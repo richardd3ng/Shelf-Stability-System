@@ -1,9 +1,11 @@
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
 
 interface SearchBarProps {
   placeholder: string;
+  onEnter: (searchText: string) => void;
 }
 
 const Search = styled("div")(({ theme }) => ({
@@ -13,11 +15,8 @@ const Search = styled("div")(({ theme }) => ({
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.black, 0.25),
   },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
   width: "100%",
   [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
     width: "auto",
   },
 }));
@@ -34,19 +33,29 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
+  width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 2, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
   },
 }));
 
 const SearchBar = (props: SearchBarProps) => {
+  const [query, setQuery] = useState<string>("");
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Enter") {
+      props.onEnter(query);
+    }
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.currentTarget.value);
+  };
+
   return (
     <Search>
       <SearchIconWrapper>
@@ -55,6 +64,8 @@ const SearchBar = (props: SearchBarProps) => {
       <StyledInputBase
         placeholder={props.placeholder}
         inputProps={{ "aria-label": "search" }}
+        onKeyDown={handleKeyDown}
+        onChange={handleChange}
       />
     </Search>
   );
