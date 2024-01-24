@@ -1,31 +1,32 @@
-import Box from "@mui/material/Box";
+import { Box, IconButton, ListItem, ListItemText } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import IconButton from "@mui/material/IconButton";
 import ViewIcon from "@mui/icons-material/Visibility";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 
 interface ExperimentListItemProps {
   id: number;
   title: string;
   startDate: string;
   week: number;
+  onView: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
 const ExperimentListItem = (props: ExperimentListItemProps) => {
   return (
     <ListItem
+      key={props.id}
       sx={{ border: 0.5 }}
       secondaryAction={
         <Box>
-          <IconButton edge="end" aria-label="delete">
+          <IconButton edge="end" aria-label="view" onClick={props.onView}>
             <ViewIcon />
           </IconButton>
-          <IconButton edge="end" aria-label="delete">
+          <IconButton edge="end" aria-label="edit" onClick={props.onEdit}>
             <EditIcon />
           </IconButton>
-          <IconButton edge="end" aria-label="delete">
+          <IconButton edge="end" aria-label="delete" onClick={props.onDelete}>
             <DeleteIcon />
           </IconButton>
         </Box>
