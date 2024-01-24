@@ -1,22 +1,25 @@
-import { Stack } from "@mui/material";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
+import {
+  Box,
+  Button,
+  Container,
+  ListItem,
+  List,
+  ListItemText,
+  Stack,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import ExperimentListItem from "./experiment-list-item";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import SearchBar from "../components/search-bar";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import IconButton from "@mui/material/IconButton";
-import ViewIcon from "@mui/icons-material/Visibility";
-import * as React from "react";
 
-const fetchExperiments = () => {
-  const mockData = [
+interface ExperimentData {
+  id: number;
+  title: string;
+  startDate: string;
+  week: number;
+}
+
+const fetchExperiments = (): ExperimentData[] => {
+  const mockData: ExperimentData[] = [
     {
       id: 100000,
       title: "Pizza Experiment",
@@ -83,58 +86,87 @@ const fetchExperiments = () => {
   return mockData;
 };
 
-const ActionBar = () => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-      }}
-    >
-      <SearchBar placeholder="Search Keyword" />
-      <Button sx={{ width: "25%" }}>Add Experiment</Button>
-    </Box>
-  );
-};
+const ExperimentList = () => {
+  const [experimentData, setExperimentData] = useState<ExperimentData[]>([]);
 
-const FilterHeaders = () => {
-  return (
-    <Container sx={{ py: 0.5 }}>
-      <ListItem
-        secondaryAction={
-          <ListItemText sx={{ flex: "0 0 10%" }} primary="Action" />
-        }
+  useEffect(() => {
+    const mockData: ExperimentData[] = fetchExperiments();
+    setExperimentData(mockData);
+  }, []);
+
+  const handleView = (id: number) => {
+    console.log("View");
+  };
+
+  const handleDelete = (id: number) => {
+    const updatedData: ExperimentData[] = experimentData.filter(
+      (exp) => exp.id !== id
+    );
+    setExperimentData(updatedData);
+  };
+
+  const handleEdit = (id: number) => {
+    console.log("Edit");
+  };
+
+  const ActionBar = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
       >
-        <ListItemText sx={{ flex: "0 0 15%" }} primary="#" />
-        <ListItemText sx={{ flex: "0 0 40%" }} primary="Title" />
-        <ListItemText sx={{ flex: "0 0 20%" }} primary="Start Date" />
-        <ListItemText sx={{ flex: "0 0 10%" }} primary="Week" />
-      </ListItem>
-    </Container>
-  );
-};
+        <SearchBar placeholder="Search Keyword" />
+        <Button sx={{ width: "25%" }}>Add Experiment</Button>
+      </Box>
+    );
+  };
 
-const ListDisplay = () => {
-  const mockData = fetchExperiments();
-  const experimentListItems = mockData.map((experiment, _) => (
-    <Container sx={{ py: 0.25 }}>
-      <ExperimentListItem {...experiment} />
-    </Container>
-  ));
-  return (
-    <List>
-      {FilterHeaders()}
-      {experimentListItems}
-    </List>
-  );
-};
+  const FilterHeaders = () => {
+    return (
+      <Container sx={{ py: 0.5 }}>
+        <ListItem
+          key={0}
+          secondaryAction={
+            <ListItemText sx={{ flex: "0 0 10%" }} primary="Action" />
+          }
+        >
+          <ListItemText sx={{ flex: "0 0 15%" }} primary="#" />
+          <ListItemText sx={{ flex: "0 0 40%" }} primary="Title" />
+          <ListItemText sx={{ flex: "0 0 20%" }} primary="Start Date" />
+          <ListItemText sx={{ flex: "0 0 10%" }} primary="Week" />
+        </ListItem>
+      </Container>
+    );
+  };
 
-export default function ExperimentList() {
+  const ListDisplay = () => {
+    const experimentListItems = experimentData.map((experiment, _) => (
+      <Container sx={{ py: 0.25 }}>
+        <ExperimentListItem
+          {...experiment}
+          onDelete={() => handleDelete(experiment.id)}
+          onEdit={() => handleEdit(experiment.id)}
+          onView={() => handleView(experiment.id)}
+        />
+      </Container>
+    ));
+    return (
+      <List>
+        {FilterHeaders()}
+        {experimentListItems}
+      </List>
+    );
+  };
+
   return (
     <Stack spacing={2}>
       {ActionBar()}
       {ListDisplay()}
     </Stack>
   );
-}
+};
+
+export default ExperimentList;
