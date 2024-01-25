@@ -301,21 +301,18 @@ const ExperimentList = () => {
     };
 
     return (
-        <Stack spacing={2}>
-            {ActionBar()}
-            {ListDisplay()}
-            <ExperimentCreationDialog
-                open={showExperiementCreationDialog}
-                onClose={() => setShowExperimentCreationDialog(false)}
-            />
-        </Stack>
-    );
-};
-
-export default () => {
-    return (
         <Layout>
-            <ExperimentList />
+            <Stack spacing={2}>
+                {ActionBar()}
+                {ListDisplay()}
+                <ExperimentCreationDialog
+                    open={showExperiementCreationDialog}
+                    onClose={() => setShowExperimentCreationDialog(false)}
+                />
+            </Stack>
         </Layout>
     );
 };
+
+ExperimentList.displayName = "ExperimentList";
+export default ExperimentList;
