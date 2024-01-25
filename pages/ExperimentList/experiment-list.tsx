@@ -135,7 +135,7 @@ const ExperimentList = () => {
     };
 
     fetchDataAndSort();
-  }, [sortState]); // Add sortState as a dependency
+  }, [sortState]);
 
   const handleView = (id: number) => {
     console.log("View");
@@ -173,12 +173,6 @@ const ExperimentList = () => {
         aria-label={"sort-arrow"}
         onClick={() => toggleSortAscending()}
         disableRipple
-        sx={{
-          "&:hover": {
-            backgroundColor: "blue",
-          },
-          transition: "background-color 3s ease-in-out",
-        }}
       >
         <ArrowUpward
           sx={{
