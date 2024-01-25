@@ -1,0 +1,52 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Experiment {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  start_date  DateTime
+
+  conditions Condition[]
+  assayTypes AssayType[]
+
+  Assay Assay[]
+}
+
+model Assay {
+  id           Int        @id @default(autoincrement())
+  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  experimentId Int
+  condition    Condition  @relation(fields: [conditionId], references: [id])
+  conditionId  Int
+  type         AssayType  @relation(fields: [typeId], references: [id])
+  typeId       Int
+  target_date  DateTime
+  result       String?
+}
+
+model AssayType {
+  id           Int        @id @default(autoincrement())
+  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  experimentId Int
+  name         String
+  Assay        Assay[]
+}
+
+
+model Condition {
+  id           Int        @id @default(autoincrement())
+  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  experimentId Int
+  name         String
+  control      Boolean?   @default(false)
+  Assay        Assay[]
+}
