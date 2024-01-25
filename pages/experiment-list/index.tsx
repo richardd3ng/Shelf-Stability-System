@@ -1,21 +1,22 @@
 import {
-  Box,
-  Button,
-  Container,
-  IconButton,
-  ListItem,
-  List,
-  ListItemText,
-  MenuItem,
-  Select,
-  Stack,
-  Typography,
+    Box,
+    Button,
+    Container,
+    IconButton,
+    ListItem,
+    List,
+    ListItemText,
+    MenuItem,
+    Select,
+    Stack,
+    Typography,
 } from "@mui/material";
 import { ArrowUpward } from "@mui/icons-material";
 import { useEffect, useState } from "react";
-import ExperimentCreationDialog from "./experiment-creation-dialog";
-import ExperimentListItem from "./experiment-list-item";
-import SearchBar from "../components/search-bar";
+import ExperimentCreationDialog from "@/components/experiment-list/experiment-creation-dialog";
+import ExperimentListItem from "../../components/experiment-list/experiment-list-item";
+import Layout from "../../components/shared/layout";
+import SearchBar from "../../components/shared/search-bar";
 
 interface ExperimentData {
   id: number;
@@ -282,4 +283,10 @@ const ExperimentList = () => {
   );
 };
 
-export default ExperimentList;
+export default () => {
+    return (
+        <Layout>
+            <ExperimentList />
+        </Layout>
+    );
+};
