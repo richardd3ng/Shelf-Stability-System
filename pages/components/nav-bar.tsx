@@ -1,4 +1,3 @@
-import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
@@ -17,16 +16,6 @@ export default function NavBar() {
         >
           Shelf Stability Tracking System
         </Typography>
-        {/* <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search..."
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search> */}
-
         <Box sx={{ flexGrow: 1 }}>
           <Link href="#" color="inherit" sx={{ padding: 15 }}>
             {"Experiments"}

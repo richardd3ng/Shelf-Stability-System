@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { ArrowUpward } from "@mui/icons-material";
 import { useEffect, useState } from "react";
+import ExperimentCreationDialog from "./experiment-creation-dialog";
 import ExperimentListItem from "./experiment-list-item";
 import SearchBar from "../components/search-bar";
 
@@ -103,12 +104,32 @@ const fetchExperiments = (): ExperimentData[] => {
   return mockData;
 };
 
+const FilterHeaders = () => {
+  return (
+    <Container sx={{ py: 0.5 }}>
+      <ListItem
+        key={0}
+        secondaryAction={
+          <ListItemText sx={{ flex: "0 0 10%" }} primary="Action" />
+        }
+      >
+        <ListItemText sx={{ flex: "0 0 15%" }} primary={SortField.Id} />
+        <ListItemText sx={{ flex: "0 0 40%" }} primary={SortField.Title} />
+        <ListItemText sx={{ flex: "0 0 20%" }} primary={SortField.StartDate} />
+        <ListItemText sx={{ flex: "0 0 10%" }} primary={SortField.Week} />
+      </ListItem>
+    </Container>
+  );
+};
+
 const ExperimentList = () => {
   const [experimentData, setExperimentData] = useState<ExperimentData[]>([]);
   const [sortState, setSortState] = useState<SortState>({
     field: SortField.Id,
     ascending: true,
   });
+  const [showExperiementCreationDialog, setShowExperimentCreationDialog] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const fetchDataAndSort = async () => {
@@ -136,6 +157,10 @@ const ExperimentList = () => {
 
     fetchDataAndSort();
   }, [sortState]);
+
+  const handleAddExperiment = () => {
+    setShowExperimentCreationDialog(true);
+  };
 
   const handleView = (id: number) => {
     console.log("View");
@@ -218,31 +243,11 @@ const ExperimentList = () => {
         </Box>
         <Button
           sx={{ width: "25%", border: "1px solid #ccc", borderRadius: "8px" }}
+          onClick={handleAddExperiment}
         >
           Add Experiment
-        </Button>{" "}
+        </Button>
       </Box>
-    );
-  };
-
-  const FilterHeaders = () => {
-    return (
-      <Container sx={{ py: 0.5 }}>
-        <ListItem
-          key={0}
-          secondaryAction={
-            <ListItemText sx={{ flex: "0 0 10%" }} primary="Action" />
-          }
-        >
-          <ListItemText sx={{ flex: "0 0 15%" }} primary={SortField.Id} />
-          <ListItemText sx={{ flex: "0 0 40%" }} primary={SortField.Title} />
-          <ListItemText
-            sx={{ flex: "0 0 20%" }}
-            primary={SortField.StartDate}
-          />
-          <ListItemText sx={{ flex: "0 0 10%" }} primary={SortField.Week} />
-        </ListItem>
-      </Container>
     );
   };
 
@@ -269,6 +274,10 @@ const ExperimentList = () => {
     <Stack spacing={2}>
       {ActionBar()}
       {ListDisplay()}
+      <ExperimentCreationDialog
+        open={showExperiementCreationDialog}
+        onClose={() => setShowExperimentCreationDialog(false)}
+      />
     </Stack>
   );
 };
