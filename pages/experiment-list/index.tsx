@@ -281,7 +281,7 @@ const ExperimentList = () => {
 
     const ListDisplay = () => {
         const experimentListItems = experimentData.map((experiment, _) => (
-            <Container sx={{ py: 0.25 }}>
+            <Container key={experiment.id} sx={{ py: 0.25 }}>
                 <ExperimentListItem
                     {...experiment}
                     onDelete={() => handleDelete(experiment.id)}
