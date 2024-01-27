@@ -202,6 +202,15 @@ const ExperimentList = () => {
         });
     };
 
+    const handleCloseDialog = (
+        event: React.SyntheticEvent<Element, Event>,
+        reason: string
+    ) => {
+        if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
+            setShowExperimentCreationDialog(false);
+        }
+    };
+
     const SortArrow = () => {
         return (
             <IconButton
@@ -307,7 +316,10 @@ const ExperimentList = () => {
                 {ListDisplay()}
                 <ExperimentCreationDialog
                     open={showExperiementCreationDialog}
-                    onClose={() => setShowExperimentCreationDialog(false)}
+                    onClose={(
+                        event: React.SyntheticEvent<Element, Event>,
+                        reason: string
+                    ) => handleCloseDialog(event, reason)}
                 />
             </Stack>
         </Layout>
