@@ -4,8 +4,9 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import React from "react";
 
-export default function NavBar() {
+const NavBar: React.FC = () => {
     return (
         <AppBar position="static">
             <Toolbar>
@@ -41,4 +42,6 @@ export default function NavBar() {
             </Toolbar>
         </AppBar>
     );
-}
+};
+
+export default NavBar;

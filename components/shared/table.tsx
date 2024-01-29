@@ -11,7 +11,7 @@ interface TableProps {
     onDeleteRows: (rows: GridRowSelectionModel) => void;
 }
 
-const Table = (props: TableProps) => {
+const Table: React.FC<TableProps> = (props: TableProps) => {
     const [selectedRows, setSelectedRows] =
         React.useState<GridRowSelectionModel>([]);
 
@@ -20,7 +20,7 @@ const Table = (props: TableProps) => {
         setSelectedRows([]);
     };
 
-    const DeleteButton = () => (
+    const DeleteButton: React.FC = () => (
         <IconButton
             disabled={selectedRows.length === 0}
             onClick={handleDeleteRows}
@@ -29,7 +29,7 @@ const Table = (props: TableProps) => {
         </IconButton>
     );
 
-    const FooterComponent = () => (
+    const FooterComponent: React.FC = () => (
         <Box
             style={{
                 display: "flex",
@@ -44,7 +44,7 @@ const Table = (props: TableProps) => {
                         <Typography variant="body2" component="span">
                             Delete {selectedRows.length} rows
                         </Typography>
-                        {DeleteButton()}
+                        {DeleteButton({})}
                     </Box>
                 )}
             </Box>
