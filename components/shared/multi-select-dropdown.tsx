@@ -19,7 +19,9 @@ interface MultiSelectDropdownProps {
     onChange: (selectedItems: string[]) => void;
 }
 
-const MultiSelectDropdown = (props: MultiSelectDropdownProps) => {
+const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = (
+    props: MultiSelectDropdownProps
+) => {
     const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
     const isSmall = props.size === "small";
     const sizeConfig = {
@@ -115,7 +117,6 @@ const MultiSelectDropdown = (props: MultiSelectDropdownProps) => {
                                 isSmall
                                     ? {
                                           height: 30,
-                                          //   display: "flex",
                                           justifyContent: "left",
                                           alignItems: "center",
                                           marginLeft: -2.5,

@@ -12,7 +12,7 @@ import {
     Typography,
 } from "@mui/material";
 import { ArrowUpward } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ExperimentCreationDialog from "@/components/experiment-list/experiment-creation-dialog";
 import ExperimentListItem from "../../components/experiment-list/experiment-list-item";
 import Layout from "../../components/shared/layout";
@@ -131,7 +131,7 @@ const FilterHeaders = () => {
     );
 };
 
-const ExperimentList = () => {
+const ExperimentList: React.FC = () => {
     const [experimentData, setExperimentData] = useState<ExperimentData[]>([]);
     const [sortState, setSortState] = useState<SortState>({
         field: SortField.Id,
@@ -231,7 +231,7 @@ const ExperimentList = () => {
         );
     };
 
-    const ActionBar = () => {
+    const ActionBar: React.FC = () => {
         return (
             <Box
                 sx={{
@@ -290,7 +290,7 @@ const ExperimentList = () => {
         );
     };
 
-    const ListDisplay = () => {
+    const ListDisplay: React.FC = () => {
         const experimentListItems = experimentData.map((experiment, _) => (
             <Container key={experiment.id} sx={{ py: 0.25 }}>
                 <ExperimentListItem
@@ -312,8 +312,8 @@ const ExperimentList = () => {
     return (
         <Layout>
             <Stack spacing={2}>
-                {ActionBar()}
-                {ListDisplay()}
+                {ActionBar({})}
+                {ListDisplay({})}
                 <ExperimentCreationDialog
                     open={showExperiementCreationDialog}
                     onClose={(

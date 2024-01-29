@@ -44,7 +44,9 @@ const assayTypes = [
 
 const storageConditions = ["0 F", "70F 38%", "73F 50%", "80F 65%", "100F 20%"];
 
-const ExperimentCreationDialog = (props: ExperimentCreationDialogProps) => {
+const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
+    props: ExperimentCreationDialogProps
+) => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -161,7 +163,7 @@ const ExperimentCreationDialog = (props: ExperimentCreationDialogProps) => {
         return [weekColumn, ...storageConditionColumns];
     };
 
-    const tableAddWeekFooter = () => {
+    const tableAddWeekFooter: React.FC = () => {
         return (
             <Box
                 style={{
