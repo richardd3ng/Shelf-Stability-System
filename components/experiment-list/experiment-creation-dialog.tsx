@@ -20,10 +20,7 @@ import { GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
-    onClose: (
-        event: React.SyntheticEvent<Element, Event>,
-        reason: string
-    ) => void;
+    onClose: (reason: string) => void;
 }
 
 interface AssayScheduleRow {
@@ -49,7 +46,9 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
 ) => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(
+        dayjs().toDate()
+    );
     const [selectedAssayTypes, setSelectedAssayTypes] = useState<string[]>([]);
     const [selectedStorageConditions, setSelectedStorageConditions] = useState<
         string[]
@@ -107,22 +106,37 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         setAssayScheduleRows(remainingRows);
     };
 
-    const handleCreateExperiment = (
-        event: React.SyntheticEvent<Element, Event>,
-        reason: string
-    ) => {
+    const handleCreateExperiment = (reason: string) => {
+        const missingComponents: string[] = [];
+        if (!title.trim()) {
+            missingComponents.push("title");
+        }
+        if (!selectedDate) {
+            missingComponents.push("start date");
+        }
+        if (missingComponents.length > 0) {
+            let alertMessage = "Please provide ";
+            if (missingComponents.length === 1) {
+                alertMessage += `a ${missingComponents[0]} for the experiment.`;
+            } else {
+                alertMessage += "the following details for the experiment: ";
+                alertMessage += missingComponents.slice(0, -1).join(", ");
+                alertMessage += `, and ${
+                    missingComponents[missingComponents.length - 1]
+                }.`;
+            }
+            alert(alertMessage);
+            return;
+        }
         // TODO: Create experiment in database
-        props.onClose(event, reason);
+        props.onClose(reason);
     };
 
-    const handleCancelExperiment = (
-        event: React.SyntheticEvent<Element, Event>,
-        reason: string
-    ) => {
+    const handleCancelExperiment = (reason: string) => {
         setSelectedAssayTypes([]);
         setSelectedStorageConditions([]);
         setAssayScheduleRows([]);
-        props.onClose(event, reason);
+        props.onClose(reason);
     };
 
     const createTableColumns = (): GridColDef[] => {
@@ -256,14 +270,10 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button
-                    onClick={(event) => handleCancelExperiment(event, "Cancel")}
-                >
+                <Button onClick={() => handleCancelExperiment("Cancel")}>
                     Cancel
                 </Button>
-                <Button
-                    onClick={(event) => handleCreateExperiment(event, "Create")}
-                >
+                <Button onClick={() => handleCreateExperiment("Create")}>
                     Create
                 </Button>
             </DialogActions>

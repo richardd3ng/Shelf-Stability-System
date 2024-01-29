@@ -141,33 +141,33 @@ const ExperimentList: React.FC = () => {
         useState<boolean>(false);
 
     useEffect(() => {
-        const fetchDataAndSort = async () => {
-            const mockData: ExperimentData[] = fetchExperiments();
-            const sortedData = mockData.sort((a, b) => {
-                switch (sortState.field) {
-                    case SortField.Id:
-                        return sortState.ascending ? a.id - b.id : b.id - a.id;
-                    case SortField.Title:
-                        return sortState.ascending
-                            ? a.title.localeCompare(b.title)
-                            : b.title.localeCompare(a.title);
-                    case SortField.StartDate:
-                        return sortState.ascending
-                            ? a.startDate.localeCompare(b.startDate)
-                            : b.startDate.localeCompare(a.startDate);
-                    case SortField.Week:
-                        return sortState.ascending
-                            ? a.week - b.week
-                            : b.week - a.week;
-                    default:
-                        return 0;
-                }
-            });
-            setExperimentData(sortedData);
-        };
-
-        fetchDataAndSort();
+        fetchAndSortData();
     }, [sortState]);
+
+    const fetchAndSortData = async () => {
+        const mockData: ExperimentData[] = fetchExperiments();
+        const sortedData = mockData.sort((a, b) => {
+            switch (sortState.field) {
+                case SortField.Id:
+                    return sortState.ascending ? a.id - b.id : b.id - a.id;
+                case SortField.Title:
+                    return sortState.ascending
+                        ? a.title.localeCompare(b.title)
+                        : b.title.localeCompare(a.title);
+                case SortField.StartDate:
+                    return sortState.ascending
+                        ? a.startDate.localeCompare(b.startDate)
+                        : b.startDate.localeCompare(a.startDate);
+                case SortField.Week:
+                    return sortState.ascending
+                        ? a.week - b.week
+                        : b.week - a.week;
+                default:
+                    return 0;
+            }
+        });
+        setExperimentData(sortedData);
+    };
 
     const handleAddExperiment = () => {
         setShowExperimentCreationDialog(true);
@@ -202,13 +202,12 @@ const ExperimentList: React.FC = () => {
         });
     };
 
-    const handleCloseDialog = (
-        event: React.SyntheticEvent<Element, Event>,
-        reason: string
-    ) => {
-        if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
-            setShowExperimentCreationDialog(false);
+    const handleCloseDialog = (reason: string) => {
+        if (reason === "backdropClick" || reason === "escapeKeyDown") {
+            return;
         }
+        setShowExperimentCreationDialog(false);
+        fetchAndSortData();
     };
 
     const SortArrow = () => {
@@ -316,10 +315,7 @@ const ExperimentList: React.FC = () => {
                 {ListDisplay({})}
                 <ExperimentCreationDialog
                     open={showExperiementCreationDialog}
-                    onClose={(
-                        event: React.SyntheticEvent<Element, Event>,
-                        reason: string
-                    ) => handleCloseDialog(event, reason)}
+                    onClose={(reason: string) => handleCloseDialog(reason)}
                 />
             </Stack>
         </Layout>
