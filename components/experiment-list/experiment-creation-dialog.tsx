@@ -30,7 +30,7 @@ interface AssayScheduleRow {
 
 const MAX_TITLE_LENGTH = 50;
 const MAX_DESCRIPTION_LENGTH = 200;
-const assayTypes = [
+const mockAssayTypes = [
     "Sensory",
     "Moisture",
     "Hexanal",
@@ -39,7 +39,13 @@ const assayTypes = [
     "Free fatty acid",
 ];
 
-const storageConditions = ["0 F", "70F 38%", "73F 50%", "80F 65%", "100F 20%"];
+const mockStorageConditions = [
+    "0 F",
+    "70F 38%",
+    "73F 50%",
+    "80F 65%",
+    "100F 20%",
+];
 
 const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     props: ExperimentCreationDialogProps
@@ -49,10 +55,16 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [selectedDate, setSelectedDate] = useState<Date | null>(
         dayjs().toDate()
     );
+    const [assayTypes, setAssayTypes] = useState<string[]>(mockAssayTypes);
+    const [storageConditions, setStorageConditions] = useState<string[]>(
+        mockStorageConditions
+    );
     const [selectedAssayTypes, setSelectedAssayTypes] = useState<string[]>([]);
     const [selectedStorageConditions, setSelectedStorageConditions] = useState<
         string[]
     >([]);
+    const [newAssayType, setNewAssayType] = useState<string>("");
+    const [newStorageCondition, setNewStorageCondition] = useState<string>("");
     const [assayScheduleRows, setAssayScheduleRows] = useState<
         AssayScheduleRow[]
     >([]);
@@ -80,14 +92,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         if (newDescription.length <= MAX_DESCRIPTION_LENGTH) {
             setDescription(newDescription);
         }
-    };
-
-    const handleAssayTypeChange = (newAssayTypes: string[]) => {
-        setSelectedAssayTypes(newAssayTypes);
-    };
-
-    const handleStorageConditionChange = (newStorageConditions: string[]) => {
-        setSelectedStorageConditions(newStorageConditions);
     };
 
     const handleAddWeek = () => {
@@ -198,6 +202,27 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         );
     };
 
+    const handleAddAssayType = () => {
+        if (!assayTypes.includes(newAssayType) && newAssayType.trim() !== "") {
+            setAssayTypes([...assayTypes, newAssayType]);
+            setNewAssayType("");
+        } else {
+            alert("Assay type already exists or is invalid!");
+        }
+    };
+
+    const handleAddStorageCondition = () => {
+        if (
+            !storageConditions.includes(newStorageCondition) &&
+            newStorageCondition.trim() !== ""
+        ) {
+            setStorageConditions([...storageConditions, newStorageCondition]);
+            setNewStorageCondition("");
+        } else {
+            alert("Storage condition already exists or is empty!");
+        }
+    };
+
     return (
         <Dialog open={props.open} onClose={props.onClose}>
             <DialogTitle>Add New Experiment</DialogTitle>
@@ -237,20 +262,69 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                             onChange={(newDate) => handleDateChange(newDate)}
                         />
                     </LocalizationProvider>
-                    <MultiSelectDropdown
-                        items={assayTypes}
-                        label="Assay Types"
-                        onChange={(newAssayTypes) =>
-                            handleAssayTypeChange(newAssayTypes)
-                        }
-                    />
-                    <MultiSelectDropdown
-                        items={storageConditions}
-                        label="Storage Conditions"
-                        onChange={(newStorageConditions) =>
-                            handleStorageConditionChange(newStorageConditions)
-                        }
-                    />
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <MultiSelectDropdown
+                            items={assayTypes}
+                            label="Assay Types"
+                            onChange={(newAssayTypes: string[]) =>
+                                setSelectedAssayTypes(newAssayTypes)
+                            }
+                        />
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                paddingLeft: 2,
+                            }}
+                        >
+                            <TextField
+                                value={newAssayType}
+                                onChange={(e) =>
+                                    setNewAssayType(e.target.value)
+                                }
+                                label="New Assay Type"
+                                inputProps={{ style: { fontSize: "0.8rem" } }}
+                                InputLabelProps={{
+                                    style: { fontSize: "0.8rem" },
+                                }}
+                            />
+                            <Button onClick={handleAddAssayType}>Add</Button>
+                        </Box>
+                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <MultiSelectDropdown
+                            items={storageConditions}
+                            label="Storage Conditions"
+                            onChange={(newStorageConditions: string[]) =>
+                                setSelectedStorageConditions(
+                                    newStorageConditions
+                                )
+                            }
+                        />
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                paddingLeft: 2,
+                            }}
+                        >
+                            <TextField
+                                value={newStorageCondition}
+                                onChange={(e) =>
+                                    setNewStorageCondition(e.target.value)
+                                }
+                                label="New Condition"
+                                inputProps={{ style: { fontSize: "0.8rem" } }}
+                                InputLabelProps={{
+                                    style: { fontSize: "0.8rem" },
+                                }}
+                            />
+                            <Button onClick={handleAddStorageCondition}>
+                                Add
+                            </Button>
+                        </Box>
+                    </Box>
+
                     {selectedAssayTypes.length > 0 &&
                         selectedStorageConditions.length > 0 && (
                             <Stack>

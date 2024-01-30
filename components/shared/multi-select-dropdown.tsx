@@ -44,101 +44,97 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = (
     };
 
     return (
-        <div>
-            <FormControl
-                sx={{
-                    width: sizeConfig.width,
-                    my: sizeConfig.marginY,
-                }}
-                size={props.size}
+        <FormControl
+            sx={{
+                width: sizeConfig.width,
+                my: sizeConfig.marginY,
+            }}
+            size={props.size}
+        >
+            <InputLabel
+                id="dropdown-label"
+                sx={
+                    isSmall
+                        ? {
+                              fontSize: sizeConfig.labelFontSize,
+                              paddingTop: 0.25,
+                          }
+                        : {}
+                }
             >
-                <InputLabel
-                    id="dropdown-label"
-                    sx={
-                        isSmall
-                            ? {
-                                  fontSize: sizeConfig.labelFontSize,
-                                  paddingTop: 0.25,
-                              }
-                            : {}
-                    }
-                >
-                    {props.label}
-                </InputLabel>
-                <Select
-                    labelId="multiple-chip-label"
-                    id="multiple-chip"
-                    multiple
-                    value={selectedItems}
-                    onChange={handleChange}
-                    input={
-                        <OutlinedInput
-                            id="select-multiple-chip"
-                            label={props.label}
-                        />
-                    }
-                    renderValue={(selected) => (
-                        <Box
-                            sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
-                        >
-                            {selected.map((value) => (
-                                <Chip
-                                    key={value}
-                                    label={value}
-                                    sx={
-                                        isSmall
-                                            ? {
-                                                  fontSize: "0.5rem",
-                                                  height: "0.75rem",
-                                              }
-                                            : {}
-                                    }
-                                    size={props.size}
-                                />
-                            ))}
-                        </Box>
-                    )}
-                    MenuProps={{
-                        PaperProps: {
-                            style: {
-                                maxHeight:
-                                    sizeConfig.itemHeight * 4.5 +
-                                    sizeConfig.itemPaddingTop,
-                                width: sizeConfig.menuWidth,
-                            },
-                        },
-                    }}
-                >
-                    {props.items.map((item) => (
-                        <MenuItem
-                            key={item}
-                            value={item}
-                            sx={
-                                isSmall
-                                    ? {
-                                          height: 30,
-                                          justifyContent: "left",
-                                          alignItems: "center",
-                                          marginLeft: -2.5,
-                                      }
-                                    : {}
-                            }
-                        >
-                            <Checkbox
-                                checked={selectedItems.indexOf(item) > -1}
+                {props.label}
+            </InputLabel>
+            <Select
+                labelId="multiple-chip-label"
+                id="multiple-chip"
+                multiple
+                value={selectedItems}
+                onChange={handleChange}
+                input={
+                    <OutlinedInput
+                        id="select-multiple-chip"
+                        label={props.label}
+                    />
+                }
+                renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value) => (
+                            <Chip
+                                key={value}
+                                label={value}
+                                sx={
+                                    isSmall
+                                        ? {
+                                              fontSize: "0.5rem",
+                                              height: "0.75rem",
+                                          }
+                                        : {}
+                                }
                                 size={props.size}
                             />
-                            <ListItemText
-                                primary={item}
-                                primaryTypographyProps={
-                                    isSmall ? { fontSize: "0.75rem" } : {}
-                                }
-                            />
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-        </div>
+                        ))}
+                    </Box>
+                )}
+                MenuProps={{
+                    PaperProps: {
+                        style: {
+                            maxHeight:
+                                sizeConfig.itemHeight * 4.5 +
+                                sizeConfig.itemPaddingTop,
+                            width: sizeConfig.menuWidth,
+                        },
+                    },
+                }}
+            >
+                {props.items.map((item) => (
+                    <MenuItem
+                        key={item}
+                        value={item}
+                        sx={
+                            isSmall
+                                ? {
+                                      height: 30,
+                                      justifyContent: "left",
+                                      alignItems: "center",
+                                      marginLeft: -2.5,
+                                  }
+                                : {}
+                        }
+                    >
+                        <Checkbox
+                            checked={selectedItems.indexOf(item) > -1}
+                            size={props.size}
+                        />
+                        <ListItemText
+                            primary={item}
+                            primaryTypographyProps={
+                                isSmall ? { fontSize: "0.75rem" } : {}
+                            }
+                        />
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
     );
 };
 
