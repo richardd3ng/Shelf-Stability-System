@@ -15,7 +15,8 @@ interface TableProps {
     rows: any[];
     pagination?: true;
     footer?: React.JSXElementConstructor<any>;
-    onDeleteRows: (rows: GridRowSelectionModel) => void;
+    onDeleteRows?: (rows: GridRowSelectionModel) => void;
+    onSortModelChange?: (sortModel: any) => void;
 }
 
 const Table: React.FC<TableProps> = (props: TableProps) => {
@@ -23,7 +24,9 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
         React.useState<GridRowSelectionModel>([]);
 
     const handleDeleteRows = () => {
-        props.onDeleteRows(selectedRows);
+        if (props.onDeleteRows !== undefined) {
+            props.onDeleteRows(selectedRows);
+        }
         setSelectedRows([]);
     };
 
@@ -88,6 +91,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                 ) => {
                     setSelectedRows(newSelectedRows);
                 }}
+                onSortModelChange={props.onSortModelChange}
             />
         </Box>
     );

@@ -1,5 +1,9 @@
-import { Box, Button, Container, IconButton, Typography } from "@mui/material";
-import { GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
+import { Box, Button, Container, IconButton } from "@mui/material";
+import {
+    GridColDef,
+    GridRowSelectionModel,
+    GridSortModel,
+} from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import ExperimentCreationDialog from "@/components/experiment-list/experiment-creation-dialog";
 import Layout from "../../components/shared/layout";
@@ -7,6 +11,9 @@ import SearchBar from "../../components/shared/search-bar";
 import Table from "../../components/shared/table";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import ViewIcon from "@mui/icons-material/Visibility";
+import { ExperimentList } from "@/lib/controllers/types";
+import { fetchExperimentList } from "@/lib/controllers/fetchExperimentList";
+import { getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 
 interface ExperimentData {
     id: number;
@@ -15,102 +22,33 @@ interface ExperimentData {
     week: number;
 }
 
-enum SortField {
-    Id = "Number",
-    Title = "Title",
-    StartDate = "Start Date",
-    Week = "Week",
-    Action = "Action",
-}
-
-interface SortState {
-    field: SortField;
-    ascending: boolean;
-}
-
-const fetchExperiments = (): ExperimentData[] => {
-    const mockData: ExperimentData[] = [
-        {
-            id: 100000,
-            title: "Pizza Experiment",
-            startDate: new Date("2022-03-15"),
-            week: 3,
-        },
-        {
-            id: 100001,
-            title: "Chicken Experiment",
-            startDate: new Date("2022-04-20"),
-            week: 2,
-        },
-        {
-            id: 100002,
-            title: "Fried Rice Experiment",
-            startDate: new Date("2022-02-10"),
-            week: 4,
-        },
-        {
-            id: 100003,
-            title: "Sushi Experiment",
-            startDate: new Date("2022-01-05"),
-            week: 5,
-        },
-        {
-            id: 100004,
-            title: "Really Long Experiment Name That Should Be Truncated Will Need To Discuss How To Handle This Case?",
-            startDate: new Date("2022-03-01"),
-            week: 3,
-        },
-        {
-            id: 100005,
-            title: "Cereal Experiment",
-            startDate: new Date("2022-05-25"),
-            week: 1,
-        },
-        {
-            id: 100006,
-            title: "Frog Intestines Experiment",
-            startDate: new Date("2022-02-28"),
-            week: 4,
-        },
-        {
-            id: 100007,
-            title: "Scorpion Tail Experiment",
-            startDate: new Date("2022-04-12"),
-            week: 2,
-        },
-        {
-            id: 100008,
-            title: "Test 9",
-            startDate: new Date("2022-05-10"),
-            week: 1,
-        },
-        {
-            id: 100009,
-            title: "Test 10",
-            startDate: new Date("2022-01-20"),
-            week: 5,
-        },
-    ];
-    return mockData;
+const fetchExperiments = async (): Promise<ExperimentData[]> => {
+    const experimentList: ExperimentList = await fetchExperimentList();
+    const experimentData: ExperimentData[] = experimentList.experiments.map(
+        (experiment) => ({
+            id: experiment.id,
+            title: experiment.title,
+            startDate: experiment.start_date,
+            week: getNumWeeksAfterStartDate(experiment.start_date, new Date()),
+        })
+    );
+    return experimentData;
 };
 
 const ExperimentList: React.FC = () => {
     const [experimentData, setExperimentData] = useState<ExperimentData[]>([]);
-    const [sortState, setSortState] = useState<SortState>({
-        field: SortField.Id,
-        ascending: true,
-    });
+    const [sortModel, setSortModel] = useState<GridSortModel>([]);
     const [showExperiementCreationDialog, setShowExperimentCreationDialog] =
         useState<boolean>(false);
     const [query, setQuery] = useState<string>("");
 
     useEffect(() => {
         fetchAndSetData();
-    }, [sortState]);
+    }, [sortModel]);
 
     const fetchAndSetData = async () => {
-        const mockData: ExperimentData[] = fetchExperiments();
-        setExperimentData(mockData);
+        const data: ExperimentData[] = await fetchExperiments();
+        setExperimentData(data);
     };
 
     const handleAddExperiment = () => {
@@ -207,15 +145,13 @@ const ExperimentList: React.FC = () => {
                 ),
             },
         ];
-        columns[0].valueFormatter = (params : any) => String(params.value);
+        columns[0].valueFormatter = (params: any) => String(params.value);
         return columns;
     };
 
     const handleDeleteExperiments = (selectedRows: GridRowSelectionModel) => {
-        const remainingRows = experimentData.filter(
-            (row) => !selectedRows.includes(row.id)
-        );
-        setExperimentData(remainingRows);
+        // TODO: Implement delete on database
+        fetchAndSetData();
     };
 
     return (
@@ -251,6 +187,9 @@ const ExperimentList: React.FC = () => {
                 pagination
                 onDeleteRows={(selectedRows: GridRowSelectionModel) =>
                     handleDeleteExperiments(selectedRows)
+                }
+                onSortModelChange={(sortModel: GridSortModel) =>
+                    setSortModel(sortModel)
                 }
             />
             <ExperimentCreationDialog
