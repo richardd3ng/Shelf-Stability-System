@@ -9,7 +9,6 @@ import { AssayEditorModal } from "@/components/experiment-detail/assayEditorModa
 import { AssayButtonInCell } from "@/components/experiment-detail/experimentTable/assayButtonInCell";
 import { ExperimentHeader } from "@/components/experiment-detail/experimentHeader";
 import { Container, Typography, Button } from "@mui/material";
-import Link from "next/link";
 import { useExperimentId } from "@/lib/hooks/useExperimentId";
 import { useRouter } from "next/router";
 

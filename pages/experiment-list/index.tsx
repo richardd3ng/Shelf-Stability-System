@@ -207,7 +207,7 @@ const ExperimentList: React.FC = () => {
                 ),
             },
         ];
-        columns[0].valueFormatter = (params) => String(params.value);
+        columns[0].valueFormatter = (params : any) => String(params.value);
         return columns;
     };
 
