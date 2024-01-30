@@ -1,7 +1,7 @@
 import { Typography, Container} from "@mui/material";
 import { AssayType } from "@prisma/client";
 import React from "react";
-import { ExperimentTable } from "./experimentTable";
+import { ExperimentTable } from "./experimentTable/experimentTable";
 import { ExperimentInfo } from "@/lib/controllers/types";
 
 interface AssaysOfOneTypeProps{

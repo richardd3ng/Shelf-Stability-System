@@ -18,7 +18,7 @@ export const useMutationToUpdateAssayResult = () => {
     return useMutation(updateAssayResultThroughAPI, {
         onSuccess : (newResultInfo) => {
             if (experimentData){
-                let newAssays = {...experimentData.assays};
+                let newAssays = [...experimentData.assays];
                 let assay = newAssays.findLast((assay) => assay.id === newResultInfo.assayId);
                 if (assay){
                     assay.result = newResultInfo.newResult;

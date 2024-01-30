@@ -4,6 +4,9 @@ import { useExperimentInfo, useMutationToUpdateAssayResult } from "@/lib/hooks/e
 import { useExperimentId } from "@/lib/hooks/useExperimentId";
 import { Typography, Container, Button, Modal, Dialog, TextField} from "@mui/material";
 import React, { useContext,  useState, useEffect } from "react";
+import { LoadingCircle } from "../shared/loading";
+import { ErrorMessage } from "../shared/errorMessage";
+import { getErrorMessage } from "@/lib/api/apiHelpers";
 
 
 
@@ -14,7 +17,7 @@ export const AssayEditorModal: React.FC = () => {
     const experimentId = useExperimentId();
     const {data, isLoading, isError} = useExperimentInfo(experimentId);
     const [newResult, setNewResult] = useState<string>(DEFAULT_RESULT);
-    const {mutate : updateAssayResultInDB} = useMutationToUpdateAssayResult();
+    const {mutate : updateAssayResultInDB, isLoading : isUpdatingDB, isError : isErrorUpdatingDB, error} = useMutationToUpdateAssayResult();
     useEffect(() => {
         if (data) {
             const assay = data?.assays.findLast((assay) => assay.id === assayIdBeingEdited);
@@ -38,7 +41,9 @@ export const AssayEditorModal: React.FC = () => {
                 <Typography>Edit Result for assay {assayIdBeingEdited}</Typography>
                 <TextField value={newResult} onChange={(e) => setNewResult(e.target.value)}></TextField>
                 <Button onClick={() => {updateAssayResultInDB({assayId : assayIdBeingEdited, experimentId : experimentId, newResult})}}>Submit New Result</Button>
+                {isUpdatingDB ? <LoadingCircle/> : null}
                 <Button onClick={() => setIsEditing(false)}>Close Editor</Button>
+                {isErrorUpdatingDB ? <ErrorMessage message={getErrorMessage(error)}/> : null}
             </Dialog>
 
         );
