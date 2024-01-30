@@ -1,26 +1,17 @@
-import {
-    Box,
-    Button,
-    Container,
-    IconButton,
-    ListItem,
-    List,
-    ListItemText,
-    MenuItem,
-    Select,
-    Stack,
-    Typography,
-} from "@mui/material";
-import { ArrowUpward } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import ExperimentListItem from "../../components/experiment-list/experiment-list-item";
+import { Box, Button, Container, IconButton, Typography } from "@mui/material";
+import { GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
+import React, { useEffect, useState } from "react";
+import ExperimentCreationDialog from "@/components/experiment-list/experiment-creation-dialog";
 import Layout from "../../components/shared/layout";
 import SearchBar from "../../components/shared/search-bar";
+import Table from "../../components/shared/table";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import ViewIcon from "@mui/icons-material/Visibility";
 
 interface ExperimentData {
     id: number;
     title: string;
-    startDate: string;
+    startDate: Date;
     week: number;
 }
 
@@ -42,102 +33,89 @@ const fetchExperiments = (): ExperimentData[] => {
         {
             id: 100000,
             title: "Pizza Experiment",
-            startDate: "2022-03-15",
+            startDate: new Date("2022-03-15"),
             week: 3,
         },
         {
             id: 100001,
             title: "Chicken Experiment",
-            startDate: "2022-04-20",
+            startDate: new Date("2022-04-20"),
             week: 2,
         },
         {
             id: 100002,
             title: "Fried Rice Experiment",
-            startDate: "2022-02-10",
+            startDate: new Date("2022-02-10"),
             week: 4,
         },
         {
             id: 100003,
             title: "Sushi Experiment",
-            startDate: "2022-01-05",
+            startDate: new Date("2022-01-05"),
             week: 5,
         },
         {
             id: 100004,
             title: "Really Long Experiment Name That Should Be Truncated Will Need To Discuss How To Handle This Case?",
-            startDate: "2022-03-01",
+            startDate: new Date("2022-03-01"),
             week: 3,
         },
         {
             id: 100005,
             title: "Cereal Experiment",
-            startDate: "2022-05-25",
+            startDate: new Date("2022-05-25"),
             week: 1,
         },
         {
             id: 100006,
             title: "Frog Intestines Experiment",
-            startDate: "2022-02-28",
+            startDate: new Date("2022-02-28"),
             week: 4,
         },
         {
             id: 100007,
             title: "Scorpion Tail Experiment",
-            startDate: "2022-04-12",
+            startDate: new Date("2022-04-12"),
             week: 2,
         },
         {
             id: 100008,
             title: "Test 9",
-            startDate: "2022-05-10",
+            startDate: new Date("2022-05-10"),
             week: 1,
         },
         {
             id: 100009,
             title: "Test 10",
-            startDate: "2022-01-20",
+            startDate: new Date("2022-01-20"),
             week: 5,
         },
     ];
     return mockData;
 };
 
-const ExperimentList = () => {
+const ExperimentList: React.FC = () => {
     const [experimentData, setExperimentData] = useState<ExperimentData[]>([]);
     const [sortState, setSortState] = useState<SortState>({
         field: SortField.Id,
         ascending: true,
     });
+    const [showExperiementCreationDialog, setShowExperimentCreationDialog] =
+        useState<boolean>(false);
+    const [query, setQuery] = useState<string>("");
 
     useEffect(() => {
-        const fetchDataAndSort = async () => {
-            const mockData: ExperimentData[] = fetchExperiments();
-            const sortedData = mockData.sort((a, b) => {
-                switch (sortState.field) {
-                    case SortField.Id:
-                        return sortState.ascending ? a.id - b.id : b.id - a.id;
-                    case SortField.Title:
-                        return sortState.ascending
-                            ? a.title.localeCompare(b.title)
-                            : b.title.localeCompare(a.title);
-                    case SortField.StartDate:
-                        return sortState.ascending
-                            ? a.startDate.localeCompare(b.startDate)
-                            : b.startDate.localeCompare(a.startDate);
-                    case SortField.Week:
-                        return sortState.ascending
-                            ? a.week - b.week
-                            : b.week - a.week;
-                    default:
-                        return 0;
-                }
-            });
-            setExperimentData(sortedData);
-        };
-
-        fetchDataAndSort();
+        fetchAndSetData();
     }, [sortState]);
+
+    const fetchAndSetData = async () => {
+        const mockData: ExperimentData[] = fetchExperiments();
+        setExperimentData(mockData);
+    };
+
+    const handleAddExperiment = () => {
+        setShowExperimentCreationDialog(true);
+    };
 
     const handleView = (id: number) => {
         console.log("View");
@@ -150,166 +128,138 @@ const ExperimentList = () => {
         setExperimentData(updatedData);
     };
 
-    const handleEdit = (id: number) => {
-        console.log("Edit");
-    };
-
     const handleSearch = (query: string) => {
         console.log("Search: ", query);
         // TODO: Implement search on database
     };
 
-    const toggleSortAscending = () => {
-        setSortState((prevState: SortState) => {
-            return {
-                field: prevState.field,
-                ascending: !prevState.ascending,
-            };
-        });
+    const handleCloseDialog = (reason: string) => {
+        if (reason === "backdropClick" || reason === "escapeKeyDown") {
+            return;
+        }
+        setShowExperimentCreationDialog(false);
+        fetchAndSetData();
     };
 
-    const SortArrow = () => {
-        return (
-            <IconButton
-                edge="end"
-                aria-label={"sort-arrow"}
-                onClick={() => toggleSortAscending()}
-                disableRipple
-            >
-                <ArrowUpward
-                    sx={{
-                        transition: "all 3s ease-in-out",
-                        transform: sortState.ascending
-                            ? "None"
-                            : "rotate(180deg)",
-                    }}
-                />
-            </IconButton>
+    const createTableColumns = (): GridColDef[] => {
+        const columns: GridColDef[] = [
+            {
+                field: "id",
+                headerName: "ID",
+                type: "number",
+                flex: 2,
+                align: "left",
+                headerAlign: "left",
+                disableColumnMenu: true,
+                editable: false,
+                sortable: true,
+            },
+            {
+                field: "title",
+                headerName: "Title",
+                type: "string",
+                flex: 5,
+                align: "left",
+                headerAlign: "left",
+                disableColumnMenu: true,
+                editable: false,
+                sortable: true,
+            },
+            {
+                field: "startDate",
+                headerName: "Start Date",
+                type: "date",
+                flex: 2,
+                align: "left",
+                headerAlign: "left",
+                disableColumnMenu: true,
+                editable: false,
+                sortable: true,
+            },
+            {
+                field: "week",
+                headerName: "Week",
+                type: "number",
+                flex: 1,
+                align: "left",
+                headerAlign: "left",
+                disableColumnMenu: true,
+                editable: false,
+                sortable: true,
+            },
+            {
+                field: "actions",
+                headerName: "Actions",
+                flex: 2,
+                align: "center",
+                headerAlign: "center",
+                disableColumnMenu: true,
+                sortable: false,
+                renderCell: () => (
+                    <Box sx={{ display: "flex" }}>
+                        <IconButton>
+                            <ViewIcon />
+                        </IconButton>
+                        <IconButton>
+                            <PictureAsPdfIcon />
+                        </IconButton>
+                    </Box>
+                ),
+            },
+        ];
+        columns[0].valueFormatter = (params) => String(params.value);
+        return columns;
+    };
+
+    const handleDeleteExperiments = (selectedRows: GridRowSelectionModel) => {
+        const remainingRows = experimentData.filter(
+            (row) => !selectedRows.includes(row.id)
         );
+        setExperimentData(remainingRows);
     };
 
-    const ActionBar = () => {
-        return (
+    return (
+        <Layout>
             <Box
                 sx={{
                     display: "flex",
+                    alignItems: "left",
                     paddingRight: 3,
                 }}
             >
-                <Container sx={{ width: "50%" }}>
+                <Container sx={{ flex: 2, marginRight: "25%" }}>
                     <SearchBar
                         placeholder="Search Keyword"
                         onEnter={handleSearch}
                     />
                 </Container>
-                <Box
-                    sx={{ width: "25%", display: "flex", alignItems: "center" }}
-                >
-                    <Typography sx={{ display: "inline" }}>Sort By:</Typography>
-                    <Select
-                        value={sortState.field}
-                        onChange={(event) =>
-                            setSortState({
-                                field: event.target.value as SortField,
-                                ascending: sortState.ascending,
-                            })
-                        }
-                        sx={{
-                            height: "30px",
-                            width: "50%",
-                            marginLeft: "12px",
-                        }}
-                    >
-                        <MenuItem value={SortField.Id}>{SortField.Id}</MenuItem>
-                        <MenuItem value={SortField.Title}>
-                            {SortField.Title}
-                        </MenuItem>
-                        <MenuItem value={SortField.StartDate}>
-                            {SortField.StartDate}
-                        </MenuItem>
-                        <MenuItem value={SortField.Week}>
-                            {SortField.Week}
-                        </MenuItem>
-                    </Select>
-                    <SortArrow />
-                </Box>
                 <Button
                     sx={{
-                        width: "25%",
                         border: "1px solid #ccc",
                         borderRadius: "8px",
+                        flex: 1,
+                        marginLeft: "auto",
                     }}
+                    onClick={handleAddExperiment}
                 >
                     Add Experiment
-                </Button>{" "}
+                </Button>
             </Box>
-        );
-    };
-
-    const FilterHeaders = () => {
-        return (
-            <Container sx={{ py: 0.5 }}>
-                <ListItem
-                    key={0}
-                    secondaryAction={
-                        <ListItemText
-                            sx={{ flex: "0 0 10%" }}
-                            primary="Action"
-                        />
-                    }
-                >
-                    <ListItemText
-                        sx={{ flex: "0 0 15%" }}
-                        primary={SortField.Id}
-                    />
-                    <ListItemText
-                        sx={{ flex: "0 0 40%" }}
-                        primary={SortField.Title}
-                    />
-                    <ListItemText
-                        sx={{ flex: "0 0 20%" }}
-                        primary={SortField.StartDate}
-                    />
-                    <ListItemText
-                        sx={{ flex: "0 0 10%" }}
-                        primary={SortField.Week}
-                    />
-                </ListItem>
-            </Container>
-        );
-    };
-
-    const ListDisplay = () => {
-        const experimentListItems = experimentData.map((experiment, _) => (
-            <Container key={experiment.id} sx={{ py: 0.25 }}>
-                <ExperimentListItem
-                    {...experiment}
-                    onDelete={() => handleDelete(experiment.id)}
-                    onEdit={() => handleEdit(experiment.id)}
-                    onView={() => handleView(experiment.id)}
-                />
-            </Container>
-        ));
-        return (
-            <List>
-                {FilterHeaders()}
-                {experimentListItems}
-            </List>
-        );
-    };
-
-    return (
-        <Stack spacing={2}>
-            {ActionBar()}
-            {ListDisplay()}
-        </Stack>
-    );
-};
-
-export default () => {
-    return (
-        <Layout>
-            <ExperimentList />
+            <Table
+                columns={createTableColumns()}
+                rows={experimentData}
+                pagination
+                onDeleteRows={(selectedRows: GridRowSelectionModel) =>
+                    handleDeleteExperiments(selectedRows)
+                }
+            />
+            <ExperimentCreationDialog
+                open={showExperiementCreationDialog}
+                onClose={(reason: string) => handleCloseDialog(reason)}
+            />
         </Layout>
     );
 };
+
+ExperimentList.displayName = "ExperimentList";
+export default ExperimentList;
