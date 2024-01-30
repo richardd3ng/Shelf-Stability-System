@@ -9,7 +9,7 @@ import { getDateAtMidnight, getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailHooks";
 import React, { useContext } from "react";
 import { AssayEditingContext } from "@/lib/context/assayEditingContext";
-import { AssayEditorModal } from "./assayEditorModal";
+import { AssayEditorModal } from "../assayEditorModal";
 
 
 export const getAssaysForWeekAndCondition = (assays : Assay[], experimentStartDate : Date, weekNum : number, conditionId : number) : Assay[] => {
@@ -30,19 +30,16 @@ export const getAllWeeksCoveredByAssays = (assays : Assay[], experimentStartDate
     return weeks;
 }
 
-export const getNameForAssay = (assay : Assay, assayTypes : AssayType[]) : string => {
-    let correspondingType = assayTypes.find(a => a.id === assay.typeId);
-    if (correspondingType){
-        return correspondingType.name;
-    } else {
-        return "?";
-    }
-}
 
 type AssayFilter = (experimentInfo : ExperimentInfo) => Assay[];
+export interface AssayComponentProps{
+    assay : Assay;
+    experimentInfo : ExperimentInfo;
+}
 
 interface ExperimentTableProps{
     assayFilter : AssayFilter;
+    componentForAssay : React.FC<AssayComponentProps>; 
 }
 
 
@@ -60,8 +57,8 @@ export const ExperimentTable : React.FC<ExperimentTableProps> = (props : Experim
     } else {
         let assays = props.assayFilter(data);
         let experimentStartDate = data.experiment.start_date;
-        let weekNums = getAllWeeksCoveredByAssays(assays, experimentStartDate);
-        let conditions = data.conditions;
+        let weekNums = getAllWeeksCoveredByAssays(assays, experimentStartDate).sort((a : number, b : number) => a - b);
+        let conditions = data.conditions.sort();
         return (
             <Container>
                 <Table>
@@ -81,17 +78,7 @@ export const ExperimentTable : React.FC<ExperimentTableProps> = (props : Experim
                                     return (
                                         <TableCell key={condition.id} style={{border : "1px solid black"}}>
                                             <Stack>
-                                                {cellAssays.map((assay) => 
-                                                    <Button variant="contained" key={assay.id} style={{marginBottom : 2}} onClick={() => {
-                                                        setAssayIdBeingEdited(assay.id);
-                                                        setIsEditing(true);
-                                                    }}>
-                                                        <Typography key={assay.id}>
-                                                            {getNameForAssay(assay, data.assayTypes)}
-                                                        </Typography>
-                                                    </Button>
-                                                    )
-                                                }
+                                                {cellAssays.map((assay) => <props.componentForAssay assay={assay} experimentInfo={data} key={assay.id}/>)}
                                             </Stack>
 
                                         </TableCell>
