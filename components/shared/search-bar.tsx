@@ -43,7 +43,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-const SearchBar = (props: SearchBarProps) => {
+const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
     const [query, setQuery] = useState<string>("");
 
     const handleKeyDown = (event: KeyboardEvent) => {
