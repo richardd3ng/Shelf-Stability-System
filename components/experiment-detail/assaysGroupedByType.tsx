@@ -4,7 +4,6 @@ import { Accordion, Container, Typography, AccordionSummary, AccordionDetails } 
 import React from "react";
 import { LoadingContainer } from "../shared/loading";
 import { ErrorMessage } from "../shared/errorMessage";
-import { AssaysOfOneType } from "./assaysOfOneType";
 import { ExperimentTable } from "./experimentTable/experimentTable";
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { ExpandMore } from "@mui/icons-material";
