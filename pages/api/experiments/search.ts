@@ -9,19 +9,39 @@ export default async function handleSearch(
 ) {
     try {
         const { query } = req.query;
+        let experiments: Experiment[] | null = [];
 
-        const experiments: Experiment[] | null = await db.experiment.findMany({
-            where: {
-                OR: [
-                    { title: { contains: query as string } },
-                    { description: { contains: query as string } },
-                ],
-            },
-        });
-
+        if (!isNaN(Number(query))) {
+            const experiment: Experiment | null =
+                await db.experiment.findUnique({
+                    where: { id: parseInt(query as string) },
+                });
+            if (experiment) {
+                experiments = [experiment];
+            }
+        } else {
+            experiments = await db.experiment.findMany({
+                where: {
+                    OR: [
+                        {
+                            title: {
+                                contains: query as string,
+                                mode: "insensitive",
+                            },
+                        },
+                        {
+                            description: {
+                                contains: query as string,
+                                mode: "insensitive",
+                            },
+                        },
+                    ],
+                },
+            });
+        }
         res.status(200).json(experiments);
     } catch (error) {
-        console.error("Error fetching experiments:", error);
+        console.error("Error searching experiments:", error);
         res.status(500).json({
             message: "Internal server error",
             statusCode: 500,

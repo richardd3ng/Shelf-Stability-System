@@ -2,23 +2,22 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { Box, Button } from "@mui/material";
 
 interface SearchBarProps {
     placeholder: string;
-    onEnter: (searchText: string) => void;
+    onSearch: (searchText: string) => void;
 }
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
-    borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.black, 0.15),
     "&:hover": {
         backgroundColor: alpha(theme.palette.common.black, 0.25),
     },
     width: "100%",
-    [theme.breakpoints.up("sm")]: {
-        width: "auto",
-    },
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4,
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -48,7 +47,7 @@ const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
 
     const handleKeyDown = (event: KeyboardEvent) => {
         if (event.key === "Enter") {
-            props.onEnter(query);
+            props.onSearch(query);
         }
     };
 
@@ -57,17 +56,34 @@ const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
     };
 
     return (
-        <Search>
-            <SearchIconWrapper>
-                <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-                placeholder={props.placeholder}
-                inputProps={{ "aria-label": "search" }}
-                onKeyDown={handleKeyDown}
-                onChange={handleChange}
-            />
-        </Search>
+        <Box
+            display="flex"
+            sx={{
+                border: "1px solid rgba(0, 0, 0, 0.5)",
+                borderRadius: 2,
+            }}
+        >
+            <Search>
+                <SearchIconWrapper>
+                    <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                    placeholder={props.placeholder}
+                    inputProps={{ "aria-label": "search" }}
+                    onKeyDown={handleKeyDown}
+                    onChange={handleChange}
+                />
+            </Search>
+            <Button
+                sx={{
+                    width: 20,
+                    textTransform: "none",
+                }}
+                onClick={() => props.onSearch(query)}
+            >
+                Search
+            </Button>
+        </Box>
     );
 };
 
