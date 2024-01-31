@@ -6,3 +6,12 @@ export type ExperimentInfo = {
     assayTypes : AssayType[];
     assays : Assay[];
 }
+
+export type AssayInfo = {
+    id: number;
+    targetDate: Date;
+    title: string;
+    condition: string;
+    week: number;
+    type: string;
+}

@@ -39,7 +39,7 @@
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
 }
-
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -72,7 +72,7 @@
     --card-border-rgb: 200, 200, 200;
   }
 }
-
+*/
 * {
   box-sizing: border-box;
   padding: 0;
