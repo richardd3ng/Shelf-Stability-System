@@ -173,8 +173,8 @@ const ExperimentList: React.FC = () => {
                 >
                     <Container sx={{ flex: 2, marginRight: "25%" }}>
                         <SearchBar
-                            placeholder="Search Keyword"
-                            onEnter={queryAndSetData}
+                            placeholder="Enter Keyword"
+                            onSearch={queryAndSetData}
                         />
                     </Container>
                     <Button
@@ -183,6 +183,7 @@ const ExperimentList: React.FC = () => {
                             borderRadius: "8px",
                             flex: 1,
                             marginLeft: "auto",
+                            textTransform: "none",
                         }}
                         onClick={handleAddExperiment}
                     >
