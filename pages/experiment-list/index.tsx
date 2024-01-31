@@ -1,4 +1,4 @@
-import { Box, Button, Container, IconButton } from "@mui/material";
+import { Box, Button, Container, IconButton, Stack } from "@mui/material";
 import {
     GridColDef,
     GridRowSelectionModel,
@@ -12,7 +12,10 @@ import Table from "../../components/shared/table";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import ViewIcon from "@mui/icons-material/Visibility";
 import { ExperimentList } from "@/lib/controllers/types";
-import { fetchExperimentList } from "@/lib/controllers/fetchExperimentList";
+import {
+    fetchExperimentList,
+    queryExperimentList,
+} from "@/lib/controllers/experimentController";
 import { getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 
 interface ExperimentData {
@@ -22,8 +25,13 @@ interface ExperimentData {
     week: number;
 }
 
-const fetchExperiments = async (): Promise<ExperimentData[]> => {
-    const experimentList: ExperimentList = await fetchExperimentList();
+const getExperiments = async (query?: string): Promise<ExperimentData[]> => {
+    let experimentList: ExperimentList;
+    if (query && query.trim() !== "") {
+        experimentList = await queryExperimentList(query);
+    } else {
+        experimentList = await fetchExperimentList();
+    }
     const experimentData: ExperimentData[] = experimentList.experiments.map(
         (experiment) => ({
             id: experiment.id,
@@ -40,15 +48,19 @@ const ExperimentList: React.FC = () => {
     const [sortModel, setSortModel] = useState<GridSortModel>([]);
     const [showExperiementCreationDialog, setShowExperimentCreationDialog] =
         useState<boolean>(false);
-    const [query, setQuery] = useState<string>("");
 
     useEffect(() => {
         fetchAndSetData();
     }, [sortModel]);
 
     const fetchAndSetData = async () => {
-        const data: ExperimentData[] = await fetchExperiments();
-        setExperimentData(data);
+        const fetchedData: ExperimentData[] = await getExperiments();
+        setExperimentData(fetchedData);
+    };
+
+    const queryAndSetData = async (query: string) => {
+        const queriedData: ExperimentData[] = await getExperiments(query);
+        setExperimentData(queriedData);
     };
 
     const handleAddExperiment = () => {
@@ -64,11 +76,6 @@ const ExperimentList: React.FC = () => {
             (exp) => exp.id !== id
         );
         setExperimentData(updatedData);
-    };
-
-    const handleSearch = (query: string) => {
-        console.log("Search: ", query);
-        // TODO: Implement search on database
     };
 
     const handleCloseDialog = (reason: string) => {
@@ -156,46 +163,48 @@ const ExperimentList: React.FC = () => {
 
     return (
         <Layout>
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "left",
-                    paddingRight: 3,
-                }}
-            >
-                <Container sx={{ flex: 2, marginRight: "25%" }}>
-                    <SearchBar
-                        placeholder="Search Keyword"
-                        onEnter={handleSearch}
-                    />
-                </Container>
-                <Button
+            <Stack spacing={2}>
+                <Box
                     sx={{
-                        border: "1px solid #ccc",
-                        borderRadius: "8px",
-                        flex: 1,
-                        marginLeft: "auto",
+                        display: "flex",
+                        alignItems: "left",
+                        paddingRight: 3,
                     }}
-                    onClick={handleAddExperiment}
                 >
-                    Add Experiment
-                </Button>
-            </Box>
-            <Table
-                columns={createTableColumns()}
-                rows={experimentData}
-                pagination
-                onDeleteRows={(selectedRows: GridRowSelectionModel) =>
-                    handleDeleteExperiments(selectedRows)
-                }
-                onSortModelChange={(sortModel: GridSortModel) =>
-                    setSortModel(sortModel)
-                }
-            />
-            <ExperimentCreationDialog
-                open={showExperiementCreationDialog}
-                onClose={(reason: string) => handleCloseDialog(reason)}
-            />
+                    <Container sx={{ flex: 2, marginRight: "25%" }}>
+                        <SearchBar
+                            placeholder="Search Keyword"
+                            onEnter={queryAndSetData}
+                        />
+                    </Container>
+                    <Button
+                        sx={{
+                            border: "1px solid #ccc",
+                            borderRadius: "8px",
+                            flex: 1,
+                            marginLeft: "auto",
+                        }}
+                        onClick={handleAddExperiment}
+                    >
+                        Add Experiment
+                    </Button>
+                </Box>
+                <Table
+                    columns={createTableColumns()}
+                    rows={experimentData}
+                    pagination
+                    onDeleteRows={(selectedRows: GridRowSelectionModel) =>
+                        handleDeleteExperiments(selectedRows)
+                    }
+                    onSortModelChange={(sortModel: GridSortModel) =>
+                        setSortModel(sortModel)
+                    }
+                />
+                <ExperimentCreationDialog
+                    open={showExperiementCreationDialog}
+                    onClose={(reason: string) => handleCloseDialog(reason)}
+                />
+            </Stack>
         </Layout>
     );
 };
