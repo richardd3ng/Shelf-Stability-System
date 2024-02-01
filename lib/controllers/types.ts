@@ -1,4 +1,5 @@
 import { Experiment, Condition, Assay, AssayType } from "@prisma/client";
+import { ExperimentJSON } from "./jsonConversions";
 
 export type ExperimentInfo = {
     experiment: Experiment;
@@ -10,3 +11,10 @@ export type ExperimentInfo = {
 export type ExperimentList = {
     experiments: Experiment[];
 };
+
+// export type ExperimentAssayTypes = {
+//     assayTypes: AssayType[];
+// };
+
+export type ExperimentCreationData = Omit<ExperimentJSON, "id">;
+export type AssayTypeCreationData = Omit<AssayType, "id">;

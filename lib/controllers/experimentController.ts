@@ -4,58 +4,57 @@ import {
     JSONToExperiment,
     ExperimentJSON,
 } from "./jsonConversions";
-import { ExperimentInfo, ExperimentList } from "./types";
+import { ExperimentInfo, ExperimentList, ExperimentCreationData } from "./types";
+import { AssayType } from "@prisma/client";
 
 export const fetchExperimentList = async (): Promise<ExperimentList> => {
     let endpoint = "/api/experiments/list";
-    const apiResponse = await fetch(endpoint, {
+    const response = await fetch(endpoint, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
     });
-    if (apiResponse.ok) {
-        const resJson = await apiResponse.json();
+    if (response.ok) {
+        const resJson = await response.json();
         return {
             experiments: resJson.map((experiment: ExperimentJSON) =>
                 JSONToExperiment(experiment)
             ),
         };
     } else {
-        throw new Error("An error occurred");
+        throw new Error("Error: Failed to fetch experiment list");
     }
 };
 
 export const queryExperimentList = async (
     query: string
 ): Promise<ExperimentList> => {
-    console.log("controller query: ", query);
     const endpoint = `/api/experiments/search?query=${encodeURIComponent(
         query
     )}`;
-    const apiResponse = await fetch(endpoint, {
+    const response = await fetch(endpoint, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
     });
-    if (apiResponse.ok) {
-        const resJson = await apiResponse.json();
-        console.log("API response: ", resJson);
+    if (response.ok) {
+        const resJson = await response.json();
         return {
             experiments: resJson.map((experiment: ExperimentJSON) =>
                 JSONToExperiment(experiment)
             ),
         };
     } else {
-        throw new Error("An error occurred");
+        throw new Error("Error: Failed to query experiment list");
     }
 };
 
 export const fetchExperimentInfo = async (
     experimentId: number
 ): Promise<ExperimentInfo> => {
-    const apiResponse = await fetch(
+    const response = await fetch(
         "/api/experiments/" + experimentId.toString() + "/fetchExperimentInfo",
         {
             method: "GET",
@@ -64,8 +63,8 @@ export const fetchExperimentInfo = async (
             },
         }
     );
-    let resJson = await apiResponse.json();
-    if (apiResponse.status < 300) {
+    let resJson = await response.json();
+    if (response.status < 300) {
         return {
             experiment: JSONToExperiment(resJson.experiment),
             conditions: resJson.conditions,
@@ -75,6 +74,33 @@ export const fetchExperimentInfo = async (
             ),
         };
     } else {
-        throw new Error("An error occurred");
+        throw new Error("Error: Failed to fetch experiment info");
     }
 };
+
+export const createExperiment = async (experimentData: ExperimentCreationData) => {
+    const response = await fetch("/api/experiments/create", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(experimentData),
+    });
+
+    if (response.ok) {
+        const resJson = await response.json();
+        console.log("created experiment resJson: ", resJson);
+        return resJson;
+    } else {
+        if (response.status === 400) {
+            const resJson = await response.json();
+            const errorMessage =
+                resJson.error || "Bad request. Please check the provided data.";
+            throw new Error(`Error: ${errorMessage}`);
+        } else {
+            throw new Error("Error: Failed to create experiment");
+        }
+    }
+};
+
+export const deleteExperiment = async (experimentId: number) => {};

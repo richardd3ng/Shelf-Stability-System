@@ -11,7 +11,7 @@ export default async function getExperimentList(
         const experiments: Experiment[] | null = await db.experiment.findMany();
         res.status(200).json(experiments);
     } catch (error) {
-        console.error("Error fetching experiments:", error);
+        console.error("Error fetching experiments: ", error);
         res.status(500).json({
             message: "Internal server error",
             statusCode: 500,
