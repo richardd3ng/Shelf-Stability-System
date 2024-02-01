@@ -1,10 +1,10 @@
-import { Typography, Container } from "@mui/material";
+import { Typography } from "@mui/material";
 
-interface ErrorMessageProps{
-    message : string;
+interface ErrorMessageProps {
+    message: string;
 }
-export const ErrorMessage : React.FC<ErrorMessageProps> = (props : ErrorMessageProps) => {
-    return (
-        <Typography>{props.message}</Typography>
-    )
-}
+export const ErrorMessage: React.FC<ErrorMessageProps> = (
+    props: ErrorMessageProps
+) => {
+    return <Typography>{props.message}</Typography>;
+};
