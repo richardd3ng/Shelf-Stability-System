@@ -1,41 +1,43 @@
 {
-  "name": "shelf-stability-system",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
-    "@fontsource/roboto": "^5.0.8",
-    "@mui/icons-material": "^5.15.6",
-    "@mui/joy": "^5.0.0-beta.24",
-    "@mui/material": "^5.15.5",
-    "next": "14.1.0",
-    "react": "^18",
-    "react-dom": "^18"
-  },
-  "devDependencies": {
-    "@mui/material": "^5.15.6",
-    "@prisma/client": "^5.8.1",
-    "@types/next-auth": "^3.15.0",
-    "@types/react-query": "^1.2.9",
-    "next": "14.1.0",
-    "next-auth": "^4.24.5",
-    "prisma": "^5.8.1",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-query": "^3.39.3",
-    "@types/material-ui": "^0.21.16",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.0",
-    "typescript": "^5"
-  }
+    "name": "shelf-stability-system",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.11.3",
+        "@emotion/styled": "^11.11.0",
+        "@fontsource/roboto": "^5.0.8",
+        "@mui/icons-material": "^5.15.6",
+        "@mui/material": "^5.15.5",
+        "@mui/x-data-grid": "^6.19.2",
+        "@mui/x-date-pickers": "^6.19.2",
+        "dayjs": "^1.11.10",
+        "next": "14.1.0",
+        "react": "^18",
+        "react-dom": "^18"
+    },
+    "devDependencies": {
+        "@mui/material": "^5.15.6",
+        "@prisma/client": "^5.8.1",
+        "@types/material-ui": "^0.21.16",
+        "@types/next-auth": "^3.15.0",
+        "@types/node": "^20",
+        "@types/react": "^18",
+        "@types/react-dom": "^18",
+        "@types/react-query": "^1.2.9",
+        "eslint": "^8",
+        "eslint-config-next": "14.1.0",
+        "next": "14.1.0",
+        "next-auth": "^4.24.5",
+        "prisma": "^5.8.1",
+        "react": "^18",
+        "react-dom": "^18",
+        "react-query": "^3.39.3",
+        "typescript": "^5"
+    }
 }
