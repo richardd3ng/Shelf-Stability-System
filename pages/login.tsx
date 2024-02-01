@@ -3,7 +3,6 @@ import {Typography, Input, TextField, Container, Stack, Button} from "@mui/mater
 import { signIn } from "next-auth/react";
 
 export default function LoginPage(){
-    const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
 
@@ -11,9 +10,11 @@ export default function LoginPage(){
         <Container maxWidth="sm" style={{marginTop : 20, paddingTop : 20}}>
             <Typography align="center" variant="h3">Login</Typography>
 			<Stack direction="column" gap={1}>
-                <TextField value={username} onChange={(e) => setUsername(e.target.value)} label={"Username"}/>
                 <TextField value={password} onChange={(e) => setPassword(e.target.value)} label={"Password"}/>
-                <Button color="primary" variant="contained" onClick={() => signIn("credentials", {username, password, callbackUrl : "/"})}>Sign in</Button>
+                <Button color="primary" variant="contained" onClick={() => {
+                    console.log(password);
+                    signIn("credentials", {password, redirect : false});
+                }}>Sign in</Button>
 			</Stack>
 		</Container>
     )
