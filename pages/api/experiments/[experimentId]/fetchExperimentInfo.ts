@@ -23,6 +23,7 @@ export default async function getExperimentInfo(req: NextApiRequest, res: NextAp
     ]);    
     if (experiment){
         res.status(200).json({experiment, conditions, assayTypes, assays});
+        
     } else {
         res.status(404).json({message : "This experiment does not exist", statusCode : 404, name : "Experiment Not Found"});
     }
