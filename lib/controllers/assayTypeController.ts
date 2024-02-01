@@ -22,9 +22,9 @@ export const createAssayTypes = async (assayTypes: AssayTypeCreationData[]) => {
             const resJson = await response.json();
             const errorMessage =
                 resJson.error || "Bad request. Please check the provided data.";
-            throw new Error(`Error: ${errorMessage}`);
+            throw new Error(errorMessage);
         } else {
-            throw new Error("Error: Failed to create assay types");
+            throw new Error("Failed to create assay types");
         }
     }
 };

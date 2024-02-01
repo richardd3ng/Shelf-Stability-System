@@ -18,10 +18,11 @@ import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
 import dayjs from "dayjs";
 import { createAssayTypes } from "@/lib/controllers/assayTypeController";
+import { createConditions } from "@/lib/controllers/conditionController";
 import { createExperiment } from "@/lib/controllers/experimentController";
-import Error from "next/error";
 import {
     AssayTypeCreationData,
+    ConditionCreationData,
     ExperimentCreationData,
 } from "@/lib/controllers/types";
 
@@ -35,7 +36,6 @@ interface AssayScheduleRow {
     week: number;
 }
 
-const DEFAULT_ID = -1; // object IDs assigned by DB, -1 is a placeholder to be overwritten
 const MAX_TITLE_LENGTH = 50;
 const MAX_DESCRIPTION_LENGTH = 200;
 const mockAssayTypes = [
@@ -157,6 +157,17 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         };
                     });
                 createAssayTypes(assayTypes);
+                const conditions: ConditionCreationData[] =
+                    selectedStorageConditions.map(
+                        (condition: string, index: number) => {
+                            return {
+                                experimentId: experimentId,
+                                name: condition,
+                                control: index === 0,
+                            };
+                        }
+                    );
+                createConditions(conditions);
             }
         } catch (error) {
             alert(error);

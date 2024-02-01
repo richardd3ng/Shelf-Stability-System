@@ -18,3 +18,4 @@ export type ExperimentList = {
 
 export type ExperimentCreationData = Omit<ExperimentJSON, "id">;
 export type AssayTypeCreationData = Omit<AssayType, "id">;
+export type ConditionCreationData = Omit<Condition, "id">;
