@@ -51,7 +51,7 @@ const ExperimentList: React.FC = () => {
 
     useEffect(() => {
         fetchAndSetData();
-    }, [sortModel]);
+    }, [sortModel, showExperiementCreationDialog]);
 
     const fetchAndSetData = async () => {
         const fetchedData: ExperimentData[] = await getExperiments();

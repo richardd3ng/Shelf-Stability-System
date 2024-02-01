@@ -8,7 +8,6 @@ export default async function getExperimentInfo(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentInfo | ApiError>
 ) {
-    console.log("FETCHING ALL EXPERIMENTS FROM DB: ", req, res);
     const experimentId = getExperimentID(req);
 
     const [experiment, conditions, assays, assayTypes] = await Promise.all([
