@@ -14,4 +14,12 @@ export type AssayInfo = {
     condition: string;
     week: number;
     type: string;
+    result: string | null;
+}
+
+export type AssayTable = {
+    // Rows on this page
+    rows: AssayInfo[];
+    // Rows in the whole table
+    rowCount: number;
 }

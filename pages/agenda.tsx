@@ -1,63 +1,9 @@
 import { fetchAgendaList } from "@/lib/controllers/assays";
-import { AssayInfo } from "@/lib/controllers/types";
-import { CheckBox } from "@mui/icons-material";
-import { Box, Stack } from "@mui/material";
-import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
+import { AssayInfo, AssayTable } from "@/lib/controllers/types";
+import { Box, Stack, Checkbox, FormControlLabel } from "@mui/material";
+import { DataGrid, GridColDef, GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useEffect, useState } from "react";
-
-function fetchExperiments(): Assay[] {
-    return [
-        {
-            id: 100000,
-            targetDate: new Date("2024-01-25"),
-            title: "Pizza Experiment",
-            condition: "0F",
-            week: 3,
-            type: "Sensory"
-        },
-        {
-            id: 100001,
-            targetDate: new Date("2024-02-01"),
-            title: "Pizza Experiment",
-            condition: "0F",
-            week: 4,
-            type: "Hexanal"
-        },
-        {
-            id: 100002,
-            targetDate: new Date("2022-02-01"),
-            title: "Pizza Experiment",
-            condition: "0F",
-            week: 4,
-            type: "Sensory"
-        },
-        {
-            id: 100003,
-            targetDate: new Date("2022-02-01"),
-            title: "Cereal Experiment",
-            condition: "10F",
-            week: 2,
-            type: "Sensory"
-        },
-        {
-            id: 100004,
-            targetDate: new Date("2022-02-01"),
-            title: "Cereal Experiment",
-            condition: "20F",
-            week: 2,
-            type: "Sensory"
-        },
-        {
-            id: 100005,
-            targetDate: new Date("2022-02-08"),
-            title: "Cereal Experiment",
-            condition: "20F",
-            week: 3,
-            type: "Sensory"
-        },
-    ];
-};
 
 const colDefs: GridColDef[] = [
     {
@@ -102,19 +48,30 @@ export default function AssayAgenda() {
 
     const [fromDate, setFromDate] = useState<Date | null>(null);
     const [toDate, setToDate] = useState<Date | null>(null);
+    const [recordedAssaysOnly, setRecordedAssaysOnly] = useState<boolean>(false);
+    const [pagination, setPagination] = useState<GridPaginationModel>({ page: 0, pageSize: 25 });
+
     const [rows, setRows] = useState<AssayInfo[]>([]);
+    const [rowCount, setRowCount] = useState<number>(0);
 
     function reloadAgendaList() {
-        console.log(fromDate, toDate);
-        console.log(fromDate?.day());
         if ((fromDate !== null && isNaN(fromDate.day())) || (toDate !== null && isNaN(toDate.day()))) return;
-        console.log("fetching");
-        fetchAgendaList(fromDate, toDate).then((res) => setRows(res));
+        fetchAgendaList(fromDate, toDate, recordedAssaysOnly, sortModel, pagination).then((res: AssayTable) => {
+            setRows(res.rows);
+            setRowCount(res.rowCount);
+        });
     }
 
     useEffect(() => {
         reloadAgendaList();
-    }, [fromDate, toDate]);
+    }, [fromDate, toDate, recordedAssaysOnly, pagination]);
+
+    useEffect(() => {
+        // When sorting changes, only reload if paging is happening
+        if (rowCount > pagination.pageSize) {
+            reloadAgendaList();
+        }
+    }, [sortModel]);
 
     return (
         <Stack spacing={2}>
@@ -123,18 +80,25 @@ export default function AssayAgenda() {
                     <DatePicker value={fromDate} onChange={setFromDate} label="From" />
                     <DatePicker value={toDate} onChange={setToDate} label="To" />
                 </Stack>
-                <Box display="flex" flexDirection="row" justifyContent="flex-end " flexGrow="1" alignItems="center">
-                    <CheckBox />
-                    Include Recorded Assays
+                <Box display="flex" flexDirection="row" justifyContent="flex-end " flexGrow="1">
+                    <FormControlLabel control={
+                        <Checkbox value={recordedAssaysOnly} onChange={(e, val) => setRecordedAssaysOnly(val)} />
+                    } label="Include Recorded Assays" />
                 </Box>
             </Box>
             <DataGrid
                 rows={rows}
+                rowCount={rowCount}
                 columns={colDefs}
-                hideFooterPagination
+                rowSelection={false}
                 autoHeight
                 sortModel={sortModel}
                 onSortModelChange={setSortModel}
+                getCellClassName={(params) => params.row.result !== null ? "assay-cell-recorded" : "assay-cell-not-recorded"}
+                pagination
+                paginationModel={pagination}
+                onPaginationModelChange={setPagination}
+                paginationMode="server"
             />
         </Stack>
     );

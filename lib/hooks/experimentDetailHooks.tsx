@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult, useMutation, useQueryClient } from "react-query";
 import { fetchExperimentInfoThroughAPI } from "../controllers/fetchExperimentInfo";
 import { ExperimentInfo } from "../controllers/types";
-import { updateAssayResultThroughAPI } from "../controllers/updateAssayResult";
+import { updateAssayResultThroughAPI } from "../controllers/assays";
 import { useExperimentId } from "./useExperimentId";
 
 export const useExperimentInfo = (experimentId : number) : UseQueryResult<ExperimentInfo> => {
