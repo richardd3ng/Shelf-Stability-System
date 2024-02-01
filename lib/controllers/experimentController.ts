@@ -4,8 +4,11 @@ import {
     JSONToExperiment,
     ExperimentJSON,
 } from "./jsonConversions";
-import { ExperimentInfo, ExperimentList, ExperimentCreationData } from "./types";
-import { AssayType } from "@prisma/client";
+import {
+    ExperimentInfo,
+    ExperimentList,
+    ExperimentCreationData,
+} from "./types";
 
 export const fetchExperimentList = async (): Promise<ExperimentList> => {
     let endpoint = "/api/experiments/list";
@@ -78,7 +81,9 @@ export const fetchExperimentInfo = async (
     }
 };
 
-export const createExperiment = async (experimentData: ExperimentCreationData) => {
+export const createExperiment = async (
+    experimentData: ExperimentCreationData
+) => {
     const response = await fetch("/api/experiments/create", {
         method: "POST",
         headers: {

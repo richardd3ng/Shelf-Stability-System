@@ -3,7 +3,7 @@ import { Experiment } from "@prisma/client";
 import { db } from "@/lib/api/db";
 import { ApiError } from "next/dist/server/api-utils";
 
-export default async function handleSearch(
+export default async function searchExperiments(
     req: NextApiRequest,
     res: NextApiResponse<Experiment[] | ApiError>
 ) {
