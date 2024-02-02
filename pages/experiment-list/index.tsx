@@ -11,12 +11,12 @@ import SearchBar from "../../components/shared/search-bar";
 import Table from "../../components/shared/table";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import ViewIcon from "@mui/icons-material/Visibility";
-import { ExperimentList } from "@/lib/controllers/types";
 import {
     fetchExperimentList,
     queryExperimentList,
 } from "@/lib/controllers/experimentController";
 import { getNumWeeksAfterStartDate } from "@/lib/datesUtils";
+import { Experiment } from "@prisma/client";
 
 interface ExperimentData {
     id: number;
@@ -26,13 +26,13 @@ interface ExperimentData {
 }
 
 const getExperiments = async (query?: string): Promise<ExperimentData[]> => {
-    let experimentList: ExperimentList;
+    let experimentList: Experiment[];
     if (query && query.trim() !== "") {
         experimentList = await queryExperimentList(query);
     } else {
         experimentList = await fetchExperimentList();
     }
-    const experimentData: ExperimentData[] = experimentList.experiments.map(
+    const experimentData: ExperimentData[] = experimentList.map(
         (experiment) => ({
             id: experiment.id,
             title: experiment.title,

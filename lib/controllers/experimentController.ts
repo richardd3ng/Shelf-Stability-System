@@ -4,14 +4,10 @@ import {
     JSONToExperiment,
     ExperimentJSON,
 } from "./jsonConversions";
-import {
-    ExperimentInfo,
-    ExperimentList,
-    ExperimentCreationData,
-} from "./types";
+import { ExperimentInfo, ExperimentCreationData } from "./types";
 import { Experiment } from "@prisma/client";
 
-export const fetchExperimentList = async (): Promise<ExperimentList> => {
+export const fetchExperimentList = async (): Promise<Experiment[]> => {
     let endpoint = "/api/experiments/list";
     const response = await fetch(endpoint, {
         method: "GET",
@@ -20,12 +16,11 @@ export const fetchExperimentList = async (): Promise<ExperimentList> => {
         },
     });
     if (response.ok) {
-        const resJson = await response.json();
-        return {
-            experiments: resJson.map((experiment: ExperimentJSON) =>
-                JSONToExperiment(experiment)
-            ),
-        };
+        const resJson: ExperimentJSON[] = await response.json();
+        console.log("fetched experiments: ", resJson);
+        return resJson.map((experiment: ExperimentJSON) =>
+            JSONToExperiment(experiment)
+        );
     } else {
         throw new Error("Error: Failed to fetch experiment list");
     }
@@ -33,7 +28,7 @@ export const fetchExperimentList = async (): Promise<ExperimentList> => {
 
 export const queryExperimentList = async (
     query: string
-): Promise<ExperimentList> => {
+): Promise<Experiment[]> => {
     const endpoint = `/api/experiments/search?query=${encodeURIComponent(
         query
     )}`;
@@ -44,12 +39,10 @@ export const queryExperimentList = async (
         },
     });
     if (response.ok) {
-        const resJson = await response.json();
-        return {
-            experiments: resJson.map((experiment: ExperimentJSON) =>
-                JSONToExperiment(experiment)
-            ),
-        };
+        const resJson: ExperimentJSON[] = await response.json();
+        return resJson.map((experiment: ExperimentJSON) =>
+            JSONToExperiment(experiment)
+        );
     } else {
         throw new Error("Error: Failed to query experiment list");
     }
