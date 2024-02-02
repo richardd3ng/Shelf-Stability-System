@@ -10,7 +10,7 @@ export default async function createManyAssayTypes(
         const { assayTypes } = req.body;
         if (!assayTypes || assayTypes.length === 0) {
             res.status(400).json({
-                error: "At least one Assay Type is required.",
+                error: "At least one assay type is required.",
             });
             return;
         }

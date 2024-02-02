@@ -10,7 +10,7 @@ export default async function createManyConditions(
         const { conditions } = req.body;
         if (!conditions || conditions.length === 0) {
             res.status(400).json({
-                error: "At least one Condition is required.",
+                error: "At least one condition is required.",
             });
             return;
         }

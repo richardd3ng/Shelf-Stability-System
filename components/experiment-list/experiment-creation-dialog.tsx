@@ -17,7 +17,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
 import dayjs from "dayjs";
-import { createAssayTypes } from "@/lib/controllers/assayTypeController";
+import {
+    createAssayTypes,
+    fetchDistinctAssayTypes,
+} from "@/lib/controllers/assayTypeController";
 import {
     createConditions,
     fetchDistinctConditions,
@@ -70,8 +73,19 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [idCounter, setIdCounter] = useState<number>(1);
 
     useEffect(() => {
+        fetchAndSetAssayTypes();
         fetchAndSetStorageConditions();
     }, []);
+
+    const fetchAndSetAssayTypes = async () => {
+        try {
+            const distinctAssayTypes: string[] =
+                await fetchDistinctAssayTypes();
+            setAssayTypes(distinctAssayTypes);
+        } catch (error) {
+            alert("Error fetching assay types");
+        }
+    };
 
     const fetchAndSetStorageConditions = async () => {
         try {
