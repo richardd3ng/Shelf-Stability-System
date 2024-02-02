@@ -65,8 +65,8 @@ export default function AssayAgenda() {
 
     function reloadAgendaList() {
         if (
-            (fromDate !== null && isNaN(fromDate.getDay())) ||
-            (toDate !== null && isNaN(toDate.getDay()))
+            (fromDate !== null && isNaN(fromDate.day())) ||
+            (toDate !== null && isNaN(toDate.day()))
         )
             return;
         fetchAgendaList(
