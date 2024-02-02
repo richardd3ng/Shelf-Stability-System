@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Button,
@@ -18,7 +18,10 @@ import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
 import dayjs from "dayjs";
 import { createAssayTypes } from "@/lib/controllers/assayTypeController";
-import { createConditions } from "@/lib/controllers/conditionController";
+import {
+    createConditions,
+    fetchDistinctConditions,
+} from "@/lib/controllers/conditionController";
 import { createExperiment } from "@/lib/controllers/experimentController";
 import {
     AssayTypeCreationData,
@@ -47,14 +50,6 @@ const mockAssayTypes = [
     "Free fatty acid",
 ];
 
-const mockStorageConditions = [
-    "0 F",
-    "70F 38%",
-    "73F 50%",
-    "80F 65%",
-    "100F 20%",
-];
-
 const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     props: ExperimentCreationDialogProps
 ) => {
@@ -62,9 +57,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [description, setDescription] = useState<string>("");
     const [date, setDate] = useState<Date | null>(dayjs().toDate());
     const [assayTypes, setAssayTypes] = useState<string[]>(mockAssayTypes);
-    const [storageConditions, setStorageConditions] = useState<string[]>(
-        mockStorageConditions
-    );
+    const [storageConditions, setStorageConditions] = useState<string[]>([]);
     const [selectedAssayTypes, setSelectedAssayTypes] = useState<string[]>([]);
     const [selectedStorageConditions, setSelectedStorageConditions] = useState<
         string[]
@@ -75,6 +68,20 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         AssayScheduleRow[]
     >([]);
     const [idCounter, setIdCounter] = useState<number>(1);
+
+    useEffect(() => {
+        fetchAndSetStorageConditions();
+    }, []);
+
+    const fetchAndSetStorageConditions = async () => {
+        try {
+            const distinctConditions: string[] =
+                await fetchDistinctConditions();
+            setStorageConditions(distinctConditions);
+        } catch (error) {
+            alert("Error fetching storage conditions");
+        }
+    };
 
     const handleDateChange = (dayjs: dayjs.Dayjs | null) => {
         if (dayjs) {
