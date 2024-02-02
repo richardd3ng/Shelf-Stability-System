@@ -1,18 +1,24 @@
-import { ConditionCreationData, ConditionResponse } from "./types";
+import { Condition } from "@prisma/client";
+import { ConditionCreationData, ConditionNamesResponse } from "./types";
 
-export const createConditions = async (conditions: ConditionCreationData[]) => {
+export const createConditions = async (
+    conditions: ConditionCreationData[]
+): Promise<Condition[]> => {
+    if (!conditions || conditions.length === 0) {
+        return [];
+    }
     const response = await fetch("/api/conditions/createMany", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            experimentId: conditions[0].experimentId,
             conditions: conditions,
         }),
     });
-
     if (response.ok) {
-        const resJson = await response.json();
+        const resJson: Condition[] = await response.json();
         return resJson;
     } else {
         if (response.status === 400) {
@@ -33,10 +39,10 @@ export const fetchDistinctConditions = async (): Promise<string[]> => {
             "Content-Type": "application/json",
         },
     });
-    let resJson: ConditionResponse[] = await response.json();
+    const resJson: ConditionNamesResponse[] = await response.json();
     if (response.status < 300) {
         const distinctConditions: string[] = resJson.map(
-            (condition: ConditionResponse) => condition.name
+            (condition: ConditionNamesResponse) => condition.name
         );
         return distinctConditions;
     } else {

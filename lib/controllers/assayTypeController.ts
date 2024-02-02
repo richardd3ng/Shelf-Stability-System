@@ -1,21 +1,24 @@
 import { AssayType } from "@prisma/client";
-import { AssayTypeCreationData, AssayTypeResponse } from "./types";
+import { AssayTypeCreationData, AssayTypeNamesResponse } from "./types";
 
-// export const fetchAllAssayTypes = async (): Promise<AssayType[]> => {};
-
-export const createAssayTypes = async (assayTypes: AssayTypeCreationData[]) => {
+export const createAssayTypes = async (
+    assayTypes: AssayTypeCreationData[]
+): Promise<AssayType[]> => {
+    if (!assayTypes || assayTypes.length === 0) {
+        return [];
+    }
     const response = await fetch("/api/assayTypes/createMany", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            experimentId: assayTypes[0].experimentId,
             assayTypes: assayTypes,
         }),
     });
-
     if (response.ok) {
-        const resJson = await response.json();
+        const resJson: AssayType[] = await response.json();
         return resJson;
     } else {
         if (response.status === 400) {
@@ -36,10 +39,10 @@ export const fetchDistinctAssayTypes = async (): Promise<string[]> => {
             "Content-Type": "application/json",
         },
     });
-    let resJson: AssayTypeResponse[] = await response.json();
+    const resJson: AssayTypeNamesResponse[] = await response.json();
     if (response.status < 300) {
         const distinctAssayTypes: string[] = resJson.map(
-            (condition: AssayTypeResponse) => condition.name
+            (condition: AssayTypeNamesResponse) => condition.name
         );
         return distinctAssayTypes;
     } else {

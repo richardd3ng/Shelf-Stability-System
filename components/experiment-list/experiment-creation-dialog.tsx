@@ -31,6 +31,7 @@ import {
     ConditionCreationData,
     ExperimentCreationData,
 } from "@/lib/controllers/types";
+import { AssayType, Condition } from "@prisma/client";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -165,11 +166,11 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             start_date: date!.toISOString(),
         };
         try {
-            const resJson = await createExperiment(experimentData);
-            if (!("id" in resJson)) {
+            const experimentResJson = await createExperiment(experimentData);
+            if (!("id" in experimentResJson)) {
                 alert("Experiment ID not found in response");
             } else {
-                const experimentId = Number(resJson.id);
+                const experimentId = Number(experimentResJson.id);
                 const assayTypes: AssayTypeCreationData[] =
                     selectedAssayTypes.map((type: string) => {
                         return {
@@ -177,7 +178,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                             name: type,
                         };
                     });
-                createAssayTypes(assayTypes);
                 const conditions: ConditionCreationData[] =
                     selectedStorageConditions.map(
                         (condition: string, index: number) => {
@@ -188,12 +188,16 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                             };
                         }
                     );
-                createConditions(conditions);
+                const createdAssayTypes: AssayType[] = await createAssayTypes(
+                    assayTypes
+                );
+                const createdConditions: Condition[] = await createConditions(
+                    conditions
+                );
             }
         } catch (error) {
             alert(error);
         }
-
         resetFields();
         props.onClose(reason);
     };

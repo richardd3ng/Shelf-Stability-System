@@ -9,6 +9,7 @@ import {
     ExperimentList,
     ExperimentCreationData,
 } from "./types";
+import { Experiment } from "@prisma/client";
 
 export const fetchExperimentList = async (): Promise<ExperimentList> => {
     let endpoint = "/api/experiments/list";
@@ -93,8 +94,7 @@ export const createExperiment = async (
     });
 
     if (response.ok) {
-        const resJson = await response.json();
-        console.log("created experiment resJson: ", resJson);
+        const resJson: Experiment = await response.json();
         return resJson;
     } else {
         if (response.status === 400) {
