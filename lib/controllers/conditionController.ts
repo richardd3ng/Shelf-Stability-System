@@ -40,6 +40,6 @@ export const fetchDistinctConditions = async (): Promise<string[]> => {
         );
         return distinctConditions;
     } else {
-        throw new Error("Error: Failed to fetch distinct condition names");
+        throw new Error("Error: Failed to fetch distinct conditions");
     }
 };
