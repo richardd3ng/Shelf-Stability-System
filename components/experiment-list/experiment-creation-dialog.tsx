@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
     Box,
     Button,
@@ -13,6 +13,7 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
+import { GridApiCommunity } from "@mui/x-data-grid/internals";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
@@ -54,6 +55,10 @@ const mockAssayTypes = [
     "Free fatty acid",
 ];
 
+interface ScheduledAssayType {
+    [key: string]: string[];
+}
+
 const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     props: ExperimentCreationDialogProps
 ) => {
@@ -72,6 +77,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         AssayScheduleRow[]
     >([]);
     const [idCounter, setIdCounter] = useState<number>(1);
+    const tableRef = useRef<GridApiCommunity | null>(null);
 
     useEffect(() => {
         fetchAndSetAssayTypes();
@@ -129,6 +135,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         };
         setAssayScheduleRows([...assayScheduleRows, addedRow]);
         setIdCounter(idCounter + 1);
+        console.log("rows: ", tableRef.current?.getRowModels());
     };
 
     const handleDeleteWeeks = (selectedRows: GridRowSelectionModel) => {
@@ -251,7 +258,16 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 editable: true,
                 sortable: false,
             }));
-        return [weekColumn, ...storageConditionColumns];
+        const columns: GridColDef[] = [weekColumn, ...storageConditionColumns];
+        columns.concat({
+            field: "__HIDDEN__",
+            width: 0,
+            renderCell: (params) => {
+                tableRef.current = params.api;
+                return null;
+            },
+        });
+        return columns;
     };
 
     const tableAddWeekFooter: React.FC = () => {
