@@ -3,6 +3,7 @@ import { AssayInfo, AssayTable } from "@/lib/controllers/types";
 import { Box, Stack, Checkbox, FormControlLabel } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
 import { DatePicker } from "@mui/x-date-pickers";
+import { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 
 const colDefs: GridColDef[] = [
@@ -46,8 +47,8 @@ export default function AssayAgenda() {
         },
     ]);
 
-    const [fromDate, setFromDate] = useState<Date | null>(null);
-    const [toDate, setToDate] = useState<Date | null>(null);
+    const [fromDate, setFromDate] = useState<Dayjs | null>(null);
+    const [toDate, setToDate] = useState<Dayjs | null>(null);
     const [recordedAssaysOnly, setRecordedAssaysOnly] = useState<boolean>(false);
     const [pagination, setPagination] = useState<GridPaginationModel>({ page: 0, pageSize: 25 });
 

@@ -1,7 +1,8 @@
 import { GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
 import { AssayTable } from "./types";
+import { Dayjs } from "dayjs";
 
-export const fetchAgendaList = async (minDate: Date | null, maxDate: Date | null, includeRecorded: boolean, sortModel: GridSortModel, pagination: GridPaginationModel) : Promise<AssayTable> => {
+export const fetchAgendaList = async (minDate: Dayjs | null, maxDate: Dayjs | null, includeRecorded: boolean, sortModel: GridSortModel, pagination: GridPaginationModel) : Promise<AssayTable> => {
     const url = new URL("/api/assays/agenda", typeof window !== "undefined" ? window.location.origin : undefined);
     if (sortModel.length > 0 && sortModel[0].sort !== null && sortModel[0].sort !== undefined) {
         url.searchParams.set("sort_by", sortModel[0].field);
@@ -12,10 +13,10 @@ export const fetchAgendaList = async (minDate: Date | null, maxDate: Date | null
 
     url.searchParams.set("include_recorded", includeRecorded.toString());
     if (minDate !== null) {
-        url.searchParams.set("minDate", minDate.toISOString());
+        url.searchParams.set("minDate", minDate.format('YYYY-MM-DD'));
     }
     if (maxDate !== null) {
-        url.searchParams.set("maxDate", maxDate.toISOString());
+        url.searchParams.set("maxDate", maxDate.format('YYYY-MM-DD'));
     }
 
     const apiResponse = await fetch(url, {
