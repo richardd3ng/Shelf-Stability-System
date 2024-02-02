@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Button,
@@ -12,11 +12,25 @@ import {
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
 import dayjs from "dayjs";
-import { GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
+import {
+    createAssayTypes,
+    fetchDistinctAssayTypes,
+} from "@/lib/controllers/assayTypeController";
+import {
+    createConditions,
+    fetchDistinctConditions,
+} from "@/lib/controllers/conditionController";
+import { createExperiment } from "@/lib/controllers/experimentController";
+import {
+    AssayTypeCreationData,
+    ConditionCreationData,
+    ExperimentCreationData,
+} from "@/lib/controllers/types";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -39,26 +53,14 @@ const mockAssayTypes = [
     "Free fatty acid",
 ];
 
-const mockStorageConditions = [
-    "0 F",
-    "70F 38%",
-    "73F 50%",
-    "80F 65%",
-    "100F 20%",
-];
-
 const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     props: ExperimentCreationDialogProps
 ) => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [selectedDate, setSelectedDate] = useState<Date | null>(
-        dayjs().toDate()
-    );
+    const [date, setDate] = useState<Date | null>(dayjs().toDate());
     const [assayTypes, setAssayTypes] = useState<string[]>(mockAssayTypes);
-    const [storageConditions, setStorageConditions] = useState<string[]>(
-        mockStorageConditions
-    );
+    const [storageConditions, setStorageConditions] = useState<string[]>([]);
     const [selectedAssayTypes, setSelectedAssayTypes] = useState<string[]>([]);
     const [selectedStorageConditions, setSelectedStorageConditions] = useState<
         string[]
@@ -70,11 +72,36 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     >([]);
     const [idCounter, setIdCounter] = useState<number>(1);
 
+    useEffect(() => {
+        fetchAndSetAssayTypes();
+        fetchAndSetStorageConditions();
+    }, []);
+
+    const fetchAndSetAssayTypes = async () => {
+        try {
+            const distinctAssayTypes: string[] =
+                await fetchDistinctAssayTypes();
+            setAssayTypes(distinctAssayTypes);
+        } catch (error) {
+            alert("Error fetching assay types");
+        }
+    };
+
+    const fetchAndSetStorageConditions = async () => {
+        try {
+            const distinctConditions: string[] =
+                await fetchDistinctConditions();
+            setStorageConditions(distinctConditions);
+        } catch (error) {
+            alert("Error fetching storage conditions");
+        }
+    };
+
     const handleDateChange = (dayjs: dayjs.Dayjs | null) => {
         if (dayjs) {
-            setSelectedDate(dayjs.toDate());
+            setDate(dayjs.toDate());
         } else {
-            setSelectedDate(null);
+            setDate(null);
         }
     };
 
@@ -110,12 +137,12 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         setAssayScheduleRows(remainingRows);
     };
 
-    const handleCreateExperiment = (reason: string) => {
+    const handleCreateExperiment = async (reason: string) => {
         const missingComponents: string[] = [];
         if (!title.trim()) {
             missingComponents.push("title");
         }
-        if (!selectedDate) {
+        if (!date) {
             missingComponents.push("start date");
         }
         if (missingComponents.length > 0) {
@@ -125,22 +152,64 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             } else {
                 alertMessage += "the following details for the experiment: ";
                 alertMessage += missingComponents.slice(0, -1).join(", ");
-                alertMessage += `, and ${
+                alertMessage += `, ${
                     missingComponents[missingComponents.length - 1]
                 }.`;
             }
             alert(alertMessage);
             return;
         }
-        // TODO: Create experiment in database
+        const experimentData: ExperimentCreationData = {
+            title: title,
+            description: description,
+            start_date: date!.toISOString(),
+        };
+        try {
+            const resJson = await createExperiment(experimentData);
+            if (!("id" in resJson)) {
+                alert("Experiment ID not found in response");
+            } else {
+                const experimentId = Number(resJson.id);
+                const assayTypes: AssayTypeCreationData[] =
+                    selectedAssayTypes.map((type: string) => {
+                        return {
+                            experimentId: experimentId,
+                            name: type,
+                        };
+                    });
+                createAssayTypes(assayTypes);
+                const conditions: ConditionCreationData[] =
+                    selectedStorageConditions.map(
+                        (condition: string, index: number) => {
+                            return {
+                                experimentId: experimentId,
+                                name: condition,
+                                control: index === 0,
+                            };
+                        }
+                    );
+                createConditions(conditions);
+            }
+        } catch (error) {
+            alert(error);
+        }
+
+        resetFields();
         props.onClose(reason);
     };
 
     const handleCancelExperiment = (reason: string) => {
+        resetFields();
+        props.onClose(reason);
+    };
+
+    const resetFields = () => {
+        setTitle("");
+        setDescription("");
+        setDate(dayjs().toDate());
         setSelectedAssayTypes([]);
         setSelectedStorageConditions([]);
         setAssayScheduleRows([]);
-        props.onClose(reason);
     };
 
     const createTableColumns = (): GridColDef[] => {
@@ -229,7 +298,8 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             <DialogContent sx={{ width: 600 }}>
                 <Stack spacing={1.5}>
                     <DialogContentText>
-                        Fill in the details for the new experiment.
+                        Fill in the details for the new experiment (* indicates
+                        required fields).
                     </DialogContentText>
                     <TextField
                         autoFocus
@@ -241,6 +311,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                             maxLength: MAX_TITLE_LENGTH,
                         }}
                         helperText={`${title.length}/${MAX_TITLE_LENGTH} characters`}
+                        required
                     />
                     <TextField
                         autoFocus
@@ -260,6 +331,11 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                             label="Start Date"
                             defaultValue={dayjs()}
                             onChange={(newDate) => handleDateChange(newDate)}
+                            slotProps={{
+                                textField: {
+                                    required: true,
+                                },
+                            }}
                         />
                     </LocalizationProvider>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -288,7 +364,12 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                                     style: { fontSize: "0.8rem" },
                                 }}
                             />
-                            <Button onClick={handleAddAssayType}>Add</Button>
+                            <Button
+                                sx={{ textTransform: "none" }}
+                                onClick={handleAddAssayType}
+                            >
+                                Add
+                            </Button>
                         </Box>
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -319,7 +400,10 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                                     style: { fontSize: "0.8rem" },
                                 }}
                             />
-                            <Button onClick={handleAddStorageCondition}>
+                            <Button
+                                sx={{ textTransform: "none" }}
+                                onClick={handleAddStorageCondition}
+                            >
                                 Add
                             </Button>
                         </Box>
@@ -344,10 +428,16 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => handleCancelExperiment("Cancel")}>
+                <Button
+                    sx={{ textTransform: "none" }}
+                    onClick={() => handleCancelExperiment("Cancel")}
+                >
                     Cancel
                 </Button>
-                <Button onClick={() => handleCreateExperiment("Create")}>
+                <Button
+                    sx={{ textTransform: "none" }}
+                    onClick={() => handleCreateExperiment("Create")}
+                >
                     Create
                 </Button>
             </DialogActions>

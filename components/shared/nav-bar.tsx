@@ -1,73 +1,33 @@
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import React from "react";
+import { Button, AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { useRouter } from "next/router";
 
-const NavBar: React.FC = () => {
+interface NavBarButtonProps {
+    text : string;
+    onClick : () => void;
+}
+const NavBarButton : React.FC<NavBarButtonProps> = (props : NavBarButtonProps) => {
     return (
-        <AppBar position="static">
-            <Toolbar sx={{ display: "flex" }}>
-                <Typography
-                    variant="h6"
-                    noWrap
-                    component="div"
-                    sx={{
-                        flex: 1,
-                        display: { xs: "none", sm: "block" },
-                    }}
-                >
+        <Button color="inherit" style={{textTransform : "none"}} onClick={props.onClick}>
+            <Typography>{props.text}</Typography>
+        </Button>
+    );
+}
+const NavBar: React.FC = () => {
+    const router = useRouter();
+    const options : NavBarButtonProps[] = [
+        {text : "Experiments", onClick : () => router.push("/experiment-list")}
+
+    ]
+    return (
+        <AppBar position="sticky" color="primary">
+            <Toolbar >
+                <Typography variant="h6"  style={{ flexGrow: 1, cursor : "pointer" }}>
                     Shelf Stability Tracking System
                 </Typography>
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        flex: 1,
-                        justifyContent: "center",
-                    }}
-                >
-                    <Link
-                        href="#"
-                        color="inherit"
-                        sx={{
-                            marginRight: "33%",
-                            textDecoration: "none",
-                            "&:hover": { textDecoration: "underline" },
-                        }}
-                    >
-                        Experiments
-                    </Link>
-                    <Link
-                        href="#"
-                        color="inherit"
-                        sx={{
-                            marginRight: "50%",
-                            textDecoration: "none",
-                            "&:hover": { textDecoration: "underline" },
-                        }}
-                    >
-                        Agenda
-                    </Link>
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                    }}
-                >
-                    <Link
-                        href="#"
-                        color="inherit"
-                        sx={{
-                            textDecoration: "none",
-                            "&:hover": { textDecoration: "underline" },
-                        }}
-                    >
-                        Sign Out
-                    </Link>
-                </Box>
+
+                {options.map((option, index) => <NavBarButton key={index} text={option.text} onClick={option.onClick}/>)}
+
             </Toolbar>
         </AppBar>
     );
