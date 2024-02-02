@@ -6,7 +6,7 @@ import {
 } from "react-query";
 import { fetchExperimentInfo } from "../controllers/experimentController";
 import { ExperimentInfo } from "../controllers/types";
-import { updateAssayResultThroughAPI } from "../controllers/assays";
+import { updateAssayResultThroughAPI } from "../controllers/assayController";
 import { useExperimentId } from "./useExperimentId";
 
 export const useExperimentInfo = (

@@ -1,4 +1,4 @@
-import { fetchAgendaList } from "@/lib/controllers/assays";
+import { fetchAgendaList } from "@/lib/controllers/assayController";
 import { AssayInfo, AssayTable } from "@/lib/controllers/types";
 import { Box, Stack, Checkbox, FormControlLabel } from "@mui/material";
 import {
