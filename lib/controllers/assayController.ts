@@ -10,12 +10,12 @@ export const createAssays = async (assays: AssayCreationData[]) => {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ assays }),
+        body: JSON.stringify({ assays: assays }),
     });
     if (response.ok) {
         const resJson: Assay[] = await response.json();
         return resJson;
     } else {
-        throw new Error("Error: Failed to create assays");
+        throw new Error("Failed to create assays");
     }
 };

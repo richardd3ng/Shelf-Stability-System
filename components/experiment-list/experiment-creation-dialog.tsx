@@ -17,6 +17,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
 import dayjs from "dayjs";
+import { createAssays } from "@/lib/controllers/assayController";
 import {
     createAssayTypes,
     fetchDistinctAssayTypes,
@@ -171,120 +172,91 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             start_date: date!.toISOString(),
         };
         try {
-            // const experimentResJson: Experiment = await createExperiment(
-            //     experimentData
-            // );
-            const experimentResJson = {
-                id: 1,
-                title: experimentData.title,
-                description: experimentData.description,
-                start_date: experimentData.start_date,
-            };
-            if (!("id" in experimentResJson)) {
-                alert("Experiment ID not found in response");
-            } else {
-                const experimentId = experimentResJson.id;
-                const assayTypes: AssayTypeCreationData[] =
-                    selectedAssayTypes.map((type: string) => {
+            const experimentResJson: Experiment = await createExperiment(
+                experimentData
+            );
+            const experimentId = experimentResJson.id;
+            const assayTypes: AssayTypeCreationData[] = selectedAssayTypes.map(
+                (type: string) => {
+                    return {
+                        experimentId: experimentId,
+                        name: type,
+                    };
+                }
+            );
+            const conditions: ConditionCreationData[] =
+                selectedStorageConditions.map(
+                    (condition: string, index: number) => {
                         return {
                             experimentId: experimentId,
-                            name: type,
+                            name: condition,
+                            control: index === 0,
                         };
-                    });
-                const conditions: ConditionCreationData[] =
-                    selectedStorageConditions.map(
-                        (condition: string, index: number) => {
-                            return {
-                                experimentId: experimentId,
-                                name: condition,
-                                control: index === 0,
-                            };
-                        }
-                    );
-                // const [createdAssayTypes, createdConditions]: [
-                //     AssayType[],
-                //     Condition[]
-                // ] = await Promise.all([
-                //     createAssayTypes(assayTypes),
-                //     createConditions(conditions),
-                // ]);
-
-                const createdAssayTypes: AssayType[] = assayTypes.map(
-                    (type, index) => ({
-                        experimentId: experimentId,
-                        id: index,
-                        name: type.name,
-                    })
+                    }
                 );
-
-                const createdConditions: Condition[] = conditions.map(
-                    (condition, index) => ({
-                        experimentId: experimentId,
-                        id: index,
-                        name: condition.name,
-                        control: condition.control,
-                    })
-                );
-
-                const assayTypeToId = new Map<string, number>(
-                    createdAssayTypes.map((type) => [type.name, type.id])
-                );
-                const conditionToId = new Map<string, number>(
-                    createdConditions.map((condition) => [
-                        condition.name,
-                        condition.id,
-                    ])
-                );
-                const rowIdToWeek = new Map<number, number>(
-                    weekRows.map((row) => [row.id, row.week])
-                );
-                const assayCreationData: AssayCreationData[] = [];
-                Object.entries(assayScheduleTypeMap).forEach(
-                    ([rowId, conditionsMap]) => {
-                        Object.entries(conditionsMap).forEach(
-                            ([condition, types]) => {
-                                const conditionId =
-                                    conditionToId.get(condition);
-                                if (conditionId === undefined) {
+            const [createdAssayTypes, createdConditions]: [
+                AssayType[],
+                Condition[]
+            ] = await Promise.all([
+                createAssayTypes(assayTypes),
+                createConditions(conditions),
+            ]);
+            const assayTypeToId = new Map<string, number>(
+                createdAssayTypes.map((type) => [type.name, type.id])
+            );
+            const conditionToId = new Map<string, number>(
+                createdConditions.map((condition) => [
+                    condition.name,
+                    condition.id,
+                ])
+            );
+            const rowIdToWeek = new Map<number, number>(
+                weekRows.map((row) => [row.id, row.week])
+            );
+            const assayCreationData: AssayCreationData[] = [];
+            Object.entries(assayScheduleTypeMap).forEach(
+                ([rowId, conditionsMap]) => {
+                    Object.entries(conditionsMap).forEach(
+                        ([condition, types]) => {
+                            const conditionId = conditionToId.get(condition);
+                            if (conditionId === undefined) {
+                                alert(
+                                    `Condition ID not found for ${condition}`
+                                );
+                                return;
+                            }
+                            (types as string[]).forEach((type) => {
+                                const typeId = assayTypeToId.get(type);
+                                if (typeId === undefined) {
                                     alert(
-                                        `Condition ID not found for ${condition}`
+                                        `Assay type ID not found for ${type}`
                                     );
                                     return;
                                 }
-                                (types as string[]).forEach((type) => {
-                                    const typeId = assayTypeToId.get(type);
-                                    if (typeId === undefined) {
-                                        alert(
-                                            `Assay type ID not found for ${type}`
-                                        );
-                                        return;
-                                    }
-                                    assayCreationData.push({
-                                        experimentId: experimentId,
-                                        conditionId: conditionId,
-                                        typeId: typeId,
-                                        target_date: dayjs()
-                                            .add(
-                                                rowIdToWeek.get(
-                                                    parseInt(rowId)
-                                                ) || 0,
-                                                "weeks"
-                                            )
-                                            .toDate(),
-                                        result: null,
-                                    });
+                                assayCreationData.push({
+                                    experimentId: experimentId,
+                                    conditionId: conditionId,
+                                    typeId: typeId,
+                                    target_date: dayjs()
+                                        .add(
+                                            rowIdToWeek.get(parseInt(rowId)) ||
+                                                0,
+                                            "weeks"
+                                        )
+                                        .toDate(),
+                                    result: null,
                                 });
-                            }
-                        );
-                    }
-                );
-                console.log("assayCreationData:", assayCreationData);
-            }
+                            });
+                        }
+                    );
+                }
+            );
+            createAssays(assayCreationData);
         } catch (error) {
             alert(error);
         }
-        // resetFields();
-        // props.onClose(reason);
+        resetFields();
+        props.onClose(reason);
     };
 
     const handleAddAssayType = () => {
