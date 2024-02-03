@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import {
     Box,
     Checkbox,
@@ -22,7 +22,7 @@ interface MultiSelectDropdownProps {
 const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = (
     props: MultiSelectDropdownProps
 ) => {
-    const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
+    const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const isSmall = props.size === "small";
     const sizeConfig = {
         labelFontSize: isSmall ? "0.75rem" : "1rem",
@@ -32,6 +32,13 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = (
         menuWidth: isSmall ? 120 : 300,
         marginY: isSmall ? 1 : 0,
     };
+
+    useEffect(() => {
+        const updatedSelectedItems: string[] = selectedItems.filter(
+            (item: string) => props.items.includes(item)
+        );
+        setSelectedItems(updatedSelectedItems);
+    }, [props.items, selectedItems]);
 
     const handleChange = (event: SelectChangeEvent<typeof selectedItems>) => {
         const {

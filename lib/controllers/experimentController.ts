@@ -17,7 +17,6 @@ export const fetchExperimentList = async (): Promise<Experiment[]> => {
     });
     if (response.ok) {
         const resJson: ExperimentJSON[] = await response.json();
-        console.log("fetched experiments: ", resJson);
         return resJson.map((experiment: ExperimentJSON) =>
             JSONToExperiment(experiment)
         );

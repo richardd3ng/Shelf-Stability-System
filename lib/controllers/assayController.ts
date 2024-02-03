@@ -1,6 +1,10 @@
+import { Assay } from "@prisma/client";
 import { AssayCreationData } from "./types";
 
 export const createAssays = async (assays: AssayCreationData[]) => {
+    if (!assays || assays.length === 0) {
+        return [];
+    }
     const response = await fetch("/api/assays/createMany", {
         method: "POST",
         headers: {
@@ -9,7 +13,8 @@ export const createAssays = async (assays: AssayCreationData[]) => {
         body: JSON.stringify({ assays }),
     });
     if (response.ok) {
-        return response.json();
+        const resJson: Assay[] = await response.json();
+        return resJson;
     } else {
         throw new Error("Error: Failed to create assays");
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Button,
@@ -13,7 +13,6 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
-import { GridApiCommunity } from "@mui/x-data-grid/internals";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
@@ -28,36 +27,31 @@ import {
 } from "@/lib/controllers/conditionController";
 import { createExperiment } from "@/lib/controllers/experimentController";
 import {
+    AssayCreationData,
     AssayTypeCreationData,
     ConditionCreationData,
     ExperimentCreationData,
 } from "@/lib/controllers/types";
-import { AssayType, Condition } from "@prisma/client";
+import { AssayType, Condition, Experiment } from "@prisma/client";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
     onClose: (reason: string) => void;
 }
 
-interface AssayScheduleRow {
+interface WeekRow {
     id: number;
     week: number;
 }
 
+interface AssayScheduleTypesMap {
+    [rowId: number]: {
+        [condition: string]: string[];
+    };
+}
+
 const MAX_TITLE_LENGTH = 50;
 const MAX_DESCRIPTION_LENGTH = 200;
-const mockAssayTypes = [
-    "Sensory",
-    "Moisture",
-    "Hexanal",
-    "Peroxide value",
-    "Anisidine",
-    "Free fatty acid",
-];
-
-interface ScheduledAssayType {
-    [key: string]: string[];
-}
 
 const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     props: ExperimentCreationDialogProps
@@ -65,7 +59,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [date, setDate] = useState<Date | null>(dayjs().toDate());
-    const [assayTypes, setAssayTypes] = useState<string[]>(mockAssayTypes);
+    const [assayTypes, setAssayTypes] = useState<string[]>([]);
     const [storageConditions, setStorageConditions] = useState<string[]>([]);
     const [selectedAssayTypes, setSelectedAssayTypes] = useState<string[]>([]);
     const [selectedStorageConditions, setSelectedStorageConditions] = useState<
@@ -73,11 +67,10 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     >([]);
     const [newAssayType, setNewAssayType] = useState<string>("");
     const [newStorageCondition, setNewStorageCondition] = useState<string>("");
-    const [assayScheduleRows, setAssayScheduleRows] = useState<
-        AssayScheduleRow[]
-    >([]);
+    const [weekRows, setWeekRows] = useState<WeekRow[]>([]);
     const [idCounter, setIdCounter] = useState<number>(1);
-    const tableRef = useRef<GridApiCommunity | null>(null);
+    const [assayScheduleTypeMap, setAssayScheduleTypeMap] =
+        useState<AssayScheduleTypesMap>({});
 
     useEffect(() => {
         fetchAndSetAssayTypes();
@@ -129,20 +122,25 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     };
 
     const handleAddWeek = () => {
-        const addedRow: AssayScheduleRow = {
+        const addedRow: WeekRow = {
             id: idCounter,
             week: 0,
         };
-        setAssayScheduleRows([...assayScheduleRows, addedRow]);
+        setWeekRows([...weekRows, addedRow]);
         setIdCounter(idCounter + 1);
-        console.log("rows: ", tableRef.current?.getRowModels());
     };
 
     const handleDeleteWeeks = (selectedRows: GridRowSelectionModel) => {
-        const remainingRows = assayScheduleRows.filter(
+        const newMap: AssayScheduleTypesMap = Object.fromEntries(
+            Object.entries(assayScheduleTypeMap).filter(
+                ([rowId]) => !selectedRows.includes(Number(rowId))
+            )
+        );
+        setAssayScheduleTypeMap(newMap);
+        const remainingRows: WeekRow[] = weekRows.filter(
             (row) => !selectedRows.includes(row.id)
         );
-        setAssayScheduleRows(remainingRows);
+        setWeekRows(remainingRows);
     };
 
     const handleCreateExperiment = async (reason: string) => {
@@ -173,11 +171,19 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             start_date: date!.toISOString(),
         };
         try {
-            const experimentResJson = await createExperiment(experimentData);
+            // const experimentResJson: Experiment = await createExperiment(
+            //     experimentData
+            // );
+            const experimentResJson = {
+                id: 1,
+                title: experimentData.title,
+                description: experimentData.description,
+                start_date: experimentData.start_date,
+            };
             if (!("id" in experimentResJson)) {
                 alert("Experiment ID not found in response");
             } else {
-                const experimentId = Number(experimentResJson.id);
+                const experimentId = experimentResJson.id;
                 const assayTypes: AssayTypeCreationData[] =
                     selectedAssayTypes.map((type: string) => {
                         return {
@@ -195,100 +201,90 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                             };
                         }
                     );
-                const createdAssayTypes: AssayType[] = await createAssayTypes(
-                    assayTypes
+                // const [createdAssayTypes, createdConditions]: [
+                //     AssayType[],
+                //     Condition[]
+                // ] = await Promise.all([
+                //     createAssayTypes(assayTypes),
+                //     createConditions(conditions),
+                // ]);
+
+                const createdAssayTypes: AssayType[] = assayTypes.map(
+                    (type, index) => ({
+                        experimentId: experimentId,
+                        id: index,
+                        name: type.name,
+                    })
                 );
-                const createdConditions: Condition[] = await createConditions(
-                    conditions
+
+                const createdConditions: Condition[] = conditions.map(
+                    (condition, index) => ({
+                        experimentId: experimentId,
+                        id: index,
+                        name: condition.name,
+                        control: condition.control,
+                    })
                 );
+
+                const assayTypeToId = new Map<string, number>(
+                    createdAssayTypes.map((type) => [type.name, type.id])
+                );
+                const conditionToId = new Map<string, number>(
+                    createdConditions.map((condition) => [
+                        condition.name,
+                        condition.id,
+                    ])
+                );
+                const rowIdToWeek = new Map<number, number>(
+                    weekRows.map((row) => [row.id, row.week])
+                );
+                const assayCreationData: AssayCreationData[] = [];
+                Object.entries(assayScheduleTypeMap).forEach(
+                    ([rowId, conditionsMap]) => {
+                        Object.entries(conditionsMap).forEach(
+                            ([condition, types]) => {
+                                const conditionId =
+                                    conditionToId.get(condition);
+                                if (conditionId === undefined) {
+                                    alert(
+                                        `Condition ID not found for ${condition}`
+                                    );
+                                    return;
+                                }
+                                (types as string[]).forEach((type) => {
+                                    const typeId = assayTypeToId.get(type);
+                                    if (typeId === undefined) {
+                                        alert(
+                                            `Assay type ID not found for ${type}`
+                                        );
+                                        return;
+                                    }
+                                    assayCreationData.push({
+                                        experimentId: experimentId,
+                                        conditionId: conditionId,
+                                        typeId: typeId,
+                                        target_date: dayjs()
+                                            .add(
+                                                rowIdToWeek.get(
+                                                    parseInt(rowId)
+                                                ) || 0,
+                                                "weeks"
+                                            )
+                                            .toDate(),
+                                        result: null,
+                                    });
+                                });
+                            }
+                        );
+                    }
+                );
+                console.log("assayCreationData:", assayCreationData);
             }
         } catch (error) {
             alert(error);
         }
-        resetFields();
-        props.onClose(reason);
-    };
-
-    const handleCancelExperiment = (reason: string) => {
-        resetFields();
-        props.onClose(reason);
-    };
-
-    const resetFields = () => {
-        setTitle("");
-        setDescription("");
-        setDate(dayjs().toDate());
-        setSelectedAssayTypes([]);
-        setSelectedStorageConditions([]);
-        setAssayScheduleRows([]);
-    };
-
-    const createTableColumns = (): GridColDef[] => {
-        const weekColumn: GridColDef = {
-            field: "week",
-            headerName: "Week",
-            type: "number",
-            width: 80,
-            align: "center",
-            headerAlign: "center",
-            disableColumnMenu: true,
-            editable: true,
-            sortable: false,
-        };
-        const storageConditionColumns: GridColDef[] =
-            selectedStorageConditions.map((condition, _) => ({
-                field: condition,
-                headerName: condition,
-                renderCell: () => {
-                    return (
-                        <MultiSelectDropdown
-                            items={selectedAssayTypes}
-                            label="Select Types"
-                            size="small"
-                            onChange={(newAssayTypes) =>
-                                console.log(newAssayTypes)
-                            }
-                        />
-                    );
-                },
-                align: "center",
-                headerAlign: "center",
-                width: 150,
-                disableColumnMenu: true,
-                editable: true,
-                sortable: false,
-            }));
-        const columns: GridColDef[] = [weekColumn, ...storageConditionColumns];
-        columns.concat({
-            field: "__HIDDEN__",
-            width: 0,
-            renderCell: (params) => {
-                tableRef.current = params.api;
-                return null;
-            },
-        });
-        return columns;
-    };
-
-    const tableAddWeekFooter: React.FC = () => {
-        return (
-            <Box
-                style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    padding: "10px",
-                }}
-            >
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddWeek}
-                >
-                    Add Week
-                </Button>
-            </Box>
-        );
+        // resetFields();
+        // props.onClose(reason);
     };
 
     const handleAddAssayType = () => {
@@ -310,6 +306,178 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         } else {
             alert("Storage condition already exists or is empty!");
         }
+    };
+
+    const handleChangeSelectedAssayTypes = (
+        newSelectedAssayTypes: string[]
+    ) => {
+        if (newSelectedAssayTypes.length === 0) {
+            setWeekRows([]);
+            setAssayScheduleTypeMap({});
+        } else {
+            const newMap: AssayScheduleTypesMap = {};
+            Object.entries(assayScheduleTypeMap).forEach(
+                ([rowId, conditionsMap]) => {
+                    const filteredConditionsMap: {
+                        [condition: string]: string[];
+                    } = {};
+                    Object.entries(conditionsMap).forEach(
+                        ([condition, values]) => {
+                            const newValues: string[] = [];
+                            (values as string[]).forEach((value) => {
+                                if (newSelectedAssayTypes.includes(value)) {
+                                    newValues.push(value);
+                                }
+                            });
+                            if (newValues.length > 0) {
+                                filteredConditionsMap[condition] = newValues;
+                            }
+                        }
+                    );
+                    if (Object.keys(filteredConditionsMap).length > 0) {
+                        newMap[Number(rowId)] = filteredConditionsMap;
+                    }
+                }
+            );
+            setAssayScheduleTypeMap(newMap);
+        }
+        setSelectedAssayTypes(newSelectedAssayTypes);
+    };
+
+    const handleChangeSelectedStorageConditions = (
+        newSelectedStorageConditions: string[]
+    ) => {
+        if (newSelectedStorageConditions.length === 0) {
+            setWeekRows([]);
+            setAssayScheduleTypeMap({});
+        } else {
+            const newMap: AssayScheduleTypesMap = {};
+            Object.entries(assayScheduleTypeMap).forEach(
+                ([rowId, conditionsMap]) => {
+                    const filteredConditionsMap: {
+                        [condition: string]: string[];
+                    } = {};
+                    Object.entries(conditionsMap).forEach(
+                        ([condition, values]) => {
+                            if (
+                                newSelectedStorageConditions.includes(condition)
+                            ) {
+                                filteredConditionsMap[condition] =
+                                    values as string[];
+                            }
+                        }
+                    );
+                    if (Object.keys(filteredConditionsMap).length > 0) {
+                        newMap[Number(rowId)] = filteredConditionsMap;
+                    }
+                }
+            );
+            setAssayScheduleTypeMap(newMap);
+        }
+        setSelectedStorageConditions(newSelectedStorageConditions);
+    };
+
+    const createTableColumns = (): GridColDef[] => {
+        const weekColumn: GridColDef = {
+            field: "week",
+            headerName: "Week",
+            type: "number",
+            width: 80,
+            align: "center",
+            headerAlign: "center",
+            disableColumnMenu: true,
+            editable: true,
+            sortable: false,
+        };
+        const storageConditionColumns: GridColDef[] =
+            selectedStorageConditions.map((condition) => ({
+                field: condition,
+                headerName: condition,
+                renderCell: (params) => {
+                    return (
+                        <MultiSelectDropdown
+                            items={selectedAssayTypes}
+                            label="Select Types"
+                            size="small"
+                            onChange={(newAssayTypes: string[]) =>
+                                setAssayScheduleTypeMap((prevMap) => {
+                                    const newMap: AssayScheduleTypesMap = {
+                                        ...prevMap,
+                                    };
+                                    if (params.row.id in newMap) {
+                                        newMap[params.row.id][condition] =
+                                            newAssayTypes;
+                                    } else {
+                                        newMap[params.row.id] = {
+                                            [condition]: newAssayTypes,
+                                        };
+                                    }
+                                    return newMap;
+                                })
+                            }
+                        />
+                    );
+                },
+                align: "center",
+                headerAlign: "center",
+                width: 150,
+                disableColumnMenu: true,
+                editable: true,
+                sortable: false,
+            }));
+        return [weekColumn, ...storageConditionColumns];
+    };
+
+    const handleWeekUpdate = (newRow: WeekRow): WeekRow => {
+        const rowIndex = weekRows.findIndex((row) => row.id === newRow.id);
+        if (rowIndex !== -1) {
+            const updatedRows: WeekRow[] = [...weekRows];
+            newRow.week = Math.max(0, newRow.week);
+            updatedRows[rowIndex] = newRow;
+            setWeekRows(updatedRows);
+        }
+        return newRow;
+    };
+
+    const handleCancelExperiment = (reason: string) => {
+        resetFields();
+        props.onClose(reason);
+    };
+
+    const resetFields = () => {
+        setTitle("");
+        setDescription("");
+        setDate(dayjs().toDate());
+        setSelectedAssayTypes([]);
+        setSelectedStorageConditions([]);
+        setNewAssayType("");
+        setNewStorageCondition("");
+        setSelectedAssayTypes([]);
+        setSelectedStorageConditions([]);
+        setWeekRows([]);
+        setIdCounter(1);
+        setAssayScheduleTypeMap({});
+    };
+
+    const tableAddWeekFooter: React.FC = () => {
+        return (
+            <Box
+                style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    padding: "10px",
+                }}
+            >
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddWeek}
+                >
+                    Add Week
+                </Button>
+            </Box>
+        );
     };
 
     return (
@@ -350,7 +518,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         <DatePicker
                             label="Start Date"
                             defaultValue={dayjs()}
-                            onChange={(newDate) => handleDateChange(newDate)}
+                            onChange={handleDateChange}
                             slotProps={{
                                 textField: {
                                     required: true,
@@ -362,9 +530,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         <MultiSelectDropdown
                             items={assayTypes}
                             label="Assay Types"
-                            onChange={(newAssayTypes: string[]) =>
-                                setSelectedAssayTypes(newAssayTypes)
-                            }
+                            onChange={handleChangeSelectedAssayTypes}
                         />
                         <Box
                             sx={{
@@ -396,11 +562,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         <MultiSelectDropdown
                             items={storageConditions}
                             label="Storage Conditions"
-                            onChange={(newStorageConditions: string[]) =>
-                                setSelectedStorageConditions(
-                                    newStorageConditions
-                                )
-                            }
+                            onChange={handleChangeSelectedStorageConditions}
                         />
                         <Box
                             sx={{
@@ -437,11 +599,11 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                                 </DialogContentText>
                                 <Table
                                     columns={createTableColumns()}
-                                    rows={assayScheduleRows}
+                                    rows={weekRows}
                                     footer={tableAddWeekFooter}
-                                    onDeleteRows={(
-                                        selectedRows: GridRowSelectionModel
-                                    ) => handleDeleteWeeks(selectedRows)}
+                                    sortModel={[{ field: "week", sort: "asc" }]}
+                                    onDeleteRows={handleDeleteWeeks}
+                                    processRowUpdate={handleWeekUpdate}
                                 />
                             </Stack>
                         )}

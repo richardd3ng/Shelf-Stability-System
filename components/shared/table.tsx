@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import {
     DataGrid,
     GridColDef,
@@ -9,14 +8,19 @@ import {
     GridFooterContainer,
     GridRowSelectionModel,
 } from "@mui/x-data-grid";
+import { GridApiCommunity } from "@mui/x-data-grid/internals";
+import { MutableRefObject } from "react";
 
 interface TableProps {
     columns: GridColDef[];
     rows: any[];
     pagination?: true;
+    sortModel?: any;
     footer?: React.JSXElementConstructor<any>;
     onDeleteRows?: (rows: GridRowSelectionModel) => void;
     onSortModelChange?: (sortModel: any) => void;
+    processRowUpdate?: (newRow: any) => any;
+    apiRef?: MutableRefObject<GridApiCommunity>;
 }
 
 const Table: React.FC<TableProps> = (props: TableProps) => {
@@ -79,6 +83,9 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                 hideFooterPagination={!props.pagination}
                 initialState={{
                     pagination: { paginationModel: { pageSize: 10 } },
+                    sorting: {
+                        sortModel: props.sortModel,
+                    },
                 }}
                 autoHeight
                 getRowHeight={() => "auto"}
@@ -92,6 +99,12 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                     setSelectedRows(newSelectedRows);
                 }}
                 onSortModelChange={props.onSortModelChange}
+                processRowUpdate={
+                    props.processRowUpdate
+                        ? (newRow: any) => props.processRowUpdate!(newRow)
+                        : () => {}
+                }
+                apiRef={props.apiRef}
             />
         </Box>
     );
