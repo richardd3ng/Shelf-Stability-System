@@ -18,7 +18,7 @@ export default async function createManyAssayTypes(
             return;
         }
         if (!assayTypes || assayTypes.length === 0) {
-            res.status(204).json([]);
+            res.status(200).json([]);
             return;
         }
         await db.assayType.createMany({

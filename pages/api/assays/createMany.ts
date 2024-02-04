@@ -11,7 +11,7 @@ export default async function createManyAssay(
     try {
         const { assays } = req.body;
         if (!assays || assays.length === 0) {
-            res.status(204).json([]);
+            res.status(200).json([]);
             return;
         }
         const createdAssays = await db.assay.createMany({

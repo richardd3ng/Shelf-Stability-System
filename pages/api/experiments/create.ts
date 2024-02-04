@@ -25,7 +25,7 @@ export default async function createExperiment(
                 },
             }
         );
-        res.status(204).json(createdExperiment);
+        res.status(200).json(createdExperiment);
     } catch (error) {
         res.status(500).json(getApiError(500));
     }
