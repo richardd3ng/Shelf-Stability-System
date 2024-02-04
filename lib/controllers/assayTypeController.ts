@@ -1,13 +1,15 @@
 import { AssayType } from "@prisma/client";
-import { AssayTypeCreationData, AssayTypeNamesResponse } from "./types";
+import { AssayTypeCreationArgs, AssayTypeNamesResponse } from "./types";
+import { ApiError } from "next/dist/server/api-utils";
 
 export const createAssayTypes = async (
-    assayTypes: AssayTypeCreationData[]
+    assayTypes: AssayTypeCreationArgs[]
 ): Promise<AssayType[]> => {
     if (!assayTypes || assayTypes.length === 0) {
         return [];
     }
-    const response = await fetch("/api/assayTypes/createMany", {
+    const endpoint = "/api/assayTypes/createMany";
+    const response = await fetch(endpoint, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -17,35 +19,29 @@ export const createAssayTypes = async (
             assayTypes: assayTypes,
         }),
     });
+    const resJson = await response.json();
     if (response.ok) {
-        const resJson: AssayType[] = await response.json();
         return resJson;
     } else {
-        if (response.status === 400) {
-            const resJson = await response.json();
-            const errorMessage =
-                resJson.error || "Bad request. Please check the provided data.";
-            throw new Error(errorMessage);
-        } else {
-            throw new Error("Failed to create assay types");
-        }
+        throw new ApiError(response.status, resJson.message);
     }
 };
 
 export const fetchDistinctAssayTypes = async (): Promise<string[]> => {
-    const response = await fetch("/api/assayTypes/fetchDistinct", {
+    const endpoint = "/api/assayTypes/fetchDistinct";
+    const response = await fetch(endpoint, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
     });
-    const resJson: AssayTypeNamesResponse[] = await response.json();
-    if (response.status < 300) {
+    const resJson = await response.json();
+    if (response.ok) {
         const distinctAssayTypes: string[] = resJson.map(
             (condition: AssayTypeNamesResponse) => condition.name
         );
         return distinctAssayTypes;
     } else {
-        throw new Error("Error: Failed to fetch distinct assay types");
+        throw new ApiError(response.status, resJson.message);
     }
 };

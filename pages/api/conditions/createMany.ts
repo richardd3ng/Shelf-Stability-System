@@ -1,24 +1,24 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { ApiError } from "next/dist/server/api-utils";
+import { Condition } from "@prisma/client";
+import { getApiError } from "@/lib/api/error";
 import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
 
 export default async function createConditions(
     req: NextApiRequest,
-    res: NextApiResponse
+    res: NextApiResponse<Condition[] | ApiError>
 ) {
     try {
         const { experimentId, conditions } = req.body;
         if (experimentId === INVALID_EXPERIMENT_ID) {
-            res.status(400).json({
-                error: "Valid Experiment ID is required.",
-            });
+            res.status(400).json(
+                getApiError(400, "Valid Experiment ID is required")
+            );
             return;
         }
         if (!conditions || conditions.length === 0) {
-            res.status(200).json({
-                message: "No conditions to create.",
-            });
+            res.status(204).json([]);
             return;
         }
         await db.condition.createMany({
@@ -31,7 +31,8 @@ export default async function createConditions(
         });
         res.status(200).json(createdConditions);
     } catch (error) {
-        let errorMsg = getErrorMessage(error);
-        res.status(500).json({ error: errorMsg });
+        res.status(500).json(
+            getApiError(500, "Failed to create conditions on server")
+        );
     }
 }

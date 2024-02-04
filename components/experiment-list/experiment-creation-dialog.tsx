@@ -28,10 +28,10 @@ import {
 } from "@/lib/controllers/conditionController";
 import { createExperiment } from "@/lib/controllers/experimentController";
 import {
-    AssayCreationData,
-    AssayTypeCreationData,
-    ConditionCreationData,
-    ExperimentCreationData,
+    AssayCreationArgs,
+    AssayTypeCreationArgs,
+    ConditionCreationArgs,
+    ExperimentCreationArgs,
 } from "@/lib/controllers/types";
 import { AssayType, Condition, Experiment } from "@prisma/client";
 
@@ -84,7 +84,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 await fetchDistinctAssayTypes();
             setAssayTypes(distinctAssayTypes);
         } catch (error) {
-            alert("Error fetching assay types");
+            alert(error);
         }
     };
 
@@ -94,7 +94,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 await fetchDistinctConditions();
             setStorageConditions(distinctConditions);
         } catch (error) {
-            alert("Error fetching storage conditions");
+            alert(error);
         }
     };
 
@@ -166,7 +166,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             alert(alertMessage);
             return;
         }
-        const experimentData: ExperimentCreationData = {
+        const experimentData: ExperimentCreationArgs = {
             title: title,
             description: description,
             start_date: date!.toISOString(),
@@ -176,7 +176,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 experimentData
             );
             const experimentId = experimentResJson.id;
-            const assayTypes: AssayTypeCreationData[] = selectedAssayTypes.map(
+            const assayTypes: AssayTypeCreationArgs[] = selectedAssayTypes.map(
                 (type: string) => {
                     return {
                         experimentId: experimentId,
@@ -184,7 +184,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                     };
                 }
             );
-            const conditions: ConditionCreationData[] =
+            const conditions: ConditionCreationArgs[] =
                 selectedStorageConditions.map(
                     (condition: string, index: number) => {
                         return {
@@ -213,7 +213,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             const rowIdToWeek = new Map<number, number>(
                 weekRows.map((row) => [row.id, row.week])
             );
-            const assayCreationData: AssayCreationData[] = [];
+            const assayCreationData: AssayCreationArgs[] = [];
             Object.entries(assayScheduleTypeMap).forEach(
                 ([rowId, conditionsMap]) => {
                     Object.entries(conditionsMap).forEach(

@@ -8,10 +8,10 @@ export type ExperimentInfo = {
     assays: Assay[];
 };
 
-export type AssayCreationData = Omit<Assay, "id">;
-export type AssayTypeCreationData = Omit<AssayType, "id">;
-export type ConditionCreationData = Omit<Condition, "id">;
-export type ExperimentCreationData = Omit<ExperimentJSON, "id">;
+export type AssayCreationArgs = Omit<Assay, "id">;
+export type AssayTypeCreationArgs = Omit<AssayType, "id">;
+export type ConditionCreationArgs = Omit<Condition, "id">;
+export type ExperimentCreationArgs = Omit<ExperimentJSON, "id">;
 
 export type AssayTypeNamesResponse = {
     name: string;

@@ -26,11 +26,15 @@ interface ExperimentData {
 }
 
 const getExperiments = async (query?: string): Promise<ExperimentData[]> => {
-    let experimentList: Experiment[];
-    if (query && query.trim() !== "") {
-        experimentList = await queryExperimentList(query);
-    } else {
-        experimentList = await fetchExperimentList();
+    let experimentList: Experiment[] = [];
+    try {
+        if (query && query.trim() !== "") {
+            experimentList = await queryExperimentList(query);
+        } else {
+            experimentList = await fetchExperimentList();
+        }
+    } catch (error) {
+        alert(error);
     }
     const experimentData: ExperimentData[] = experimentList.map(
         (experiment) => ({

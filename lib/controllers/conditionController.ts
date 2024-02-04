@@ -1,13 +1,15 @@
 import { Condition } from "@prisma/client";
-import { ConditionCreationData, ConditionNamesResponse } from "./types";
+import { ConditionCreationArgs, ConditionNamesResponse } from "./types";
+import { ApiError } from "next/dist/server/api-utils";
 
 export const createConditions = async (
-    conditions: ConditionCreationData[]
+    conditions: ConditionCreationArgs[]
 ): Promise<Condition[]> => {
     if (!conditions || conditions.length === 0) {
         return [];
     }
-    const response = await fetch("/api/conditions/createMany", {
+    const endpoint = "/api/conditions/createMany";
+    const response = await fetch(endpoint, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -17,35 +19,29 @@ export const createConditions = async (
             conditions: conditions,
         }),
     });
+    const resJson = await response.json();
     if (response.ok) {
-        const resJson: Condition[] = await response.json();
         return resJson;
     } else {
-        if (response.status === 400) {
-            const resJson = await response.json();
-            const errorMessage =
-                resJson.error || "Bad request. Please check the provided data.";
-            throw new Error(errorMessage);
-        } else {
-            throw new Error("Failed to create conditions");
-        }
+        throw new ApiError(response.status, resJson.message);
     }
 };
 
 export const fetchDistinctConditions = async (): Promise<string[]> => {
-    const response = await fetch("/api/conditions/fetchDistinct", {
+    const endpoint = "/api/conditions/fetchDistinct";
+    const response = await fetch(endpoint, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
     });
-    const resJson: ConditionNamesResponse[] = await response.json();
-    if (response.status < 300) {
+    const resJson = await response.json();
+    if (response.ok) {
         const distinctConditions: string[] = resJson.map(
             (condition: ConditionNamesResponse) => condition.name
         );
         return distinctConditions;
     } else {
-        throw new Error("Error: Failed to fetch distinct conditions");
+        throw new ApiError(response.status, resJson.message);
     }
 };

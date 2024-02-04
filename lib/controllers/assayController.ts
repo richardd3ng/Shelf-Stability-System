@@ -1,7 +1,8 @@
 import { Assay } from "@prisma/client";
-import { AssayCreationData } from "./types";
+import { AssayCreationArgs } from "./types";
+import { ApiError } from "next/dist/server/api-utils";
 
-export const createAssays = async (assays: AssayCreationData[]) => {
+export const createAssays = async (assays: AssayCreationArgs[]) => {
     if (!assays || assays.length === 0) {
         return [];
     }
@@ -12,10 +13,10 @@ export const createAssays = async (assays: AssayCreationData[]) => {
         },
         body: JSON.stringify({ assays: assays }),
     });
+    const resJson = await response.json();
     if (response.ok) {
-        const resJson: Assay[] = await response.json();
         return resJson;
     } else {
-        throw new Error("Failed to create assays");
+        throw new ApiError(response.status, resJson.message);
     }
 };

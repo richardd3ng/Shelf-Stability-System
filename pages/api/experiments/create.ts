@@ -1,29 +1,32 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { ApiError } from "next/dist/server/api-utils";
+import { Experiment } from "@prisma/client";
+import { getApiError } from "@/lib/api/error";
 
 export default async function createExperiment(
     req: NextApiRequest,
-    res: NextApiResponse
+    res: NextApiResponse<Experiment | ApiError>
 ) {
     try {
         const { title, description, start_date } = req.body;
         if (!title || !start_date) {
-            res.status(400).json({
-                error: "Title and Start Date are required.",
-            });
+            res.status(400).json(
+                getApiError(400, "Title and Start Date are required.")
+            );
             return;
         }
-        const createdExperiment = await db.experiment.create({
-            data: {
-                title,
-                description,
-                start_date,
-            },
-        });
-        res.status(200).json(createdExperiment);
+        const createdExperiment: Experiment | null = await db.experiment.create(
+            {
+                data: {
+                    title,
+                    description,
+                    start_date,
+                },
+            }
+        );
+        res.status(204).json(createdExperiment);
     } catch (error) {
-        let errorMsg = getErrorMessage(error);
-        res.status(500).json({ error: errorMsg });
+        res.status(500).json(getApiError(500));
     }
 }

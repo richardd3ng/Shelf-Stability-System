@@ -1,21 +1,25 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { ApiError } from "next/dist/server/api-utils";
+import { ConditionNamesResponse } from "@/lib/controllers/types";
+import { getApiError } from "@/lib/api/error";
 
 export default async function fetchDistinctConditions(
-    req: NextApiRequest,
-    res: NextApiResponse
+    _req: NextApiRequest,
+    res: NextApiResponse<ConditionNamesResponse[] | ApiError>
 ) {
     try {
-        const distinctConditions = await db.condition.findMany({
-            select: {
-                name: true,
-            },
-            distinct: ["name"],
-        });
+        const distinctConditions: ConditionNamesResponse[] =
+            await db.condition.findMany({
+                select: {
+                    name: true,
+                },
+                distinct: ["name"],
+            });
         res.status(200).json(distinctConditions);
     } catch (error) {
-        let errorMsg = getErrorMessage(error);
-        res.status(500).json({ error: errorMsg });
+        res.status(500).json(
+            getApiError(500, "Failed to fetch condition names on server")
+        );
     }
 }

@@ -1,24 +1,24 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { ApiError } from "next/dist/server/api-utils";
+import { AssayType } from "@prisma/client";
 import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
+import { getApiError } from "@/lib/api/error";
 
 export default async function createManyAssayTypes(
     req: NextApiRequest,
-    res: NextApiResponse
+    res: NextApiResponse<AssayType[] | ApiError>
 ) {
     try {
         const { experimentId, assayTypes } = req.body;
         if (experimentId === INVALID_EXPERIMENT_ID) {
-            res.status(400).json({
-                error: "Valid Experiment ID is required.",
-            });
+            res.status(400).json(
+                getApiError(400, "Valid Experiment ID is required.")
+            );
             return;
         }
         if (!assayTypes || assayTypes.length === 0) {
-            res.status(200).json({
-                message: "No assay types to create.",
-            });
+            res.status(204).json([]);
             return;
         }
         await db.assayType.createMany({
@@ -31,7 +31,8 @@ export default async function createManyAssayTypes(
         });
         res.status(200).json(createdAssayTypes);
     } catch (error) {
-        let errorMsg = getErrorMessage(error);
-        res.status(500).json({ error: errorMsg });
+        res.status(500).json(
+            getApiError(500, "Failed to create assay types on server")
+        );
     }
 }

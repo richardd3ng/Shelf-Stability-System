@@ -1,17 +1,17 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { ApiError } from "next/dist/server/api-utils";
+import { getApiError } from "@/lib/api/error";
+import { Prisma } from "@prisma/client";
 
 export default async function createManyAssay(
     req: NextApiRequest,
-    res: NextApiResponse
+    res: NextApiResponse<Prisma.BatchPayload | never[] | ApiError>
 ) {
     try {
         const { assays } = req.body;
         if (!assays || assays.length === 0) {
-            res.status(400).json({
-                error: "At least one assay is required.",
-            });
+            res.status(204).json([]);
             return;
         }
         const createdAssays = await db.assay.createMany({
@@ -19,7 +19,6 @@ export default async function createManyAssay(
         });
         res.status(200).json(createdAssays);
     } catch (error) {
-        let errorMsg = getErrorMessage(error);
-        res.status(500).json({ error: errorMsg });
+        res.status(500).json(getApiError(500, "Failed to create assays", "Assay Creation Internal Server Error"));
     }
 }

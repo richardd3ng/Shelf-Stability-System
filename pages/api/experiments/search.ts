@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Experiment } from "@prisma/client";
 import { db } from "@/lib/api/db";
 import { ApiError } from "next/dist/server/api-utils";
+import { getApiError } from "@/lib/api/error";
 
 export default async function searchExperiments(
     req: NextApiRequest,
@@ -10,7 +11,6 @@ export default async function searchExperiments(
     try {
         const { query } = req.query;
         let experiments: Experiment[] | null = [];
-
         if (!isNaN(Number(query))) {
             const experiment: Experiment | null =
                 await db.experiment.findUnique({
@@ -41,11 +41,8 @@ export default async function searchExperiments(
         }
         res.status(200).json(experiments);
     } catch (error) {
-        console.error("Error searching experiments:", error);
-        res.status(500).json({
-            message: "Internal server error",
-            statusCode: 500,
-            name: "Server Error",
-        });
+        res.status(500).json(
+            getApiError(500, "Failed to query experiments on server")
+        );
     }
 }
