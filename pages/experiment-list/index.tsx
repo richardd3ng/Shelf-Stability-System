@@ -56,14 +56,18 @@ const ExperimentList: React.FC = () => {
     const [sortModel, setSortModel] = useState<GridSortModel>([]);
     const [showExperiementCreationDialog, setShowExperimentCreationDialog] =
         useState<boolean>(false);
+    const [loadingExperiments, setLoadingExperiments] =
+        useState<boolean>(false);
 
     useEffect(() => {
         fetchAndSetData();
     }, [sortModel, showExperiementCreationDialog]);
 
     const fetchAndSetData = async () => {
+        setLoadingExperiments(true);
         const fetchedData: ExperimentData[] = await getExperiments();
         setExperimentData(fetchedData);
+        // setLoadingExperiments(false);
     };
 
     const queryAndSetData = async (query: string) => {
@@ -208,13 +212,17 @@ const ExperimentList: React.FC = () => {
                         Add Experiment
                     </Button>
                 </Box>
-                <Table
-                    columns={createTableColumns()}
-                    rows={experimentData}
-                    pagination
-                    onDeleteRows={handleDeleteExperiments}
-                    onSortModelChange={setSortModel}
-                />
+                {loadingExperiments ? (
+                    <LoadingContainer text="Loading Experiments..." />
+                ) : (
+                    <Table
+                        columns={createTableColumns()}
+                        rows={experimentData}
+                        pagination
+                        onDeleteRows={handleDeleteExperiments}
+                        onSortModelChange={setSortModel}
+                    />
+                )}
                 <ExperimentCreationDialog
                     open={showExperiementCreationDialog}
                     onClose={handleCloseDialog}
