@@ -14,11 +14,17 @@ export default async function createManyAssay(
             res.status(200).json([]);
             return;
         }
-        const createdAssays = await db.assay.createMany({
+        const createdAssays: Prisma.BatchPayload = await db.assay.createMany({
             data: assays,
         });
         res.status(200).json(createdAssays);
     } catch (error) {
-        res.status(500).json(getApiError(500, "Failed to create assays", "Assay Creation Internal Server Error"));
+        res.status(500).json(
+            getApiError(
+                500,
+                "Failed to create assays",
+                "Assay Creation Internal Server Error"
+            )
+        );
     }
 }

@@ -1,6 +1,7 @@
 import { Box, Button, Container, IconButton, Stack } from "@mui/material";
 import {
     GridColDef,
+    GridRowId,
     GridRowSelectionModel,
     GridSortModel,
 } from "@mui/x-data-grid";
@@ -12,11 +13,14 @@ import Table from "../../components/shared/table";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import ViewIcon from "@mui/icons-material/Visibility";
 import {
+    deleteExperiment,
     fetchExperimentList,
+    hasRecordedAssayResults,
     queryExperimentList,
 } from "@/lib/controllers/experimentController";
 import { getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import { Experiment } from "@prisma/client";
+import { LoadingCircle, LoadingContainer } from "@/components/shared/loading";
 
 interface ExperimentData {
     id: number;
@@ -73,13 +77,6 @@ const ExperimentList: React.FC = () => {
 
     const handleView = (id: number) => {
         console.log("View");
-    };
-
-    const handleDelete = (id: number) => {
-        const updatedData: ExperimentData[] = experimentData.filter(
-            (exp) => exp.id !== id
-        );
-        setExperimentData(updatedData);
     };
 
     const handleCloseDialog = (reason: string) => {
@@ -161,7 +158,24 @@ const ExperimentList: React.FC = () => {
     };
 
     const handleDeleteExperiments = (selectedRows: GridRowSelectionModel) => {
-        // TODO: Implement delete on database
+        selectedRows.forEach(async (experimentId: GridRowId) => {
+            experimentId = experimentId as number;
+            try {
+                const resultFound: Boolean = await hasRecordedAssayResults(
+                    experimentId
+                );
+                if (resultFound) {
+                    alert(
+                        `Error: Experiment ${experimentId} contains recorded assay results and cannot be deleted!`
+                    );
+                } else {
+                    await deleteExperiment(experimentId);
+                    alert(`Succesfully deleted Experiment ${experimentId}!`);
+                }
+            } catch (error) {
+                alert(error);
+            }
+        });
         fetchAndSetData();
     };
 
@@ -198,16 +212,12 @@ const ExperimentList: React.FC = () => {
                     columns={createTableColumns()}
                     rows={experimentData}
                     pagination
-                    onDeleteRows={(selectedRows: GridRowSelectionModel) =>
-                        handleDeleteExperiments(selectedRows)
-                    }
-                    onSortModelChange={(sortModel: GridSortModel) =>
-                        setSortModel(sortModel)
-                    }
+                    onDeleteRows={handleDeleteExperiments}
+                    onSortModelChange={setSortModel}
                 />
                 <ExperimentCreationDialog
                     open={showExperiementCreationDialog}
-                    onClose={(reason: string) => handleCloseDialog(reason)}
+                    onClose={handleCloseDialog}
                 />
             </Stack>
         </Layout>

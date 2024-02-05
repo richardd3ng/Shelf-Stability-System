@@ -48,6 +48,25 @@ export const queryExperimentList = async (
     }
 };
 
+export const createExperiment = async (
+    experimentData: ExperimentCreationArgs
+): Promise<Experiment> => {
+    const endpoint = "/api/experiments/create";
+    const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(experimentData),
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return JSONToExperiment(resJson);
+    } else {
+        throw new ApiError(response.status, resJson.message);
+    }
+};
+
 export const fetchExperimentInfo = async (
     experimentId: number
 ): Promise<ExperimentInfo> => {
@@ -73,18 +92,18 @@ export const fetchExperimentInfo = async (
     }
 };
 
-export const createExperiment = async (
-    experimentData: ExperimentCreationArgs
-) => {
-    const endpoint = "/api/experiments/create";
+export const hasRecordedAssayResults = async (
+    experimentId: number
+): Promise<Boolean> => {
+    const endpoint = `/api/experiments/${experimentId.toString()}/hasRecordedResults`;
     const response = await fetch(endpoint, {
-        method: "POST",
+        method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(experimentData),
     });
-    const resJson = await response.json();
+    let resJson = await response.json();
+    console.log("has recorded results:", resJson);
     if (response.ok) {
         return resJson;
     } else {
@@ -92,4 +111,20 @@ export const createExperiment = async (
     }
 };
 
-export const deleteExperiment = async (experimentId: number) => {};
+export const deleteExperiment = async (
+    experimentId: number
+): Promise<Experiment> => {
+    const endpoint = `/api/experiments/${experimentId.toString()}/delete`;
+    const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    let resJson = await response.json();
+    if (response.ok) {
+        return JSONToExperiment(resJson);
+    } else {
+        throw new ApiError(response.status, resJson.message);
+    }
+};

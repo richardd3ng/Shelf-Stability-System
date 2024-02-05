@@ -24,11 +24,12 @@ export default async function createManyAssayTypes(
         await db.assayType.createMany({
             data: assayTypes,
         });
-        const createdAssayTypes = await db.assayType.findMany({
-            where: {
-                experimentId: experimentId,
-            },
-        });
+        const createdAssayTypes: AssayType[] | null =
+            await db.assayType.findMany({
+                where: {
+                    experimentId: experimentId,
+                },
+            });
         res.status(200).json(createdAssayTypes);
     } catch (error) {
         res.status(500).json(
