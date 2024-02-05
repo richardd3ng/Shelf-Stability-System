@@ -25,10 +25,10 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = (
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const isSmall = props.size === "small";
     const sizeConfig = {
-        labelFontSize: isSmall ? "0.75rem" : "1rem",
+        fontSize: isSmall ? "0.75rem" : "1rem",
         itemHeight: isSmall ? 24 : 48,
         itemPaddingTop: isSmall ? -12 : 8,
-        width: isSmall ? 120 : 400,
+        width: isSmall ? "100%" : 400,
         menuWidth: isSmall ? 120 : 300,
         marginY: isSmall ? 1 : 0,
     };
@@ -63,7 +63,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = (
                 sx={
                     isSmall
                         ? {
-                              fontSize: sizeConfig.labelFontSize,
+                              fontSize: sizeConfig.fontSize,
                               paddingTop: 0.25,
                           }
                         : {}
@@ -92,8 +92,8 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = (
                                 sx={
                                     isSmall
                                         ? {
-                                              fontSize: "0.5rem",
-                                              height: "0.75rem",
+                                              fontSize: sizeConfig.fontSize,
+                                              height: "1rem",
                                           }
                                         : {}
                                 }

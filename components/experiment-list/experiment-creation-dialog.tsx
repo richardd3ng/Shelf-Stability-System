@@ -354,7 +354,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             field: "week",
             headerName: "Week",
             type: "number",
-            width: 80,
+            width: 70,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
@@ -392,7 +392,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 },
                 align: "center",
                 headerAlign: "center",
-                width: 150,
+                width: 175,
                 disableColumnMenu: true,
                 editable: true,
                 sortable: false,
@@ -453,9 +453,13 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     };
 
     return (
-        <Dialog open={props.open} onClose={props.onClose}>
-            <DialogTitle>Add New Experiment</DialogTitle>
-            <DialogContent sx={{ width: 600 }}>
+        <Dialog
+            open={props.open}
+            onClose={props.onClose}
+            sx={{ width: "100%" }}
+        >
+            <DialogTitle sx={{ width: "100%" }}>Add New Experiment</DialogTitle>
+            <DialogContent sx={{ width: "100%" }}>
                 <Stack spacing={1.5}>
                     <DialogContentText>
                         Fill in the details for the new experiment (* indicates
@@ -581,7 +585,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         )}
                 </Stack>
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{ width: "100%" }}>
                 <Button
                     sx={{ textTransform: "none" }}
                     onClick={() => handleCancelExperiment("Cancel")}
