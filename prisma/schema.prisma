@@ -10,20 +10,20 @@ datasource db {
 
 
 model Experiment {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   title       String
   description String?
   start_date  DateTime
 
-  conditions Condition[]
-  assayTypes AssayType[]
+  conditions Condition[]  
+  assayTypes AssayType[]  
 
-  Assay Assay[]
+  Assay Assay[]           
 }
 
 model Assay {
   id           Int        @id @default(autoincrement())
-  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
   experimentId Int
   condition    Condition  @relation(fields: [conditionId], references: [id])
   conditionId  Int
@@ -35,7 +35,7 @@ model Assay {
 
 model AssayType {
   id           Int        @id @default(autoincrement())
-  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
   experimentId Int
   name         String
   Assay        Assay[]
@@ -44,7 +44,7 @@ model AssayType {
 
 model Condition {
   id           Int        @id @default(autoincrement())
-  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
   experimentId Int
   name         String
   control      Boolean?   @default(false)

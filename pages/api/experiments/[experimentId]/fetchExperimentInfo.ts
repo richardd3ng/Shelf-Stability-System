@@ -43,7 +43,7 @@ export default async function getExperimentInfo(
             res.status(404).json(
                 getApiError(
                     404,
-                    `Experiment with ID ${experimentId} does not exist`,
+                    `Experiment ${experimentId} does not exist`,
                     "Experiment Not Found"
                 )
             );
@@ -52,7 +52,7 @@ export default async function getExperimentInfo(
         res.status(500).json(
             getApiError(
                 500,
-                `Failed to fetch details for experiment ${experimentId} on server`
+                `Failed to fetch details for Experiment ${experimentId} on server`
             )
         );
     }

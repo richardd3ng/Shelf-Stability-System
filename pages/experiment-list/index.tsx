@@ -67,7 +67,7 @@ const ExperimentList: React.FC = () => {
         setLoadingExperiments(true);
         const fetchedData: ExperimentData[] = await getExperiments();
         setExperimentData(fetchedData);
-        // setLoadingExperiments(false);
+        setLoadingExperiments(false);
     };
 
     const queryAndSetData = async (query: string) => {
@@ -83,12 +83,12 @@ const ExperimentList: React.FC = () => {
         console.log("View");
     };
 
-    const handleCloseDialog = (reason: string) => {
+    const handleCloseDialog = async (reason: string) => {
         if (reason === "backdropClick" || reason === "escapeKeyDown") {
             return;
         }
         setShowExperimentCreationDialog(false);
-        fetchAndSetData();
+        await fetchAndSetData();
     };
 
     const createTableColumns = (): GridColDef[] => {
@@ -161,26 +161,37 @@ const ExperimentList: React.FC = () => {
         return columns;
     };
 
-    const handleDeleteExperiments = (selectedRows: GridRowSelectionModel) => {
-        selectedRows.forEach(async (experimentId: GridRowId) => {
-            experimentId = experimentId as number;
-            try {
-                const resultFound: Boolean = await hasRecordedAssayResults(
-                    experimentId
-                );
-                if (resultFound) {
-                    alert(
-                        `Error: Experiment ${experimentId} contains recorded assay results and cannot be deleted!`
-                    );
-                } else {
-                    await deleteExperiment(experimentId);
-                    alert(`Succesfully deleted Experiment ${experimentId}!`);
+    const handleDeleteExperiments = async (
+        selectedRows: GridRowSelectionModel
+    ) => {
+        try {
+            const deletePromises = selectedRows.map(
+                async (experimentId: GridRowId) => {
+                    experimentId = experimentId as number;
+                    try {
+                        const resultFound: Boolean =
+                            await hasRecordedAssayResults(experimentId);
+                        if (resultFound) {
+                            alert(
+                                `Error: Experiment ${experimentId} contains recorded assay results and cannot be deleted!`
+                            );
+                        } else {
+                            await deleteExperiment(experimentId);
+                            alert(
+                                `Successfully deleted Experiment ${experimentId}!`
+                            );
+                        }
+                    } catch (error) {
+                        alert(error);
+                    }
                 }
-            } catch (error) {
-                alert(error);
-            }
-        });
-        fetchAndSetData();
+            );
+
+            await Promise.all(deletePromises);
+            await fetchAndSetData();
+        } catch (error) {
+            alert(error);
+        }
     };
 
     return (
