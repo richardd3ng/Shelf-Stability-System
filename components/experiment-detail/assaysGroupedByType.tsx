@@ -1,5 +1,5 @@
-import { useExperimentInfo } from "@/lib/hooks/experimentDetailHooks";
-import { useExperimentId } from "@/lib/hooks/useExperimentId";
+import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
+import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Accordion, Container, Typography, AccordionSummary, AccordionDetails } from "@mui/material";
 import React from "react";
 import { LoadingContainer } from "../shared/loading";
@@ -8,6 +8,7 @@ import { ExperimentTable } from "./experimentTable/experimentTable";
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { ExpandMore } from "@mui/icons-material";
 import { AssayResultInCell } from "./experimentTable/assayResultInCell";
+import { AssayButtonInCell } from "./experimentTable/assayButtonInCell";
 
 export const AssaysGroupedByType : React.FC = () => {
     const experimentId = useExperimentId();
@@ -19,11 +20,19 @@ export const AssaysGroupedByType : React.FC = () => {
     } else {
         return (
             <Container style={{marginTop : 24}}>
+                <Accordion >
+                    <AccordionSummary expandIcon={<ExpandMore/>}>
+                        <Typography>All Assays</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <ExperimentTable assayFilter={(experimentInfo : ExperimentInfo) => experimentInfo.assays} componentForAssay={AssayButtonInCell}/>
+                    </AccordionDetails>
+                </Accordion>
                 {data.assayTypes.map((type) => {
                     return (
-                        <Accordion key={type.id}>
+                        <Accordion key={type.name}>
                             <AccordionSummary expandIcon={<ExpandMore/>}>
-                                <Typography>Assays Results for Type {type.name}</Typography>
+                                <Typography>Assays Results for Type {type.id}</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <ExperimentTable assayFilter={(experimentInfo : ExperimentInfo) => experimentInfo.assays.filter((assay) => assay.typeId === type.id)} componentForAssay={AssayResultInCell}/>

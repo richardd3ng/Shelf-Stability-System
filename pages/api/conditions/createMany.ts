@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { Condition } from "@prisma/client";
 import { getApiError } from "@/lib/api/error";
-import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
+import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 
 export default async function createConditions(
     req: NextApiRequest,
