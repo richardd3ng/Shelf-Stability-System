@@ -83,3 +83,7 @@ export const updateAssayResultThroughAPI = async (
         throw new ApiError(response.status, resJson.message);
     }
 };
+
+export const deleteAssayThroughAPI = async (assayId : number) => {
+    await deleteEntity("/api/assays/" + assayId.toString() + "/deleteAssay");
+}
