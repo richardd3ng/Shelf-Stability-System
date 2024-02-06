@@ -9,7 +9,7 @@ export default async function fetchDistinctConditions(
     res: NextApiResponse<ConditionNamesResponse[] | ApiError>
 ) {
     try {
-        const distinctConditions: ConditionNamesResponse[] | null =
+        const distinctConditions: ConditionNamesResponse[] =
             await db.condition.findMany({
                 select: {
                     name: true,

@@ -16,15 +16,13 @@ export default async function createExperiment(
             );
             return;
         }
-        const createdExperiment: Experiment | null = await db.experiment.create(
-            {
-                data: {
-                    title,
-                    description,
-                    start_date,
-                },
-            }
-        );
+        const createdExperiment: Experiment = await db.experiment.create({
+            data: {
+                title,
+                description,
+                start_date,
+            },
+        });
         res.status(200).json(createdExperiment);
     } catch (error) {
         res.status(500).json(getApiError(500));

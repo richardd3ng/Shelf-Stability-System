@@ -23,9 +23,18 @@ export default async function deleteExperiment(
                 where: { id: experimentId },
             }
         );
+        if (!deletedExperiment) {
+            res.status(404).json(
+                getApiError(
+                    404,
+                    `Experiment ${experimentId} does not exist or was already deleted`,
+                    "Experiment Not Found"
+                )
+            );
+            return;
+        }
         res.status(200).json(deletedExperiment);
     } catch (error) {
-        console.log("server error:", error);
         res.status(500).json(
             getApiError(
                 500,

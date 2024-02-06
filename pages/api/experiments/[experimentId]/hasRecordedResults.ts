@@ -4,6 +4,7 @@ import { Assay } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { getExperimentID } from "@/lib/api/apiHelpers";
+import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
 
 export default async function hasRecordedAssayResults(
     req: NextApiRequest,
@@ -11,7 +12,13 @@ export default async function hasRecordedAssayResults(
 ) {
     try {
         const experimentId = getExperimentID(req);
-        const assays: Assay[] | null = await db.assay.findMany({
+        if (experimentId === INVALID_EXPERIMENT_ID) {
+            res.status(400).json(
+                getApiError(400, "Valid Experiment ID is required.")
+            );
+            return;
+        }
+        const assays: Assay[] = await db.assay.findMany({
             where: {
                 experimentId: experimentId,
                 result: {

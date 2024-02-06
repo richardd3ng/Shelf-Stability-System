@@ -9,7 +9,7 @@ export default async function fetchDistinctAssayTypes(
     res: NextApiResponse<AssayTypeNamesResponse[] | ApiError>
 ) {
     try {
-        const distinctAssayTypes: AssayTypeNamesResponse[] | null =
+        const distinctAssayTypes: AssayTypeNamesResponse[] =
             await db.assayType.findMany({
                 select: {
                     name: true,

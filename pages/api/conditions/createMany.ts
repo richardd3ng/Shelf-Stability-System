@@ -24,12 +24,11 @@ export default async function createConditions(
         await db.condition.createMany({
             data: conditions,
         });
-        const createdConditions: Condition[] | null =
-            await db.condition.findMany({
-                where: {
-                    experimentId: experimentId,
-                },
-            });
+        const createdConditions: Condition[] = await db.condition.findMany({
+            where: {
+                experimentId: experimentId,
+            },
+        });
         res.status(200).json(createdConditions);
     } catch (error) {
         res.status(500).json(

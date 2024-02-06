@@ -10,7 +10,7 @@ export default async function searchExperiments(
 ) {
     try {
         const { query } = req.query;
-        let experiments: Experiment[] | null = [];
+        let experiments: Experiment[] = [];
         if (!isNaN(Number(query))) {
             const experiment: Experiment | null =
                 await db.experiment.findUnique({

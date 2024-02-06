@@ -103,7 +103,6 @@ export const hasRecordedAssayResults = async (
         },
     });
     let resJson = await response.json();
-    console.log("has recorded results:", resJson);
     if (response.ok) {
         return resJson;
     } else {

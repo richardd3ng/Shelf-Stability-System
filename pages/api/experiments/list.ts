@@ -9,7 +9,7 @@ export default async function getExperimentList(
     res: NextApiResponse<Experiment[] | ApiError>
 ) {
     try {
-        const experiments: Experiment[] | null = await db.experiment.findMany();
+        const experiments: Experiment[] = await db.experiment.findMany();
         res.status(200).json(experiments);
     } catch (error) {
         res.status(500).json(
