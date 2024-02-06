@@ -1,6 +1,7 @@
 import { AssayType } from "@prisma/client";
 import { AssayTypeCreationArgs, AssayTypeNamesResponse } from "./types";
 import { ApiError } from "next/dist/server/api-utils";
+import { deleteEntity } from "./deletions";
 
 export const createAssayTypes = async (
     assayTypes: AssayTypeCreationArgs[]
@@ -45,3 +46,25 @@ export const fetchDistinctAssayTypes = async (): Promise<string[]> => {
         throw new ApiError(response.status, resJson.message);
     }
 };
+
+interface UpdateAssayTypeArgs {
+    assayTypeId : number;
+    newName : string;
+}
+export const updateAssayTypeThroughAPI = async (assayTypeInfo : UpdateAssayTypeArgs) : Promise<UpdateAssayTypeArgs> => {
+    const apiResponse = await fetch("/api/assayTypes/" + assayTypeInfo.assayTypeId.toString() + "/updateAssayType", {
+        method: "POST",
+        body : JSON.stringify( {name : assayTypeInfo.newName}),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (apiResponse.status > 300) {
+        throw new Error("An error occurred");
+    }
+    return assayTypeInfo;
+}
+
+export const deleteAssayType = async (assayTypeId : number) => {
+    await deleteEntity("/api/assayTypes/" + assayTypeId.toString() + "/deleteAssayType");
+}

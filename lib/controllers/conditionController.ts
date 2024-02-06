@@ -1,6 +1,7 @@
 import { Condition } from "@prisma/client";
 import { ConditionCreationArgs, ConditionNamesResponse } from "./types";
 import { ApiError } from "next/dist/server/api-utils";
+import { deleteEntity } from "./deletions";
 
 export const createConditions = async (
     conditions: ConditionCreationArgs[]
@@ -45,3 +46,26 @@ export const fetchDistinctConditions = async (): Promise<string[]> => {
         throw new ApiError(response.status, resJson.message);
     }
 };
+
+interface UpdateConditionArgs {
+    conditionId : number;
+    newName : string;
+}
+export const updateConditionThroughAPI = async (conditionInfo : UpdateConditionArgs) : Promise<UpdateConditionArgs> => {
+    const apiResponse = await fetch("/api/conditions/" + conditionInfo.conditionId.toString() + "/updateCondition", {
+        method: "POST",
+        body : JSON.stringify( {name : conditionInfo.newName}),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (apiResponse.status > 300) {
+        throw new Error("An error occurred");
+    }
+    return conditionInfo;
+}
+
+
+export const deleteCondition = async (conditionId : number) => {
+    await deleteEntity("/api/conditions/" + conditionId.toString() + "/deleteCondition");
+}
