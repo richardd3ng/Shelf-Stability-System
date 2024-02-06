@@ -1,4 +1,6 @@
 import "@/styles/globals.css";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import type { AppProps } from "next/app";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { AlertProvider } from "@/context/alert-context";
@@ -9,7 +11,9 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
             <AlertProvider>
-                <Component {...pageProps} />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Component {...pageProps} />
+                </ LocalizationProvider>
             </AlertProvider>
         </QueryClientProvider>
     );

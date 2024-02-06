@@ -8,6 +8,23 @@ export type ExperimentInfo = {
     assays: Assay[];
 };
 
+export type AssayInfo = {
+    id: number;
+    targetDate: Date;
+    title: string;
+    condition: string;
+    week: number;
+    type: string;
+    result: string | null;
+}
+
+export type AssayTable = {
+    // Rows on this page
+    rows: AssayInfo[];
+    // Rows in the whole table
+    rowCount: number;
+}
+
 export type AssayCreationArgs = Omit<Assay, "id">;
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 export type ConditionCreationArgs = Omit<Condition, "id">;
