@@ -179,6 +179,8 @@ const ExperimentList: React.FC = () => {
             return;
         }
         setDebounce(true);
+        let deletedIds: number[] = [];
+        let cannotDeleteIds: number[] = [];
         try {
             const deletePromises = selectedRows.map(
                 async (experimentId: GridRowId) => {
@@ -187,22 +189,31 @@ const ExperimentList: React.FC = () => {
                         const resultFound: Boolean =
                             await hasRecordedAssayResults(experimentId);
                         if (resultFound) {
-                            alert(
-                                `Error: Experiment ${experimentId} contains recorded assay results and cannot be deleted!`
-                            );
+                            cannotDeleteIds.push(experimentId);
                         } else {
                             await deleteExperiment(experimentId);
-                            alert(
-                                `Successfully deleted Experiment ${experimentId}!`
-                            );
+                            deletedIds.push(experimentId);
                         }
                     } catch (error) {
                         alert(error);
                     }
                 }
             );
-
             await Promise.all(deletePromises);
+            if (deletedIds.length > 0) {
+                alert(
+                    `The following experiments were successfully deleted: ${deletedIds.join(
+                        ", "
+                    )}`
+                );
+            }
+            if (cannotDeleteIds.length > 0) {
+                alert(
+                    `The following experiments contained recorded assay results and could not be deleted: ${cannotDeleteIds.join(
+                        ", "
+                    )}`
+                );
+            }
             await fetchAndSetData();
         } catch (error) {
             alert(error);

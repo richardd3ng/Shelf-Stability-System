@@ -52,7 +52,7 @@ export default async function getExperimentInfo(
         res.status(500).json(
             getApiError(
                 500,
-                `Failed to fetch details for Experiment ${experimentId} on server`
+                `Failed to fetch details for experiment ${experimentId} on server`
             )
         );
     }

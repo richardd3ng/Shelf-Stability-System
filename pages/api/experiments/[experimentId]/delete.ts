@@ -38,7 +38,7 @@ export default async function deleteExperiment(
         res.status(500).json(
             getApiError(
                 500,
-                `Failed to delete Experiment ${experimentId} on server`
+                `Failed to delete experiment ${experimentId} on server`
             )
         );
     }
