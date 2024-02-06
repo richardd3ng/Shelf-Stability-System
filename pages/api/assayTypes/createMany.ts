@@ -31,6 +31,7 @@ export default async function createManyAssayTypes(
         });
         res.status(200).json(createdAssayTypes);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(500, "Failed to create assay types on server")
         );

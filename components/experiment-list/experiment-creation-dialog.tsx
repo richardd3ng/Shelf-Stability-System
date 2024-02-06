@@ -19,22 +19,19 @@ import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
 import dayjs from "dayjs";
 import { createAssays } from "@/lib/controllers/assayController";
-import {
-    createAssayTypes,
-    fetchDistinctAssayTypes,
-} from "@/lib/controllers/assayTypeController";
-import {
-    createConditions,
-    fetchDistinctConditions,
-} from "@/lib/controllers/conditionController";
+import { fetchDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
+import { fetchDistinctConditions } from "@/lib/controllers/conditionController";
 import { createExperiment } from "@/lib/controllers/experimentController";
 import {
+    AssayTypeCreationArgsNoExperimentId,
+    ConditionCreationArgsNoExperimentId,
+    ExperimentCreationResponse,
+} from "@/lib/controllers/types";
+import {
     AssayCreationArgs,
-    AssayTypeCreationArgs,
-    ConditionCreationArgs,
     ExperimentCreationArgs,
 } from "@/lib/controllers/types";
-import { AssayType, Condition, Experiment } from "@prisma/client";
+import { AssayType, Condition } from "@prisma/client";
 import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
 import { useAlert } from "@/context/alert-context";
 
@@ -172,42 +169,37 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             return;
         }
         setCreationLoading(true);
-        const experimentData: ExperimentCreationArgs = {
-            title: title,
-            description: description,
-            start_date: date!.toISOString(),
-        };
         let experimentId = INVALID_EXPERIMENT_ID;
         try {
-            const experimentResJson: Experiment = await createExperiment(
-                experimentData
-            );
-            experimentId = experimentResJson.id;
-            const assayTypes: AssayTypeCreationArgs[] = selectedAssayTypes.map(
-                (type: string) => {
+            const assayTypeCreationArgsNoExperimentIdArray: AssayTypeCreationArgsNoExperimentId[] =
+                selectedAssayTypes.map((type: string) => {
                     return {
-                        experimentId: experimentId,
                         name: type,
                     };
-                }
-            );
-            const conditions: ConditionCreationArgs[] =
+                });
+            const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
                 selectedStorageConditions.map(
                     (condition: string, index: number) => {
                         return {
-                            experimentId: experimentId,
                             name: condition,
                             control: index === 0,
                         };
                     }
                 );
-            const [createdAssayTypes, createdConditions]: [
-                AssayType[],
-                Condition[]
-            ] = await Promise.all([
-                createAssayTypes(assayTypes),
-                createConditions(conditions),
-            ]);
+            const experimentData: ExperimentCreationArgs = {
+                title: title,
+                description: description,
+                start_date: date!.toISOString(),
+                assayTypeCreationArgsNoExperimentIdArray:
+                    assayTypeCreationArgsNoExperimentIdArray,
+                conditionCreationArgsNoExperimentIdArray:
+                    conditionCreationArgsNoExperimentIdArray,
+            };
+            const experimentResJson: ExperimentCreationResponse =
+                await createExperiment(experimentData);
+            experimentId = experimentResJson.experiment.id;
+            const createdAssayTypes: AssayType[] = experimentResJson.assayTypes;
+            const createdConditions: Condition[] = experimentResJson.conditions;
             const assayTypeToId = new Map<string, number>(
                 createdAssayTypes.map((type) => [type.name, type.id])
             );
@@ -231,7 +223,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                                     "error",
                                     `Condition ID not found for ${condition}`
                                 );
-
                                 return;
                             }
                             (types as string[]).forEach((type) => {
@@ -241,7 +232,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                                         "error",
                                         `Assay type ID not found for ${type}`
                                     );
-
                                     return;
                                 }
                                 assayCreationData.push({

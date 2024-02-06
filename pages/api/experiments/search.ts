@@ -41,6 +41,7 @@ export default async function searchExperiments(
         }
         res.status(200).json(experiments);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(500, "Failed to query experiments on server")
         );

@@ -29,6 +29,7 @@ export default async function hasRecordedAssayResults(
         const hasRecordedResults = assays.length > 0;
         res.status(200).json(hasRecordedResults);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(
                 500,

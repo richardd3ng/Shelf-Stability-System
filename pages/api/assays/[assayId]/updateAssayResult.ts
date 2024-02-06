@@ -23,6 +23,7 @@ export default async function updateAssayResultAPI(
         });
         res.status(200).json(updatedAssay);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(500, "Failed to update assay result on server")
         );

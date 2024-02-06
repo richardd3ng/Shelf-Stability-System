@@ -18,6 +18,7 @@ export default async function fetchDistinctConditions(
             });
         res.status(200).json(distinctConditions);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(500, "Failed to fetch condition names on server")
         );
