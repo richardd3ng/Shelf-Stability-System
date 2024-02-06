@@ -3,14 +3,15 @@ import { ExperimentInfo } from "@/lib/controllers/types";
 import { ExperimentTable } from "@/components/experiment-detail/experimentTable/experimentTable";
 import { AssaysGroupedByType } from "@/components/experiment-detail/assaysGroupedByType";
 import Layout from "@/components/shared/layout";
-import { AssayEditingContext } from "@/lib/context/assayEditingContext";
+import { AssayEditingContext } from "@/lib/context/experimentDetailPage/assayEditingContext";
 import { useState } from "react";
-import { AssayEditorModal } from "@/components/experiment-detail/assayEditorModal";
+import { AssayEditorModal } from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
 import { AssayButtonInCell } from "@/components/experiment-detail/experimentTable/assayButtonInCell";
-import { ExperimentHeader } from "@/components/experiment-detail/experimentHeader";
+import { ExperimentHeader } from "@/components/experiment-detail/summary/experimentHeader";
 import { Container, Typography, Button } from "@mui/material";
-import { useExperimentId } from "@/lib/hooks/useExperimentId";
+import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useRouter } from "next/router";
+import { ModificationOptions } from "@/components/experiment-detail/modifications/modificationOptions";
 
 
 export default function ExperimentPage() {
@@ -22,7 +23,7 @@ export default function ExperimentPage() {
         <Layout>
             <AssayEditingContext.Provider value={{isEditing : isEditingAssay, setIsEditing : setIsEditingAssay, assayIdBeingEdited, setAssayIdBeingEdited}}>
                 <ExperimentHeader/>
-                <ExperimentTable assayFilter={(experiment : ExperimentInfo) => experiment.assays} componentForAssay={AssayButtonInCell}/>
+                <ModificationOptions/>
                 <AssayEditorModal/>
                 <AssaysGroupedByType/>
                 <Container maxWidth="sm" style={{marginTop : 24, marginBottom : 24}}>
