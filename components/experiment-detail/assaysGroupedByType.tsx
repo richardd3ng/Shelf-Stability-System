@@ -19,11 +19,19 @@ export const AssaysGroupedByType : React.FC = () => {
     } else {
         return (
             <Container style={{marginTop : 24}}>
+                <Accordion >
+                    <AccordionSummary expandIcon={<ExpandMore/>}>
+                        <Typography>All Assays</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <ExperimentTable assayFilter={(experimentInfo : ExperimentInfo) => experimentInfo.assays} componentForAssay={AssayButtonInCell}/>
+                    </AccordionDetails>
+                </Accordion>
                 {data.assayTypes.map((type) => {
                     return (
-                        <Accordion key={type.id}>
+                        <Accordion key={type.name}>
                             <AccordionSummary expandIcon={<ExpandMore/>}>
-                                <Typography>Assays Results for Type {type.name}</Typography>
+                                <Typography>Assays Results for Type {type.id}</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <ExperimentTable assayFilter={(experimentInfo : ExperimentInfo) => experimentInfo.assays.filter((assay) => assay.typeId === type.id)} componentForAssay={AssayResultInCell}/>
