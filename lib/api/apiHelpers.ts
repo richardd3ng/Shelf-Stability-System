@@ -1,6 +1,5 @@
 import { NextApiRequest } from "next";
-import { INVALID_EXPERIMENT_ID } from "../hooks/useExperimentId";
-
+import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 
 export function getErrorMessage(error: unknown): string {
     if (error instanceof Error) return error.message;

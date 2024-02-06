@@ -2,11 +2,11 @@
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { ExperimentTable } from "@/components/experiment-detail/experimentTable/experimentTable";
 import { AssaysGroupedByType } from "@/components/experiment-detail/assaysGroupedByType";
-import { AssayEditingContext } from "@/lib/context/assayEditingContext";
+import { AssayEditingContext } from "@/lib/context/experimentDetailPage/assayEditingContext";
 import { useState } from "react";
-import { AssayEditorModal } from "@/components/experiment-detail/assayEditorModal";
+import { AssayEditorModal } from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
 import { AssayButtonInCell } from "@/components/experiment-detail/experimentTable/assayButtonInCell";
-import { ExperimentHeader } from "@/components/experiment-detail/experimentHeader";
+import { ExperimentHeader } from "@/components/experiment-detail/summary/experimentHeader";
 import { Container } from "@mui/material";
 
 

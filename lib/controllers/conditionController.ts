@@ -1,6 +1,7 @@
 import { Condition } from "@prisma/client";
 import { ConditionCreationArgs, ConditionNamesResponse } from "./types";
 import { ApiError } from "next/dist/server/api-utils";
+import { deleteEntity } from "./deletions";
 
 export const createConditions = async (
     conditions: ConditionCreationArgs[]

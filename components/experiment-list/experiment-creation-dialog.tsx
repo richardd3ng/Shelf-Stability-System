@@ -35,7 +35,7 @@ import {
     ExperimentCreationArgs,
 } from "@/lib/controllers/types";
 import { AssayType, Condition, Experiment } from "@prisma/client";
-import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
+import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useAlert } from "@/context/alert-context";
 
 interface ExperimentCreationDialogProps {

@@ -1,5 +1,5 @@
-import { useExperimentInfo } from "@/lib/hooks/experimentDetailHooks";
-import { useExperimentId } from "@/lib/hooks/useExperimentId";
+import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
+import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Accordion, Container, Typography, AccordionSummary, AccordionDetails } from "@mui/material";
 import React from "react";
 import { LoadingContainer } from "../shared/loading";
@@ -8,6 +8,7 @@ import { ExperimentTable } from "./experimentTable/experimentTable";
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { ExpandMore } from "@mui/icons-material";
 import { AssayResultInCell } from "./experimentTable/assayResultInCell";
+import { AssayButtonInCell } from "./experimentTable/assayButtonInCell";
 
 export const AssaysGroupedByType : React.FC = () => {
     const experimentId = useExperimentId();

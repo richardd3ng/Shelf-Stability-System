@@ -4,7 +4,7 @@ import { getExperimentID } from "@/lib/api/apiHelpers";
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
-import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
+import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 
 export default async function getExperimentInfo(
     req: NextApiRequest,

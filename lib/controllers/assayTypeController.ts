@@ -1,6 +1,7 @@
 import { AssayType } from "@prisma/client";
 import { AssayTypeCreationArgs, AssayTypeNamesResponse } from "./types";
 import { ApiError } from "next/dist/server/api-utils";
+import { deleteEntity } from "./deletions";
 
 export const createAssayTypes = async (
     assayTypes: AssayTypeCreationArgs[]
