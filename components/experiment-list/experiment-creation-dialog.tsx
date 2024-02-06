@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
     Box,
     Button,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
@@ -34,6 +35,7 @@ import {
     ExperimentCreationArgs,
 } from "@/lib/controllers/types";
 import { AssayType, Condition, Experiment } from "@prisma/client";
+import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -72,6 +74,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [idCounter, setIdCounter] = useState<number>(1);
     const [assayScheduleTypeMap, setAssayScheduleTypeMap] =
         useState<AssayScheduleTypesMap>({});
+    const [creationLoading, setCreationLoading] = useState<boolean>(false);
 
     useEffect(() => {
         fetchAndSetAssayTypes();
@@ -166,16 +169,18 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             alert(alertMessage);
             return;
         }
+        setCreationLoading(true);
         const experimentData: ExperimentCreationArgs = {
             title: title,
             description: description,
             start_date: date!.toISOString(),
         };
+        let experimentId = INVALID_EXPERIMENT_ID;
         try {
             const experimentResJson: Experiment = await createExperiment(
                 experimentData
             );
-            const experimentId = experimentResJson.id;
+            experimentId = experimentResJson.id;
             const assayTypes: AssayTypeCreationArgs[] = selectedAssayTypes.map(
                 (type: string) => {
                     return {
@@ -254,6 +259,10 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             createAssays(assayCreationData);
         } catch (error) {
             alert(error);
+        }
+        setCreationLoading(false);
+        if (experimentId !== INVALID_EXPERIMENT_ID) {
+            alert(`Successfully created experiment ${experimentId}!`);
         }
         closeDialog();
     };
@@ -587,6 +596,10 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 <Button
                     sx={{ textTransform: "none" }}
                     onClick={handleCreateExperiment}
+                    disabled={creationLoading}
+                    startIcon={
+                        creationLoading && <CircularProgress size={20} />
+                    }
                 >
                     Create
                 </Button>
