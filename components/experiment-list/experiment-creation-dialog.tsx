@@ -36,6 +36,7 @@ import {
 } from "@/lib/controllers/types";
 import { AssayType, Condition, Experiment } from "@prisma/client";
 import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
+import { useAlert } from "@/context/alert-context";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -75,6 +76,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [assayScheduleTypeMap, setAssayScheduleTypeMap] =
         useState<AssayScheduleTypesMap>({});
     const [creationLoading, setCreationLoading] = useState<boolean>(false);
+    const { showAlert } = useAlert();
 
     useEffect(() => {
         fetchAndSetAssayTypes();
@@ -87,7 +89,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 await fetchDistinctAssayTypes();
             setAssayTypes(distinctAssayTypes);
         } catch (error) {
-            alert(error);
+            showAlert("error", String(error));
         }
     };
 
@@ -97,7 +99,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 await fetchDistinctConditions();
             setStorageConditions(distinctConditions);
         } catch (error) {
-            alert(error);
+            showAlert("error", String(error));
         }
     };
 
@@ -166,7 +168,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                     missingComponents[missingComponents.length - 1]
                 }.`;
             }
-            alert(alertMessage);
+            showAlert("error", alertMessage);
             return;
         }
         setCreationLoading(true);
@@ -225,17 +227,21 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         ([condition, types]) => {
                             const conditionId = conditionToId.get(condition);
                             if (conditionId === undefined) {
-                                alert(
+                                showAlert(
+                                    "error",
                                     `Condition ID not found for ${condition}`
                                 );
+
                                 return;
                             }
                             (types as string[]).forEach((type) => {
                                 const typeId = assayTypeToId.get(type);
                                 if (typeId === undefined) {
-                                    alert(
+                                    showAlert(
+                                        "error",
                                         `Assay type ID not found for ${type}`
                                     );
+
                                     return;
                                 }
                                 assayCreationData.push({
@@ -258,11 +264,14 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             );
             createAssays(assayCreationData);
         } catch (error) {
-            alert(error);
+            showAlert("error", String(error));
         }
         setCreationLoading(false);
         if (experimentId !== INVALID_EXPERIMENT_ID) {
-            alert(`Successfully created experiment ${experimentId}!`);
+            showAlert(
+                "success",
+                `Successfully created experiment ${experimentId}!`
+            );
         }
         closeDialog();
     };
@@ -272,7 +281,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             setAssayTypes([...assayTypes, newAssayType]);
             setNewAssayType("");
         } else {
-            alert("Assay type already exists or is invalid!");
+            showAlert("error", "Assay type already exists or is invalid!");
         }
     };
 
@@ -284,7 +293,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             setStorageConditions([...storageConditions, newStorageCondition]);
             setNewStorageCondition("");
         } else {
-            alert("Storage condition already exists or is empty!");
+            showAlert("error", "Storage condition already exists or is empty!");
         }
     };
 

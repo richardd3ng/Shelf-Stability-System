@@ -1,4 +1,11 @@
-import { Box, Button, Container, IconButton, Stack } from "@mui/material";
+import {
+    Alert,
+    Box,
+    Button,
+    Container,
+    IconButton,
+    Stack,
+} from "@mui/material";
 import {
     GridColDef,
     GridRowId,
@@ -22,6 +29,8 @@ import {
     queryExperimentList,
 } from "@/lib/controllers/experimentController";
 import { Experiment } from "@prisma/client";
+import ExperimentDeletionDialog from "@/components/experiment-list/experiment-deletion-dialog";
+import { useAlert } from "@/context/alert-context";
 
 interface ExperimentData {
     id: number;
@@ -30,40 +39,50 @@ interface ExperimentData {
     week: number;
 }
 
-const getExperiments = async (query?: string): Promise<ExperimentData[]> => {
-    let experimentList: Experiment[] = [];
-    try {
-        if (query && query.trim() !== "") {
-            experimentList = await queryExperimentList(query);
-        } else {
-            experimentList = await fetchExperimentList();
-        }
-    } catch (error) {
-        alert(error);
-    }
-    const experimentData: ExperimentData[] = experimentList.map(
-        (experiment) => ({
-            id: experiment.id,
-            title: experiment.title,
-            startDate: experiment.start_date,
-            week: getNumWeeksAfterStartDate(experiment.start_date, new Date()),
-        })
-    );
-    return experimentData;
-};
-
 const ExperimentList: React.FC = () => {
     const [experimentData, setExperimentData] = useState<ExperimentData[]>([]);
     const [sortModel, setSortModel] = useState<GridSortModel>([]);
-    const [showExperiementCreationDialog, setShowExperimentCreationDialog] =
+    const [showCreationDialog, setShowCreationDialog] =
+        useState<boolean>(false);
+    const [showDeletionDialog, setShowDeletionDialog] =
         useState<boolean>(false);
     const [loadingExperiments, setLoadingExperiments] =
         useState<boolean>(false);
     const [debounce, setDebounce] = useState<boolean>(false);
+    const [selectedExperimentIds, setSelectedExperimentIds] =
+        useState<GridRowSelectionModel>([]);
+    const { showAlert } = useAlert();
 
     useEffect(() => {
         fetchAndSetData();
-    }, [sortModel, showExperiementCreationDialog]);
+    }, [sortModel]);
+
+    const getExperiments = async (
+        query?: string
+    ): Promise<ExperimentData[]> => {
+        let experimentList: Experiment[] = [];
+        try {
+            if (query && query.trim() !== "") {
+                experimentList = await queryExperimentList(query);
+            } else {
+                experimentList = await fetchExperimentList();
+            }
+        } catch (error) {
+            showAlert("error", String(error));
+        }
+        const experimentData: ExperimentData[] = experimentList.map(
+            (experiment) => ({
+                id: experiment.id,
+                title: experiment.title,
+                startDate: experiment.start_date,
+                week: getNumWeeksAfterStartDate(
+                    experiment.start_date,
+                    new Date()
+                ),
+            })
+        );
+        return experimentData;
+    };
 
     const fetchAndSetData = async () => {
         setLoadingExperiments(true);
@@ -82,17 +101,8 @@ const ExperimentList: React.FC = () => {
         setDebounce(false);
     };
 
-    const handleAddExperiment = () => {
-        setShowExperimentCreationDialog(true);
-    };
-
     const handleView = (id: number) => {
         console.log("View");
-    };
-
-    const handleCloseDialog = async () => {
-        setShowExperimentCreationDialog(false);
-        await fetchAndSetData();
     };
 
     const createTableColumns = (): GridColDef[] => {
@@ -158,9 +168,7 @@ const ExperimentList: React.FC = () => {
                             <PictureAsPdfIcon />
                         </IconButton>
                         <IconButton
-                            onClick={() =>
-                                handleDeleteExperiments([params.row.id])
-                            }
+                            onClick={() => prepareForDeletion([params.row.id])}
                         >
                             <DeleteIcon />
                         </IconButton>
@@ -172,17 +180,16 @@ const ExperimentList: React.FC = () => {
         return columns;
     };
 
-    const handleDeleteExperiments = async (
-        selectedRows: GridRowSelectionModel
-    ) => {
-        if (debounce) {
-            return;
-        }
-        setDebounce(true);
+    const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
+        setSelectedExperimentIds(selectedRows);
+        setShowDeletionDialog(true);
+    };
+
+    const handleDeleteExperiments = async () => {
         let deletedIds: number[] = [];
         let cannotDeleteIds: number[] = [];
         try {
-            const deletePromises = selectedRows.map(
+            const deletePromises = selectedExperimentIds.map(
                 async (experimentId: GridRowId) => {
                     experimentId = experimentId as number;
                     try {
@@ -195,30 +202,31 @@ const ExperimentList: React.FC = () => {
                             deletedIds.push(experimentId);
                         }
                     } catch (error) {
-                        alert(error);
+                        showAlert("error", String(error));
                     }
                 }
             );
             await Promise.all(deletePromises);
+            await fetchAndSetData();
             if (deletedIds.length > 0) {
-                alert(
+                showAlert(
+                    "success",
                     `The following experiments were successfully deleted: ${deletedIds.join(
                         ", "
                     )}`
                 );
             }
             if (cannotDeleteIds.length > 0) {
-                alert(
+                showAlert(
+                    "warning",
                     `The following experiments contained recorded assay results and could not be deleted: ${cannotDeleteIds.join(
                         ", "
                     )}`
                 );
             }
-            await fetchAndSetData();
         } catch (error) {
-            alert(error);
+            showAlert("error", String(error));
         }
-        setDebounce(false);
     };
 
     return (
@@ -245,7 +253,7 @@ const ExperimentList: React.FC = () => {
                             marginLeft: "auto",
                             textTransform: "none",
                         }}
-                        onClick={handleAddExperiment}
+                        onClick={() => setShowCreationDialog(true)}
                     >
                         Add Experiment
                     </Button>
@@ -257,13 +265,23 @@ const ExperimentList: React.FC = () => {
                         columns={createTableColumns()}
                         rows={experimentData}
                         pagination
-                        onDeleteRows={handleDeleteExperiments}
+                        onDeleteRows={prepareForDeletion}
                         onSortModelChange={setSortModel}
                     />
                 )}
                 <ExperimentCreationDialog
-                    open={showExperiementCreationDialog}
-                    onClose={handleCloseDialog}
+                    open={showCreationDialog}
+                    onClose={() => {
+                        setShowCreationDialog(false);
+                        fetchAndSetData();
+                    }}
+                />
+                <ExperimentDeletionDialog
+                    open={showDeletionDialog}
+                    onClose={() => {
+                        setShowDeletionDialog(false);
+                    }}
+                    onDelete={handleDeleteExperiments}
                 />
             </Stack>
         </Layout>

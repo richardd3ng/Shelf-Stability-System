@@ -1,13 +1,16 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { QueryClientProvider, QueryClient } from "react-query";
+import { AlertProvider } from "@/context/alert-context";
 
 export default function App({ Component, pageProps }: AppProps) {
-	const queryClient = new QueryClient();
+    const queryClient = new QueryClient();
 
-	return (
-		<QueryClientProvider client={queryClient}>
-			<Component {...pageProps} />
-		</QueryClientProvider>
-	);
+    return (
+        <QueryClientProvider client={queryClient}>
+            <AlertProvider>
+                <Component {...pageProps} />
+            </AlertProvider>
+        </QueryClientProvider>
+    );
 }
