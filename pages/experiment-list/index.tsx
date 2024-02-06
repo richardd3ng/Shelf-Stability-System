@@ -6,21 +6,22 @@ import {
     GridSortModel,
 } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
 import ExperimentCreationDialog from "@/components/experiment-list/experiment-creation-dialog";
 import Layout from "../../components/shared/layout";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import SearchBar from "../../components/shared/search-bar";
 import Table from "../../components/shared/table";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import ViewIcon from "@mui/icons-material/Visibility";
+import { LoadingContainer } from "@/components/shared/loading";
+import { getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import {
     deleteExperiment,
     fetchExperimentList,
     hasRecordedAssayResults,
     queryExperimentList,
 } from "@/lib/controllers/experimentController";
-import { getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import { Experiment } from "@prisma/client";
-import { LoadingCircle, LoadingContainer } from "@/components/shared/loading";
 
 interface ExperimentData {
     id: number;
@@ -58,6 +59,7 @@ const ExperimentList: React.FC = () => {
         useState<boolean>(false);
     const [loadingExperiments, setLoadingExperiments] =
         useState<boolean>(false);
+    const [debounce, setDebounce] = useState<boolean>(false);
 
     useEffect(() => {
         fetchAndSetData();
@@ -71,8 +73,13 @@ const ExperimentList: React.FC = () => {
     };
 
     const queryAndSetData = async (query: string) => {
+        if (debounce) {
+            return;
+        }
+        setDebounce(true);
         const queriedData: ExperimentData[] = await getExperiments(query);
         setExperimentData(queriedData);
+        setDebounce(false);
     };
 
     const handleAddExperiment = () => {
@@ -83,10 +90,7 @@ const ExperimentList: React.FC = () => {
         console.log("View");
     };
 
-    const handleCloseDialog = async (reason: string) => {
-        if (reason === "backdropClick" || reason === "escapeKeyDown") {
-            return;
-        }
+    const handleCloseDialog = async () => {
         setShowExperimentCreationDialog(false);
         await fetchAndSetData();
     };
@@ -145,13 +149,20 @@ const ExperimentList: React.FC = () => {
                 headerAlign: "center",
                 disableColumnMenu: true,
                 sortable: false,
-                renderCell: () => (
+                renderCell: (params) => (
                     <Box sx={{ display: "flex" }}>
                         <IconButton>
                             <ViewIcon />
                         </IconButton>
                         <IconButton>
                             <PictureAsPdfIcon />
+                        </IconButton>
+                        <IconButton
+                            onClick={() =>
+                                handleDeleteExperiments([params.row.id])
+                            }
+                        >
+                            <DeleteIcon />
                         </IconButton>
                     </Box>
                 ),
@@ -164,6 +175,10 @@ const ExperimentList: React.FC = () => {
     const handleDeleteExperiments = async (
         selectedRows: GridRowSelectionModel
     ) => {
+        if (debounce) {
+            return;
+        }
+        setDebounce(true);
         try {
             const deletePromises = selectedRows.map(
                 async (experimentId: GridRowId) => {
@@ -192,6 +207,7 @@ const ExperimentList: React.FC = () => {
         } catch (error) {
             alert(error);
         }
+        setDebounce(false);
     };
 
     return (

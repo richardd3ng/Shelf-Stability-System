@@ -37,7 +37,7 @@ import { AssayType, Condition, Experiment } from "@prisma/client";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
-    onClose: (reason: string) => void;
+    onClose: () => void;
 }
 
 interface WeekRow {
@@ -144,7 +144,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         setWeekRows(remainingRows);
     };
 
-    const handleCreateExperiment = async (reason: string) => {
+    const handleCreateExperiment = async () => {
         const missingComponents: string[] = [];
         if (!title.trim()) {
             missingComponents.push("title");
@@ -255,8 +255,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         } catch (error) {
             alert(error);
         }
-        resetFields();
-        props.onClose(reason);
+        closeDialog();
     };
 
     const handleAddAssayType = () => {
@@ -411,9 +410,9 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         return newRow;
     };
 
-    const handleCancelExperiment = (reason: string) => {
+    const closeDialog = () => {
         resetFields();
-        props.onClose(reason);
+        props.onClose();
     };
 
     const resetFields = () => {
@@ -453,11 +452,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     };
 
     return (
-        <Dialog
-            open={props.open}
-            onClose={props.onClose}
-            sx={{ width: "100%" }}
-        >
+        <Dialog open={props.open} sx={{ width: "100%" }}>
             <DialogTitle sx={{ width: "100%" }}>Add New Experiment</DialogTitle>
             <DialogContent sx={{ width: "100%" }}>
                 <Stack spacing={1.5}>
@@ -586,15 +581,12 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ width: "100%" }}>
-                <Button
-                    sx={{ textTransform: "none" }}
-                    onClick={() => handleCancelExperiment("Cancel")}
-                >
+                <Button sx={{ textTransform: "none" }} onClick={closeDialog}>
                     Cancel
                 </Button>
                 <Button
                     sx={{ textTransform: "none" }}
-                    onClick={() => handleCreateExperiment("Create")}
+                    onClick={handleCreateExperiment}
                 >
                     Create
                 </Button>
