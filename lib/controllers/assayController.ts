@@ -4,6 +4,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import { Dayjs } from "dayjs";
 import { ServerPaginationArgs } from "../hooks/useServerPagination";
 import { encodePaging, relativeURL } from "./url";
+import { deleteEntity } from "./deletions";
 
 export const fetchAgendaList = async (minDate: Dayjs | null, maxDate: Dayjs | null, includeRecorded: boolean, paging: ServerPaginationArgs): Promise<AssayTable> => {
     const url = encodePaging(relativeURL("/api/assays/agenda"), paging);
@@ -83,3 +84,7 @@ export const updateAssayResultThroughAPI = async (
         throw new ApiError(response.status, resJson.message);
     }
 };
+
+export const deleteAssayThroughAPI = async (assayId : number) => {
+    await deleteEntity("/api/assays/" + assayId.toString() + "/deleteAssay");
+}

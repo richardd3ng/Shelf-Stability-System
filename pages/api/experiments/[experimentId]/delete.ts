@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { Experiment } from "@prisma/client";
 import { getApiError } from "@/lib/api/error";
-import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
+import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { getExperimentID } from "@/lib/api/apiHelpers";
 
 export default async function deleteExperiment(
@@ -35,6 +35,7 @@ export default async function deleteExperiment(
         }
         res.status(200).json(deletedExperiment);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(
                 500,

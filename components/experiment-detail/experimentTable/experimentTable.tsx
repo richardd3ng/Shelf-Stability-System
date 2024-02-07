@@ -2,14 +2,14 @@
 import { ErrorMessage } from "@/components/shared/errorMessage";
 import { LoadingContainer } from "@/components/shared/loading";
 import { ExperimentInfo } from "@/lib/controllers/types";
-import { INVALID_EXPERIMENT_ID, useExperimentId } from "@/lib/hooks/useExperimentId";
+import { INVALID_EXPERIMENT_ID, useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import {Typography, Container, Table, TableBody, TableRow, TableCell, Stack, Button} from "@mui/material";
 import { Assay, AssayType } from "@prisma/client";
 import { getDateAtMidnight, getNumWeeksAfterStartDate } from "@/lib/datesUtils";
-import { useExperimentInfo } from "@/lib/hooks/experimentDetailHooks";
+import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import React, { useContext } from "react";
-import { AssayEditingContext } from "@/lib/context/assayEditingContext";
-import { AssayEditorModal } from "../assayEditorModal";
+import { AssayEditingContext } from "@/lib/context/experimentDetailPage/assayEditingContext";
+import { AssayEditorModal } from "../modifications/editorModals/assayEditorModal";
 
 
 export const getAssaysForWeekAndCondition = (assays : Assay[], experimentStartDate : Date, weekNum : number, conditionId : number) : Assay[] => {
@@ -65,7 +65,7 @@ export const ExperimentTable : React.FC<ExperimentTableProps> = (props : Experim
                     <TableBody> 
                         <TableRow>
                             <TableCell></TableCell>
-                            {conditions.map((condition) =>
+                            {data.conditions.sort().map((condition) =>
                                 <TableCell key={condition.id}>
                                     <Typography align="center">{condition.name}</Typography>
                                 </TableCell>)}
@@ -73,7 +73,7 @@ export const ExperimentTable : React.FC<ExperimentTableProps> = (props : Experim
                         {weekNums.map((week) => 
                             <TableRow key={week}>
                                 <TableCell><Typography>Week {week}</Typography></TableCell>
-                                {conditions.map((condition) => {
+                                {data.conditions.sort().map((condition) => {
                                     let cellAssays = getAssaysForWeekAndCondition(assays, experimentStartDate, week, condition.id)
                                     return (
                                         <TableCell key={condition.id} style={{border : "1px solid black"}}>

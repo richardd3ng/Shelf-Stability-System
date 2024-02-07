@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { Condition } from "@prisma/client";
 import { getApiError } from "@/lib/api/error";
-import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
+import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 
 export default async function createConditions(
     req: NextApiRequest,
@@ -31,6 +31,7 @@ export default async function createConditions(
         });
         res.status(200).json(createdConditions);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(500, "Failed to create conditions on server")
         );

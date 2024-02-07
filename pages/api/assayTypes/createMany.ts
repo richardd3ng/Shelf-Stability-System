@@ -2,7 +2,7 @@ import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { AssayType } from "@prisma/client";
-import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/useExperimentId";
+import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { getApiError } from "@/lib/api/error";
 
 export default async function createManyAssayTypes(
@@ -31,6 +31,7 @@ export default async function createManyAssayTypes(
         });
         res.status(200).json(createdAssayTypes);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(500, "Failed to create assay types on server")
         );

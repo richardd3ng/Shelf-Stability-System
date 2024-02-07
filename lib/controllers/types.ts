@@ -29,23 +29,40 @@ export type AssayInfo = {
     week: number;
     type: string;
     result: string | null;
-}
+};
 
 export type AssayTable = {
     // Rows on this page
     rows: AssayInfo[];
     // Rows in the whole table
     rowCount: number;
-}
+};
 
 export type AssayCreationArgs = Omit<Assay, "id">;
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 export type ConditionCreationArgs = Omit<Condition, "id">;
-export type ExperimentCreationArgs = {
-    title: string;
-    description: string;
-    start_date: string;
-};
+
+export type AssayTypeCreationArgsNoExperimentId = Omit<
+    AssayTypeCreationArgs,
+    "experimentId"
+>;
+export type ConditionCreationArgsNoExperimentId = Omit<
+    ConditionCreationArgs,
+    "experimentId"
+>;
+export type ExperimentCreationArgs =
+    | {
+        title: string;
+        description: string;
+        start_date: string;
+    } | {
+          assayTypeCreationArgsNoExperimentIdArray: AssayTypeCreationArgsNoExperimentId[];
+      }
+    | {
+          conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+      };
+
+export type ExperimentCreationResponse = Omit<ExperimentInfo, "assays">;
 
 export type AssayTypeNamesResponse = {
     name: string;

@@ -4,7 +4,12 @@ import {
     JSONToAssay,
     JSONToExperiment
 } from "./jsonConversions";
-import { ExperimentInfo, ExperimentCreationArgs, ExperimentTable } from "./types";
+import {
+    ExperimentInfo,
+    ExperimentCreationArgs,
+    ExperimentCreationResponse,
+    ExperimentTable
+} from "./types";
 import { Experiment } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { encodePaging, relativeURL } from "./url";
@@ -38,7 +43,7 @@ export const fetchExperimentList = async (searchQuery: string, paging: ServerPag
 
 export const createExperiment = async (
     experimentData: ExperimentCreationArgs
-): Promise<Experiment> => {
+): Promise<ExperimentCreationResponse> => {
     const endpoint = "/api/experiments/create";
     const response = await fetch(endpoint, {
         method: "POST",
@@ -49,7 +54,11 @@ export const createExperiment = async (
     });
     const resJson = await response.json();
     if (response.ok) {
-        return JSONToExperiment(resJson);
+        return {
+            experiment: JSONToExperiment(resJson.experiment),
+            conditions: resJson.conditions,
+            assayTypes: resJson.assayTypes,
+        };
     } else {
         throw new ApiError(response.status, resJson.message);
     }
