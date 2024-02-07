@@ -1,5 +1,4 @@
 import { DataGridProps, GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
-import { Pick } from "@prisma/client/runtime/library";
 import { useEffect, useState } from "react";
 
 export type ServerPaginationProps = Partial<DataGridProps>

@@ -114,9 +114,9 @@ const ExperimentList: React.FC = () => {
                 rows: table.rows.map(experiment => ({
                     id: experiment.id,
                     title: experiment.title,
-                    startDate: experiment.start_date,
+                    startDate: experiment.startDate,
                     week: getNumWeeksAfterStartDate(
-                        experiment.start_date,
+                        experiment.startDate,
                         new Date()
                     ),
                 })),
@@ -136,14 +136,9 @@ const ExperimentList: React.FC = () => {
 
     const [paginationProps, reload] = useServerPagination(
         reloadExperimentData,
-        [
-            {
-                field: "targetDate",
-                sort: "asc",
-            },
-        ],
+        [],
         {
-            pageSize: 25,
+            pageSize: 10,
             page: 0
         });
 
