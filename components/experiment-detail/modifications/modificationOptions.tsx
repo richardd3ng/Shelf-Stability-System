@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Stack , Typography, Button} from "@mui/material";
+import { Stack , Typography, Button, Container } from "@mui/material";
 import { ExperimentAdditionsContext } from "@/lib/context/experimentDetailPage/experimentAdditionsContext";
 import { NewConditionModal } from "./newEntityModals/newConditionModal";
 import { NewAssayTypeModal } from "./newEntityModals/newAssayTypeModal";
@@ -26,13 +26,15 @@ export const ModificationOptions  = () => {
     ];
     return (
         <ExperimentAdditionsContext.Provider value={{isAddingCondition, setIsAddingCondition, isAddingAssayType, setIsAddingAssayType, isAddingAssay, setIsAddingAssay}}>
-            <Stack direction="row">
-                <Typography>Options : </Typography>
-                {options.map((option, index) => <ModButton text={option.text} onClick={option.onClick} key={index}/>)}
-            </Stack>
-            <NewConditionModal/>
-            <NewAssayTypeModal/>
-            <NewAssayModal/>
+            <Container style={{marginTop : 8}}>
+                <Stack direction="row">
+                    <Typography>Options : </Typography>
+                    {options.map((option, index) => <ModButton text={option.text} onClick={option.onClick} key={index}/>)}
+                </Stack>
+                <NewConditionModal/>
+                <NewAssayTypeModal/>
+                <NewAssayModal/>
+            </Container>
         </ExperimentAdditionsContext.Provider>
     );
 }

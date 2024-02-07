@@ -1,4 +1,4 @@
-import { useQueryClient, useMutation } from "react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useExperimentId } from "./useExperimentId";
 import { getQueryKeyForUseExperimentInfo } from "./experimentDetailHooks";
 import { AssayTypeCreationArgs, ConditionCreationArgs } from "@/lib/controllers/types";
@@ -14,9 +14,10 @@ const createAssayTypeMutationFn = async (assayTypeData : AssayTypeCreationArgs) 
 export const useMutationToCreateAssayType = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
-    return useMutation(createAssayTypeMutationFn, {
+    return useMutation( {
+        mutationFn : createAssayTypeMutationFn,
         onSuccess : () => {
-            queryClient.invalidateQueries(getQueryKeyForUseExperimentInfo(experimentId));
+            queryClient.invalidateQueries({queryKey : getQueryKeyForUseExperimentInfo(experimentId)});
         }
         
     })
@@ -30,10 +31,13 @@ const createConditionMutationFn = async (conditionData : ConditionCreationArgs) 
 export const useMutationToCreateCondition = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
-    return useMutation(createConditionMutationFn, {
+
+    return useMutation( {
+        mutationFn : createConditionMutationFn,
         onSuccess : () => {
-            queryClient.invalidateQueries(getQueryKeyForUseExperimentInfo(experimentId));
+            queryClient.invalidateQueries({queryKey : getQueryKeyForUseExperimentInfo(experimentId)});
         }
+        
     })
 }
 

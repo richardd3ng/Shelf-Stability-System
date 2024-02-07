@@ -11,7 +11,7 @@ interface CloseableModalProps {
 
 export const CloseableModal : React.FC<CloseableModalProps> = (props : CloseableModalProps) => {
     return (
-        <Dialog open={props.open}>
+        <Dialog open={props.open} maxWidth="lg">
             <DialogTitle>
                 <Typography style={{marginLeft : 8, marginRight : 8, marginBottom : 8, marginTop : 8}}>{props.title}</Typography>
                 <IconButton aria-label="close"

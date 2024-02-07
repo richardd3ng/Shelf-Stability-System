@@ -20,7 +20,7 @@ export const NewAssayModal = () => {
     const [conditionId, setConditionId] = useState<number>(-1);
     const [assayTyepId, setAssayTypeId] = useState<number>(-1);
     const [targetDate, setTargetDate] = useState<Date>(new Date(Date.now()));
-    const {isLoading, isError, error, mutate : createConditionInDB} = useMutationToCreateCondition();
+    const { isPending, isError, error, mutate : createConditionInDB} = useMutationToCreateCondition();
 
     const onSubmit = () => {
         
@@ -64,7 +64,7 @@ export const NewAssayModal = () => {
             : 
             null}
 
-            <ButtonWithLoadingAndError text="Submit" isLoading={isLoading} isError={isError} error={error} onSubmit={onSubmit}/>
+            <ButtonWithLoadingAndError text="Submit" isLoading={isPending} isError={isError} error={error} onSubmit={onSubmit}/>
         </CloseableModal>
     );
 }

@@ -124,3 +124,30 @@ export const deleteExperiment = async (
         throw new ApiError(response.status, resJson.message);
     }
 };
+
+export interface UpdateExperimentArgs {
+    experimentId : number;
+    newTitle : string;
+    newDescription : string | null;
+    newStartDate : Date;
+    shouldUpdateStartDate : boolean;
+
+}
+export const updateExperimentThroughAPI = async (experimentInfo : UpdateExperimentArgs) : Promise<UpdateExperimentArgs> => {
+    const apiResponse = await fetch("/api/experiments/" + experimentInfo.experimentId.toString() + "/updateExperiment", {
+        method: "POST",
+        body : JSON.stringify( {
+            title : experimentInfo.newTitle, 
+            description : experimentInfo.newDescription,
+            startDate : experimentInfo.newStartDate,
+            shouldUpdateStartDate : experimentInfo.shouldUpdateStartDate
+        }),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (apiResponse.status > 300) {
+        throw new Error("An error occurred");
+    }
+    return experimentInfo;
+}

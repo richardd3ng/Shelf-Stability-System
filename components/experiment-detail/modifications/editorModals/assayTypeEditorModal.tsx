@@ -11,8 +11,8 @@ import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoading
 
 export const AssayTypeEditorModal = () => {
     const {isEditing, setIsEditing, assayTypeIdBeingEdited, setAssayTypeIdBeingEdited} = useContext(AssayTypeEditingContext);
-    const {mutate : deleteAssayType, isLoading : isDeleting, isError : isErrorDeleting, error : errorDeleting} = useMutationToDeleteAssayType();
-    const {mutate : updateAssayType, isLoading : isUpdating, isError : isErrorUpdating, error : errorUpdating} = useMutationToUpdateAssayType();
+    const {mutate : deleteAssayType, isPending : isDeleting, isError : isErrorDeleting, error : errorDeleting} = useMutationToDeleteAssayType();
+    const {mutate : updateAssayType, isPending : isUpdating, isError : isErrorUpdating, error : errorUpdating} = useMutationToUpdateAssayType();
     const experimentId = useExperimentId();
     const {data} = useExperimentInfo(experimentId);
     const DEFAULT_RESULT = "";

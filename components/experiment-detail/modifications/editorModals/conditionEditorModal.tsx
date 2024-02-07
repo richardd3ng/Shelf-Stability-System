@@ -12,8 +12,8 @@ import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoading
 
 export const ConditionEditorModal = () => {
     const {isEditing, setIsEditing, setConditionIdBeingEdited, conditionIdBeingEdited} = useContext(ConditionEditingContext);
-    const {mutate : deleteCondition, isLoading : isDeleting, isError : isErrorDeleting, error : errorDeleting} = useMutationToDeleteCondition();
-    const {mutate : updateCondition, isLoading : isUpdating, isError : isErrorUpdating, error : errorUpdating} = useMutationToUpdateCondition();
+    const {mutate : deleteCondition, isPending : isDeleting, isError : isErrorDeleting, error : errorDeleting} = useMutationToDeleteCondition();
+    const {mutate : updateCondition, isPending : isUpdating, isError : isErrorUpdating, error : errorUpdating} = useMutationToUpdateCondition();
     const experimentId = useExperimentId();
     const {data} = useExperimentInfo(experimentId);
     const [newName, setNewName] = useState<string>("");
