@@ -25,3 +25,4 @@ export const INVALID_CONDITION_ID = -1;
 export const getConditionID = (req: NextApiRequest) : number => {
     return req.query.conditionId? Number(req.query.conditionId.toString()) : INVALID_ASSAY_TYPE_ID;
 }
+

@@ -3,7 +3,8 @@ import { getQueryKeyForUseExperimentInfo } from "./experimentDetailHooks";
 import { deleteAssayType } from "@/lib/controllers/assayTypeController";
 import { useExperimentId } from "./useExperimentId";
 import { deleteCondition } from "@/lib/controllers/conditionController";
-import { deleteAssayThroughAPI } from "@/lib/controllers/assayController";
+import { deleteAssayResultThroughAPI, deleteAssayThroughAPI } from "@/lib/controllers/assayController";
+import deleteAssayResultAPI from "@/pages/api/assays/[assayId]/deleteAssayResult";
 
 type deleteFnType = (id : number) => Promise<void>;
 const useMutationToDelteEntity = (deleteFn : deleteFnType) => {
@@ -55,3 +56,17 @@ export const useMutationToDeleteAssay = () => {
         
     })
 }
+
+export const useMutationToDeleteAssayResult = () => {
+    const queryClient = useQueryClient();
+    const experimentId = useExperimentId();
+    return useMutation( {
+        mutationFn : deleteAssayResultThroughAPI,
+        onSuccess : () => {
+            queryClient.invalidateQueries({queryKey : getQueryKeyForUseExperimentInfo(experimentId)});
+        }
+        
+    })
+}
+
+

@@ -2,11 +2,13 @@ import { getAssayTypeID } from '@/lib/api/apiHelpers';
 import { db } from '@/lib/api/db';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getErrorMessage } from '@/lib/api/apiHelpers';
+import { throwErrorIfAssaysWithThisAssayTypeHaveResult } from '@/lib/api/checkForRecordedAssays';
 
 
 export default async function deleteAssayTypeAPI(req: NextApiRequest, res: NextApiResponse) {
     try {
         const assayTypeId  = getAssayTypeID(req);
+        await throwErrorIfAssaysWithThisAssayTypeHaveResult(assayTypeId);
         await db.assayType.delete({
             where : {
                 id : assayTypeId

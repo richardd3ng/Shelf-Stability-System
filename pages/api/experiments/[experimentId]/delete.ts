@@ -5,12 +5,14 @@ import { Experiment } from "@prisma/client";
 import { getApiError } from "@/lib/api/error";
 import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { getExperimentID } from "@/lib/api/apiHelpers";
+import { throwErrorIfExperimentHasAssaysWithResults } from "@/lib/api/checkForRecordedAssays";
 
 export default async function deleteExperiment(
     req: NextApiRequest,
     res: NextApiResponse<Experiment | ApiError>
 ) {
     const experimentId = getExperimentID(req);
+    await throwErrorIfExperimentHasAssaysWithResults(experimentId);
     if (experimentId === INVALID_EXPERIMENT_ID) {
         res.status(400).json(
             getApiError(400, "Valid Experiment ID is required.")

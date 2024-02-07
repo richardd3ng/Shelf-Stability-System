@@ -14,7 +14,7 @@ interface ButtonWithLoadingAndErrorProps{
 export const ButtonWithLoadingAndError : React.FC<ButtonWithLoadingAndErrorProps> = (props : ButtonWithLoadingAndErrorProps) => {
     return (
         <YourButtonWithLoadingAndError isLoading={props.isLoading} isError={props.isError} error={props.error}>
-            <Button onClick={props.onSubmit}>
+            <Button variant="contained" color="primary" onClick={props.onSubmit}>
                 <Typography>{props.text}</Typography>
             </Button>
         </YourButtonWithLoadingAndError>

@@ -4,10 +4,11 @@ import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDe
 import { useMutationToDeleteAssayType } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useMutationToUpdateAssayType } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
-import { Typography, TextField } from "@mui/material";
+import { Typography, TextField, Stack } from "@mui/material";
 import { useContext, useState, useEffect } from "react"
 import { ButtonWithConfirmationLoadingAndError } from "@/components/shared/buttonWithConfirmationLoadingAndError";
 import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
+import { checkIfAnAssayHasResults } from "@/lib/checkIfAnAssayHasResults";
 
 export const AssayTypeEditorModal = () => {
     const {isEditing, setIsEditing, assayTypeIdBeingEdited, setAssayTypeIdBeingEdited} = useContext(AssayTypeEditingContext);
@@ -30,13 +31,25 @@ export const AssayTypeEditorModal = () => {
     
     return (
         <CloseableModal open={isEditing} closeFn={() => setIsEditing(false)} title={"Edit Assay type"}>
-            <TextField value={newName} onChange={(e) => setNewName(e.target.value)}></TextField>
-            <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdating} isLoading={isUpdating} error={errorUpdating} onSubmit={
-                () => updateAssayType({assayTypeId : assayTypeIdBeingEdited, newName : newName})
-            }/>
-            <ButtonWithConfirmationLoadingAndError text="Delete Assay Type" isLoading={isDeleting} isError={isErrorDeleting} error={errorDeleting} onSubmit={
-                () => deleteAssayType(assayTypeIdBeingEdited)
-            }/>
+            {
+                checkIfAnAssayHasResults(data, (assay) => assay.typeId === assayTypeIdBeingEdited) 
+                ? 
+                <Typography style={{marginLeft : 4, marginRight : 4}}>You cannot edit this assay type, as it has an assay with results</Typography>
+                :
+                <>
+                    <Stack>
+                        <TextField style={{marginLeft : 4, marginRight : 4}} label="Name" value={newName} onChange={(e) => setNewName(e.target.value)}></TextField>
+                        <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdating} isLoading={isUpdating} error={errorUpdating} onSubmit={
+                            () => updateAssayType({assayTypeId : assayTypeIdBeingEdited, newName : newName})
+                        }/>
+                        <ButtonWithConfirmationLoadingAndError text="Delete Assay Type" isLoading={isDeleting} isError={isErrorDeleting} error={errorDeleting} onSubmit={
+                            () => deleteAssayType(assayTypeIdBeingEdited)
+                        }/>
+                    </Stack>
+                </>
+
+            }
+            
         </CloseableModal>
     )
 }

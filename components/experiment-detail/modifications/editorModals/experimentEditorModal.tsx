@@ -4,7 +4,7 @@ import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDe
 import { useMutationToDeleteAssayType } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useMutationToUpdateAssayType, useMutationToUpdateExperiment } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
-import { Typography, TextField } from "@mui/material";
+import { Typography, TextField, Stack } from "@mui/material";
 import { useContext, useState, useEffect } from "react"
 import { ButtonWithConfirmationLoadingAndError } from "@/components/shared/buttonWithConfirmationLoadingAndError";
 import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
@@ -13,7 +13,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { ExperimentInfo } from "@/lib/controllers/types";
+import { checkIfAnAssayHasResults } from "../../../../lib/checkIfAnAssayHasResults";
+import { MyDatePicker } from "@/components/shared/myDatePicker";
 
 export const ExperimentEditorModal = () => {
     const {isEditing, setIsEditing} = useContext(ExperimentEditingContext);
@@ -37,44 +38,24 @@ export const ExperimentEditorModal = () => {
     
     return (
         <CloseableModal open={isEditing} closeFn={() => setIsEditing(false)} title={"Edit Experiment"}>
-            <TextField value={newTitle} label="Title" onChange={(e) => setNewTitle(e.target.value)} style={{marginBottom : 8}}></TextField>
-            <TextField value={newDescription} label="Description" onChange={(e) => setNewDescription(e.target.value)} style={{marginBottom : 8}}></TextField>
-            {
-                checkIfAnAssayHasResults(data) 
-                ?
-                <Typography>Cannot modify the start date, because assay results have been recorded</Typography>
-                : 
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker  label="Start Date" onChange={(newDate : Dayjs | null) => {
-                        if (newDate){
-                            setNewStartDate(newDate.toDate())
-                        }
-                    }}>
-
-                    </DatePicker>
-                </LocalizationProvider>
-            }
-            
-            <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdating} isLoading={isUpdating} error={errorUpdating} onSubmit={
-                () => {
-                    updateExperiment({newTitle, newDescription, newStartDate, shouldUpdateStartDate : !checkIfAnAssayHasResults(data), experimentId : experimentId })
+            <Stack>
+                <TextField value={newTitle} label="Title" onChange={(e) => setNewTitle(e.target.value)} style={{marginBottom : 8, marginLeft : 4, marginRight : 4}}></TextField>
+                <TextField value={newDescription} label="Description" onChange={(e) => setNewDescription(e.target.value)} style={{marginBottom : 8, marginLeft : 4, marginRight : 4}}></TextField>
+                {
+                    checkIfAnAssayHasResults(data,  () => true)
+                    ?
+                    <Typography>Cannot modify the start date, because assay results have been recorded</Typography>
+                    : 
+                    <MyDatePicker label="Start Date" setDate={setNewStartDate} date={newStartDate} />
                 }
-            }/>
+                
+                <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdating} isLoading={isUpdating} error={errorUpdating} onSubmit={
+                    () => {
+                        updateExperiment({newTitle, newDescription, newStartDate, shouldUpdateStartDate : !checkIfAnAssayHasResults(data, () => true), experimentId : experimentId })
+                    }
+                }/>
+            </Stack>
         </CloseableModal>
     )
 }
 
-const checkIfAnAssayHasResults = (experimentInfo : ExperimentInfo | undefined) : boolean => {
-    if (experimentInfo){
-        let anAssayHasResults = false;
-        experimentInfo.assays.forEach((assay) => {
-            if (assay.result){
-                anAssayHasResults = true;
-            }
-        })
-        return anAssayHasResults;
-    } else {
-        return false;
-    }
-}
-    

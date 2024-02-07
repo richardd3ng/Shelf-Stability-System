@@ -16,7 +16,7 @@ export const ButtonWithConfirmationLoadingAndError : React.FC<ButtonWithConfirma
     const [isAskingToConfirm, setIsAskingToConfirm] = useState<boolean>(false);
     if (!isAskingToConfirm){
         return (
-            <Button onClick={() => setIsAskingToConfirm(true)}>
+            <Button variant="outlined" color="primary" onClick={() => setIsAskingToConfirm(true)}>
                 <Typography>{props.text}</Typography>
             </Button>
         )
@@ -27,12 +27,12 @@ export const ButtonWithConfirmationLoadingAndError : React.FC<ButtonWithConfirma
                     <Typography>
                         Are you sure?
                     </Typography>
-                    <Button onClick={props.onSubmit}>
+                    <Button onClick={props.onSubmit} variant="outlined" color="primary">
                         <Typography>
                             Yes
                         </Typography>
                     </Button>
-                    <Button onClick={() => setIsAskingToConfirm(false)}>
+                    <Button onClick={() => setIsAskingToConfirm(false)} variant="contained" color="primary">
                         <Typography>
                             No
                         </Typography>

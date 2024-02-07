@@ -2,6 +2,7 @@ import { getExperimentID } from '@/lib/api/apiHelpers';
 import { db } from '@/lib/api/db';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getErrorMessage } from '@/lib/api/apiHelpers';
+import { throwErrorIfExperimentHasAssaysWithResults } from '@/lib/api/checkForRecordedAssays';
 
 
 export default async function updateExperimentAPI(req: NextApiRequest, res: NextApiResponse) {
@@ -13,6 +14,7 @@ export default async function updateExperimentAPI(req: NextApiRequest, res: Next
         const newStartDate = new Date(jsonData.startDate);
         const shouldUpdateStartDate = jsonData.shouldUpdateStartDate;
         if (shouldUpdateStartDate){
+            await throwErrorIfExperimentHasAssaysWithResults(experimentId);
             await db.experiment.update({
                 where : {
                     id : experimentId

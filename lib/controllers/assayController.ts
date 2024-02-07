@@ -88,3 +88,32 @@ export const updateAssayResultThroughAPI = async (
 export const deleteAssayThroughAPI = async (assayId : number) => {
     await deleteEntity("/api/assays/" + assayId.toString() + "/deleteAssay");
 }
+
+export const deleteAssayResultThroughAPI = async (assayId : number) => {
+    await deleteEntity("/api/assays/" + assayId.toString() + "/deleteAssayResult");
+}
+
+export interface UpdateAssayArgs {
+    assayId : number;
+    newResult : string | null;
+    newTargetDate : Date;
+    shouldUpdateTargetDate : boolean;
+
+}
+export const updateAssayThroughAPI = async (assayInfo : UpdateAssayArgs) : Promise<UpdateAssayArgs> => {
+    const apiResponse = await fetch("/api/assays/" + assayInfo.assayId.toString() + "/updateAssay", {
+        method: "POST",
+        body : JSON.stringify( {
+            result : assayInfo.newResult,
+            targetDate : assayInfo.newTargetDate,
+            shouldUpdateTargetDate : assayInfo.shouldUpdateTargetDate
+        }),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (apiResponse.status > 300) {
+        throw new Error("An error occurred");
+    }
+    return assayInfo;
+}
