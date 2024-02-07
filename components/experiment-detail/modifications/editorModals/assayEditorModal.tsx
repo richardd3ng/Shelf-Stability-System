@@ -44,7 +44,7 @@ export const AssayEditorModal: React.FC = () => {
         return (
             <CloseableModal open={isEditing} closeFn={() => setIsEditing(false)} title="Edit Assay">
                 <TextField value={newResult} onChange={(e) => setNewResult(e.target.value)}></TextField>
-                <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdatingDB} isLoading={isUpdatingDB} error={errorUpdatingAssay} onClick={
+                <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdatingDB} isLoading={isUpdatingDB} error={errorUpdatingAssay} onSubmit={
                     () => {updateAssayResultInDB({assayId : assayIdBeingEdited, experimentId : experimentId, newResult})}
                 }/>
                 <ButtonWithConfirmationLoadingAndError text="Delete Assay" isLoading={isDeleting} isError={isErrorDeleting} error={errorDeleting} onSubmit={

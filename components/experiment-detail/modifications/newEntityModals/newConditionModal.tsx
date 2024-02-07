@@ -18,7 +18,7 @@ export const NewConditionModal = () => {
     return (
         <CloseableModal open={isAddingCondition} closeFn={() => setIsAddingCondition(false)} title={"Add New Condition"}>
             <TextField value={name} onChange={(e) => setName(e.target.value)}></TextField>
-            <ButtonWithLoadingAndError text="Submit" isLoading={isLoading} isError={isError} error={error} onClick={onSubmit}/>
+            <ButtonWithLoadingAndError text="Submit" isLoading={isLoading} isError={isError} error={error} onSubmit={onSubmit}/>
         </CloseableModal>
     );
 }

@@ -64,7 +64,7 @@ export const NewAssayModal = () => {
             : 
             null}
 
-            <ButtonWithLoadingAndError text="Submit" isLoading={isLoading} isError={isError} error={error} onClick={onSubmit}/>
+            <ButtonWithLoadingAndError text="Submit" isLoading={isLoading} isError={isError} error={error} onSubmit={onSubmit}/>
         </CloseableModal>
     );
 }
