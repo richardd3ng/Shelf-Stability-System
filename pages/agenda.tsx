@@ -4,9 +4,7 @@ import { AssayInfo, AssayTable } from "@/lib/controllers/types";
 import { Box, Stack, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import {
     DataGrid,
-    GridColDef,
-    GridPaginationModel,
-    GridSortModel,
+    GridColDef
 } from "@mui/x-data-grid";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
@@ -97,7 +95,7 @@ export default function AssayAgenda() {
             },
         ],
         {
-            pageSize: 25,
+            pageSize: 15,
             page: 0
         });
 
@@ -146,6 +144,8 @@ export default function AssayAgenda() {
                     {...paginationProps}
                     rowSelection={false}
                     autoHeight
+                    rowHeight={43}
+                    pageSizeOptions={[15, 30, 60, 120]}
                     getCellClassName={(params) =>
                         params.row.result !== null
                             ? "assay-cell-recorded"
