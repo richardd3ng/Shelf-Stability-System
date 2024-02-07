@@ -38,6 +38,7 @@ import {
 import { AssayType, Condition } from "@prisma/client";
 import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useAlert } from "@/lib/context/alert-context";
+import { useRouter } from "next/router";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -78,6 +79,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         useState<AssayScheduleTypesMap>({});
     const [creationLoading, setCreationLoading] = useState<boolean>(false);
     const { showAlert } = useAlert();
+    const router = useRouter();
 
     useEffect(() => {
         fetchAndSetAssayTypes();
@@ -279,8 +281,11 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 "success",
                 `Successfully created experiment ${experimentId}!`
             );
+            router.push(`/experiments/${experimentId}`);
+            closeDialog();
+        } else {
+            showAlert("error", "Experiment ID is invalid!");
         }
-        closeDialog();
     };
 
     const handleAddAssayType = () => {
