@@ -1,40 +1,75 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Shelf Stability System
 
-## Getting Started
+## Developer Guide
+This app uses [Next.js](https://nextjs.org/) to have both frontend and backend code contained within a single codebase with a RESTful API to connect them. We use [Prisma](https://www.prisma.io/) as an ORM to communicate with our database in a type-safe way.
 
-First, run the development server:
+We use a postgres database with the tables `Assay`, `AssayType`, `Condition`, and `Experiment`. Experiments have some number of AssayTypes and Conditions, as expressed by an experiment id in each of them. Assays have ids for an Experiment, Condition, and AssayType that they belong to. There is no limit on how many Assays may link to a given Experiment, Conditon, or AssayType.
+
+For development:
+- Install Node.js v21.6.1. We recommend using [nvm](https://github.com/nvm-sh/nvm) for this
+- Clone this GitHub repository
+- Create a `.env` file in the root of the project with the format shown below. The details for populating this file will be provided by someone who knows them.
+```
+DATABASE_URL="<database connection string>"
+NEXTAUTH_SECRET=<secret>
+```
+- In the root of the project, run `npm install`
+- Run `npm run dev` to start the webserver. You should now be able to access it at [http://localhost:3000](http://localhost:3000)
+
+## Deployment Guide
+
+We started with an Ubuntu 22.04 server with the following packages installed:
+- Node.js v21.6.1 (installed through [nvm](https://github.com/nvm-sh/nvm) although this method is not required)
+- nginx
+- [pm2](https://www.npmjs.com/package/pm2) (Optional, but useful)
+- postgresql (if hosting the database on the same machine, however we will not be detailing how to setup the database software) 
+
+Clone this repository to somewhere on the machine. Create a file called `.env` in the root with the format
+```
+DATABASE_URL="<database connection string>"
+NEXTAUTH_SECRET=<secret>
+```
+Replace the database connection string with whatever connection string is used for the database you're using and the secret with some random string of your choice (an easy way to generate this is with `openssl rand -base64 32`). These instructions assume your database software is already running somewhere it can be reached from the server.
+
+`cd` into the project root and run the following commands:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install # Install all required packages
+npx prisma migrate deploy # Deploy the database schema
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then start the webserver. 
+For a production environment, run this to build the project:
+```bash
+npm run build
+```
+Followed by this to start the server:
+```bash
+npm run start
+```
+or if you're using pm2
+```bash
+pm2 start npm --name "prod" -- start # "prod" may be replaced with a name of your choosing
+```
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+The webserver will now be accepting http requests on port 8080. `nginx` will be needed to get it accepting https requests on port 80.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+There are many ways to configure nginx to achieve this, however, this was our method
+- In `/etc/nginx/nginx.conf`, within the `http` block, add:
+```nginx
+server {
+    server_name <your domain name(s) here>;
+    location / {
+        proxy_pass http://localhost:8080;
+    }
+}
+```
+- In the same file, comment out the following lines (although perhaps useful, we did not need these):
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```nginx
+include /etc/nginx/conf.d/*.conf;
+include /etc/nginx/sites-enabled/*;
+```
+- Follow the instructions on the [Certbot website](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal) to obtain and install an HTTPS certificate
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The first time you connect to the website, you will be presented with a Set Password page to setup the initial password. It is recommended to do this sometime before the server can be accessed from outside the network.
