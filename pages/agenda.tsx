@@ -145,7 +145,7 @@ export default function AssayAgenda() {
                     rowSelection={false}
                     autoHeight
                     rowHeight={43}
-                    pageSizeOptions={[15, 30, 60, 120]}
+                    pageSizeOptions={[15, 30, 60, 100]}
                     getCellClassName={(params) =>
                         params.row.result !== null
                             ? "assay-cell-recorded"
