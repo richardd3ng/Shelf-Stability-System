@@ -2,7 +2,7 @@ import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useExperimentId } from "./useExperimentId";
 import { useExperimentInfo, getQueryKeyForUseExperimentInfo  } from "./experimentDetailHooks";
 import { updateAssayResultThroughAPI, updateAssayThroughAPI } from "@/lib/controllers/assayController";
-import { updateConditionThroughAPI } from "@/lib/controllers/conditionController";
+import { makeConditionTheControlThroughAPI, updateConditionThroughAPI } from "@/lib/controllers/conditionController";
 import { updateAssayTypeThroughAPI } from "@/lib/controllers/assayTypeController";
 import { UpdateExperimentArgs, updateExperimentThroughAPI } from "@/lib/controllers/experimentController";
 
@@ -68,4 +68,19 @@ export const useMutationToUpdateExperiment = () => {
         
     })
 };
+
+export const useMutationToMakeConditionTheControl = () => {
+    const queryClient = useQueryClient();
+    const experimentId = useExperimentId();
+
+    return useMutation( {
+        mutationFn : makeConditionTheControlThroughAPI,
+        onSuccess : () => {
+            queryClient.invalidateQueries({queryKey : getQueryKeyForUseExperimentInfo(experimentId)});
+        }
+        
+    })
+};
+
+
 

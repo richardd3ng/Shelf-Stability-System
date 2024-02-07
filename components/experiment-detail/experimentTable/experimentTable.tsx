@@ -9,7 +9,6 @@ import { getDateAtMidnight, getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import React, { useContext } from "react";
 import { AssayEditingContext } from "@/lib/context/experimentDetailPage/assayEditingContext";
-import { AssayEditorModal } from "../modifications/editorModals/assayEditorModal";
 
 
 export const getAssaysForWeekAndCondition = (assays : Assay[], experimentStartDate : Date, weekNum : number, conditionId : number) : Assay[] => {
