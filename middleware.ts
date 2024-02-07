@@ -1,22 +1,24 @@
-import type { NextRequest } from 'next/server'
-import { redirectOrBlockIfNotLoggedIn } from './lib/middleware/checkIfLoggedIn';
-import { middlewareForFrontendAuthPages } from './lib/middleware/mwForFrontendAuthPages';
+import type { NextRequest } from "next/server";
+import { redirectOrBlockIfNotLoggedIn } from "./lib/middleware/checkIfLoggedIn";
+import { middlewareForFrontendAuthPages } from "./lib/middleware/mwForFrontendAuthPages";
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
     let pathname = request.nextUrl.pathname;
-    if (pathname.startsWith("/auth")){
+    if (pathname.startsWith("/auth")) {
         return await middlewareForFrontendAuthPages(request);
     }
-    if (pathname.startsWith("/api") && !pathname.startsWith("/api/auth")){
+    if (pathname.startsWith("/api") && !pathname.startsWith("/api/auth")) {
         return await redirectOrBlockIfNotLoggedIn(request);
     }
-    if (pathname.startsWith("/experiments") || pathname.startsWith("/agenda")){
+    if (
+        pathname.startsWith("/experiments") ||
+        pathname.startsWith("/agenda") ||
+        pathname.startsWith("/experiment-list")
+    ) {
         return await redirectOrBlockIfNotLoggedIn(request);
     }
-    
 }
 
- 
 export const config = {
-    matcher: ['/:path*'],
-  }
+    matcher: ["/:path*"],
+};
