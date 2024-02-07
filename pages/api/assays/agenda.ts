@@ -67,8 +67,8 @@ export default async function getAssays(req: NextApiRequest, res: NextApiRespons
             LATERAL (SELECT name FROM public."AssayType" WHERE a."typeId" = id) t
         
             WHERE TRUE
-                ${maxDate !== undefined ? Prisma.sql`AND a.target_date < ${maxDate.toDate()}` : Prisma.empty}
-                ${minDate !== undefined ? Prisma.sql`AND a.target_date > ${minDate.toDate()}` : Prisma.empty}
+                ${maxDate !== undefined ? Prisma.sql`AND a.target_date <= ${maxDate.toDate()}` : Prisma.empty}
+                ${minDate !== undefined ? Prisma.sql`AND a.target_date >= ${minDate.toDate()}` : Prisma.empty}
                 ${includeRecorded ? Prisma.empty : Prisma.sql`AND a.result ISNULL`}
             ${orderBy !== undefined ? Prisma.raw(`ORDER BY ${orderBy.field} ${orderBy.order}`) : Prisma.empty}
             LIMIT ${pageSize} OFFSET ${page * pageSize}`
