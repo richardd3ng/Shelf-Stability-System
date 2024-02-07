@@ -11,7 +11,7 @@ export default function UpdatePasswordPage(){
     const [password1, setPassword1] = useState<string>("");
     const [password2, setPassword2] = useState<string>("");
     const [oldPassword, setOldPassword] = useState<string>("");
-    const {mutate : updatePassword, isLoading, isError, error} = useMutationToUpdatePassword();
+    const {mutate : updatePassword, isPending, isError, error} = useMutationToUpdatePassword();
     return (
         <Layout>
             <Container maxWidth="sm" style={{marginTop : 20, paddingTop : 20}}>
@@ -42,7 +42,7 @@ export default function UpdatePasswordPage(){
                     : 
                     null
                 }
-                <YourButtonWithLoadingAndError isLoading={isLoading} isError={isError} error={error}>
+                <YourButtonWithLoadingAndError isLoading={isPending} isError={isError} error={error}>
                     <Button variant="contained" color="primary" disabled={password1 !== password2 || (password1.length < 1 || password2.length < 1)} onClick={
                         () => {updatePassword({newPassword : password1, oldPassword : oldPassword})}
                     }>

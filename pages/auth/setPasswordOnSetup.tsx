@@ -9,7 +9,7 @@ import { checkIfPasswordHasBeenSet } from "@/lib/api/auth/authHelpers";
 export default function SetPasswordOnSetupPage(){
     const [password1, setPassword1] = useState<string>("");
     const [password2, setPassword2] = useState<string>("");
-    const {mutate : setPassword, isLoading, isError, error} = useMutationToSetPasswordOnSetup();
+    const {mutate : setPassword, isPending, isError, error} = useMutationToSetPasswordOnSetup();
     return (
         <Container maxWidth="sm" style={{marginTop : 20, paddingTop : 20}}>
             
@@ -35,7 +35,7 @@ export default function SetPasswordOnSetupPage(){
                 : 
                 null
             }
-            <YourButtonWithLoadingAndError isLoading={isLoading} isError={isError} error={error}>
+            <YourButtonWithLoadingAndError isLoading={isPending} isError={isError} error={error}>
                 <Button variant="contained" color="primary" disabled={password1 !== password2 || (password1.length < 1 || password2.length < 1)} onClick={
                     () => {setPassword({newPassword : password1})}
                 }>

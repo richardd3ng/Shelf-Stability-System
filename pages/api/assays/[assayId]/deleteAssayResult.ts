@@ -2,16 +2,17 @@ import { getAssayID } from '@/lib/api/apiHelpers';
 import { db } from '@/lib/api/db';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getErrorMessage } from '@/lib/api/apiHelpers';
-import { throwErrorIfAssayHasResult } from '@/lib/api/checkForRecordedAssays';
 
 
-export default async function deleteAssayAPI(req: NextApiRequest, res: NextApiResponse) {
+export default async function deleteAssayResultAPI(req: NextApiRequest, res: NextApiResponse) {
     try {
         const assayId  = getAssayID(req);
-        await throwErrorIfAssayHasResult(assayId);
-        await db.assay.delete({
+        await db.assay.update({
             where : {
                 id : assayId
+            },
+            data : {
+                result : null
             }
         })
         res.status(200).json({message : "success!"});

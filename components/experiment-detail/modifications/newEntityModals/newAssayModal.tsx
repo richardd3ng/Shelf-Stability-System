@@ -1,7 +1,7 @@
 import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
 import { CloseableModal } from "@/components/shared/closeableModal";
 import { ExperimentAdditionsContext } from "@/lib/context/experimentDetailPage/experimentAdditionsContext";
-import { useMutationToCreateCondition } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
+import { useMutationToCreateAssay, useMutationToCreateCondition } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { FormControl, InputLabel, Stack, TextField, Select, MenuItem} from "@mui/material";
@@ -11,6 +11,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { createAssays } from "@/lib/controllers/assayController";
 
 export const NewAssayModal = () => {
     const {isAddingAssay, setIsAddingAssay} = useContext(ExperimentAdditionsContext);
@@ -20,10 +21,18 @@ export const NewAssayModal = () => {
     const [conditionId, setConditionId] = useState<number>(-1);
     const [assayTyepId, setAssayTypeId] = useState<number>(-1);
     const [targetDate, setTargetDate] = useState<Date>(new Date(Date.now()));
-    const {isLoading, isError, error, mutate : createConditionInDB} = useMutationToCreateCondition();
+    const { isPending, isError, error, mutate : createAssayInDB} = useMutationToCreateAssay();
 
     const onSubmit = () => {
-        
+        createAssayInDB(
+            {
+                experimentId : experimentId,
+                conditionId : conditionId,
+                typeId : assayTyepId,
+                target_date : targetDate,
+                result : null
+            }
+        )
     }
     return (
         <CloseableModal open={isAddingAssay} closeFn={() => setIsAddingAssay(false)} title={"Add New Assay"}>
@@ -64,7 +73,7 @@ export const NewAssayModal = () => {
             : 
             null}
 
-            <ButtonWithLoadingAndError text="Submit" isLoading={isLoading} isError={isError} error={error} onSubmit={onSubmit}/>
+            <ButtonWithLoadingAndError text="Submit" isLoading={isPending} isError={isError} error={error} onSubmit={onSubmit}/>
         </CloseableModal>
     );
 }

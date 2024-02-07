@@ -30,9 +30,9 @@ export const AssaysGroupedByType : React.FC = () => {
                 </Accordion>
                 {data.assayTypes.map((type) => {
                     return (
-                        <Accordion key={type.name}>
+                        <Accordion key={type.id}>
                             <AccordionSummary expandIcon={<ExpandMore/>}>
-                                <Typography>Assays Results for Type {type.id}</Typography>
+                                <Typography>Assays Results for Type {type.name}</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <ExperimentTable assayFilter={(experimentInfo : ExperimentInfo) => experimentInfo.assays.filter((assay) => assay.typeId === type.id)} componentForAssay={AssayResultInCell}/>

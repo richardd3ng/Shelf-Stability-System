@@ -6,6 +6,6 @@ import { Typography } from "@mui/material";
 
 export const AssayResultInCell : React.FC<AssayComponentProps> = (props : AssayComponentProps) => {
     return (
-        <Typography align="center">{props.assay.result}</Typography>
+        <Typography align="center">{props.assay.result ? props.assay.result : "Not Recorded"}</Typography>
     )
 }

@@ -4,7 +4,7 @@ import { ExperimentAdditionsContext } from "@/lib/context/experimentDetailPage/e
 import { useMutationToCreateAssayType, useMutationToCreateCondition } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { TextField} from "@mui/material";
+import { Stack, TextField} from "@mui/material";
 import { useContext, useState } from "react";
 
 export const NewAssayTypeModal = () => {
@@ -12,15 +12,17 @@ export const NewAssayTypeModal = () => {
     const experimentId = useExperimentId();
     const {data} = useExperimentInfo(experimentId);
     const [name, setName] = useState<string>("");
-    const {isLoading, isError, error, mutate : createAssayType} = useMutationToCreateAssayType();
+    const {isPending, isError, error, mutate : createAssayType} = useMutationToCreateAssayType();
 
     const onSubmit = () => {
         createAssayType({name : name, experimentId : experimentId});
     }
     return (
         <CloseableModal open={isAddingAssayType} closeFn={() => setIsAddingAssayType(false)} title={"Add New Assay Type"}>
-            <TextField value={name} onChange={(e) => setName(e.target.value)}></TextField>
-            <ButtonWithLoadingAndError text="Submit" isLoading={isLoading} isError={isError} error={error} onSubmit={onSubmit}/>
+            <Stack gap={1}>
+                <TextField style={{marginLeft : 4, marginRight : 4}} label="Name" value={name} onChange={(e) => setName(e.target.value)}></TextField>
+                <ButtonWithLoadingAndError text="Submit" isLoading={isPending} isError={isError} error={error} onSubmit={onSubmit}/>
+            </Stack>
         </CloseableModal>
     );
 }
