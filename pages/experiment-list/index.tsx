@@ -26,11 +26,11 @@ import {
     deleteExperiment,
     fetchExperimentList,
     hasRecordedAssayResults,
-    queryExperimentList,
 } from "@/lib/controllers/experimentController";
-import { Experiment } from "@prisma/client";
 import ExperimentDeletionDialog from "@/components/experiment-list/experiment-deletion-dialog";
 import { useAlert } from "@/context/alert-context";
+import { ServerPaginationArgs, useServerPagination } from "@/lib/hooks/useServerPagination";
+import { ExperimentTable } from "@/lib/controllers/types";
 
 interface ExperimentData {
     id: number;
@@ -41,7 +41,6 @@ interface ExperimentData {
 
 const ExperimentList: React.FC = () => {
     const [experimentData, setExperimentData] = useState<ExperimentData[]>([]);
-    const [sortModel, setSortModel] = useState<GridSortModel>([]);
     const [showCreationDialog, setShowCreationDialog] =
         useState<boolean>(false);
     const [showDeletionDialog, setShowDeletionDialog] =
@@ -51,133 +50,114 @@ const ExperimentList: React.FC = () => {
     const [debounce, setDebounce] = useState<boolean>(false);
     const [selectedExperimentIds, setSelectedExperimentIds] =
         useState<GridRowSelectionModel>([]);
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const { showAlert } = useAlert();
 
-    useEffect(() => {
-        fetchAndSetData();
-    }, [sortModel]);
+    const colDefs: GridColDef[] = [
+        {
+            field: "id",
+            headerName: "ID",
+            type: "number",
+            flex: 2,
+            valueFormatter: (params: any) => String(params.value)
+        },
+        {
+            field: "title",
+            headerName: "Title",
+            type: "string",
+            flex: 5
+        },
+        {
+            field: "startDate",
+            headerName: "Start Date",
+            type: "date",
+            flex: 2
+        },
+        {
+            field: "week",
+            headerName: "Week",
+            type: "number",
+            flex: 1
+        },
+        {
+            field: "actions",
+            headerName: "Actions",
+            flex: 2,
+            align: "center",
+            headerAlign: "center",
+            sortable: false,
+            renderCell: (params) => (
+                <Box sx={{ display: "flex" }}>
+                    <IconButton>
+                        <ViewIcon />
+                    </IconButton>
+                    <IconButton>
+                        <PictureAsPdfIcon />
+                    </IconButton>
+                    <IconButton
+                        onClick={() => prepareForDeletion([params.row.id])}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                </Box>
+            ),
+        },
+    ];
 
-    const getExperiments = async (
-        query?: string
-    ): Promise<ExperimentData[]> => {
-        let experimentList: Experiment[] = [];
-        try {
-            if (query && query.trim() !== "") {
-                experimentList = await queryExperimentList(query);
-            } else {
-                experimentList = await fetchExperimentList();
-            }
-        } catch (error) {
-            showAlert("error", String(error));
-        }
-        const experimentData: ExperimentData[] = experimentList.map(
-            (experiment) => ({
-                id: experiment.id,
-                title: experiment.title,
-                startDate: experiment.start_date,
-                week: getNumWeeksAfterStartDate(
-                    experiment.start_date,
-                    new Date()
-                ),
+    const getExperiments = (paging: ServerPaginationArgs): Promise<{ rows: ExperimentData[], rowCount: number }> => {
+        return fetchExperimentList(searchQuery, paging)
+            .catch((error) => {
+                showAlert("error", String(error));
+                return { rows: [], rowCount: 0 };
             })
-        );
-        return experimentData;
+            .then((table: ExperimentTable) => ({
+                rows: table.rows.map(experiment => ({
+                    id: experiment.id,
+                    title: experiment.title,
+                    startDate: experiment.start_date,
+                    week: getNumWeeksAfterStartDate(
+                        experiment.start_date,
+                        new Date()
+                    ),
+                })),
+                rowCount: table.rowCount
+            }));
     };
 
-    const fetchAndSetData = async () => {
+    const reloadExperimentData = (paging: ServerPaginationArgs): Promise<{ rows: ExperimentData[], rowCount: number }> => {
         setLoadingExperiments(true);
-        const fetchedData: ExperimentData[] = await getExperiments();
-        setExperimentData(fetchedData);
-        setLoadingExperiments(false);
+        return getExperiments(paging)
+            .then((fetchedData) => {
+                setExperimentData(fetchedData.rows);
+                setLoadingExperiments(false);
+                return fetchedData
+            });
     };
 
-    const queryAndSetData = async (query: string) => {
+    const [paginationProps, reload] = useServerPagination(
+        reloadExperimentData,
+        [
+            {
+                field: "targetDate",
+                sort: "asc",
+            },
+        ],
+        {
+            pageSize: 25,
+            page: 0
+        });
+
+    useEffect(() => {
         if (debounce) {
             return;
         }
         setDebounce(true);
-        const queriedData: ExperimentData[] = await getExperiments(query);
-        setExperimentData(queriedData);
+        reload();
         setDebounce(false);
-    };
+    }, [searchQuery]);
 
     const handleView = (id: number) => {
         console.log("View");
-    };
-
-    const createTableColumns = (): GridColDef[] => {
-        const columns: GridColDef[] = [
-            {
-                field: "id",
-                headerName: "ID",
-                type: "number",
-                flex: 2,
-                align: "left",
-                headerAlign: "left",
-                disableColumnMenu: true,
-                editable: false,
-                sortable: true,
-            },
-            {
-                field: "title",
-                headerName: "Title",
-                type: "string",
-                flex: 5,
-                align: "left",
-                headerAlign: "left",
-                disableColumnMenu: true,
-                editable: false,
-                sortable: true,
-            },
-            {
-                field: "startDate",
-                headerName: "Start Date",
-                type: "date",
-                flex: 2,
-                align: "left",
-                headerAlign: "left",
-                disableColumnMenu: true,
-                editable: false,
-                sortable: true,
-            },
-            {
-                field: "week",
-                headerName: "Week",
-                type: "number",
-                flex: 1,
-                align: "left",
-                headerAlign: "left",
-                disableColumnMenu: true,
-                editable: false,
-                sortable: true,
-            },
-            {
-                field: "actions",
-                headerName: "Actions",
-                flex: 2,
-                align: "center",
-                headerAlign: "center",
-                disableColumnMenu: true,
-                sortable: false,
-                renderCell: (params) => (
-                    <Box sx={{ display: "flex" }}>
-                        <IconButton>
-                            <ViewIcon />
-                        </IconButton>
-                        <IconButton>
-                            <PictureAsPdfIcon />
-                        </IconButton>
-                        <IconButton
-                            onClick={() => prepareForDeletion([params.row.id])}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
-                    </Box>
-                ),
-            },
-        ];
-        columns[0].valueFormatter = (params: any) => String(params.value);
-        return columns;
     };
 
     const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
@@ -207,7 +187,7 @@ const ExperimentList: React.FC = () => {
                 }
             );
             await Promise.all(deletePromises);
-            await fetchAndSetData();
+            await reload();
             if (deletedIds.length > 0) {
                 showAlert(
                     "success",
@@ -242,7 +222,7 @@ const ExperimentList: React.FC = () => {
                     <Container sx={{ flex: 2, marginRight: "25%" }}>
                         <SearchBar
                             placeholder="Enter Keyword"
-                            onSearch={queryAndSetData}
+                            onSearch={setSearchQuery}
                         />
                     </Container>
                     <Button
@@ -262,18 +242,18 @@ const ExperimentList: React.FC = () => {
                     <LoadingContainer text="Loading Experiments..." />
                 ) : (
                     <Table
-                        columns={createTableColumns()}
+                        columns={colDefs}
                         rows={experimentData}
                         pagination
                         onDeleteRows={prepareForDeletion}
-                        onSortModelChange={setSortModel}
+                        {...paginationProps}
                     />
                 )}
                 <ExperimentCreationDialog
                     open={showCreationDialog}
                     onClose={() => {
                         setShowCreationDialog(false);
-                        fetchAndSetData();
+                        reload();
                     }}
                 />
                 <ExperimentDeletionDialog

@@ -1,11 +1,24 @@
 import { Experiment, Condition, Assay, AssayType } from "@prisma/client";
-import { ExperimentJSON } from "./jsonConversions";
 
 export type ExperimentInfo = {
     experiment: Experiment;
     conditions: Condition[];
     assayTypes: AssayType[];
     assays: Assay[];
+};
+
+export type ExerimentTableInfo = {
+    id: number;
+    title: string;
+    startDate: Date;
+    week: number;
+};
+
+export type ExperimentTable = {
+    // Rows on this page
+    rows: ExerimentTableInfo[];
+    // Rows in the whole table
+    rowCount: number;
 };
 
 export type AssayInfo = {
@@ -28,7 +41,11 @@ export type AssayTable = {
 export type AssayCreationArgs = Omit<Assay, "id">;
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 export type ConditionCreationArgs = Omit<Condition, "id">;
-export type ExperimentCreationArgs = Omit<ExperimentJSON, "id">;
+export type ExperimentCreationArgs = {
+    title: string;
+    description: string;
+    start_date: string;
+};
 
 export type AssayTypeNamesResponse = {
     name: string;
