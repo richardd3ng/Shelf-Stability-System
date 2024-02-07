@@ -65,6 +65,23 @@ export const updateConditionThroughAPI = async (conditionInfo : UpdateConditionA
     return conditionInfo;
 }
 
+interface MakeConditionTheControlArgs {
+    conditionId : number;
+}
+export const makeConditionTheControlThroughAPI = async (conditionInfo : MakeConditionTheControlArgs) : Promise<MakeConditionTheControlArgs> => {
+    const apiResponse = await fetch("/api/conditions/" + conditionInfo.conditionId.toString() + "/makeTheControl", {
+        method: "POST",
+        body : JSON.stringify({}),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (apiResponse.status > 300) {
+        throw new Error("An error occurred");
+    }
+    return conditionInfo;
+}
+
 
 export const deleteCondition = async (conditionId : number) => {
     await deleteEntity("/api/conditions/" + conditionId.toString() + "/deleteCondition");

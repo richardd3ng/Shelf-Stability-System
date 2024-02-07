@@ -60,7 +60,7 @@ export const AssayEditorModal: React.FC = () => {
                         <MyDatePicker label="Target Date" setDate={setNewTargetDate} date={newTargetDate} />
                     }
                     
-                    <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdatingDB} isLoading={isUpdatingDB} error={errorUpdatingAssay} onSubmit={
+                    <ButtonWithLoadingAndError text="Submit New Result" isError={isErrorUpdatingDB} isLoading={isUpdatingDB} error={errorUpdatingAssay} onSubmit={
                         () => {updateAssayInDB({assayId : assayIdBeingEdited, newTargetDate, newResult, shouldUpdateTargetDate : !assayHasResults})}
                     }/>
                     {

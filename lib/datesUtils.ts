@@ -6,6 +6,6 @@ export const getNumWeeksAfterStartDate = (startDate : Date, date : Date) : numbe
     let dateAtMidnight = getDateAtMidnight(date);
     let msDiff = dateAtMidnight.getTime() - startDateMidnight.getTime();
     let daysDiff = msDiff / (1000 * 60 * 60 * 24);
-    let weeksDiff = Math.floor(daysDiff / 7);
+    let weeksDiff = Math.round(daysDiff / 7);
     return weeksDiff;
 }

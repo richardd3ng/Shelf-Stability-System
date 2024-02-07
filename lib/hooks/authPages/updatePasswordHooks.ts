@@ -1,4 +1,4 @@
-import { useAlert } from "@/context/alert-context";
+import { useAlert } from "@/lib/context/alert-context";
 import { updatePasswordThroughAPI } from "@/lib/controllers/authController";
 import { useMutation } from "@tanstack/react-query";
 

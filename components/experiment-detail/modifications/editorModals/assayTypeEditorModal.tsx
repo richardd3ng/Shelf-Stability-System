@@ -34,12 +34,12 @@ export const AssayTypeEditorModal = () => {
             {
                 checkIfAnAssayHasResults(data, (assay) => assay.typeId === assayTypeIdBeingEdited) 
                 ? 
-                <Typography style={{marginLeft : 4, marginRight : 4}}>You cannot edit this assay type, as it has an assay with results</Typography>
+                <Typography style={{marginLeft : 4, marginRight : 4}}>You cannot edit this assay type, as it has an assay with results recorded</Typography>
                 :
                 <>
                     <Stack>
                         <TextField style={{marginLeft : 4, marginRight : 4}} label="Name" value={newName} onChange={(e) => setNewName(e.target.value)}></TextField>
-                        <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdating} isLoading={isUpdating} error={errorUpdating} onSubmit={
+                        <ButtonWithLoadingAndError text="Submit New Name" isError={isErrorUpdating} isLoading={isUpdating} error={errorUpdating} onSubmit={
                             () => updateAssayType({assayTypeId : assayTypeIdBeingEdited, newName : newName})
                         }/>
                         <ButtonWithConfirmationLoadingAndError text="Delete Assay Type" isLoading={isDeleting} isError={isErrorDeleting} error={errorDeleting} onSubmit={
