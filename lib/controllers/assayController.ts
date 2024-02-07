@@ -61,15 +61,16 @@ export const createAssays = async (assays: AssayCreationArgs[]) => {
 };
 
 export interface UpdateAssayResultArgs {
-    experimentId: number;
     assayId: number;
-    newResult: string;
+    newResult: string | null;
 }
 
 export const updateAssayResultThroughAPI = async (
     assayInfo: UpdateAssayResultArgs
 ): Promise<UpdateAssayResultArgs> => {
-    const endpoint = `/api/assays/${assayInfo.assayId.toString()} +  + /updateAssayResult`;
+    console.log(assayInfo.assayId);
+    console.log(assayInfo.assayId.toString());
+    const endpoint = `/api/assays/${assayInfo.assayId}/updateAssayResult`;
     const response = await fetch(endpoint, {
         method: "POST",
         body: JSON.stringify({ result: assayInfo.newResult }),
@@ -86,11 +87,11 @@ export const updateAssayResultThroughAPI = async (
 };
 
 export const deleteAssayThroughAPI = async (assayId : number) => {
-    await deleteEntity("/api/assays/" + assayId.toString() + "/deleteAssay");
+    await deleteEntity(`/api/assays/${assayId}/deleteAssay`);
 }
 
 export const deleteAssayResultThroughAPI = async (assayId : number) => {
-    await deleteEntity("/api/assays/" + assayId.toString() + "/deleteAssayResult");
+    await deleteEntity(`/api/assays/${assayId}/deleteAssayResult`);
 }
 
 export interface UpdateAssayArgs {
