@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { AssayInfo, AssayTable } from "@/lib/controllers/types";
 import { Prisma } from "@prisma/client";
 import dayjs, { Dayjs } from "dayjs";
+import { ApiError } from "next/dist/server/api-utils";
+import { getApiError } from "@/lib/api/error";
 
 // Be very careful with this function, it's very easy to introduce SQL injection vulnerabilities
 function convertSort(field: string | string[] | undefined, order: string | string[] | undefined) {
@@ -17,6 +19,8 @@ function convertSort(field: string | string[] | undefined, order: string | strin
                 field: "e.title",
                 order: newOrder
             };
+        case "targetDate":
+            field = "target_date";
         case "id":
         case "result":
             return {
@@ -25,7 +29,6 @@ function convertSort(field: string | string[] | undefined, order: string | strin
             };
         case "type":
         case "condition":
-        case "targetDate":
         case "week":
             return {
                 field: field,
@@ -36,17 +39,27 @@ function convertSort(field: string | string[] | undefined, order: string | strin
     return undefined;
 }
 
-export default async function getAssays(req: NextApiRequest, res: NextApiResponse<AssayTable>) {
+export default async function getAssays(req: NextApiRequest, res: NextApiResponse<AssayTable | ApiError>) {
     const minDate = req.query.minDate ? dayjs(req.query.minDate as string) : undefined;
     const maxDate = req.query.maxDate ? dayjs(req.query.maxDate as string) : undefined;
     const includeRecorded = req.query.include_recorded === "true";
+
     const orderBy = convertSort(req.query.sort_by, req.query.sort_order);
-    const page = parseInt(req.query.page as string);
-    const pageSize = parseInt(req.query.page_size as string);
+    var page;
+    var pageSize;
+    try {
+        page = parseInt(req.query.page as string);
+        pageSize = parseInt(req.query.page_size as string);
+    } catch (error) {
+        res.status(400).json(
+            getApiError(400, "Invalid page or page_size")
+        );
+        return;
+    }
 
     const [assays, totalRows] = await Promise.all([
         // TODO look at views instead?
-        db.$queryRaw<any[]>`SELECT a.id, a.target_date AS targetDate, e.title, c.name as condition, t.name as type, ROUND(EXTRACT(DAY FROM a.target_date - e.start_date) / 7) as week, a.result
+        db.$queryRaw<any[]>`SELECT a.id, a.target_date, e.title, c.name as condition, t.name as type, ROUND(EXTRACT(DAY FROM a.target_date - e.start_date) / 7) as week, a.result
             
             FROM public."Assay" a,
             LATERAL (SELECT title, start_date FROM public."Experiment" e WHERE a."experimentId" = id) e,
@@ -59,8 +72,7 @@ export default async function getAssays(req: NextApiRequest, res: NextApiRespons
                 ${includeRecorded ? Prisma.empty : Prisma.sql`AND a.result ISNULL`}
             ${orderBy !== undefined ? Prisma.raw(`ORDER BY ${orderBy.field} ${orderBy.order}`) : Prisma.empty}
             LIMIT ${pageSize} OFFSET ${page * pageSize}`
-            // SQL doesn't understand casing
-            .then<AssayInfo[]>(assays => assays.map(assay => ({...assay, targetdate: undefined, targetDate: assay.targetdate}))),
+            .then<AssayInfo[]>(assays => assays.map(assay => ({...assay, target_date: undefined, targetDate: assay.target_date}))),
         db.assay.count({
             where: {
                 target_date: { gte: minDate?.toDate(), lte: maxDate?.toDate() },

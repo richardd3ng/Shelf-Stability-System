@@ -3,27 +3,19 @@ import { Box, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
     DataGrid,
-    GridColDef,
+    DataGridProps,
     GridFooter,
     GridFooterContainer,
     GridRowSelectionModel,
 } from "@mui/x-data-grid";
-import { GridApiCommunity } from "@mui/x-data-grid/internals";
-import { MutableRefObject } from "react";
 
 interface TableProps {
-    columns: GridColDef[];
-    rows: any[];
-    pagination?: true;
     sortModel?: any;
     footer?: React.JSXElementConstructor<any>;
     onDeleteRows?: (rows: GridRowSelectionModel) => void;
-    onSortModelChange?: (sortModel: any) => void;
-    processRowUpdate?: (newRow: any) => any;
-    apiRef?: MutableRefObject<GridApiCommunity>;
 }
 
-const Table: React.FC<TableProps> = (props: TableProps) => {
+const Table: React.FC<TableProps & DataGridProps> = (props: TableProps & DataGridProps) => {
     const [selectedRows, setSelectedRows] =
         React.useState<GridRowSelectionModel>([]);
 
@@ -78,8 +70,6 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
     return (
         <Box sx={{ width: "100%" }}>
             <DataGrid
-                rows={props.rows}
-                columns={props.columns}
                 hideFooterPagination={!props.pagination}
                 initialState={{
                     pagination: { paginationModel: { pageSize: 10 } },
@@ -87,6 +77,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                         sortModel: props.sortModel,
                     },
                 }}
+                disableColumnMenu
                 autoHeight
                 getRowHeight={() => "auto"}
                 pageSizeOptions={[10, 15]}
@@ -98,13 +89,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                 ) => {
                     setSelectedRows(newSelectedRows);
                 }}
-                onSortModelChange={props.onSortModelChange}
-                processRowUpdate={
-                    props.processRowUpdate
-                        ? (newRow: any) => props.processRowUpdate!(newRow)
-                        : () => {}
-                }
-                apiRef={props.apiRef}
+                {...props}
             />
         </Box>
     );

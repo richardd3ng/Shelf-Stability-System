@@ -1,55 +1,44 @@
+import { ServerPaginationArgs } from "../hooks/useServerPagination";
 import {
     AssayJSON,
     JSONToAssay,
-    JSONToExperiment,
-    ExperimentJSON,
+    JSONToExperiment
 } from "./jsonConversions";
 import {
     ExperimentInfo,
     ExperimentCreationArgs,
     ExperimentCreationResponse,
+    ExperimentTable
 } from "./types";
 import { Experiment } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
+import { encodePaging, relativeURL } from "./url";
 
-export const fetchExperimentList = async (): Promise<Experiment[]> => {
-    const endpoint = "/api/experiments/list";
-    const response = await fetch(endpoint, {
+export const fetchExperimentList = async (searchQuery: string, paging: ServerPaginationArgs): Promise<ExperimentTable> => {
+    const url = encodePaging(relativeURL("/api/experiments/search"), paging);
+    url.searchParams.set("query", searchQuery);
+
+    const response = await fetch(url, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
     });
+
     const resJson = await response.json();
     if (response.ok) {
-        return resJson.map((experiment: ExperimentJSON) =>
-            JSONToExperiment(experiment)
-        );
-    } else {
-        throw new ApiError(response.status, resJson.message);
+        const table: ExperimentTable = resJson;
+        return {
+            ...table,
+            // Convert the startDate from string to Date
+            rows: table.rows.map(experiment => ({
+                ...experiment,
+                startDate: new Date(experiment.startDate),
+            }))
+        }
     }
-};
 
-export const queryExperimentList = async (
-    query: string
-): Promise<Experiment[]> => {
-    const endpoint = `/api/experiments/search?query=${encodeURIComponent(
-        query
-    )}`;
-    const response = await fetch(endpoint, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-    const resJson = await response.json();
-    if (response.status < 300) {
-        return resJson.map((experiment: ExperimentJSON) =>
-            JSONToExperiment(experiment)
-        );
-    } else {
-        throw new ApiError(response.status, resJson.message);
-    }
+    throw new ApiError(response.status, resJson.message);
 };
 
 export const createExperiment = async (

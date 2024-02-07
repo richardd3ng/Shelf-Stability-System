@@ -1,15 +1,11 @@
 import { Assay, Experiment } from "@prisma/client";
 
-export type ExperimentJSON = Omit<Experiment, "start_date"> & {
-    start_date: string;
-};
-
-export const JSONToExperiment = (JSONData: ExperimentJSON): Experiment => {
+export const JSONToExperiment = (JSONData: Experiment): Experiment => {
     return {
         ...JSONData,
         start_date: new Date(JSONData.start_date),
     };
-};
+}
 
 export type AssayJSON = Omit<Assay, "target_date"> & { target_date: string };
 
