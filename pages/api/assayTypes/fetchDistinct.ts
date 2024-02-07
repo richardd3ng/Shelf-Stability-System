@@ -18,6 +18,7 @@ export default async function fetchDistinctAssayTypes(
             });
         res.status(200).json(distinctAssayTypes);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(500, "Failed to fetch assay type names on server")
         );

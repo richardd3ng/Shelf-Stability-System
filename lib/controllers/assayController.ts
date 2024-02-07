@@ -2,17 +2,12 @@ import { AssayCreationArgs } from "./types";
 import { AssayTable } from "./types";
 import { ApiError } from "next/dist/server/api-utils";
 import { Dayjs } from "dayjs";
-import { GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
+import { ServerPaginationArgs } from "../hooks/useServerPagination";
+import { encodePaging, relativeURL } from "./url";
 import { deleteEntity } from "./deletions";
 
-export const fetchAgendaList = async (minDate: Dayjs | null, maxDate: Dayjs | null, includeRecorded: boolean, sortModel: GridSortModel, pagination: GridPaginationModel) : Promise<AssayTable> => {
-    const url = new URL("/api/assays/agenda", typeof window !== "undefined" ? window.location.origin : undefined);
-    if (sortModel.length > 0 && sortModel[0].sort !== null && sortModel[0].sort !== undefined) {
-        url.searchParams.set("sort_by", sortModel[0].field);
-        url.searchParams.set("sort_order", sortModel[0].sort);
-    }
-    url.searchParams.set("page", pagination.page.toString());
-    url.searchParams.set("page_size", pagination.pageSize.toString());
+export const fetchAgendaList = async (minDate: Dayjs | null, maxDate: Dayjs | null, includeRecorded: boolean, paging: ServerPaginationArgs): Promise<AssayTable> => {
+    const url = encodePaging(relativeURL("/api/assays/agenda"), paging);
 
     url.searchParams.set("include_recorded", includeRecorded.toString());
     if (minDate !== null) {
@@ -29,16 +24,21 @@ export const fetchAgendaList = async (minDate: Dayjs | null, maxDate: Dayjs | nu
         },
     });
 
+    const resJson = await apiResponse.json();
     if (apiResponse.ok) {
-        return await apiResponse.json()
-            .then((data: AssayTable) =>
-                ({
-                    ...data,
-                    // Convert the targetDate from string to Date
-                    rows: data.rows.map(assay => ({...assay, targetDate: new Date(assay.targetDate)}))
-                }));
+        const table: AssayTable = resJson;
+        return {
+            ...table,
+            // Convert the targetDate from string to Date
+            rows: table.rows.map(assay =>
+            ({
+                ...assay,
+                targetDate: new Date(assay.targetDate)
+            }))
+        }
     }
-    throw new Error(apiResponse.status +": Failed to fetch assays");
+
+    throw new ApiError(apiResponse.status, resJson.message);
 }
 
 export const createAssays = async (assays: AssayCreationArgs[]) => {

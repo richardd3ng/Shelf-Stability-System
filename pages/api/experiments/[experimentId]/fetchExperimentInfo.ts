@@ -48,7 +48,8 @@ export default async function getExperimentInfo(
                 )
             );
         }
-    } catch {
+    } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(
                 500,

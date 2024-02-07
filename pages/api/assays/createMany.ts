@@ -19,6 +19,7 @@ export default async function createManyAssay(
         });
         res.status(200).json(createdAssays);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(
                 500,

@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import ViewIcon from "@mui/icons-material/Visibility";
 import { Edit } from "@mui/icons-material";
 import Link from "next/link";
+import { useServerPagination, ServerPaginationArgs } from "@/lib/hooks/useServerPagination";
 
 const colDefs: GridColDef[] = [
     {
@@ -69,47 +70,40 @@ const colDefs: GridColDef[] = [
 ];
 
 export default function AssayAgenda() {
-    const [sortModel, setSortModel] = useState<GridSortModel>([
-        {
-            field: "targetDate",
-            sort: "asc",
-        },
-    ]);
-
     const [fromDate, setFromDate] = useState<Dayjs | null>(dayjs().subtract(1, "week"));
     const [toDate, setToDate] = useState<Dayjs | null>(null);
     const [recordedAssaysOnly, setRecordedAssaysOnly] = useState<boolean>(false);
-    const [pagination, setPagination] = useState<GridPaginationModel>({
-        page: 0,
-        pageSize: 25,
-    });
 
     const [rows, setRows] = useState<AssayInfo[]>([]);
-    const [rowCount, setRowCount] = useState<number>(0);
 
-    function reloadAgendaList() {
-        fetchAgendaList(
+    function reloadAgendaList(paging: ServerPaginationArgs) {
+        return fetchAgendaList(
             fromDate,
             toDate,
             recordedAssaysOnly,
-            sortModel,
-            pagination
+            paging
         ).then((res: AssayTable) => {
             setRows(res.rows);
-            setRowCount(res.rowCount);
+            return res;
         });
     }
 
-    useEffect(() => {
-        reloadAgendaList();
-    }, [fromDate, toDate, recordedAssaysOnly, pagination]);
+    const [paginationProps, reload] = useServerPagination(
+        reloadAgendaList,
+        [
+            {
+                field: "targetDate",
+                sort: "asc",
+            },
+        ],
+        {
+            pageSize: 25,
+            page: 0
+        });
 
     useEffect(() => {
-        // When sorting changes, only reload if paging is happening
-        if (rowCount > pagination.pageSize) {
-            reloadAgendaList();
-        }
-    }, [sortModel]);
+        reload();
+    }, [fromDate, toDate, recordedAssaysOnly]);
 
     return (
         <Layout>
@@ -137,7 +131,7 @@ export default function AssayAgenda() {
                             control={
                                 <Checkbox
                                     value={recordedAssaysOnly}
-                                    onChange={(e, val) =>
+                                    onChange={(_, val) =>
                                         setRecordedAssaysOnly(val)
                                     }
                                 />
@@ -148,21 +142,16 @@ export default function AssayAgenda() {
                 </Box>
                 <DataGrid
                     rows={rows}
-                    rowCount={rowCount}
                     columns={colDefs}
+                    {...paginationProps}
                     rowSelection={false}
                     autoHeight
-                    sortModel={sortModel}
-                    onSortModelChange={setSortModel}
                     getCellClassName={(params) =>
                         params.row.result !== null
                             ? "assay-cell-recorded"
                             : "assay-cell-not-recorded"
                     }
-                    pagination
-                    paginationModel={pagination}
-                    onPaginationModelChange={setPagination}
-                    paginationMode="server"
+                    disableColumnMenu
                 />
             </Stack>
         </Layout>

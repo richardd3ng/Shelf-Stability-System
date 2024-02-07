@@ -31,6 +31,7 @@ export default async function createConditions(
         });
         res.status(200).json(createdConditions);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(500, "Failed to create conditions on server")
         );

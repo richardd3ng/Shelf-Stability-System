@@ -35,6 +35,7 @@ export default async function deleteExperiment(
         }
         res.status(200).json(deletedExperiment);
     } catch (error) {
+        console.error(error);
         res.status(500).json(
             getApiError(
                 500,
