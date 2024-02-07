@@ -27,7 +27,9 @@ export default async function createExperiment(
             !title ||
             !start_date ||
             !assayTypeCreationArgsNoExperimentIdArray ||
-            !conditionCreationArgsNoExperimentIdArray
+            !conditionCreationArgsNoExperimentIdArray ||
+            assayTypeCreationArgsNoExperimentIdArray.length === 0 ||
+            conditionCreationArgsNoExperimentIdArray.length === 0
         ) {
             res.status(400).json(
                 getApiError(
