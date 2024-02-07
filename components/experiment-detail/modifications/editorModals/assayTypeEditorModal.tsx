@@ -31,7 +31,7 @@ export const AssayTypeEditorModal = () => {
     return (
         <CloseableModal open={isEditing} closeFn={() => setIsEditing(false)} title={"Edit Assay type"}>
             <TextField value={newName} onChange={(e) => setNewName(e.target.value)}></TextField>
-            <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdating} isLoading={isUpdating} error={errorUpdating} onClick={
+            <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdating} isLoading={isUpdating} error={errorUpdating} onSubmit={
                 () => updateAssayType({assayTypeId : assayTypeIdBeingEdited, newName : newName})
             }/>
             <ButtonWithConfirmationLoadingAndError text="Delete Assay Type" isLoading={isDeleting} isError={isErrorDeleting} error={errorDeleting} onSubmit={

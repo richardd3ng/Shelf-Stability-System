@@ -6,5 +6,5 @@ interface ErrorMessageProps {
 export const ErrorMessage: React.FC<ErrorMessageProps> = (
     props: ErrorMessageProps
 ) => {
-    return <Typography>{props.message}</Typography>;
+    return <Typography align="center" color="red">{props.message}</Typography>;
 };

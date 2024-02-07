@@ -8,6 +8,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Auth {
+  id          Int         @id @default(autoincrement())
+  username    String      @unique
+  password    String      
+  lastUpdated DateTime
+}
+
 
 model Experiment {
   id          Int         @id @default(autoincrement())

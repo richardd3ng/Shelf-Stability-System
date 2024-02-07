@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Button, Typography } from "@mui/material";
 import { LoadingCircle } from "./loading";
 import { ErrorMessage } from "./errorMessage";
@@ -8,17 +8,45 @@ interface ButtonWithLoadingAndErrorProps{
     isLoading : boolean;
     error : any;
     isError : boolean;
-    onClick : () => void;
+    onSubmit : () => void;
 }
 
 export const ButtonWithLoadingAndError : React.FC<ButtonWithLoadingAndErrorProps> = (props : ButtonWithLoadingAndErrorProps) => {
     return (
-        <>
-            <Button onClick={props.onClick}>
+        <YourButtonWithLoadingAndError isLoading={props.isLoading} isError={props.isError} error={props.error}>
+            <Button onClick={props.onSubmit}>
                 <Typography>{props.text}</Typography>
-                {props.isLoading ? <LoadingCircle/> : null}
-                {props.isError ? <ErrorMessage message={getErrorMessage(props.error)}/> : null}
             </Button>
+        </YourButtonWithLoadingAndError>
+    )
+}
+
+interface YourButtonWithLoadingAndErrorProps{
+    children : ReactNode;
+    isLoading : boolean;
+    isError : boolean;
+    error : any;
+}
+export const YourButtonWithLoadingAndError : React.FC<YourButtonWithLoadingAndErrorProps> = (props : YourButtonWithLoadingAndErrorProps) => {
+    return (
+        <>
+            {props.children}
+            <LoadingAndError isLoading={props.isLoading} isError={props.isError} error={props.error} />
+        </>
+    )
+}
+
+interface LoadingAndErrorProps{
+    isLoading : boolean;
+    isError : boolean;
+    error : any;
+}
+
+export const LoadingAndError : React.FC<LoadingAndErrorProps> = (props : LoadingAndErrorProps) => {
+    return (
+        <>
+            {props.isLoading ? <LoadingCircle/> : null}
+            {props.isError ? <ErrorMessage message={getErrorMessage(props.error)}/> : null}
         </>
     )
 }

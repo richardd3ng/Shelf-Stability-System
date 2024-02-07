@@ -30,7 +30,7 @@ export const ConditionEditorModal = () => {
     return (
         <CloseableModal open={isEditing} closeFn={() => setIsEditing(false)} title="Edit Condition">
             <TextField value={newName} onChange={(e) => setNewName(e.target.value)}></TextField>
-            <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdating} isLoading={isUpdating} error={errorUpdating} onClick={
+            <ButtonWithLoadingAndError text="Submit" isError={isErrorUpdating} isLoading={isUpdating} error={errorUpdating} onSubmit={
                 () => updateCondition({conditionId : conditionIdBeingEdited, newName : newName})
             }/>
             <ButtonWithConfirmationLoadingAndError text="Delete Condition" isLoading={isDeleting} isError={isErrorDeleting} error={errorDeleting} onSubmit={

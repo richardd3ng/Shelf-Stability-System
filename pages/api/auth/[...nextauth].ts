@@ -1,12 +1,8 @@
-import NextAuth, {Session} from "next-auth";
-import type { NextApiRequest, NextApiResponse } from 'next';
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
-import Token from "next-auth";
-import { JWT } from "next-auth/jwt";
-import { AdapterUser } from "next-auth/adapters";
-import { User } from "next-auth";
-import { USER_ID } from "./USERID";
+import { USER_ID } from "@/lib/api/auth/authHelpers";
+import { db } from "@/lib/api/db";
+import { compare } from "bcryptjs";
 
 export const authOptions = {
     providers: [
@@ -21,12 +17,29 @@ export const authOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                console.log("trying to authorize");
-                const password = credentials ? credentials.password : "asdfasdf";
-                console.log("the password is " + password);
-                if (password === "password"){
-                    return {id : USER_ID, name : USER_ID, email : USER_ID}
-                } else {
+                try{
+                    const password = credentials?.password;
+                    if (password){
+                        const ROOT_USER = await db.auth.findUnique({
+                            where : {
+                                username : USER_ID
+                            }
+                        })
+                        if (ROOT_USER){
+                            const correctPassword = await compare(password, ROOT_USER.password)
+                            if (correctPassword){
+                                return {id : ROOT_USER.username, name : ROOT_USER.username, email : ROOT_USER.username}
+                            } else {
+                                return null;
+                            }
+                        } else {
+                            return null;
+                        }
+                        
+                    } else {
+                        return null;
+                    }
+                } catch{
                     return null;
                 }
             }

@@ -20,7 +20,7 @@ export const NewAssayTypeModal = () => {
     return (
         <CloseableModal open={isAddingAssayType} closeFn={() => setIsAddingAssayType(false)} title={"Add New Assay Type"}>
             <TextField value={name} onChange={(e) => setName(e.target.value)}></TextField>
-            <ButtonWithLoadingAndError text="Submit" isLoading={isLoading} isError={isError} error={error} onClick={onSubmit}/>
+            <ButtonWithLoadingAndError text="Submit" isLoading={isLoading} isError={isError} error={error} onSubmit={onSubmit}/>
         </CloseableModal>
     );
 }
