@@ -17,7 +17,8 @@ const NavBar: React.FC = () => {
     const router = useRouter();
     const options: NavBarButtonProps[] = [
         { text: "Experiments", onClick: () => router.push("/experiment-list") },
-        { text: "Assay Agenda", onClick: () => router.push("/agenda") }
+        { text: "Assay Agenda", onClick: () => router.push("/agenda") },
+        { text : "Change Password", onClick: () => router.push("/auth/updatePassword")}
 
     ]
     return (

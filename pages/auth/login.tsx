@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { AuthForm } from "@/components/shared/authForm";
 import { YourButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
+import { checkIfPasswordHasBeenSet } from "@/lib/api/auth/authHelpers";
 
 export default function LoginPage(){
     const [password, setPassword] = useState<string>("");
@@ -48,4 +49,28 @@ export default function LoginPage(){
             </YourButtonWithLoadingAndError>
 		</Container>
     )
+}
+
+export async function getServerSideProps(){
+    try{
+        const passwordHasBeenSet = await checkIfPasswordHasBeenSet();
+        if (!passwordHasBeenSet){
+            return {
+                redirect : {
+                    destination: '/auth/setPasswordOnSetup',
+                    permanent: false,
+                },
+            }
+        } else {
+            return {props : {}};
+        }
+    } catch {
+        return {
+            redirect : {
+                destination: '/auth/setPasswordOnSetup',
+                permanent: false,
+            },
+        }
+    }
+    
 }
