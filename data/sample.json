@@ -1,0 +1,1994 @@
+{
+  "experiments": [
+    {
+      "title": "Cereal Shelf Life Study",
+      "number": 100001,
+      "description": "Investigating the shelf life of a new cereal product",
+      "start_date": "2024-01-12",
+      "storage_conditions": ["0 F", "70F 38%", "80F 65%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory"] },
+        "70F 38%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"] },
+        "80F 65%": { "9": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "70F 38%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "70F 38%", "week": 6, "assay_type": "Moisture", "result": "2.5%" },
+        { "condition": "70F 38%", "week": 6, "assay_type": "Hexanal", "result": "10 ppm" }
+      ]
+    },
+    {
+      "title": "Snack Bar Quality Test",
+      "number": 100002,
+      "description": "Testing the quality of a new snack bar under various storage conditions",
+      "start_date": "2024-02-01",
+      "storage_conditions": ["0 F", "73F 50%", "100F 20%"],
+      "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory"] },
+        "73F 50%": { "6": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "12": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+        "100F 20%": { "9": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "73F 50%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "73F 50%", "week": 6, "assay_type": "Anisidine", "result": "5 units" },
+        { "condition": "73F 50%", "week": 6, "assay_type": "Free fatty acid (FFA)", "result": "2%" }
+      ]
+    },
+    {
+      "title": "Frozen Pizza Shelf Life",
+      "number": 100003,
+      "description": "Evaluating the shelf life of frozen pizza under various conditions",
+      "start_date": "2024-03-01",
+      "storage_conditions": ["0 F", "70F 38%", "80F 65%", "120F 10%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "70F 38%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+        "80F 65%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "120F 10%": { "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "70F 38%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "80F 65%", "week": 9, "assay_type": "Peroxide value (PV)", "result": "15 meq/kg" },
+        { "condition": "120F 10%", "week": 12, "assay_type": "Anisidine", "result": "8 units" }
+      ]
+    },
+    {
+      "title": "Bread Quality Assessment",
+      "number": 100004,
+      "description": "Assessing the quality of different types of bread",
+      "start_date": "2024-02-15",
+      "storage_conditions": ["0 F", "73F 50%", "90F 60%"],
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Moisture"] },
+        "73F 50%": { "6": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+        "90F 60%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "73F 50%", "week": 6, "assay_type": "Moisture", "result": "3%" },
+        { "condition": "90F 60%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": "1.5%" }
+      ]
+    },
+    {
+      "title": "Pasta Quality Study",
+      "number": 100005,
+      "description": "Examining the quality of a new pasta product",
+      "start_date": "2024-03-15",
+      "storage_conditions": ["0 F", "75F 40%", "85F 55%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Moisture"] },
+        "75F 40%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"] },
+        "85F 55%": { "9": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "75F 40%", "week": 6, "assay_type": "Moisture", "result": "2.8%" },
+        { "condition": "85F 55%", "week": 9, "assay_type": "Hexanal", "result": "12 ppm" }
+      ]
+    },
+    {
+      "title": "Dairy Product Shelf Life",
+      "number": 100006,
+      "description": "Investigating the shelf life of a new dairy product",
+      "start_date": "2024-04-01",
+      "storage_conditions": ["0 F", "68F 45%", "95F 30%"],
+      "assay_types": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Peroxide value (PV)"] },
+        "68F 45%": { "6": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "12": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "95F 30%": { "9": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "16": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "68F 45%", "week": 6, "assay_type": "Peroxide value (PV)", "result": "18 meq/kg" },
+        { "condition": "95F 30%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": "2.2%" }
+      ]
+    },
+    {
+      "title": "Fruit Juice Quality Test",
+      "number": 100007,
+      "description": "Testing the quality of a new fruit juice under various storage conditions",
+      "start_date": "2024-05-01",
+      "storage_conditions": ["0 F", "75F 40%", "85F 60%", "110F 15%"],
+      "assay_types": ["Sensory", "Moisture", "Anisidine"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Anisidine"] },
+        "75F 40%": { "6": ["Sensory", "Moisture", "Anisidine"], "12": ["Sensory", "Moisture", "Anisidine"] },
+        "85F 60%": { "9": ["Sensory", "Moisture", "Anisidine"], "16": ["Sensory", "Moisture", "Anisidine"] },
+        "110F 15%": { "12": ["Sensory", "Moisture", "Anisidine"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "75F 40%", "week": 6, "assay_type": "Moisture", "result": "4.5%" },
+        { "condition": "85F 60%", "week": 9, "assay_type": "Anisidine", "result": "3 units" }
+      ]
+    },
+    {
+      "title": "Cheese Aging Process",
+      "number": 100008,
+      "description": "Monitoring the aging process of a new cheese variant",
+      "start_date": "2024-05-15",
+      "storage_conditions": ["0 F", "55F 80%", "70F 60%", "90F 40%"],
+      "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+        "55F 80%": { "6": ["Sensory", "Moisture", "Peroxide value (PV)"], "12": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+        "70F 60%": { "9": ["Sensory", "Moisture", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+        "90F 40%": { "12": ["Sensory", "Moisture", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "55F 80%", "week": 6, "assay_type": "Moisture", "result": "5.2%" },
+        { "condition": "70F 60%", "week": 9, "assay_type": "Peroxide value (PV)", "result": "12 meq/kg" }
+      ]
+    },
+    {
+      "title": "Fresh Salad Quality Check",
+      "number": 100009,
+      "description": "Evaluating the quality of a new packaged fresh salad",
+      "start_date": "2024-06-01",
+      "storage_conditions": ["0 F", "35F 90%", "55F 70%", "75F 50%"],
+      "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+        "35F 90%": { "6": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "12": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+        "55F 70%": { "9": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+        "75F 50%": { "12": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "35F 90%", "week": 6, "assay_type": "Anisidine", "result": "4 units" },
+        { "condition": "55F 70%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": "1.8%" }
+      ]
+    },
+    {
+      "title": "Dessert Shelf Life Analysis",
+      "number": 100010,
+      "description": "Analyzing the shelf life of a new dessert variant",
+      "start_date": "2024-07-01",
+      "storage_conditions": ["0 F", "80F 45%", "95F 30%", "110F 20%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "80F 45%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+        "95F 30%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "110F 20%": { "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "80F 45%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "95F 30%", "week": 9, "assay_type": "Peroxide value (PV)", "result": "14 meq/kg" },
+        { "condition": "110F 20%", "week": 12, "assay_type": "Anisidine", "result": "7 units" }
+      ]
+    },
+    {
+      "title": "Fresh Juice Preservation",
+      "number": 100011,
+      "description": "Investigating methods to preserve the freshness of a new juice product",
+      "start_date": "2024-08-01",
+      "storage_conditions": ["0 F", "40F 85%", "60F 70%", "80F 50%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "40F 85%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+        "60F 70%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "80F 50%": { "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "40F 85%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "60F 70%", "week": 9, "assay_type": "Peroxide value (PV)", "result": "12 meq/kg" },
+        { "condition": "80F 50%", "week": 12, "assay_type": "Free fatty acid (FFA)", "result": "2%" }
+      ]
+    },
+    {
+      "title": "Coffee Bean Roasting Study",
+      "number": 100012,
+      "description": "Analyzing the impact of roasting conditions on coffee bean quality",
+      "start_date": "2024-09-01",
+      "storage_conditions": ["0 F", "70F 30%", "85F 20%", "100F 10%"],
+      "assay_types": ["Sensory", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "6": ["Sensory", "Hexanal"], "12": ["Sensory", "Hexanal", "Peroxide value (PV)"], "24": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+        "70F 30%": { "6": ["Sensory", "Hexanal"], "12": ["Sensory", "Hexanal"], "16": ["Sensory", "Hexanal"] },
+        "85F 20%": { "9": ["Sensory", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+        "100F 10%": { "12": ["Sensory", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "70F 30%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "85F 20%", "week": 9, "assay_type": "Peroxide value (PV)", "result": "18 meq/kg" },
+        { "condition": "100F 10%", "week": 12, "assay_type": "Hexanal", "result": "5 ppm" }
+      ]
+    },
+    {
+      "title": "Yogurt Texture Analysis",
+      "number": 100013,
+      "description": "Assessing the texture changes in different yogurt formulations",
+      "start_date": "2024-10-01",
+      "storage_conditions": ["0 F", "60F 50%", "75F 40%", "90F 30%"],
+      "assay_types": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Moisture"] },
+        "60F 50%": { "6": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+        "75F 40%": { "9": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+        "90F 30%": { "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "60F 50%", "week": 6, "assay_type": "Moisture", "result": "2.8%" },
+        { "condition": "75F 40%", "week": 9, "assay_type": "Anisidine", "result": "3 units" }
+      ]
+    },
+    {
+      "title": "Cheese Aging Study",
+      "number": 100014,
+      "description": "Examining the impact of aging on different cheese varieties",
+      "start_date": "2024-05-01",
+      "storage_conditions": ["0 F", "50F 80%", "65F 60%", "75F 50%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Anisidine"] },
+        "50F 80%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+        "65F 60%": { "9": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] },
+        "75F 50%": { "12": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "50F 80%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "65F 60%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": "1.8%" },
+        { "condition": "75F 50%", "week": 12, "assay_type": "Anisidine", "result": "4 units" }
+      ]
+    },
+    {
+      "title": "Tomato Sauce Stability Test",
+      "number": 100015,
+      "description": "Evaluating the stability of tomato sauce under different temperature and humidity conditions",
+      "start_date": "2024-06-01",
+      "storage_conditions": ["0 F", "60F 40%", "80F 30%", "100F 20%"],
+      "assay_types": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "6": ["Sensory", "Peroxide value (PV)"], "12": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"], "24": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] },
+        "60F 40%": { "6": ["Sensory", "Peroxide value (PV)"], "12": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] },
+        "80F 30%": { "9": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] },
+        "100F 20%": { "12": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "60F 40%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "80F 30%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": "2.2%" },
+        { "condition": "100F 20%", "week": 12, "assay_type": "Anisidine", "result": "6 units" }
+      ]
+    },
+    {
+      "title": "Ice Cream Melting Rate",
+      "number": 100016,
+      "description": "Investigating the melting rate of different ice cream formulations",
+      "start_date": "2024-07-01",
+      "storage_conditions": ["-10 F", "10F 60%", "25F 50%", "40F 40%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "-10 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "10F 60%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+        "25F 50%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "40F 40%": { "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-10 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "10F 60%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "25F 50%", "week": 9, "assay_type": "Peroxide value (PV)", "result": "8 meq/kg" },
+        { "condition": "40F 40%", "week": 12, "assay_type": "Hexanal", "result": "5 ppm" }
+      ]
+    },
+    {
+      "title": "Energy Drink Stability",
+      "number": 100017,
+      "description": "Assessing the stability of energy drinks under varying conditions",
+      "start_date": "2024-08-01",
+      "storage_conditions": ["32 F", "50F 70%", "85F 30%", "110F 10%"],
+      "assay_types": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "32 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "24": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+        "50F 70%": { "6": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+        "85F 30%": { "9": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+        "110F 10%": { "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "32 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "50F 70%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "85F 30%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": "2.5%" },
+        { "condition": "110F 10%", "week": 12, "assay_type": "Anisidine", "result": "7 units" }
+      ]
+    },
+    {
+      "title": "Tea Bag Freshness Test",
+      "number": 100018,
+      "description": "Evaluating the freshness of different tea bag varieties over time",
+      "start_date": "2024-09-01",
+      "storage_conditions": ["-5 F", "40F 60%", "70F 40%", "90F 20%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "-5 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "40F 60%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+        "70F 40%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "90F 20%": { "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-5 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "40F 60%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "70F 40%", "week": 9, "assay_type": "Peroxide value (PV)", "result": "12 meq/kg" },
+        { "condition": "90F 20%", "week": 12, "assay_type": "Hexanal", "result": "3 ppm" }
+      ]
+    },
+    {
+      "title": "Granola Bar Texture Analysis",
+      "number": 100019,
+      "description": "Analyzing the texture changes in granola bars under different storage conditions",
+      "start_date": "2024-10-01",
+      "storage_conditions": ["-2 F", "35F 70%", "60F 50%", "80F 30%"],
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "-2 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "24": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "35F 70%": { "6": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "60F 50%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "80F 30%": { "12": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-2 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "35F 70%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "60F 50%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": "1.5%" },
+        { "condition": "80F 30%", "week": 12, "assay_type": "Peroxide value (PV)", "result": "6 meq/kg" }
+      ]
+    },
+    {
+      "title": "Chocolate Bar Bloom Test",
+      "number": 100020,
+      "description": "Investigating the bloom formation in chocolate bars stored under different conditions",
+      "start_date": "2024-11-01",
+      "storage_conditions": ["15 F", "45F 60%", "70F 40%", "90F 20%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "15 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "45F 60%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+        "70F 40%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "90F 20%": { "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "15 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "45F 60%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "70F 40%", "week": 9, "assay_type": "Peroxide value (PV)", "result": "9 meq/kg" },
+        { "condition": "90F 20%", "week": 12, "assay_type": "Hexanal", "result": "4 ppm" }
+      ]
+    },
+    {
+      "title": "Cereal Crunchiness Analysis",
+      "number": 100021,
+      "description": "Assessing the crunchiness of different cereal formulations over time",
+      "start_date": "2024-12-01",
+      "storage_conditions": ["5 F", "30F 80%", "50F 60%", "70F 40%"],
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"],
+      "assay_schedule": {
+        "5 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"], "24": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"] },
+        "30F 80%": { "6": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"] },
+        "50F 60%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"] },
+        "70F 40%": { "12": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"] }
+      },
+      "assay_results": [
+        { "condition": "5 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "30F 80%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "50F 60%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": "2.0%" },
+        { "condition": "70F 40%", "week": 12, "assay_type": "Anisidine", "result": "5 units" }
+      ]
+    },
+    {
+      "title": "Cheese Aging Analysis",
+      "number": 100022,
+      "description": "Studying the aging process of different cheese varieties under controlled conditions",
+      "start_date": "2023-07-01",
+      "storage_conditions": ["40 F", "55F 75%", "70F 60%", "85F 45%"],
+      "assay_types": ["Sensory", "Moisture", "Lactic acid", "Tyrosine"],
+      "assay_schedule": {
+        "40 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Lactic acid"], "24": ["Sensory", "Moisture", "Lactic acid", "Tyrosine"] },
+        "55F 75%": { "6": ["Sensory", "Moisture", "Lactic acid", "Tyrosine"], "12": ["Sensory", "Moisture", "Lactic acid", "Tyrosine"], "16": ["Sensory", "Moisture", "Lactic acid", "Tyrosine"] },
+        "70F 60%": { "9": ["Sensory", "Moisture", "Lactic acid", "Tyrosine"], "16": ["Sensory", "Moisture", "Lactic acid", "Tyrosine"] },
+        "85F 45%": { "12": ["Sensory", "Moisture", "Lactic acid", "Tyrosine"] }
+      },
+      "assay_results": [
+        { "condition": "40 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "55F 75%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "70F 60%", "week": 9, "assay_type": "Lactic acid", "result": "2.5%" },
+        { "condition": "85F 45%", "week": 12, "assay_type": "Tyrosine", "result": "15 mg/g" }
+      ]
+    },
+    {
+      "title": "Wine Oxidation Study",
+      "number": 100023,
+      "description": "Investigating the impact of oxidation on various wine types stored at different temperatures",
+      "start_date": "2023-08-15",
+      "storage_conditions": ["50 F", "65F 70%", "80F 50%", "95F 30%"],
+      "assay_types": ["Sensory", "Moisture", "Ethanol content", "Acetaldehyde"],
+      "assay_schedule": {
+        "50 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Ethanol content"], "24": ["Sensory", "Moisture", "Ethanol content", "Acetaldehyde"] },
+        "65F 70%": { "6": ["Sensory", "Moisture", "Ethanol content", "Acetaldehyde"], "12": ["Sensory", "Moisture", "Ethanol content", "Acetaldehyde"], "16": ["Sensory", "Moisture", "Ethanol content", "Acetaldehyde"] },
+        "80F 50%": { "9": ["Sensory", "Moisture", "Ethanol content", "Acetaldehyde"], "16": ["Sensory", "Moisture", "Ethanol content", "Acetaldehyde"] },
+        "95F 30%": { "12": ["Sensory", "Moisture", "Ethanol content", "Acetaldehyde"] }
+      },
+      "assay_results": [
+        { "condition": "50 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "65F 70%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "80F 50%", "week": 9, "assay_type": "Ethanol content", "result": "12%" },
+        { "condition": "95F 30%", "week": 12, "assay_type": "Acetaldehyde", "result": "8 ppm" }
+      ]
+    },
+    {
+      "title": "Coffee Bean Freshness Evaluation",
+      "number": 100024,
+      "description": "Assessing the freshness of different coffee bean varieties over time",
+      "start_date": "2023-09-01",
+      "storage_conditions": ["25 F", "40F 60%", "60F 40%", "75F 20%"],
+      "assay_types": ["Sensory", "Moisture", "Caffeine content", "Chlorogenic acid"],
+      "assay_schedule": {
+        "25 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Caffeine content"], "24": ["Sensory", "Moisture", "Caffeine content", "Chlorogenic acid"] },
+        "40F 60%": { "6": ["Sensory", "Moisture", "Caffeine content", "Chlorogenic acid"], "12": ["Sensory", "Moisture", "Caffeine content", "Chlorogenic acid"], "16": ["Sensory", "Moisture", "Caffeine content", "Chlorogenic acid"] },
+        "60F 40%": { "9": ["Sensory", "Moisture", "Caffeine content", "Chlorogenic acid"], "16": ["Sensory", "Moisture", "Caffeine content", "Chlorogenic acid"] },
+        "75F 20%": { "12": ["Sensory", "Moisture", "Caffeine content", "Chlorogenic acid"] }
+      },
+      "assay_results": [
+        { "condition": "25 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "40F 60%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "60F 40%", "week": 9, "assay_type": "Caffeine content", "result": "1.8%" },
+        { "condition": "75F 20%", "week": 12, "assay_type": "Chlorogenic acid", "result": "22 mg/g" }
+      ]
+    },
+    {
+      "title": "Chocolate Flavor Development",
+      "number": 100025,
+      "description": "Exploring the flavor profile evolution in different chocolate formulations over a specified duration",
+      "start_date": "2023-10-15",
+      "storage_conditions": ["55 F", "70F 65%", "85F 50%", "100F 30%"],
+      "assay_types": ["Sensory", "Moisture", "Cocoa content", "Volatile compounds"],
+      "assay_schedule": {
+        "55 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Cocoa content"], "24": ["Sensory", "Moisture", "Cocoa content", "Volatile compounds"] },
+        "70F 65%": { "6": ["Sensory", "Moisture", "Cocoa content", "Volatile compounds"], "12": ["Sensory", "Moisture", "Cocoa content", "Volatile compounds"], "16": ["Sensory", "Moisture", "Cocoa content", "Volatile compounds"] },
+        "85F 50%": { "9": ["Sensory", "Moisture", "Cocoa content", "Volatile compounds"], "16": ["Sensory", "Moisture", "Cocoa content", "Volatile compounds"] },
+        "100F 30%": { "12": ["Sensory", "Moisture", "Cocoa content", "Volatile compounds"] }
+      },
+      "assay_results": [
+        { "condition": "55 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "70F 65%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "85F 50%", "week": 9, "assay_type": "Cocoa content", "result": "12%" },
+        { "condition": "100F 30%", "week": 12, "assay_type": "Volatile compounds", "result": "25 ppm" }
+      ]
+    },
+    {
+      "title": "Beer Hop Aroma Investigation",
+      "number": 100026,
+      "description": "Analyzing the impact of hop varieties on aroma development in beer during fermentation",
+      "start_date": "2023-11-01",
+      "storage_conditions": ["45 F", "60F 70%", "75F 50%", "90F 30%"],
+      "assay_types": ["Sensory", "Moisture", "Alpha acids", "Beta acids"],
+      "assay_schedule": {
+        "45 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Alpha acids"], "24": ["Sensory", "Moisture", "Alpha acids", "Beta acids"] },
+        "60F 70%": { "6": ["Sensory", "Moisture", "Alpha acids", "Beta acids"], "12": ["Sensory", "Moisture", "Alpha acids", "Beta acids"], "16": ["Sensory", "Moisture", "Alpha acids", "Beta acids"] },
+        "75F 50%": { "9": ["Sensory", "Moisture", "Alpha acids", "Beta acids"], "16": ["Sensory", "Moisture", "Alpha acids", "Beta acids"] },
+        "90F 30%": { "12": ["Sensory", "Moisture", "Alpha acids", "Beta acids"] }
+      },
+      "assay_results": [
+        { "condition": "45 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "60F 70%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "75F 50%", "week": 9, "assay_type": "Alpha acids", "result": "5%" },
+        { "condition": "90F 30%", "week": 12, "assay_type": "Beta acids", "result": "2%" }
+      ]
+    },
+    {
+      "title": "Tea Infusion Flavor Profiling",
+      "number": 100027,
+      "description": "Examining the flavor development in different tea varieties through infusion at varying temperatures",
+      "start_date": "2023-12-15",
+      "storage_conditions": ["30 F", "45F 60%", "65F 40%", "80F 20%"],
+      "assay_types": ["Sensory", "Moisture", "Catechins", "Theanine"],
+      "assay_schedule": {
+        "30 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Catechins"], "24": ["Sensory", "Moisture", "Catechins", "Theanine"] },
+        "45F 60%": { "6": ["Sensory", "Moisture", "Catechins", "Theanine"], "12": ["Sensory", "Moisture", "Catechins", "Theanine"], "16": ["Sensory", "Moisture", "Catechins", "Theanine"] },
+        "65F 40%": { "9": ["Sensory", "Moisture", "Catechins", "Theanine"], "16": ["Sensory", "Moisture", "Catechins", "Theanine"] },
+        "80F 20%": { "12": ["Sensory", "Moisture", "Catechins", "Theanine"] }
+      },
+      "assay_results": [
+        { "condition": "30 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "45F 60%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "65F 40%", "week": 9, "assay_type": "Catechins", "result": "8%" },
+        { "condition": "80F 20%", "week": 12, "assay_type": "Theanine", "result": "5 mg/g" }
+      ]
+    },
+    {
+      "title": "Bread Mold Growth Investigation",
+      "number": 100028,
+      "description": "Analyzing the mold growth patterns in different types of bread under controlled humidity levels",
+      "start_date": "2024-01-01",
+      "storage_conditions": ["40 F", "55F 70%", "70F 50%", "85F 30%"],
+      "assay_types": ["Visual inspection", "Mold count", "Moisture content", "Mycotoxin analysis"],
+      "assay_schedule": {
+        "40 F": { "3": ["Visual inspection"], "6": ["Visual inspection", "Mold count"], "12": ["Visual inspection", "Mold count", "Moisture content"], "24": ["Visual inspection", "Mold count", "Moisture content", "Mycotoxin analysis"] },
+        "55F 70%": { "6": ["Visual inspection", "Mold count", "Moisture content", "Mycotoxin analysis"], "12": ["Visual inspection", "Mold count", "Moisture content", "Mycotoxin analysis"], "16": ["Visual inspection", "Mold count", "Moisture content", "Mycotoxin analysis"] },
+        "70F 50%": { "9": ["Visual inspection", "Mold count", "Moisture content", "Mycotoxin analysis"], "16": ["Visual inspection", "Mold count", "Moisture content", "Mycotoxin analysis"] },
+        "85F 30%": { "12": ["Visual inspection", "Mold count", "Moisture content", "Mycotoxin analysis"] }
+      },
+      "assay_results": [
+        { "condition": "40 F", "week": 3, "assay_type": "Visual inspection", "result": "Mild mold growth observed" },
+        { "condition": "55F 70%", "week": 6, "assay_type": "Visual inspection", "result": "No significant mold growth" },
+        { "condition": "70F 50%", "week": 9, "assay_type": "Moisture content", "result": "4%" },
+        { "condition": "85F 30%", "week": 12, "assay_type": "Mycotoxin analysis", "result": "Below detectable limits" }
+      ]
+    },
+    {
+      "title": "Spice Blend Flavor Stability",
+      "number": 100029,
+      "description": "Investigating the stability of flavor compounds in different spice blends under various storage conditions",
+      "start_date": "2024-02-15",
+      "storage_conditions": ["50 F", "65F 60%", "80F 40%", "95F 20%"],
+      "assay_types": ["Sensory", "Moisture", "Terpenes", "Capsaicin"],
+      "assay_schedule": {
+        "50 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Terpenes"], "24": ["Sensory", "Moisture", "Terpenes", "Capsaicin"] },
+        "65F 60%": { "6": ["Sensory", "Moisture", "Terpenes", "Capsaicin"], "12": ["Sensory", "Moisture", "Terpenes", "Capsaicin"], "16": ["Sensory", "Moisture", "Terpenes", "Capsaicin"] },
+        "80F 40%": { "9": ["Sensory", "Moisture", "Terpenes", "Capsaicin"], "16": ["Sensory", "Moisture", "Terpenes", "Capsaicin"] },
+        "95F 20%": { "12": ["Sensory", "Moisture", "Terpenes", "Capsaicin"] }
+      },
+      "assay_results": [
+        { "condition": "50 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "65F 60%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "80F 40%", "week": 9, "assay_type": "Terpenes", "result": "8%" },
+        { "condition": "95F 20%", "week": 12, "assay_type": "Capsaicin", "result": "10 mg/g" }
+      ]
+    },
+    {
+      "title": "Fruit Juice Sweetness Analysis",
+      "number": 100030,
+      "description": "Assessing the sweetness perception in different fruit juices under controlled sugar concentrations",
+      "start_date": "2024-03-01",
+      "storage_conditions": ["35 F", "50F 60%", "65F 40%", "80F 20%"],
+      "assay_types": ["Sensory", "Brix value", "Fructose content", "Sucrose content"],
+      "assay_schedule": {
+        "35 F": { "3": ["Sensory"], "6": ["Sensory", "Brix value"], "12": ["Sensory", "Brix value", "Fructose content"], "24": ["Sensory", "Brix value", "Fructose content", "Sucrose content"] },
+        "50F 60%": { "6": ["Sensory", "Brix value", "Fructose content", "Sucrose content"], "12": ["Sensory", "Brix value", "Fructose content", "Sucrose content"], "16": ["Sensory", "Brix value", "Fructose content", "Sucrose content"] },
+        "65F 40%": { "9": ["Sensory", "Brix value", "Fructose content", "Sucrose content"], "16": ["Sensory", "Brix value", "Fructose content", "Sucrose content"] },
+        "80F 20%": { "12": ["Sensory", "Brix value", "Fructose content", "Sucrose content"] }
+      },
+      "assay_results": [
+        { "condition": "35 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "50F 60%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "65F 40%", "week": 9, "assay_type": "Fructose content", "result": "5%" },
+        { "condition": "80F 20%", "week": 12, "assay_type": "Sucrose content", "result": "8%" }
+      ]
+    },
+    {
+      "title": "Olive Oil Quality Assessment",
+      "number": 100031,
+      "description": "Evaluating the quality and stability of olive oil under various storage conditions",
+      "start_date": "2024-04-15",
+      "storage_conditions": ["0 F", "15F 60%", "30F 40%", "45F 20%"],
+      "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Peroxide value (PV)"], "24": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "15F 60%": { "6": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "30F 40%": { "9": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "45F 20%": { "12": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "15F 60%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "30F 40%", "week": 9, "assay_type": "Peroxide value (PV)", "result": "8 meq O2/kg" },
+        { "condition": "45F 20%", "week": 12, "assay_type": "Free fatty acid (FFA)", "result": "2%" }
+      ]
+    },
+    {
+      "title": "Cheese Aging Process",
+      "number": 100032,
+      "description": "Monitoring the aging process of different cheese varieties under controlled humidity and temperature conditions",
+      "start_date": "2024-05-01",
+      "storage_conditions": ["0 F", "15F 70%", "30F 50%", "45F 30%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Anisidine"] },
+        "15F 70%": { "6": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "12": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "16": ["Sensory", "Moisture", "Hexanal", "Anisidine"] },
+        "30F 50%": { "9": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "16": ["Sensory", "Moisture", "Hexanal", "Anisidine"] },
+        "45F 30%": { "12": ["Sensory", "Moisture", "Hexanal", "Anisidine"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "15F 70%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "30F 50%", "week": 9, "assay_type": "Hexanal", "result": "15 mg/kg" },
+        { "condition": "45F 30%", "week": 12, "assay_type": "Anisidine", "result": "0.5" }
+      ]
+    },
+    {
+      "title": "Nut Mix Freshness Evaluation",
+      "number": 100033,
+      "description": "Assessing the freshness of different nut mixes under varying storage conditions",
+      "start_date": "2024-06-15",
+      "storage_conditions": ["0 F", "15F 60%", "30F 40%", "45F 20%"],
+      "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Peroxide value (PV)"], "24": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "15F 60%": { "6": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "30F 40%": { "9": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "45F 20%": { "12": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": "Positive response" },
+        { "condition": "15F 60%", "week": 6, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "30F 40%", "week": 9, "assay_type": "Peroxide value (PV)", "result": "5 meq O2/kg" },
+        { "condition": "45F 20%", "week": 12, "assay_type": "Free fatty acid (FFA)", "result": "1.5%" }
+      ]
+    }, {
+      "title": "Bread Freshness Assessment",
+      "number": 100034,
+      "description": "Evaluation of bread freshness over time under varying temperature and humidity conditions",
+      "start_date": "2024-07-15",
+      "storage_conditions": ["0 F", "20C 50%", "30C 40%", "40C 30%"],
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "20C 50%": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "30C 40%": { "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "40C 30%": { "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Fresh" },
+        { "condition": "20C 50%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "30C 40%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.8%" },
+        { "condition": "40C 30%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "2 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Fish Fillet Quality Control",
+      "number": 100035,
+      "description": "Monitoring the quality of fish fillets during storage at different temperature and humidity levels",
+      "start_date": "2024-09-01",
+      "storage_conditions": ["0 F", "10C 60%", "15C 40%", "20C 20%"],
+      "assay_types": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Hexanal"], "3": ["Sensory", "Hexanal", "Anisidine"], "4": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] },
+        "10C 60%": { "1": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "2": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "3": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] },
+        "15C 40%": { "2": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "3": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "4": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] },
+        "20C 20%": { "3": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "4": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Fresh" },
+        { "condition": "10C 60%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "15C 40%", "week": 2, "assay_type": "Hexanal", "result": "20 mg/kg" },
+        { "condition": "20C 20%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "1.2%" }
+      ]
+    },
+    {
+      "title": "Canned Fruit Shelf Life Study",
+      "number": 100036,
+      "description": "Investigating the shelf life of canned fruits stored at different temperature and humidity conditions",
+      "start_date": "2024-11-15",
+      "storage_conditions": ["0 F", "25C 50%", "35C 30%", "45C 10%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "25C 50%": { "1": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "35C 30%": { "2": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "45C 10%": { "3": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Fresh" },
+        { "condition": "25C 50%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "35C 30%", "week": 2, "assay_type": "Hexanal", "result": "18 mg/kg" },
+        { "condition": "45C 10%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "1.8 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Chocolate Confectionery Aging Experiment",
+      "number": 100037,
+      "description": "Studying the aging process of various chocolate confectioneries under different humidity and temperature conditions",
+      "start_date": "2025-01-01",
+      "storage_conditions": ["0 F", "30C 60%", "40C 40%", "50C 20%"],
+      "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Moisture"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Anisidine"], "3": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "4": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Moisture"] },
+        "30C 60%": { "1": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Moisture"], "2": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Moisture"], "3": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Moisture"] },
+        "40C 40%": { "2": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Moisture"], "3": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Moisture"], "4": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Moisture"] },
+        "50C 20%": { "3": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Moisture"], "4": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Moisture"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Fresh" },
+        { "condition": "30C 60%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "40C 40%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "1.3%" },
+        { "condition": "50C 20%", "week": 3, "assay_type": "Moisture", "result": "2.5%" }
+      ]
+    },
+    {
+      "title": "Wine Aging Analysis",
+      "number": 100038,
+      "description": "Assessing the impact of storage conditions on the aging process of different wine varieties",
+      "start_date": "2025-03-15",
+      "storage_conditions": ["0 F", "15C 50%", "25C 30%", "35C 10%"],
+      "assay_types": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Hexanal"], "3": ["Sensory", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"] },
+        "15C 50%": { "1": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"], "2": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"], "3": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"] },
+        "25C 30%": { "2": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"], "3": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"], "4": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"] },
+        "35C 10%": { "3": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"], "4": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Fresh" },
+        { "condition": "15C 50%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "25C 30%", "week": 2, "assay_type": "Hexanal", "result": "12 mg/kg" },
+        { "condition": "35C 10%", "week": 3, "assay_type": "Anisidine", "result": "0.3" }
+      ]
+    },
+    {
+      "title": "Coffee Bean Roasting Experiment",
+      "number": 100039,
+      "description": "Monitoring the roasting process of different coffee bean varieties at various temperature and humidity conditions",
+      "start_date": "2025-06-01",
+      "storage_conditions": ["0 F", "20C 60%", "30C 40%", "40C 20%"],
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "20C 60%": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "30C 40%": { "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "40C 20%": { "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Rich aroma" },
+        { "condition": "20C 60%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "30C 40%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "1.0%" },
+        { "condition": "40C 20%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "1.5 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Cheese Aging Analysis",
+      "number": 100040,
+      "description": "Analyzing the aging characteristics of different cheese varieties under controlled temperature and humidity conditions",
+      "start_date": "2025-09-15",
+      "storage_conditions": ["0 F", "25C 50%", "35C 30%", "45C 10%"],
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "25C 50%": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "35C 30%": { "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "45C 10%": { "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Rich flavor" },
+        { "condition": "25C 50%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "35C 30%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "1.2%" },
+        { "condition": "45C 10%", "week": 3, "assay_type": "Hexanal", "result": "15 mg/kg" }
+      ]
+    },
+    {
+      "title": "Frozen Dessert Texture Analysis",
+      "number": 100041,
+      "description": "Evaluating the texture changes in frozen desserts under different freezing conditions",
+      "start_date": "2026-01-01",
+      "storage_conditions": ["0 F", "20C 60%", "30C 40%", "40C 20%"],
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "20C 60%": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "30C 40%": { "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "40C 20%": { "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Smooth texture" },
+        { "condition": "20C 60%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "30C 40%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.5%" },
+        { "condition": "40C 20%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "1.0 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Snack Chip Crispiness Analysis",
+      "number": 100042,
+      "description": "Investigating the crispiness retention of different snack chips under various temperature and humidity conditions",
+      "start_date": "2026-04-15",
+      "storage_conditions": ["0 F", "25C 50%", "35C 30%", "45C 10%"],
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "25C 50%": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "35C 30%": { "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "45C 10%": { "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Crispy" },
+        { "condition": "25C 50%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "35C 30%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.7%" },
+        { "condition": "45C 10%", "week": 3, "assay_type": "Hexanal", "result": "12 mg/kg" }
+      ]
+    },
+    {
+      "title": "Shampoo Fragrance Stability",
+      "number": 100043,
+      "description": "Assessing the fragrance stability of different shampoo formulations under controlled temperature and humidity conditions",
+      "start_date": "2026-07-01",
+      "storage_conditions": ["0 F", "20C 60%", "30C 40%", "40C 20%"],
+      "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"] },
+        "20C 60%": { "1": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"], "2": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"], "3": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"] },
+        "30C 40%": { "2": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"], "3": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"], "4": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"] },
+        "40C 20%": { "3": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"], "4": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Fragrant" },
+        { "condition": "20C 60%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "30C 40%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "0.5 meq O2/kg" },
+        { "condition": "40C 20%", "week": 3, "assay_type": "Hexanal", "result": "8 mg/kg" }
+      ]
+    },
+    {
+      "title": "Antique Book Preservation",
+      "number": 100044,
+      "description": "Preserving the quality of antique books under different temperature and humidity conditions",
+      "start_date": "2026-10-15",
+      "storage_conditions": ["0 F", "25C 50%", "35C 30%", "45C 10%"],
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"] },
+        "25C 50%": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"] },
+        "35C 30%": { "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"] },
+        "45C 10%": { "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Anisidine"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Well-preserved" },
+        { "condition": "25C 50%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "35C 30%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.8%" },
+        { "condition": "45C 10%", "week": 3, "assay_type": "Anisidine", "result": "0.2" }
+      ]
+    },
+    {
+      "title": "Candle Fragrance Stability",
+      "number": 100045,
+      "description": "Evaluating the stability of fragrance in candles under varying temperature and humidity conditions",
+      "start_date": "2027-01-01",
+      "storage_conditions": ["0 F", "20C 60%", "30C 40%", "40C 20%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "20C 60%": { "1": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "30C 40%": { "2": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "40C 20%": { "3": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Aromatic" },
+        { "condition": "20C 60%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "30C 40%", "week": 2, "assay_type": "Hexanal", "result": "15 mg/kg" },
+        { "condition": "40C 20%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "1.5 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Leather Goods Aging Analysis",
+      "number": 100046,
+      "description": "Analyzing the aging process of leather goods under controlled temperature and humidity conditions",
+      "start_date": "2027-04-15",
+      "storage_conditions": ["0 F", "25C 50%", "35C 30%", "45C 10%"],
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "25C 50%": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "35C 30%": { "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "45C 10%": { "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "Supple texture" },
+        { "condition": "25C 50%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "35C 30%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.7%" },
+        { "condition": "45C 10%", "week": 3, "assay_type": "Hexanal", "result": "12 mg/kg" }
+      ]
+    },
+    {
+      "title": "Metal Corrosion Resistance",
+      "number": 100047,
+      "description": "Assessing the corrosion resistance of metal alloys under varying environmental conditions",
+      "start_date": "2027-07-01",
+      "storage_conditions": ["0 F", "15C 70%", "25C 50%", "35C 30%"],
+      "assay_types": ["Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)", "Anisidine"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture"], "2": ["Moisture", "Peroxide value (PV)"], "3": ["Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)", "Anisidine"] },
+        "15C 70%": { "1": ["Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)", "Anisidine"], "2": ["Moisture", "Peroxide value (PV)"], "3": ["Moisture", "Peroxide value (PV)"], "4": ["Moisture", "Peroxide value (PV)"] },
+        "25C 50%": { "2": ["Moisture", "Peroxide value (PV)"], "3": ["Moisture", "Peroxide value (PV)"], "4": ["Moisture", "Peroxide value (PV)"] },
+        "35C 30%": { "3": ["Moisture", "Peroxide value (PV)"], "4": ["Moisture", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Low moisture content" },
+        { "condition": "15C 70%", "week": 1, "assay_type": "Moisture", "result": "No significant difference" },
+        { "condition": "25C 50%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "2.0 meq O2/kg" },
+        { "condition": "35C 30%", "week": 3, "assay_type": "Anisidine", "result": "0.3" }
+      ]
+    },
+    {
+      "title": "Electronic Device Reliability",
+      "number": 100048,
+      "description": "Testing the reliability of electronic devices under different temperature and humidity conditions",
+      "start_date": "2027-08-15",
+      "storage_conditions": ["-20 C", "5C 80%", "25C 50%", "40C 20%"],
+      "assay_types": ["Moisture", "Hexanal", "Peroxide value (PV)", "Sensory"],
+      "assay_schedule": {
+        "-20 C": { "1": ["Moisture"], "2": ["Moisture", "Hexanal"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)", "Sensory"] },
+        "5C 80%": { "1": ["Moisture", "Hexanal", "Peroxide value (PV)", "Sensory"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "25C 50%": { "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "40C 20%": { "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-20 C", "week": 1, "assay_type": "Moisture", "result": "Dry condition" },
+        { "condition": "5C 80%", "week": 1, "assay_type": "Moisture", "result": "No significant difference" },
+        { "condition": "25C 50%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "1.8 meq O2/kg" },
+        { "condition": "40C 20%", "week": 3, "assay_type": "Sensory", "result": "Normal operation" }
+      ]
+    },
+    {
+      "title": "Paint Color Stability",
+      "number": 100049,
+      "description": "Investigating the stability of paint colors under different temperature and humidity conditions",
+      "start_date": "2027-11-01",
+      "storage_conditions": ["0 F", "20C 60%", "30C 40%", "45C 10%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "20C 60%": { "1": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "2": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "30C 40%": { "2": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "45C 10%": { "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "No color change" },
+        { "condition": "20C 60%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "30C 40%", "week": 2, "assay_type": "Moisture", "result": "3.2%" },
+        { "condition": "45C 10%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "0.5%" }
+      ]
+    },
+    {
+      "title": "Plastic Durability",
+      "number": 100050,
+      "description": "Evaluating the durability of plastic materials under various temperature and humidity conditions",
+      "start_date": "2028-01-15",
+      "storage_conditions": ["-10 C", "10C 75%", "30C 55%", "40C 25%"],
+      "assay_types": ["Moisture", "Hexanal", "Sensory", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "-10 C": { "1": ["Moisture"], "2": ["Moisture", "Hexanal"], "3": ["Moisture", "Hexanal", "Sensory"], "4": ["Moisture", "Hexanal", "Sensory", "Free fatty acid (FFA)"] },
+        "10C 75%": { "1": ["Moisture", "Hexanal", "Sensory", "Free fatty acid (FFA)"], "2": ["Moisture", "Hexanal", "Sensory"], "3": ["Moisture", "Hexanal", "Sensory"] },
+        "30C 55%": { "2": ["Moisture", "Hexanal", "Sensory"], "3": ["Moisture", "Hexanal", "Sensory"], "4": ["Moisture", "Hexanal", "Sensory"] },
+        "40C 25%": { "3": ["Moisture", "Hexanal", "Sensory"], "4": ["Moisture", "Hexanal", "Sensory"] }
+      },
+      "assay_results": [
+        { "condition": "-10 C", "week": 1, "assay_type": "Moisture", "result": "Minimal moisture absorption" },
+        { "condition": "10C 75%", "week": 1, "assay_type": "Moisture", "result": "Slight moisture increase" },
+        { "condition": "30C 55%", "week": 2, "assay_type": "Sensory", "result": "No significant change" },
+        { "condition": "40C 25%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "0.4%" }
+      ]
+    },
+    {
+      "title": "Adhesive Bond Strength",
+      "number": 100051,
+      "description": "Testing the bond strength of adhesives under different humidity and temperature conditions",
+      "start_date": "2028-03-01",
+      "storage_conditions": ["-5 C", "20C 60%", "35C 40%", "50C 15%"],
+      "assay_types": ["Sensory", "Hexanal", "Peroxide value (PV)", "Moisture"],
+      "assay_schedule": {
+        "-5 C": { "1": ["Sensory"], "2": ["Sensory", "Hexanal"], "3": ["Sensory", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Hexanal", "Peroxide value (PV)", "Moisture"] },
+        "20C 60%": { "1": ["Sensory", "Hexanal", "Peroxide value (PV)", "Moisture"], "2": ["Sensory", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+        "35C 40%": { "2": ["Sensory", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+        "50C 15%": { "3": ["Sensory", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-5 C", "week": 1, "assay_type": "Sensory", "result": "Adhesive bond intact" },
+        { "condition": "20C 60%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "35C 40%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "1.5 meq O2/kg" },
+        { "condition": "50C 15%", "week": 3, "assay_type": "Moisture", "result": "2.8%" }
+      ]
+    },
+    {
+      "title": "Textile Colorfastness",
+      "number": 100052,
+      "description": "Examining the colorfastness of textiles exposed to different light and humidity conditions",
+      "start_date": "2028-05-15",
+      "storage_conditions": ["10 C", "25C 50%", "40C 30%", "55C 10%"],
+      "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"],
+      "assay_schedule": {
+        "10 C": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"] },
+        "25C 50%": { "1": ["Sensory", "Moisture", "Peroxide value (PV)", "Hexanal"], "2": ["Sensory", "Moisture", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+        "40C 30%": { "2": ["Sensory", "Moisture", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+        "55C 10%": { "3": ["Sensory", "Moisture", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "10 C", "week": 1, "assay_type": "Sensory", "result": "No color change" },
+        { "condition": "25C 50%", "week": 1, "assay_type": "Sensory", "result": "Slight fading observed" },
+        { "condition": "40C 30%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "0.8 meq O2/kg" },
+        { "condition": "55C 10%", "week": 3, "assay_type": "Hexanal", "result": "0.3%" }
+      ]
+    },
+    {
+      "title": "Electronic Component Reliability",
+      "number": 100053,
+      "description": "Assessing the reliability of electronic components under various temperature and humidity conditions",
+      "start_date": "2028-08-01",
+      "storage_conditions": ["-20 C", "5C 80%", "25C 45%", "35C 20%"],
+      "assay_types": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)", "Sensory"],
+      "assay_schedule": {
+        "-20 C": { "1": ["Moisture"], "2": ["Moisture", "Free fatty acid (FFA)"], "3": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)", "Sensory"] },
+        "5C 80%": { "1": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "2": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "25C 45%": { "2": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "35C 20%": { "3": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-20 C", "week": 1, "assay_type": "Moisture", "result": "Minimal moisture absorption" },
+        { "condition": "5C 80%", "week": 1, "assay_type": "Moisture", "result": "Slight increase in moisture content" },
+        { "condition": "25C 45%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "2.0 meq O2/kg" },
+        { "condition": "35C 20%", "week": 3, "assay_type": "Sensory", "result": "No noticeable change" }
+      ]
+    },
+    {
+      "title": "Automotive Paint Adhesion",
+      "number": 100054,
+      "description": "Investigating the adhesion of automotive paint under different temperature and humidity conditions",
+      "start_date": "2028-10-15",
+      "storage_conditions": ["-15 C", "15C 70%", "30C 50%", "45C 15%"],
+      "assay_types": ["Sensory", "Peroxide value (PV)", "Moisture", "Hexanal"],
+      "assay_schedule": {
+        "-15 C": { "1": ["Sensory"], "2": ["Sensory", "Peroxide value (PV)"], "3": ["Sensory", "Peroxide value (PV)", "Moisture"], "4": ["Sensory", "Peroxide value (PV)", "Moisture", "Hexanal"] },
+        "15C 70%": { "1": ["Sensory", "Peroxide value (PV)", "Moisture", "Hexanal"], "2": ["Sensory", "Peroxide value (PV)", "Moisture"], "3": ["Sensory", "Peroxide value (PV)", "Moisture"] },
+        "30C 50%": { "2": ["Sensory", "Peroxide value (PV)", "Moisture"], "3": ["Sensory", "Peroxide value (PV)", "Moisture"], "4": ["Sensory", "Peroxide value (PV)", "Moisture"] },
+        "45C 15%": { "3": ["Sensory", "Peroxide value (PV)", "Moisture"], "4": ["Sensory", "Peroxide value (PV)", "Moisture"] }
+      },
+      "assay_results": [
+        { "condition": "-15 C", "week": 1, "assay_type": "Sensory", "result": "Excellent adhesion" },
+        { "condition": "15C 70%", "week": 1, "assay_type": "Sensory", "result": "No significant difference" },
+        { "condition": "30C 50%", "week": 2, "assay_type": "Moisture", "result": "1.8%" },
+        { "condition": "45C 15%", "week": 3, "assay_type": "Hexanal", "result": "0.6%" }
+      ]
+    },
+    {
+      "title": "Paper Aging Resistance",
+      "number": 100055,
+      "description": "Examining the aging resistance of paper under different light and temperature conditions",
+      "start_date": "2029-01-01",
+      "storage_conditions": ["5 C", "20C 50%", "35C 30%", "50C 10%"],
+      "assay_types": ["Peroxide value (PV)", "Hexanal", "Sensory", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "5 C": { "1": ["Peroxide value (PV)"], "2": ["Peroxide value (PV)", "Hexanal"], "3": ["Peroxide value (PV)", "Hexanal", "Sensory"], "4": ["Peroxide value (PV)", "Hexanal", "Sensory", "Free fatty acid (FFA)"] },
+        "20C 50%": { "1": ["Peroxide value (PV)", "Hexanal", "Sensory", "Free fatty acid (FFA)"], "2": ["Peroxide value (PV)", "Hexanal", "Sensory"], "3": ["Peroxide value (PV)", "Hexanal", "Sensory"] },
+        "35C 30%": { "2": ["Peroxide value (PV)", "Hexanal", "Sensory"], "3": ["Peroxide value (PV)", "Hexanal", "Sensory"], "4": ["Peroxide value (PV)", "Hexanal", "Sensory"] },
+        "50C 10%": { "3": ["Peroxide value (PV)", "Hexanal", "Sensory"], "4": ["Peroxide value (PV)", "Hexanal", "Sensory"] }
+      },
+      "assay_results": [
+        { "condition": "5 C", "week": 1, "assay_type": "Peroxide value (PV)", "result": "0.5 meq O2/kg" },
+        { "condition": "20C 50%", "week": 1, "assay_type": "Peroxide value (PV)", "result": "No significant change" },
+        { "condition": "35C 30%", "week": 2, "assay_type": "Sensory", "result": "Slight color change" },
+        { "condition": "50C 10%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "1.2%" }
+      ]
+    },
+    {
+      "title": "Food Packaging Integrity",
+      "number": 100056,
+      "description": "Assessing the integrity of food packaging materials under different storage conditions",
+      "start_date": "2029-04-15",
+      "storage_conditions": ["-10 C", "10C 70%", "25C 40%", "35C 15%"],
+      "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "-10 C": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "10C 70%": { "1": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"], "2": ["Sensory", "Moisture", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+        "25C 40%": { "2": ["Sensory", "Moisture", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+        "35C 15%": { "3": ["Sensory", "Moisture", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-10 C", "week": 1, "assay_type": "Sensory", "result": "No packaging damage" },
+        { "condition": "10C 70%", "week": 1, "assay_type": "Sensory", "result": "Slight discoloration observed" },
+        { "condition": "25C 40%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "1.7 meq O2/kg" },
+        { "condition": "35C 15%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "0.8%" }
+      ]
+    },
+    {
+      "title": "Wood Coating Durability",
+      "number": 100057,
+      "description": "Investigating the durability of wood coatings under different exposure conditions",
+      "start_date": "2029-07-01",
+      "storage_conditions": ["-5 C", "15C 60%", "30C 35%", "40C 10%"],
+      "assay_types": ["Sensory", "Hexanal", "Free fatty acid (FFA)", "Moisture"],
+      "assay_schedule": {
+        "-5 C": { "1": ["Sensory"], "2": ["Sensory", "Hexanal"], "3": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Hexanal", "Free fatty acid (FFA)", "Moisture"] },
+        "15C 60%": { "1": ["Sensory", "Hexanal", "Free fatty acid (FFA)", "Moisture"], "2": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] },
+        "30C 35%": { "2": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] },
+        "40C 10%": { "3": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "-5 C", "week": 1, "assay_type": "Sensory", "result": "Excellent coating adhesion" },
+        { "condition": "15C 60%", "week": 1, "assay_type": "Sensory", "result": "No significant change" },
+        { "condition": "30C 35%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.5%" },
+        { "condition": "40C 10%", "week": 3, "assay_type": "Moisture", "result": "Slight increase in moisture content" }
+      ]
+    },
+    {
+      "title": "Cosmetic Stability",
+      "number": 100058,
+      "description": "Evaluating the stability of cosmetic products under varying temperature and humidity conditions",
+      "start_date": "2029-10-15",
+      "storage_conditions": ["0 C", "25C 55%", "35C 30%", "45C 10%"],
+      "assay_types": ["Sensory", "Hexanal", "Moisture", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 C": { "1": ["Sensory"], "2": ["Sensory", "Hexanal"], "3": ["Sensory", "Hexanal", "Moisture"], "4": ["Sensory", "Hexanal", "Moisture", "Peroxide value (PV)"] },
+        "25C 55%": { "1": ["Sensory", "Hexanal", "Moisture", "Peroxide value (PV)"], "2": ["Sensory", "Hexanal", "Moisture"], "3": ["Sensory", "Hexanal", "Moisture"] },
+        "35C 30%": { "2": ["Sensory", "Hexanal", "Moisture"], "3": ["Sensory", "Hexanal", "Moisture"], "4": ["Sensory", "Hexanal", "Moisture"] },
+        "45C 10%": { "3": ["Sensory", "Hexanal", "Moisture"], "4": ["Sensory", "Hexanal", "Moisture"] }
+      },
+      "assay_results": [
+        { "condition": "0 C", "week": 1, "assay_type": "Sensory", "result": "No change in product appearance" },
+        { "condition": "25C 55%", "week": 1, "assay_type": "Sensory", "result": "Slight alteration in fragrance" },
+        { "condition": "35C 30%", "week": 2, "assay_type": "Moisture", "result": "1.2%" },
+        { "condition": "45C 10%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "2.5 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Pharmaceutical Drug Stability",
+      "number": 100059,
+      "description": "Investigating the stability of pharmaceutical drugs under different storage conditions",
+      "start_date": "2030-02-01",
+      "storage_conditions": ["-10 C", "10C 60%", "25C 35%", "40C 5%"],
+      "assay_types": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)", "Moisture"],
+      "assay_schedule": {
+        "-10 C": { "1": ["Peroxide value (PV)"], "2": ["Peroxide value (PV)", "Sensory"], "3": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)"], "4": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)", "Moisture"] },
+        "10C 60%": { "1": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)", "Moisture"], "2": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)"], "3": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)"] },
+        "25C 35%": { "2": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)"], "3": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)"], "4": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)"] },
+        "40C 5%": { "3": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)"], "4": ["Peroxide value (PV)", "Sensory", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "-10 C", "week": 1, "assay_type": "Peroxide value (PV)", "result": "0.3 meq O2/kg" },
+        { "condition": "10C 60%", "week": 1, "assay_type": "Peroxide value (PV)", "result": "No significant change" },
+        { "condition": "25C 35%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.6%" },
+        { "condition": "40C 5%", "week": 3, "assay_type": "Moisture", "result": "Slight moisture increase" }
+      ]
+    },
+    {
+      "title": "Metal Corrosion Resistance",
+      "number": 100060,
+      "description": "Assessing the corrosion resistance of metal surfaces under varying environmental conditions",
+      "start_date": "2030-06-15",
+      "storage_conditions": ["-10 C", "15C 50%", "30C 25%", "40C 5%"],
+      "assay_types": ["Moisture", "Sensory", "Peroxide value (PV)", "Hexanal"],
+      "assay_schedule": {
+        "-10 C": { "1": ["Moisture"], "2": ["Moisture", "Sensory"], "3": ["Moisture", "Sensory", "Peroxide value (PV)"], "4": ["Moisture", "Sensory", "Peroxide value (PV)", "Hexanal"] },
+        "15C 50%": { "1": ["Moisture", "Sensory", "Peroxide value (PV)", "Hexanal"], "2": ["Moisture", "Sensory", "Peroxide value (PV)"], "3": ["Moisture", "Sensory", "Peroxide value (PV)"] },
+        "30C 25%": { "2": ["Moisture", "Sensory", "Peroxide value (PV)"], "3": ["Moisture", "Sensory", "Peroxide value (PV)"], "4": ["Moisture", "Sensory", "Peroxide value (PV)"] },
+        "40C 5%": { "3": ["Moisture", "Sensory", "Peroxide value (PV)"], "4": ["Moisture", "Sensory", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-10 C", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "15C 50%", "week": 1, "assay_type": "Moisture", "result": "No significant change" },
+        { "condition": "30C 25%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "1.2 meq O2/kg" },
+        { "condition": "40C 5%", "week": 3, "assay_type": "Hexanal", "result": "0.4%" }
+      ]
+    },
+    {
+      "title": "Food Shelf Life",
+      "number": 100061,
+      "description": "Evaluating the shelf life of packaged food items under different temperature and humidity conditions",
+      "start_date": "2030-07-01",
+      "storage_conditions": ["-20 F", "10 F 60%", "25 F 35%", "40 F 5%"],
+      "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "-20 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "10 F 60%": { "1": ["Sensory", "Moisture", "Peroxide value (PV)", "Free fatty acid (FFA)"], "2": ["Sensory", "Moisture", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+        "25 F 35%": { "2": ["Sensory", "Moisture", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+        "40 F 5%": { "3": ["Sensory", "Moisture", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-20 F", "week": 1, "assay_type": "Sensory", "result": "Normal product appearance" },
+        { "condition": "10 F 60%", "week": 1, "assay_type": "Sensory", "result": "Slight change in texture" },
+        { "condition": "25 F 35%", "week": 2, "assay_type": "Moisture", "result": "0.8%" },
+        { "condition": "40 F 5%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "1.5%" }
+      ]
+    },
+    {
+      "title": "Chemical Reactor Stability",
+      "number": 100062,
+      "description": "Studying the stability of chemical reactors under various temperature and pressure conditions",
+      "start_date": "2030-09-15",
+      "storage_conditions": ["-15 F", "5 F 55%", "30 F 30%", "45 F 10%"],
+      "assay_types": ["Hexanal", "Moisture", "Sensory", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "-15 F": { "1": ["Hexanal"], "2": ["Hexanal", "Moisture"], "3": ["Hexanal", "Moisture", "Sensory"], "4": ["Hexanal", "Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "5 F 55%": { "1": ["Hexanal", "Moisture", "Sensory", "Free fatty acid (FFA)"], "2": ["Hexanal", "Moisture", "Sensory"], "3": ["Hexanal", "Moisture", "Sensory"] },
+        "30 F 30%": { "2": ["Hexanal", "Moisture", "Sensory"], "3": ["Hexanal", "Moisture", "Sensory"], "4": ["Hexanal", "Moisture", "Sensory"] },
+        "45 F 10%": { "3": ["Hexanal", "Moisture", "Sensory"], "4": ["Hexanal", "Moisture", "Sensory"] }
+      },
+      "assay_results": [
+        { "condition": "-15 F", "week": 1, "assay_type": "Hexanal", "result": "Stable chemical composition" },
+        { "condition": "5 F 55%", "week": 1, "assay_type": "Hexanal", "result": "No significant changes" },
+        { "condition": "30 F 30%", "week": 2, "assay_type": "Sensory", "result": "Subtle odor alteration" },
+        { "condition": "45 F 10%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "2.2%" }
+      ]
+    },
+    {
+      "title": "Electronic Component Reliability",
+      "number": 100063,
+      "description": "Assessing the reliability of electronic components under different temperature and humidity conditions",
+      "start_date": "2030-12-01",
+      "storage_conditions": ["-25 F", "0 F 50%", "20 F 25%", "35 F 8%"],
+      "assay_types": ["Peroxide value (PV)", "Sensory", "Moisture", "Hexanal"],
+      "assay_schedule": {
+        "-25 F": { "1": ["Peroxide value (PV)"], "2": ["Peroxide value (PV)", "Sensory"], "3": ["Peroxide value (PV)", "Sensory", "Moisture"], "4": ["Peroxide value (PV)", "Sensory", "Moisture", "Hexanal"] },
+        "0 F 50%": { "1": ["Peroxide value (PV)", "Sensory", "Moisture", "Hexanal"], "2": ["Peroxide value (PV)", "Sensory", "Moisture"], "3": ["Peroxide value (PV)", "Sensory", "Moisture"] },
+        "20 F 25%": { "2": ["Peroxide value (PV)", "Sensory", "Moisture"], "3": ["Peroxide value (PV)", "Sensory", "Moisture"], "4": ["Peroxide value (PV)", "Sensory", "Moisture"] },
+        "35 F 8%": { "3": ["Peroxide value (PV)", "Sensory", "Moisture"], "4": ["Peroxide value (PV)", "Sensory", "Moisture"] }
+      },
+      "assay_results": [
+        { "condition": "-25 F", "week": 1, "assay_type": "Peroxide value (PV)", "result": "Low oxidative rancidity" },
+        { "condition": "0 F 50%", "week": 1, "assay_type": "Peroxide value (PV)", "result": "Stable oxidative state" },
+        { "condition": "20 F 25%", "week": 2, "assay_type": "Sensory", "result": "Normal operation observed" },
+        { "condition": "35 F 8%", "week": 3, "assay_type": "Hexanal", "result": "0.5%" }
+      ]
+    },
+    {
+      "title": "Pharmaceutical Drug Stability",
+      "number": 100064,
+      "description": "Investigating the stability of pharmaceutical drugs under controlled temperature and humidity conditions",
+      "start_date": "2031-02-15",
+      "storage_conditions": ["-18 F", "15 F 45%", "28 F 22%", "42 F 7%"],
+      "assay_types": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "-18 F": { "1": ["Moisture"], "2": ["Moisture", "Sensory"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "15 F 45%": { "1": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Peroxide value (PV)"], "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "28 F 22%": { "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "42 F 7%": { "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "-18 F", "week": 1, "assay_type": "Moisture", "result": "1.2%" },
+        { "condition": "15 F 45%", "week": 1, "assay_type": "Moisture", "result": "Slight texture change" },
+        { "condition": "28 F 22%", "week": 2, "assay_type": "Sensory", "result": "No noticeable changes" },
+        { "condition": "42 F 7%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "Stable oxidative state" }
+      ]
+    },
+    {
+      "title": "Paint Coating Durability",
+      "number": 100065,
+      "description": "Testing the durability of paint coatings under different temperature and humidity conditions",
+      "start_date": "2031-05-01",
+      "storage_conditions": ["-22 F", "8 F 65%", "23 F 40%", "38 F 12%"],
+      "assay_types": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)", "Moisture"],
+      "assay_schedule": {
+        "-22 F": { "1": ["Hexanal"], "2": ["Hexanal", "Peroxide value (PV)"], "3": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)", "Moisture"] },
+        "8 F 65%": { "1": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)", "Moisture"], "2": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "3": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "23 F 40%": { "2": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "3": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "38 F 12%": { "3": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "-22 F", "week": 1, "assay_type": "Hexanal", "result": "No significant change" },
+        { "condition": "8 F 65%", "week": 1, "assay_type": "Hexanal", "result": "Stable chemical composition" },
+        { "condition": "23 F 40%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "1.8%" },
+        { "condition": "38 F 12%", "week": 3, "assay_type": "Moisture", "result": "2.5%" }
+      ]
+    },
+    {
+      "title": "Textile Fiber Strength",
+      "number": 100066,
+      "description": "Analyzing the strength of textile fibers under varying temperature and humidity conditions",
+      "start_date": "2031-08-15",
+      "storage_conditions": ["-17 F", "12 F 60%", "27 F 35%", "42 F 8%"],
+      "assay_types": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)", "Moisture"],
+      "assay_schedule": {
+        "-17 F": { "1": ["Free fatty acid (FFA)"], "2": ["Free fatty acid (FFA)", "Sensory"], "3": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)"], "4": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)", "Moisture"] },
+        "12 F 60%": { "1": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)", "Moisture"], "2": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)"], "3": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)"] },
+        "27 F 35%": { "2": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)"], "3": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)"], "4": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)"] },
+        "42 F 8%": { "3": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)"], "4": ["Free fatty acid (FFA)", "Sensory", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-17 F", "week": 1, "assay_type": "Free fatty acid (FFA)", "result": "Stable chemical composition" },
+        { "condition": "12 F 60%", "week": 1, "assay_type": "Free fatty acid (FFA)", "result": "0.9%" },
+        { "condition": "27 F 35%", "week": 2, "assay_type": "Sensory", "result": "Slight change in appearance" },
+        { "condition": "42 F 8%", "week": 3, "assay_type": "Moisture", "result": "1.3%" }
+      ]
+    },
+    {
+      "title": "Automotive Lubricant Viscosity",
+      "number": 100067,
+      "description": "Assessing the viscosity of automotive lubricants under different temperature and humidity conditions",
+      "start_date": "2031-11-01",
+      "storage_conditions": ["-20 F", "10 F 50%", "25 F 28%", "40 F 8%"],
+      "assay_types": ["Sensory", "Hexanal", "Moisture", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "-20 F": { "1": ["Sensory"], "2": ["Sensory", "Hexanal"], "3": ["Sensory", "Hexanal", "Moisture"], "4": ["Sensory", "Hexanal", "Moisture", "Peroxide value (PV)"] },
+        "10 F 50%": { "1": ["Sensory", "Hexanal", "Moisture", "Peroxide value (PV)"], "2": ["Sensory", "Hexanal", "Moisture"], "3": ["Sensory", "Hexanal", "Moisture"] },
+        "25 F 28%": { "2": ["Sensory", "Hexanal", "Moisture"], "3": ["Sensory", "Hexanal", "Moisture"], "4": ["Sensory", "Hexanal", "Moisture"] },
+        "40 F 8%": { "3": ["Sensory", "Hexanal", "Moisture"], "4": ["Sensory", "Hexanal", "Moisture"] }
+      },
+      "assay_results": [
+        { "condition": "-20 F", "week": 1, "assay_type": "Sensory", "result": "Normal appearance and smell" },
+        { "condition": "10 F 50%", "week": 1, "assay_type": "Sensory", "result": "Slight change in color" },
+        { "condition": "25 F 28%", "week": 2, "assay_type": "Hexanal", "result": "0.3%" },
+        { "condition": "40 F 8%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "Stable oxidative state" }
+      ]
+    },
+    {
+      "title": "Plastic Material Hardness",
+      "number": 100068,
+      "description": "Measuring the hardness of plastic materials under different temperature and humidity conditions",
+      "start_date": "2032-02-15",
+      "storage_conditions": ["-18 F", "15 F 40%", "28 F 20%", "42 F 6%"],
+      "assay_types": ["Moisture", "Sensory", "Hexanal", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "-18 F": { "1": ["Moisture"], "2": ["Moisture", "Sensory"], "3": ["Moisture", "Sensory", "Hexanal"], "4": ["Moisture", "Sensory", "Hexanal", "Free fatty acid (FFA)"] },
+        "15 F 40%": { "1": ["Moisture", "Sensory", "Hexanal", "Free fatty acid (FFA)"], "2": ["Moisture", "Sensory", "Hexanal"], "3": ["Moisture", "Sensory", "Hexanal"] },
+        "28 F 20%": { "2": ["Moisture", "Sensory", "Hexanal"], "3": ["Moisture", "Sensory", "Hexanal"], "4": ["Moisture", "Sensory", "Hexanal"] },
+        "42 F 6%": { "3": ["Moisture", "Sensory", "Hexanal"], "4": ["Moisture", "Sensory", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "-18 F", "week": 1, "assay_type": "Moisture", "result": "0.5%" },
+        { "condition": "15 F 40%", "week": 1, "assay_type": "Moisture", "result": "Slight change in texture" },
+        { "condition": "28 F 20%", "week": 2, "assay_type": "Sensory", "result": "No significant changes" },
+        { "condition": "42 F 6%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "1.2%" }
+      ]
+    },
+    {
+      "title": "Cosmetic Cream Stability",
+      "number": 100069,
+      "description": "Testing the stability of cosmetic creams under various temperature and humidity conditions",
+      "start_date": "2032-05-01",
+      "storage_conditions": ["-22 F", "8 F 60%", "23 F 35%", "38 F 10%"],
+      "assay_types": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)", "Sensory"],
+      "assay_schedule": {
+        "-22 F": { "1": ["Hexanal"], "2": ["Hexanal", "Free fatty acid (FFA)"], "3": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)", "Sensory"] },
+        "8 F 60%": { "1": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)", "Sensory"], "2": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "23 F 35%": { "2": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "38 F 10%": { "3": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"], "4": ["Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-22 F", "week": 1, "assay_type": "Hexanal", "result": "Stable chemical composition" },
+        { "condition": "8 F 60%", "week": 1, "assay_type": "Hexanal", "result": "No significant changes" },
+        { "condition": "23 F 35%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "Stable oxidative state" },
+        { "condition": "38 F 10%", "week": 3, "assay_type": "Sensory", "result": "Slight change in fragrance" }
+      ]
+    },
+    {
+      "title": "Metallic Coating Adhesion",
+      "number": 100070,
+      "description": "Assessing the adhesion of metallic coatings under different temperature and humidity conditions",
+      "start_date": "2032-08-15",
+      "storage_conditions": ["-17 F", "12 F 50%", "27 F 28%", "42 F 8%"],
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "-17 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "12 F 50%": { "1": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "2": ["Sensory", "Moisture", "Hexanal"], "3": ["Sensory", "Moisture", "Hexanal"] },
+        "27 F 28%": { "2": ["Sensory", "Moisture", "Hexanal"], "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal"] },
+        "42 F 8%": { "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "-17 F", "week": 1, "assay_type": "Sensory", "result": "Normal appearance" },
+        { "condition": "12 F 50%", "week": 1, "assay_type": "Sensory", "result": "Slight change in texture" },
+        { "condition": "27 F 28%", "week": 2, "assay_type": "Hexanal", "result": "0.4%" },
+        { "condition": "42 F 8%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "1.7%" }
+      ]
+    },
+    {
+      "title": "Paper Packaging Integrity",
+      "number": 100071,
+      "description": "Testing the integrity of paper packaging under various temperature and humidity conditions",
+      "start_date": "2032-11-01",
+      "storage_conditions": ["-22 F", "8 F 45%", "23 F 25%", "38 F 7%"],
+      "assay_types": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "-22 F": { "1": ["Moisture"], "2": ["Moisture", "Sensory"], "3": ["Moisture", "Sensory", "Hexanal"], "4": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"] },
+        "8 F 45%": { "1": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"], "2": ["Moisture", "Sensory", "Hexanal"], "3": ["Moisture", "Sensory", "Hexanal"] },
+        "23 F 25%": { "2": ["Moisture", "Sensory", "Hexanal"], "3": ["Moisture", "Sensory", "Hexanal"], "4": ["Moisture", "Sensory", "Hexanal"] },
+        "38 F 7%": { "3": ["Moisture", "Sensory", "Hexanal"], "4": ["Moisture", "Sensory", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "-22 F", "week": 1, "assay_type": "Moisture", "result": "0.8%" },
+        { "condition": "8 F 45%", "week": 1, "assay_type": "Moisture", "result": "Slight texture change" },
+        { "condition": "23 F 25%", "week": 2, "assay_type": "Sensory", "result": "Normal appearance observed" },
+        { "condition": "38 F 7%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "Stable oxidative state" }
+      ]
+    },
+    {
+      "title": "Adhesive Bond Strength",
+      "number": 100072,
+      "description": "Evaluating the bond strength of adhesives under different temperature and humidity conditions",
+      "start_date": "2033-02-15",
+      "storage_conditions": ["-20 F", "10 F 40%", "25 F 20%", "40 F 5%"],
+      "assay_types": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)", "Moisture"],
+      "assay_schedule": {
+        "-20 F": { "1": ["Sensory"], "2": ["Sensory", "Peroxide value (PV)"], "3": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)", "Moisture"] },
+        "10 F 40%": { "1": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)", "Moisture"], "2": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "3": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "25 F 20%": { "2": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "3": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "40 F 5%": { "3": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "-20 F", "week": 1, "assay_type": "Sensory", "result": "Normal bond appearance" },
+        { "condition": "10 F 40%", "week": 1, "assay_type": "Sensory", "result": "Slight change in color" },
+        { "condition": "25 F 20%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "1.3%" },
+        { "condition": "40 F 5%", "week": 3, "assay_type": "Moisture", "result": "0.6%" }
+      ]
+    },
+    {
+      "title": "Rubber Seal Flexibility",
+      "number": 100073,
+      "description": "Assessing the flexibility of rubber seals under varying temperature and humidity conditions",
+      "start_date": "2033-05-01",
+      "storage_conditions": ["-22 F", "8 F 55%", "23 F 30%", "38 F 10%"],
+      "assay_types": ["Moisture", "Sensory", "Peroxide value (PV)", "Hexanal"],
+      "assay_schedule": {
+        "-22 F": { "1": ["Moisture"], "2": ["Moisture", "Sensory"], "3": ["Moisture", "Sensory", "Peroxide value (PV)"], "4": ["Moisture", "Sensory", "Peroxide value (PV)", "Hexanal"] },
+        "8 F 55%": { "1": ["Moisture", "Sensory", "Peroxide value (PV)", "Hexanal"], "2": ["Moisture", "Sensory", "Peroxide value (PV)"], "3": ["Moisture", "Sensory", "Peroxide value (PV)"] },
+        "23 F 30%": { "2": ["Moisture", "Sensory", "Peroxide value (PV)"], "3": ["Moisture", "Sensory", "Peroxide value (PV)"], "4": ["Moisture", "Sensory", "Peroxide value (PV)"] },
+        "38 F 10%": { "3": ["Moisture", "Sensory", "Peroxide value (PV)"], "4": ["Moisture", "Sensory", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "-22 F", "week": 1, "assay_type": "Moisture", "result": "1.2%" },
+        { "condition": "8 F 55%", "week": 1, "assay_type": "Moisture", "result": "Slight change in flexibility" },
+        { "condition": "23 F 30%", "week": 2, "assay_type": "Sensory", "result": "Normal appearance observed" },
+        { "condition": "38 F 10%", "week": 3, "assay_type": "Hexanal", "result": "0.4%" }
+      ]
+    },
+    {
+      "title": "Ceramic Tile Durability",
+      "number": 100074,
+      "description": "Testing the durability of ceramic tiles under different temperature and humidity conditions",
+      "start_date": "2033-08-15",
+      "storage_conditions": ["-20 F", "10 F 45%", "25 F 23%", "40 F 7%"],
+      "assay_types": ["Sensory", "Hexanal", "Free fatty acid (FFA)", "Moisture"],
+      "assay_schedule": {
+        "-20 F": { "1": ["Sensory"], "2": ["Sensory", "Hexanal"], "3": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Hexanal", "Free fatty acid (FFA)", "Moisture"] },
+        "10 F 45%": { "1": ["Sensory", "Hexanal", "Free fatty acid (FFA)", "Moisture"], "2": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] },
+        "25 F 23%": { "2": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] },
+        "40 F 7%": { "3": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "-20 F", "week": 1, "assay_type": "Sensory", "result": "Normal appearance" },
+        { "condition": "10 F 45%", "week": 1, "assay_type": "Sensory", "result": "Slight change in color" },
+        { "condition": "25 F 23%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "1.5%" },
+        { "condition": "40 F 7%", "week": 3, "assay_type": "Moisture", "result": "0.9%" }
+      ]
+    },
+    {
+      "title": "Electronic Component Reliability",
+      "number": 100075,
+      "description": "Assessing the reliability of electronic components under different temperature and humidity conditions",
+      "start_date": "2033-11-01",
+      "storage_conditions": ["-22 F", "8 F 50%", "23 F 28%", "38 F 8%"],
+      "assay_types": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)", "Moisture"],
+      "assay_schedule": {
+        "-22 F": { "1": ["Sensory"], "2": ["Sensory", "Peroxide value (PV)"], "3": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)", "Moisture"] },
+        "8 F 50%": { "1": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)", "Moisture"], "2": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "3": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "23 F 28%": { "2": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "3": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "38 F 8%": { "3": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Sensory", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "-22 F", "week": 1, "assay_type": "Sensory", "result": "Normal operation observed" },
+        { "condition": "8 F 50%", "week": 1, "assay_type": "Sensory", "result": "Slight change in appearance" },
+        { "condition": "23 F 28%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "1.2%" },
+        { "condition": "38 F 8%", "week": 3, "assay_type": "Moisture", "result": "0.7%" }
+      ]
+    },
+    {
+      "title": "Wood Coating Adhesion",
+      "number": 100076,
+      "description": "Evaluating the adhesion of wood coatings under different temperature and humidity conditions",
+      "start_date": "2034-02-15",
+      "storage_conditions": ["-18 F", "15 F 45%", "28 F 22%", "42 F 7%"],
+      "assay_types": ["Sensory", "Peroxide value (PV)", "Moisture", "Hexanal"],
+      "assay_schedule": {
+        "-18 F": { "1": ["Sensory"], "2": ["Sensory", "Peroxide value (PV)"], "3": ["Sensory", "Peroxide value (PV)", "Moisture"], "4": ["Sensory", "Peroxide value (PV)", "Moisture", "Hexanal"] },
+        "15 F 45%": { "1": ["Sensory", "Peroxide value (PV)", "Moisture", "Hexanal"], "2": ["Sensory", "Peroxide value (PV)", "Moisture"], "3": ["Sensory", "Peroxide value (PV)", "Moisture"] },
+        "28 F 22%": { "2": ["Sensory", "Peroxide value (PV)", "Moisture"], "3": ["Sensory", "Peroxide value (PV)", "Moisture"], "4": ["Sensory", "Peroxide value (PV)", "Moisture"] },
+        "42 F 7%": { "3": ["Sensory", "Peroxide value (PV)", "Moisture"], "4": ["Sensory", "Peroxide value (PV)", "Moisture"] }
+      },
+      "assay_results": [
+        { "condition": "-18 F", "week": 1, "assay_type": "Sensory", "result": "Normal appearance" },
+        { "condition": "15 F 45%", "week": 1, "assay_type": "Sensory", "result": "Slight change in texture" },
+        { "condition": "28 F 22%", "week": 2, "assay_type": "Moisture", "result": "1.0%" },
+        { "condition": "42 F 7%", "week": 3, "assay_type": "Hexanal", "result": "0.3%" }
+      ]
+    },
+    {
+      "title": "Food Quality Evaluation",
+      "number": 100077,
+      "description": "Evaluating the quality of food products under different storage conditions",
+      "start_date": "2030-01-15",
+      "storage_conditions": ["0 F", "15C 60%", "25C 40%", "35C 20%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "15C 60%": { "1": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Sensory", "Moisture", "Hexanal"], "3": ["Sensory", "Moisture", "Hexanal"] },
+        "25C 40%": { "2": ["Sensory", "Moisture", "Hexanal"], "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal"] },
+        "35C 20%": { "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "No change in product appearance" },
+        { "condition": "15C 60%", "week": 1, "assay_type": "Sensory", "result": "Slight alteration in fragrance" },
+        { "condition": "25C 40%", "week": 2, "assay_type": "Hexanal", "result": "0.8%" },
+        { "condition": "35C 20%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "1.8 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Cosmetic Stability Testing",
+      "number": 100078,
+      "description": "Stability testing of cosmetic products under varying environmental conditions",
+      "start_date": "2030-02-10",
+      "storage_conditions": ["0 F", "10C 70%", "20C 45%", "30C 15%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture"], "2": ["Moisture", "Sensory"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"] },
+        "10C 70%": { "1": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"], "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "20C 45%": { "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "30C 15%": { "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "10C 70%", "week": 1, "assay_type": "Moisture", "result": "No significant change" },
+        { "condition": "20C 45%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.5%" },
+        { "condition": "30C 15%", "week": 3, "assay_type": "Hexanal", "result": "0.3%" }
+      ]
+    },
+    {
+      "title": "Electronics Performance",
+      "number": 100079,
+      "description": "Assessing the performance of electronic devices under different temperature and humidity conditions",
+      "start_date": "2030-03-25",
+      "storage_conditions": ["0 F", "5C 80%", "25C 50%", "40C 10%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Humidity resistance", "Moisture", "Sensory", "Temperature tolerance"],
+      "assay_schedule": {
+        "0 F": { "1": ["Humidity resistance"], "2": ["Humidity resistance", "Moisture"], "3": ["Humidity resistance", "Moisture", "Sensory"], "4": ["Humidity resistance", "Moisture", "Sensory", "Temperature tolerance"] },
+        "5C 80%": { "1": ["Humidity resistance", "Moisture", "Sensory", "Temperature tolerance"], "2": ["Humidity resistance", "Moisture", "Sensory"], "3": ["Humidity resistance", "Moisture", "Sensory"] },
+        "25C 50%": { "2": ["Humidity resistance", "Moisture", "Sensory"], "3": ["Humidity resistance", "Moisture", "Sensory"], "4": ["Humidity resistance", "Moisture", "Sensory"] },
+        "40C 10%": { "3": ["Humidity resistance", "Moisture", "Sensory"], "4": ["Humidity resistance", "Moisture", "Sensory"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Humidity resistance", "result": "No impact on performance" },
+        { "condition": "5C 80%", "week": 1, "assay_type": "Humidity resistance", "result": "Stable resistance to humidity" },
+        { "condition": "25C 50%", "week": 2, "assay_type": "Sensory", "result": "No observable changes" },
+        { "condition": "40C 10%", "week": 3, "assay_type": "Temperature tolerance", "result": "Normal performance under high temperature" }
+      ]
+    },
+    {
+      "title": "Beverage Shelf Life Study",
+      "number": 100080,
+      "description": "Investigating the shelf life of various beverages under different storage conditions",
+      "start_date": "2030-05-01",
+      "storage_conditions": ["0 F", "20C 60%", "30C 40%", "40C 20%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory"], "2": ["Sensory", "Moisture"], "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "20C 60%": { "1": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Sensory", "Moisture", "Hexanal"], "3": ["Sensory", "Moisture", "Hexanal"] },
+        "30C 40%": { "2": ["Sensory", "Moisture", "Hexanal"], "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal"] },
+        "40C 20%": { "3": ["Sensory", "Moisture", "Hexanal"], "4": ["Sensory", "Moisture", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "No significant changes in taste or aroma" },
+        { "condition": "20C 60%", "week": 1, "assay_type": "Sensory", "result": "Mild alteration in flavor detected" },
+        { "condition": "30C 40%", "week": 2, "assay_type": "Hexanal", "result": "1.2%" },
+        { "condition": "40C 20%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "2.0 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Textile Durability Test",
+      "number": 100081,
+      "description": "Evaluating the durability of textiles under different environmental conditions",
+      "start_date": "2030-06-15",
+      "storage_conditions": ["0 F", "15C 70%", "25C 45%", "35C 15%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture"], "2": ["Moisture", "Sensory"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"] },
+        "15C 70%": { "1": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"], "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "25C 45%": { "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "35C 15%": { "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "15C 70%", "week": 1, "assay_type": "Moisture", "result": "No significant change" },
+        { "condition": "25C 45%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.6%" },
+        { "condition": "35C 15%", "week": 3, "assay_type": "Hexanal", "result": "0.4%" }
+      ]
+    },
+    {
+      "title": "Automotive Component Reliability",
+      "number": 100082,
+      "description": "Assessing the reliability of automotive components under different temperature and humidity conditions",
+      "start_date": "2030-08-01",
+      "storage_conditions": ["0 F", "5C 75%", "25C 55%", "40C 12%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Humidity resistance", "Moisture", "Sensory", "Temperature tolerance"],
+      "assay_schedule": {
+        "0 F": { "1": ["Humidity resistance"], "2": ["Humidity resistance", "Moisture"], "3": ["Humidity resistance", "Moisture", "Sensory"], "4": ["Humidity resistance", "Moisture", "Sensory", "Temperature tolerance"] },
+        "5C 75%": { "1": ["Humidity resistance", "Moisture", "Sensory", "Temperature tolerance"], "2": ["Humidity resistance", "Moisture", "Sensory"], "3": ["Humidity resistance", "Moisture", "Sensory"] },
+        "25C 55%": { "2": ["Humidity resistance", "Moisture", "Sensory"], "3": ["Humidity resistance", "Moisture", "Sensory"], "4": ["Humidity resistance", "Moisture", "Sensory"] },
+        "40C 12%": { "3": ["Humidity resistance", "Moisture", "Sensory"], "4": ["Humidity resistance", "Moisture", "Sensory"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Humidity resistance", "result": "Stable resistance to humidity" },
+        { "condition": "5C 75%", "week": 1, "assay_type": "Humidity resistance", "result": "Slight moisture absorption observed" },
+        { "condition": "25C 55%", "week": 2, "assay_type": "Sensory", "result": "No observable changes" },
+        { "condition": "40C 12%", "week": 3, "assay_type": "Temperature tolerance", "result": "Normal performance under high temperature" }
+      ]
+    },
+    {
+      "title": "Food Packaging Integrity Test",
+      "number": 100083,
+      "description": "Ensuring the integrity of food packaging materials under varying temperature and humidity conditions",
+      "start_date": "2030-09-15",
+      "storage_conditions": ["0 F", "10C 65%", "20C 40%", "35C 18%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture", "Hexanal"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "10C 65%": { "1": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "20C 40%": { "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "35C 18%": { "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "10C 65%", "week": 1, "assay_type": "Moisture", "result": "Slight increase in moisture content" },
+        { "condition": "20C 40%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "1.5 meq O2/kg" },
+        { "condition": "35C 18%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "0.8%" }
+      ]
+    },
+    {
+      "title": "Electronics Performance Evaluation",
+      "number": 100084,
+      "description": "Testing the performance of electronic components under different temperature and humidity conditions",
+      "start_date": "2030-11-01",
+      "storage_conditions": ["0 F", "5C 80%", "25C 50%", "40C 10%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Humidity resistance", "Sensory", "Temperature tolerance", "Moisture"],
+      "assay_schedule": {
+        "0 F": { "1": ["Humidity resistance"], "2": ["Humidity resistance", "Sensory"], "3": ["Humidity resistance", "Sensory", "Temperature tolerance"], "4": ["Humidity resistance", "Sensory", "Temperature tolerance", "Moisture"] },
+        "5C 80%": { "1": ["Humidity resistance", "Sensory", "Temperature tolerance", "Moisture"], "2": ["Humidity resistance", "Sensory", "Temperature tolerance"], "3": ["Humidity resistance", "Sensory", "Temperature tolerance"] },
+        "25C 50%": { "2": ["Humidity resistance", "Sensory", "Temperature tolerance"], "3": ["Humidity resistance", "Sensory", "Temperature tolerance"], "4": ["Humidity resistance", "Sensory", "Temperature tolerance"] },
+        "40C 10%": { "3": ["Humidity resistance", "Sensory", "Temperature tolerance"], "4": ["Humidity resistance", "Sensory", "Temperature tolerance"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Humidity resistance", "result": "Stable performance under high humidity" },
+        { "condition": "5C 80%", "week": 1, "assay_type": "Humidity resistance", "result": "No adverse effects observed" },
+        { "condition": "25C 50%", "week": 2, "assay_type": "Sensory", "result": "No observable changes" },
+        { "condition": "40C 10%", "week": 3, "assay_type": "Temperature tolerance", "result": "Normal performance under high temperature" }
+      ]
+    },
+    {
+      "title": "Chemical Stability Assessment",
+      "number": 100085,
+      "description": "Assessing the stability of chemical compounds under varying storage conditions",
+      "start_date": "2031-01-15",
+      "storage_conditions": ["0 F", "15C 60%", "30C 35%", "45C 15%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture", "Hexanal", "Free fatty acid (FFA)"], "2": ["Moisture", "Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+        "15C 60%": { "1": ["Moisture", "Hexanal", "Free fatty acid (FFA)", "Peroxide value (PV)"], "2": ["Moisture", "Hexanal", "Free fatty acid (FFA)"], "3": ["Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "30C 35%": { "2": ["Moisture", "Hexanal", "Free fatty acid (FFA)"], "3": ["Moisture", "Hexanal", "Free fatty acid (FFA)"], "4": ["Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "45C 15%": { "3": ["Moisture", "Hexanal", "Free fatty acid (FFA)"], "4": ["Moisture", "Hexanal", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "15C 60%", "week": 1, "assay_type": "Moisture", "result": "Slight increase in moisture content" },
+        { "condition": "30C 35%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.7%" },
+        { "condition": "45C 15%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "2.2 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Pharmaceutical Stability Study",
+      "number": 100086,
+      "description": "Investigating the stability of pharmaceutical formulations under different temperature and humidity conditions",
+      "start_date": "2031-03-01",
+      "storage_conditions": ["0 F", "10C 50%", "25C 30%", "40C 10%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture", "Sensory"], "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"] },
+        "10C 50%": { "1": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"], "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "25C 30%": { "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "40C 10%": { "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "10C 50%", "week": 1, "assay_type": "Moisture", "result": "No significant change" },
+        { "condition": "25C 30%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.5%" },
+        { "condition": "40C 10%", "week": 3, "assay_type": "Hexanal", "result": "0.3%" }
+      ]
+    },
+    {
+      "title": "Cosmetic Product Quality Evaluation",
+      "number": 100087,
+      "description": "Evaluating the quality of cosmetic products under different storage conditions",
+      "start_date": "2031-04-15",
+      "storage_conditions": ["0 F", "15C 55%", "30C 25%", "45C 10%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Sensory", "Free fatty acid (FFA)", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory", "Free fatty acid (FFA)"], "2": ["Sensory", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Free fatty acid (FFA)", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Free fatty acid (FFA)", "Hexanal", "Peroxide value (PV)"] },
+        "15C 55%": { "1": ["Sensory", "Free fatty acid (FFA)", "Hexanal", "Peroxide value (PV)"], "2": ["Sensory", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Free fatty acid (FFA)", "Hexanal"] },
+        "30C 25%": { "2": ["Sensory", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Free fatty acid (FFA)", "Hexanal"] },
+        "45C 10%": { "3": ["Sensory", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Free fatty acid (FFA)", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "No significant changes in color or odor" },
+        { "condition": "15C 55%", "week": 1, "assay_type": "Sensory", "result": "Mild alteration in fragrance observed" },
+        { "condition": "30C 25%", "week": 2, "assay_type": "Hexanal", "result": "0.5%" },
+        { "condition": "45C 10%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "1.8 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Agricultural Seed Viability Test",
+      "number": 100088,
+      "description": "Assessing the viability of agricultural seeds under different storage conditions",
+      "start_date": "2031-06-01",
+      "storage_conditions": ["0 F", "10C 65%", "25C 40%", "35C 15%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "10C 65%": { "1": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "25C 40%": { "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "35C 15%": { "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "10C 65%", "week": 1, "assay_type": "Moisture", "result": "Slight increase in moisture content" },
+        { "condition": "25C 40%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "1.3 meq O2/kg" },
+        { "condition": "35C 15%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "0.6%" }
+      ]
+    },
+    {
+      "title": "Personal Care Product Stability Assessment",
+      "number": 100089,
+      "description": "Evaluating the stability of personal care products under different temperature and humidity conditions",
+      "start_date": "2031-07-15",
+      "storage_conditions": ["0 F", "15C 50%", "30C 20%", "45C 8%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory", "Moisture", "Hexanal"], "2": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "15C 50%": { "1": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "2": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "30C 20%": { "2": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "45C 8%": { "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "No significant changes in color or odor" },
+        { "condition": "15C 50%", "week": 1, "assay_type": "Sensory", "result": "Mild alteration in fragrance observed" },
+        { "condition": "30C 20%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.4%" },
+        { "condition": "45C 8%", "week": 3, "assay_type": "Hexanal", "result": "0.2%" }
+      ]
+    },
+    {
+      "title": "Industrial Lubricant Performance Test",
+      "number": 100090,
+      "description": "Assessing the performance of industrial lubricants under different temperature and humidity conditions",
+      "start_date": "2031-09-01",
+      "storage_conditions": ["0 F", "10C 60%", "25C 35%", "40C 12%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "10C 60%": { "1": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "25C 35%": { "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "40C 12%": { "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "10C 60%", "week": 1, "assay_type": "Moisture", "result": "Slight increase in moisture content" },
+        { "condition": "25C 35%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.8%" },
+        { "condition": "40C 12%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "1.9 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Pharmaceutical Excipient Compatibility Study",
+      "number": 100091,
+      "description": "Investigating the compatibility of pharmaceutical excipients under different temperature and humidity conditions",
+      "start_date": "2031-10-15",
+      "storage_conditions": ["0 F", "15C 55%", "30C 30%", "45C 10%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture", "Sensory"], "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"] },
+        "15C 55%": { "1": ["Moisture", "Sensory", "Free fatty acid (FFA)", "Hexanal"], "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "30C 30%": { "2": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)"] },
+        "45C 10%": { "3": ["Moisture", "Sensory", "Free fatty acid (FFA)"], "4": ["Moisture", "Sensory", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "15C 55%", "week": 1, "assay_type": "Moisture", "result": "No significant change" },
+        { "condition": "30C 30%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.6%" },
+        { "condition": "45C 10%", "week": 3, "assay_type": "Hexanal", "result": "0.4%" }
+      ]
+    },
+    {
+      "title": "Pet Food Quality Evaluation",
+      "number": 100092,
+      "description": "Evaluating the quality of pet food under different storage conditions",
+      "start_date": "2031-12-01",
+      "storage_conditions": ["0 F", "10C 50%", "25C 25%", "40C 8%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Sensory", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory", "Hexanal", "Peroxide value (PV)"], "2": ["Sensory", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "3": ["Sensory", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+        "10C 50%": { "1": ["Sensory", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "2": ["Sensory", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+        "25C 25%": { "2": ["Sensory", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+        "40C 8%": { "3": ["Sensory", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "No significant changes in color or odor" },
+        { "condition": "10C 50%", "week": 1, "assay_type": "Sensory", "result": "Mild alteration in flavor observed" },
+        { "condition": "25C 25%", "week": 2, "assay_type": "Peroxide value (PV)", "result": "1.7 meq O2/kg" },
+        { "condition": "40C 8%", "week": 3, "assay_type": "Free fatty acid (FFA)", "result": "0.5%" }
+      ]
+    },
+    {
+      "title": "Automotive Coating Durability Test",
+      "number": 100093,
+      "description": "Assessing the durability of automotive coatings under different temperature and humidity conditions",
+      "start_date": "2032-02-15",
+      "storage_conditions": ["0 F", "10C 60%", "25C 35%", "40C 12%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture", "Sensory", "Hexanal"], "2": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"] },
+        "10C 60%": { "1": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"], "2": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"] },
+        "25C 35%": { "2": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"] },
+        "40C 12%": { "3": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Sensory", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "10C 60%", "week": 1, "assay_type": "Moisture", "result": "Slight increase in moisture content" },
+        { "condition": "25C 35%", "week": 2, "assay_type": "Hexanal", "result": "0.4%" },
+        { "condition": "40C 12%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "1.8 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Textile Color Fastness Assessment",
+      "number": 100094,
+      "description": "Assessing the color fastness of textiles under different temperature and humidity conditions",
+      "start_date": "2032-05-01",
+      "storage_conditions": ["0 F", "15C 50%", "30C 25%", "45C 8%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "15C 50%": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "30C 25%": { "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "45C 8%": { "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "No significant changes in color or odor" },
+        { "condition": "15C 50%", "week": 1, "assay_type": "Sensory", "result": "Mild alteration in color observed" },
+        { "condition": "30C 25%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.5%" },
+        { "condition": "45C 8%", "week": 3, "assay_type": "Hexanal", "result": "0.3%" }
+      ]
+    },
+    {
+      "title": "Food Additive Stability Test",
+      "number": 100095,
+      "description": "Assessing the stability of food additives under different temperature and humidity conditions",
+      "start_date": "2032-08-15",
+      "storage_conditions": ["0 F", "10C 55%", "25C 30%", "40C 10%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "10C 55%": { "1": ["Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "25C 30%": { "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "40C 10%": { "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "10C 55%", "week": 1, "assay_type": "Moisture", "result": "No significant change" },
+        { "condition": "25C 30%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.6%" },
+        { "condition": "40C 10%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "2.0 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Electronic Component Reliability Test",
+      "number": 100096,
+      "description": "Assessing the reliability of electronic components under different temperature and humidity conditions",
+      "start_date": "2032-11-01",
+      "storage_conditions": ["0 F", "15C 60%", "30C 35%", "45C 12%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "2": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "15C 60%": { "1": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "2": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "30C 35%": { "2": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+        "45C 12%": { "3": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "No significant changes in appearance" },
+        { "condition": "15C 60%", "week": 1, "assay_type": "Sensory", "result": "Mild alteration in color observed" },
+        { "condition": "30C 35%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.4%" },
+        { "condition": "45C 12%", "week": 3, "assay_type": "Hexanal", "result": "0.2%" }
+      ]
+    },
+    {
+      "title": "Beverage Packaging Integrity Test",
+      "number": 100097,
+      "description": "Ensuring the integrity of beverage packaging under different temperature and humidity conditions",
+      "start_date": "2033-01-15",
+      "storage_conditions": ["0 F", "10C 50%", "25C 30%", "40C 10%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "10C 50%": { "1": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "25C 30%": { "2": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "40C 10%": { "3": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "No significant changes in packaging appearance" },
+        { "condition": "10C 50%", "week": 1, "assay_type": "Sensory", "result": "Mild alteration in color observed" },
+        { "condition": "25C 30%", "week": 2, "assay_type": "Hexanal", "result": "0.3%" },
+        { "condition": "40C 10%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "1.5 meq O2/kg" }
+      ]
+    },
+    {
+      "title": "Cosmetic Shelf Life Study",
+      "number": 100098,
+      "description": "Evaluating the shelf life of cosmetics under different temperature and humidity conditions",
+      "start_date": "2033-04-01",
+      "storage_conditions": ["0 F", "15C 55%", "30C 30%", "45C 10%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"],
+      "assay_schedule": {
+        "0 F": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "15C 55%": { "1": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "30C 30%": { "2": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+        "45C 10%": { "3": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "4": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Sensory", "result": "No significant changes in appearance" },
+        { "condition": "15C 55%", "week": 1, "assay_type": "Sensory", "result": "Mild alteration in fragrance observed" },
+        { "condition": "30C 30%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.5%" },
+        { "condition": "45C 10%", "week": 3, "assay_type": "Hexanal", "result": "0.3%" }
+      ]
+    },
+    {
+      "title": "Nutraceutical Stability Test",
+      "number": 100099,
+      "description": "Assessing the stability of nutraceutical products under different temperature and humidity conditions",
+      "start_date": "2033-07-15",
+      "storage_conditions": ["0 F", "10C 60%", "25C 35%", "40C 12%"],
+      "control_storage_condition": "0 F",
+      "assay_types": ["Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+      "assay_schedule": {
+        "0 F": { "1": ["Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "10C 60%": { "1": ["Moisture", "Hexanal", "Peroxide value (PV)"], "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "25C 35%": { "2": ["Moisture", "Hexanal", "Peroxide value (PV)"], "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] },
+        "40C 12%": { "3": ["Moisture", "Hexanal", "Peroxide value (PV)"], "4": ["Moisture", "Hexanal", "Peroxide value (PV)"] }
+      },
+      "assay_results": [
+        { "condition": "0 F", "week": 1, "assay_type": "Moisture", "result": "Stable moisture content" },
+        { "condition": "10C 60%", "week": 1, "assay_type": "Moisture", "result": "No significant change" },
+        { "condition": "25C 35%", "week": 2, "assay_type": "Free fatty acid (FFA)", "result": "0.8%" },
+        { "condition": "40C 12%", "week": 3, "assay_type": "Peroxide value (PV)", "result": "2.2 meq O2/kg" }
+      ]
+    }
+  ]
+}
