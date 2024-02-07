@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
+import { GridColDef, GridRowSelectionModel, GridSortItem } from "@mui/x-data-grid";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
@@ -580,7 +580,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                                     columns={createTableColumns()}
                                     rows={weekRows}
                                     footer={tableAddWeekFooter}
-                                    sortModel={[{ field: "week", sort: "asc" }]}
+                                    sortModel={[{ field: "week", sort: "asc" } as GridSortItem]}
                                     onDeleteRows={handleDeleteWeeks}
                                     processRowUpdate={handleWeekUpdate}
                                 />
