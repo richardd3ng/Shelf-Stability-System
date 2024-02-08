@@ -1,6 +1,6 @@
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { Accordion, Container, Typography, AccordionSummary, AccordionDetails } from "@mui/material";
+import { Accordion, Container, Typography, AccordionSummary, AccordionDetails, Stack } from "@mui/material";
 import React from "react";
 import { LoadingContainer } from "../shared/loading";
 import { ErrorMessage } from "../shared/errorMessage";
@@ -20,19 +20,22 @@ export const AssaysGroupedByType : React.FC = () => {
     } else {
         return (
             <Container style={{marginTop : 24}}>
-                <Accordion >
+                <Accordion>
                     <AccordionSummary expandIcon={<ExpandMore/>}>
-                        <Typography>All Assays</Typography>
+                        <Typography variant="h6">All Assays - Click to view and modify assays</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
+                        <Stack>
+                            <Typography>Click on an assay to edit</Typography>
                         <ExperimentTable assayFilter={(experimentInfo : ExperimentInfo) => experimentInfo.assays} componentForAssay={AssayButtonInCell}/>
+                        </Stack>
                     </AccordionDetails>
                 </Accordion>
                 {data.assayTypes.map((type) => {
                     return (
                         <Accordion key={type.id}>
                             <AccordionSummary expandIcon={<ExpandMore/>}>
-                                <Typography>Assays Results for Type {type.name}</Typography>
+                                <Typography >Assays Results for Type {type.name}</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <ExperimentTable assayFilter={(experimentInfo : ExperimentInfo) => experimentInfo.assays.filter((assay) => assay.typeId === type.id)} componentForAssay={AssayResultInCell}/>

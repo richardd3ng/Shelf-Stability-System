@@ -30,6 +30,7 @@ export const AssayEditorModal: React.FC = () => {
         if (data) {
             const assay = data?.assays.findLast((assay) => assay.id === assayIdBeingEdited);
             if (assay ) {
+                console.log("setting  new result to " + assay.result);
                 setNewResult(assay.result);
                 setNewTargetDate(assay.target_date);
             } 
