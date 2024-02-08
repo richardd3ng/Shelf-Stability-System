@@ -133,6 +133,8 @@ export interface UpdateExperimentArgs {
     shouldUpdateStartDate : boolean;
 
 }
+
+export const TITLE_IS_TAKEN_CODE = 400;
 export const updateExperimentThroughAPI = async (experimentInfo : UpdateExperimentArgs) : Promise<UpdateExperimentArgs> => {
     const apiResponse = await fetch("/api/experiments/" + experimentInfo.experimentId.toString() + "/updateExperiment", {
         method: "POST",
@@ -147,7 +149,12 @@ export const updateExperimentThroughAPI = async (experimentInfo : UpdateExperime
         },
     });
     if (apiResponse.status > 300) {
-        throw new Error("An error occurred");
+        if (apiResponse.status === TITLE_IS_TAKEN_CODE){
+            throw new Error("Title is taken already, pick another");
+        } else {
+            throw new Error("An error occurred");
+        }
+        
     }
     return experimentInfo;
 }

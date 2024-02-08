@@ -8,7 +8,7 @@ import { Assay, AssayType } from "@prisma/client";
 export const AssayButtonInCell : React.FC<AssayComponentProps> = (props : AssayComponentProps) => {
     const {setIsEditing, setAssayIdBeingEdited, isEditing} = useContext(AssayEditingContext);
     return (
-        <Button variant="contained" key={props.assay.id} style={{marginBottom : 2}} onClick={() => {
+        <Button variant={props.assay.result ? "contained" : "outlined"} key={props.assay.id} style={{marginBottom : 2}} onClick={() => {
             setAssayIdBeingEdited(props.assay.id);
             setIsEditing(true);
         }}>
