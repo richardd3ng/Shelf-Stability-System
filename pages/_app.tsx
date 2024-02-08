@@ -4,6 +4,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import type { AppProps } from "next/app";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { AlertProvider } from "@/lib/context/alert-context";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    icons: {
+        icon: '/favicon.ico',
+    }
+};
 
 const queryClient = new QueryClient();
 export default function App({ Component, pageProps }: AppProps) {
