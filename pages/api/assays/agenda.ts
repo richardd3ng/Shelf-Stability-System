@@ -59,7 +59,7 @@ export default async function getAssays(req: NextApiRequest, res: NextApiRespons
 
     const [assays, totalRows] = await Promise.all([
         // TODO look at views instead?
-        db.$queryRaw<any[]>`SELECT a.id, a.target_date, e.title, c.name as condition, t.name as type, ROUND((CAST(a.target_date AS DATE) - CAST(e.start_date AS DATE)) / 7.0) as week, a.result
+        db.$queryRaw<AssayInfo[]>`SELECT a.id, a.target_date as "targetDate", e.title, a."experimentId" as "experimentId", c.name as condition, t.name as type, ROUND((CAST(a.target_date AS DATE) - CAST(e.start_date AS DATE)) / 7.0) as week, a.result
             
             FROM public."Assay" a,
             LATERAL (SELECT title, start_date FROM public."Experiment" e WHERE a."experimentId" = id) e,
@@ -72,7 +72,8 @@ export default async function getAssays(req: NextApiRequest, res: NextApiRespons
                 ${includeRecorded ? Prisma.empty : Prisma.sql`AND a.result ISNULL`}
             ${orderBy !== undefined ? Prisma.raw(`ORDER BY ${orderBy.field} ${orderBy.order}`) : Prisma.empty}
             LIMIT ${pageSize} OFFSET ${page * pageSize}`
-            .then<AssayInfo[]>(assays => assays.map(assay => ({...assay, target_date: undefined, targetDate: assay.target_date}))),
+            // .then<AssayInfo[]>(assays => assays.map(assay => ({...assay, target_date: undefined, targetDate: assay.target_date})))
+            ,
         db.assay.count({
             where: {
                 target_date: { gte: minDate?.toDate(), lte: maxDate?.toDate() },

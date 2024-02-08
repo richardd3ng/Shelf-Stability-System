@@ -25,6 +25,7 @@ export type AssayInfo = {
     id: number;
     targetDate: Date;
     title: string;
+    experimentId: number;
     condition: string;
     week: number;
     type: string;
