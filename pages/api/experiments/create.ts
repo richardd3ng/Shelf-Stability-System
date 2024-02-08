@@ -1,7 +1,7 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
-import { AssayType, Condition, Experiment } from "@prisma/client";
+import { AssayType, Condition, Experiment, Prisma } from "@prisma/client";
 import { getApiError } from "@/lib/api/error";
 import {
     AssayTypeCreationArgs,
@@ -90,6 +90,15 @@ export default async function createExperiment(
         });
     } catch (error) {
         console.error(error);
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === "P2002" && (error.meta?.target as string[])?.includes("title")) {
+                res.status(400).json(
+                    getApiError(400, `An experiment with the name "${req.body.title}" already exists.`)
+                );
+                return;
+            }
+            
+        }
         res.status(500).json(
             getApiError(500, "Failed to create experiment on server")
         );

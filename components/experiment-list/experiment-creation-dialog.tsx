@@ -272,6 +272,9 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 }
             );
             createAssays(assayCreationData);
+            if (experimentId === INVALID_EXPERIMENT_ID) {
+                showAlert("error", "Experiment ID is invalid!");
+            }
         } catch (error) {
             showAlert("error", String(error));
         }
@@ -283,8 +286,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             );
             router.push(`/experiments/${experimentId}`);
             closeDialog();
-        } else {
-            showAlert("error", "Experiment ID is invalid!");
         }
     };
 

@@ -18,7 +18,7 @@ model Auth {
 
 model Experiment {
   id          Int         @id @default(autoincrement())
-  title       String
+  title       String      @unique
   description String?
   start_date  DateTime
 
