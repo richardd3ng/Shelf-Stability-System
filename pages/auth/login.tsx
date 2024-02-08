@@ -40,7 +40,7 @@ export default function LoginPage() {
                     ]}
                     title="Login"
                 />
-                <YourButtonWithLoadingAndError isError={errorMessage.length > 0} error={{ message: errorMessage }} isLoading={isLoading}>
+                <YourButtonWithLoadingAndError isError={errorMessage.length > 0} error={new Error(errorMessage)} isLoading={isLoading}>
                     <Button variant="contained" color="primary" type="submit">
                         <Typography>
                             Submit
