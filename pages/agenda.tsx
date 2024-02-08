@@ -4,16 +4,11 @@ import { AssayInfo, AssayTable } from "@/lib/controllers/types";
 import { Box, Stack, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import {
     DataGrid,
-    GridColDef,
-    GridPaginationModel,
-    GridSortModel,
+    GridColDef
 } from "@mui/x-data-grid";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
-import ViewIcon from "@mui/icons-material/Visibility";
-import { Edit } from "@mui/icons-material";
-import Link from "next/link";
 import { useServerPagination, ServerPaginationArgs } from "@/lib/hooks/useServerPagination";
 import { AgendaContext } from "@/lib/context/agendaPage/agendaContext";
 import { AssayOptionsBox } from "@/components/agenda/assayOptionsBox";
@@ -59,7 +54,7 @@ const colDefs: GridColDef[] = [
         disableColumnMenu: true,
         sortable: false,
         renderCell: params => (
-            <AssayOptionsBox assayId={params.row.id} experimentId={412}/>
+            <AssayOptionsBox assayId={params.row.id} experimentId={params.row.experimentId}/>
         ),
     },
 ];
@@ -94,7 +89,7 @@ export default function AssayAgenda() {
             },
         ],
         {
-            pageSize: 25,
+            pageSize: 15,
             page: 0
         });
 
@@ -145,6 +140,8 @@ export default function AssayAgenda() {
                         {...paginationProps}
                         rowSelection={false}
                         autoHeight
+                        rowHeight={43}
+                        pageSizeOptions={[15, 30, 60, 100]}
                         getCellClassName={(params) =>
                             params.row.result !== null
                                 ? "assay-cell-recorded"

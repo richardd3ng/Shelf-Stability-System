@@ -1,5 +1,4 @@
 import fs from "fs";
-import { signIn } from "next-auth/react";
 import {
     AssayCreationArgs,
     AssayTypeCreationArgsNoExperimentId,
@@ -10,7 +9,7 @@ import {
 import { JSONToExperiment } from "../lib/controllers/jsonConversions";
 import { ApiError } from "next/dist/server/api-utils";
 import { AssayType, Condition } from "@prisma/client";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 interface AssayScheduleImportJSON {
     [condition: string]: {

@@ -6,17 +6,12 @@ import {
     IconButton,
     Stack,
 } from "@mui/material";
-import {
-    GridColDef,
-    GridRowId,
-    GridRowSelectionModel,
-    GridSortModel,
-} from "@mui/x-data-grid";
+import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DescriptionIcon from "@mui/icons-material/Description";
 import ExperimentCreationDialog from "@/components/experiment-list/experiment-creation-dialog";
 import Layout from "../../components/shared/layout";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import SearchBar from "../../components/shared/search-bar";
 import Table from "../../components/shared/table";
 import ViewIcon from "@mui/icons-material/Visibility";
@@ -29,8 +24,12 @@ import {
 } from "@/lib/controllers/experimentController";
 import ExperimentDeletionDialog from "@/components/experiment-list/experiment-deletion-dialog";
 import { useAlert } from "@/lib/context/alert-context";
-import { ServerPaginationArgs, useServerPagination } from "@/lib/hooks/useServerPagination";
+import {
+    ServerPaginationArgs,
+    useServerPagination,
+} from "@/lib/hooks/useServerPagination";
 import { ExperimentTable } from "@/lib/controllers/types";
+import { useRouter } from "next/router";
 
 interface ExperimentData {
     id: number;
@@ -52,6 +51,7 @@ const ExperimentList: React.FC = () => {
         useState<GridRowSelectionModel>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const { showAlert } = useAlert();
+    const router = useRouter();
 
     const colDefs: GridColDef[] = [
         {
@@ -59,25 +59,25 @@ const ExperimentList: React.FC = () => {
             headerName: "ID",
             type: "number",
             flex: 2,
-            valueFormatter: (params: any) => String(params.value)
+            valueFormatter: (params: any) => String(params.value),
         },
         {
             field: "title",
             headerName: "Title",
             type: "string",
-            flex: 5
+            flex: 5,
         },
         {
             field: "startDate",
             headerName: "Start Date",
             type: "date",
-            flex: 2
+            flex: 2,
         },
         {
             field: "week",
             headerName: "Week",
             type: "number",
-            flex: 1
+            flex: 1,
         },
         {
             field: "actions",
@@ -88,11 +88,13 @@ const ExperimentList: React.FC = () => {
             sortable: false,
             renderCell: (params) => (
                 <Box sx={{ display: "flex" }}>
-                    <IconButton>
+                    <IconButton onClick={() => handleView(params.row.id)}>
                         <ViewIcon />
                     </IconButton>
-                    <IconButton>
-                        <PictureAsPdfIcon />
+                    <IconButton
+                        onClick={() => handleGenerateReport(params.row.id)}
+                    >
+                        <DescriptionIcon />
                     </IconButton>
                     <IconButton
                         onClick={() => prepareForDeletion([params.row.id])}
@@ -104,14 +106,16 @@ const ExperimentList: React.FC = () => {
         },
     ];
 
-    const getExperiments = (paging: ServerPaginationArgs): Promise<{ rows: ExperimentData[], rowCount: number }> => {
+    const getExperiments = (
+        paging: ServerPaginationArgs
+    ): Promise<{ rows: ExperimentData[]; rowCount: number }> => {
         return fetchExperimentList(searchQuery, paging)
             .catch((error) => {
                 showAlert("error", String(error));
                 return { rows: [], rowCount: 0 };
             })
             .then((table: ExperimentTable) => ({
-                rows: table.rows.map(experiment => ({
+                rows: table.rows.map((experiment) => ({
                     id: experiment.id,
                     title: experiment.title,
                     startDate: experiment.startDate,
@@ -120,18 +124,19 @@ const ExperimentList: React.FC = () => {
                         new Date()
                     ),
                 })),
-                rowCount: table.rowCount
+                rowCount: table.rowCount,
             }));
     };
 
-    const reloadExperimentData = (paging: ServerPaginationArgs): Promise<{ rows: ExperimentData[], rowCount: number }> => {
+    const reloadExperimentData = (
+        paging: ServerPaginationArgs
+    ): Promise<{ rows: ExperimentData[]; rowCount: number }> => {
         setLoadingExperiments(true);
-        return getExperiments(paging)
-            .then((fetchedData) => {
-                setExperimentData(fetchedData.rows);
-                setLoadingExperiments(false);
-                return fetchedData
-            });
+        return getExperiments(paging).then((fetchedData) => {
+            setExperimentData(fetchedData.rows);
+            setLoadingExperiments(false);
+            return fetchedData;
+        });
     };
 
     const [paginationProps, reload] = useServerPagination(
@@ -139,8 +144,9 @@ const ExperimentList: React.FC = () => {
         [],
         {
             pageSize: 10,
-            page: 0
-        });
+            page: 0,
+        }
+    );
 
     useEffect(() => {
         if (debounce) {
@@ -152,7 +158,11 @@ const ExperimentList: React.FC = () => {
     }, [searchQuery]);
 
     const handleView = (id: number) => {
-        console.log("View");
+        router.push(`/experiments/${id}`);
+    };
+
+    const handleGenerateReport = (id: number) => {
+        router.push(`/experiments/${id}/report`);
     };
 
     const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {

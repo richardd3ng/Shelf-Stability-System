@@ -13,7 +13,11 @@ import {
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { GridColDef, GridRowSelectionModel, GridSortItem } from "@mui/x-data-grid";
+import {
+    GridColDef,
+    GridRowSelectionModel,
+    GridSortItem,
+} from "@mui/x-data-grid";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
@@ -34,6 +38,7 @@ import {
 import { AssayType, Condition } from "@prisma/client";
 import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useAlert } from "@/lib/context/alert-context";
+import { useRouter } from "next/router";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -74,6 +79,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         useState<AssayScheduleTypesMap>({});
     const [creationLoading, setCreationLoading] = useState<boolean>(false);
     const { showAlert } = useAlert();
+    const router = useRouter();
 
     useEffect(() => {
         fetchAndSetAssayTypes();
@@ -146,26 +152,39 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         setWeekRows(remainingRows);
     };
 
-    const handleCreateExperiment = async () => {
-        const missingComponents: string[] = [];
+    const checkMissingDetails = (): string[] => {
+        const missingDetails: string[] = [];
         if (!title.trim()) {
-            missingComponents.push("title");
+            missingDetails.push("title");
         }
         if (!date) {
-            missingComponents.push("start date");
+            missingDetails.push("start date");
         }
-        if (missingComponents.length > 0) {
-            let alertMessage = "Please provide ";
-            if (missingComponents.length === 1) {
-                alertMessage += `a ${missingComponents[0]} for the experiment.`;
-            } else {
-                alertMessage += "the following details for the experiment: ";
-                alertMessage += missingComponents.slice(0, -1).join(", ");
-                alertMessage += `, ${
-                    missingComponents[missingComponents.length - 1]
-                }.`;
-            }
-            showAlert("error", alertMessage);
+        if (selectedAssayTypes.length === 0) {
+            missingDetails.push("assay type(s)");
+        }
+        if (selectedStorageConditions.length === 0) {
+            missingDetails.push("storage condition(s)");
+        }
+        return missingDetails;
+    };
+
+    const generateAlertMessage = (missingDetails: string[]): string => {
+        let alertMessage = "Please provide ";
+        if (missingDetails.length === 1) {
+            alertMessage += `a ${missingDetails[0]} for the experiment.`;
+        } else {
+            alertMessage += "the following details for the experiment: ";
+            alertMessage += missingDetails.slice(0, -1).join(", ");
+            alertMessage += `, ${missingDetails[missingDetails.length - 1]}.`;
+        }
+        return alertMessage;
+    };
+
+    const handleCreateExperiment = async () => {
+        const missingDetails: string[] = checkMissingDetails();
+        if (missingDetails.length > 0) {
+            showAlert("error", generateAlertMessage(missingDetails));
             return;
         }
         setCreationLoading(true);
@@ -253,6 +272,9 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 }
             );
             createAssays(assayCreationData);
+            if (experimentId === INVALID_EXPERIMENT_ID) {
+                showAlert("error", "Experiment ID is invalid!");
+            }
         } catch (error) {
             showAlert("error", String(error));
         }
@@ -262,8 +284,9 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 "success",
                 `Successfully created experiment ${experimentId}!`
             );
+            router.push(`/experiments/${experimentId}`);
+            closeDialog();
         }
-        closeDialog();
     };
 
     const handleAddAssayType = () => {
@@ -580,7 +603,12 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                                     columns={createTableColumns()}
                                     rows={weekRows}
                                     footer={tableAddWeekFooter}
-                                    sortModel={[{ field: "week", sort: "asc" } as GridSortItem]}
+                                    sortModel={[
+                                        {
+                                            field: "week",
+                                            sort: "asc",
+                                        } as GridSortItem,
+                                    ]}
                                     onDeleteRows={handleDeleteWeeks}
                                     processRowUpdate={handleWeekUpdate}
                                 />
