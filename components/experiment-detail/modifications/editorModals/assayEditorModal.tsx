@@ -34,9 +34,9 @@ export const AssayEditorModal: React.FC = () => {
                 setNewTargetDate(assay.target_date);
             } 
         } else {
-            setNewResult(DEFAULT_RESULT);
+            setNewResult(null);
         }
-    }, [data, assayIdBeingEdited]);
+    }, [data, assayIdBeingEdited, isEditing]);
 
     let assayHasResults = checkIfAnAssayHasResults(data, (assay : Assay) => assay.id === assayIdBeingEdited);
     if (!isEditing || isError || isLoading || !data ){

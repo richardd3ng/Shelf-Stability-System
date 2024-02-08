@@ -20,13 +20,18 @@ export default function ExperimentPage() {
     return (
         <Container>
                 <ExperimentHeader/>
-                <ExperimentTable assayFilter={(experiment : ExperimentInfo) => experiment.assays} componentForAssay={AssayButtonInCell}/>
+                <Container style={{border : "2px solid black", marginTop : 16, marginBottom : 16}}>
+                    <Typography variant="h4" align="center" style={{marginBottom : 8, marginTop : 24}}>
+                        All Assays
+                    </Typography>
+                    <ExperimentTable assayFilter={(experiment : ExperimentInfo) => experiment.assays} componentForAssay={AssayButtonInCell}/>
+                </Container>
                 {data 
                     ? 
                     data.assayTypes.map((type) => {
                         return (
-                            <Container key={type.id} style={{marginBottom : 24, marginTop : 64, border : "1px solid black"}}>
-                                <Typography>Assays Results for Type {type.name}</Typography>
+                            <Container key={type.id} style={{marginBottom : 24, marginTop : 64, border : "2px solid black"}}>
+                                <Typography variant="h5" align="center" style={{marginTop : 8, marginBottom : 8}}>Assays Results for Type {type.name}</Typography>
                                 <ExperimentTable assayFilter={(experimentInfo : ExperimentInfo) => experimentInfo.assays.filter((assay) => assay.typeId === type.id)} componentForAssay={AssayResultInCell}/>
 
                             </Container>
