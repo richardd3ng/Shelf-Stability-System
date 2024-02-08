@@ -1,17 +1,19 @@
-
-import { ExperimentInfo } from "@/lib/controllers/types";
-import { ExperimentTable } from "@/components/experiment-detail/experimentTable/experimentTable";
 import { AssaysGroupedByType } from "@/components/experiment-detail/assaysGroupedByType";
 import Layout from "@/components/shared/layout";
 import { AssayEditingContext } from "@/lib/context/experimentDetailPage/assayEditingContext";
 import { useState } from "react";
 import { AssayEditorModal } from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
-import { AssayButtonInCell } from "@/components/experiment-detail/experimentTable/assayButtonInCell";
 import { ExperimentHeader } from "@/components/experiment-detail/summary/experimentHeader";
-import { Container, Typography, Button } from "@mui/material";
+import { Container, Typography, Button, Stack } from "@mui/material";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useRouter } from "next/router";
 import { ModificationOptions } from "@/components/experiment-detail/modifications/modificationOptions";
+import { ButtonWithConfirmationLoadingAndError } from "@/components/shared/buttonWithConfirmationLoadingAndError";
+import { DeleteExperimentButton } from "@/components/experiment-detail/deleteExperimentButton";
+import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
+import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
+import { checkIfAnAssayHasResults } from "@/lib/checkIfAnAssayHasResults";
+import { Assay } from "@prisma/client";
 
 
 export default function ExperimentPage() {
@@ -19,6 +21,9 @@ export default function ExperimentPage() {
     const [assayIdBeingEdited, setAssayIdBeingEdited] = useState<number>(0);
     const experimentId = useExperimentId();
     const router = useRouter();
+    const {data} = useExperimentInfo(experimentId);
+    const {mutate : deleteExperiment, isPending, isError, error} = useMutationToDeleteExperiment();
+
     return (
         <Layout>
             <AssayEditingContext.Provider value={{isEditing : isEditingAssay, setIsEditing : setIsEditingAssay, assayIdBeingEdited, setAssayIdBeingEdited}}>
@@ -26,14 +31,19 @@ export default function ExperimentPage() {
                 <ModificationOptions/>
                 <AssayEditorModal/>
                 <AssaysGroupedByType/>
+                
                 <Container maxWidth="sm" style={{marginTop : 24, marginBottom : 24}}>
-                    <Typography align="center">
-                        <Button variant="outlined" onClick={() => router.push("/experiments/" + experimentId.toString() + "/report")} style={{textTransform : "none"}}>
-                            <Typography align="center">
-                                Generate a report for this experiment
-                            </Typography> 
-                        </Button>
-                    </Typography>
+                    <Stack>
+                        <Typography align="center" style={{marginBottom : 8}}>
+                            <Button variant="outlined" onClick={() => router.push("/experiments/" + experimentId.toString() + "/report")} style={{textTransform : "none"}}>
+                                <Typography align="center">
+                                    Generate a report for this experiment
+                                </Typography> 
+                            </Button>
+                            
+                        </Typography>
+                        <DeleteExperimentButton/>
+                    </Stack>
                     
                 </Container>
             </AssayEditingContext.Provider>
