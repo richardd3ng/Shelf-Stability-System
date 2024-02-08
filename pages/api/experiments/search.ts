@@ -54,7 +54,7 @@ export default async function searchExperiments(
 
         const [experiments, totalRows] = await Promise.all([
             // TODO look at views instead?
-            db.$queryRaw<any[]>`SELECT e.id, e.title, e.start_date, ROUND(EXTRACT(DAY FROM CURRENT_DATE - e.start_date) / 7) as week
+            db.$queryRaw<any[]>`SELECT e.id, e.title, e.start_date, ROUND((CAST(CURRENT_DATE AS DATE) - e.start_date) / 7.0) as week
                 
                 FROM public."Experiment" e
 

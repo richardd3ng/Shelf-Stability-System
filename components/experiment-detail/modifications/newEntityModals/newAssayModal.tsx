@@ -60,7 +60,7 @@ export const NewAssayModal = () => {
                     </Select>
                 </FormControl>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker  label="Target Date" onChange={(newDate : Dayjs | null) => {
+                    <DatePicker timezone="UTC" label="Target Date" onChange={(newDate : Dayjs | null) => {
                         if (newDate){
                             setTargetDate(newDate.toDate())
                         }

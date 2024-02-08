@@ -30,6 +30,7 @@ import {
 } from "@/lib/hooks/useServerPagination";
 import { ExperimentTable } from "@/lib/controllers/types";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
 
 interface ExperimentData {
     id: number;
@@ -71,6 +72,7 @@ const ExperimentList: React.FC = () => {
             field: "startDate",
             headerName: "Start Date",
             type: "date",
+            valueFormatter: (params: any) => dayjs.utc(params.value).format("YYYY-MM-DD"),
             flex: 2,
         },
         {

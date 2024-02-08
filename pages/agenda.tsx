@@ -19,6 +19,7 @@ const colDefs: GridColDef[] = [
         field: "targetDate",
         headerName: "Target Date",
         type: "date",
+        valueFormatter: (params: any) => dayjs.utc(params.value).format("YYYY-MM-DD"),
         flex: 2,
     },
     {

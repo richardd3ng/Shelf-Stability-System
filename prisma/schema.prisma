@@ -20,7 +20,7 @@ model Experiment {
   id          Int         @id @default(autoincrement())
   title       String      @unique
   description String?
-  start_date  DateTime
+  start_date  DateTime    @db.Date
 
   conditions Condition[]  
   assayTypes AssayType[]  
@@ -36,7 +36,7 @@ model Assay {
   conditionId  Int
   type         AssayType  @relation(fields: [typeId], references: [id])
   typeId       Int
-  target_date  DateTime
+  target_date  DateTime   @db.Date
   result       String?
 }
 
