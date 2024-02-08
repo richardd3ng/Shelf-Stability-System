@@ -531,7 +531,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <MultiSelectDropdown
                             items={assayTypes}
-                            label="Assay Types"
+                            label="Assay Types *"
                             onChange={handleChangeSelectedAssayTypes}
                         />
                         <Box
@@ -563,7 +563,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <MultiSelectDropdown
                             items={storageConditions}
-                            label="Storage Conditions"
+                            label="Storage Conditions *"
                             onChange={handleChangeSelectedStorageConditions}
                         />
                         <Box
