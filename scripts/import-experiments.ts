@@ -137,99 +137,96 @@ const importExperiments = async (filePath: string) => {
     try {
         const jsonData: ExperimentImportJSON[] = await readFileToJSON(filePath);
         const assayCreationArgsArray: AssayCreationArgs[] = [];
-        const experimentPromises = jsonData.map(
-            async (experimentImportJSON: ExperimentImportJSON) => {
-                const assayTypeCreationArgsNoExperimentIdArray: AssayTypeCreationArgsNoExperimentId[] =
-                    experimentImportJSON.assay_types.map(
-                        (assayType: string) => {
-                            return {
-                                name: assayType,
-                            };
+        for (const experimentImportJSON of jsonData) {
+            const assayTypeCreationArgsNoExperimentIdArray: AssayTypeCreationArgsNoExperimentId[] =
+                experimentImportJSON.assay_types.map(
+                    (assayType: string) => {
+                        return {
+                            name: assayType,
+                        };
+                    }
+                );
+            const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
+                experimentImportJSON.storage_conditions.map(
+                    (condition: string, index: number) => {
+                        return {
+                            name: condition,
+                            control: index === 0,
+                        };
+                    }
+                );
+            const experimentData: ExperimentCreationArgs = {
+                title: experimentImportJSON.title,
+                description: experimentImportJSON.description,
+                start_date: new Date(
+                    experimentImportJSON.start_date
+                ).toISOString(),
+                assayTypeCreationArgsNoExperimentIdArray:
+                    assayTypeCreationArgsNoExperimentIdArray,
+                conditionCreationArgsNoExperimentIdArray:
+                    conditionCreationArgsNoExperimentIdArray,
+            };
+            const experimentResJson = await postExperiment(
+                experimentData
+                // cookie
+            );
+            const createdAssayTypes: AssayType[] =
+                experimentResJson.assayTypes;
+            const createdConditions: Condition[] =
+                experimentResJson.conditions;
+            const assayTypeToId = new Map<string, number>(
+                createdAssayTypes.map((type) => [type.name, type.id])
+            );
+            const conditionToId = new Map<string, number>(
+                createdConditions.map((condition) => [
+                    condition.name,
+                    condition.id,
+                ])
+            );
+            for (const condition in experimentImportJSON.assay_schedule) {
+                const schedule =
+                    experimentImportJSON.assay_schedule[condition];
+                for (const week in schedule) {
+                    for (const assayType of schedule[week]) {
+                        if (!assayTypeToId.has(assayType)) {
+                            throw new Error(
+                                `Bad JSON data: Assay type ${assayType} not found in database`
+                            );
                         }
-                    );
-                const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
-                    experimentImportJSON.storage_conditions.map(
-                        (condition: string, index: number) => {
-                            return {
-                                name: condition,
-                                control: index === 0,
-                            };
+                        if (!conditionToId.has(condition)) {
+                            throw new Error(
+                                `Bad JSON data: Condition ${condition} not found in database`
+                            );
                         }
-                    );
-                const experimentData: ExperimentCreationArgs = {
-                    title: experimentImportJSON.title,
-                    description: experimentImportJSON.description,
-                    start_date: new Date(
-                        experimentImportJSON.start_date
-                    ).toISOString(),
-                    assayTypeCreationArgsNoExperimentIdArray:
-                        assayTypeCreationArgsNoExperimentIdArray,
-                    conditionCreationArgsNoExperimentIdArray:
-                        conditionCreationArgsNoExperimentIdArray,
-                };
-                const experimentResJson = await postExperiment(
-                    experimentData
-                    // cookie
-                );
-                const createdAssayTypes: AssayType[] =
-                    experimentResJson.assayTypes;
-                const createdConditions: Condition[] =
-                    experimentResJson.conditions;
-                const assayTypeToId = new Map<string, number>(
-                    createdAssayTypes.map((type) => [type.name, type.id])
-                );
-                const conditionToId = new Map<string, number>(
-                    createdConditions.map((condition) => [
-                        condition.name,
-                        condition.id,
-                    ])
-                );
-                for (const condition in experimentImportJSON.assay_schedule) {
-                    const schedule =
-                        experimentImportJSON.assay_schedule[condition];
-                    for (const week in schedule) {
-                        for (const assayType of schedule[week]) {
-                            if (!assayTypeToId.has(assayType)) {
-                                throw new Error(
-                                    `Bad JSON data: Assay type ${assayType} not found in database`
-                                );
-                            }
-                            if (!conditionToId.has(condition)) {
-                                throw new Error(
-                                    `Bad JSON data: Condition ${condition} not found in database`
-                                );
-                            }
-                            assayCreationArgsArray.push({
-                                experimentId: experimentResJson.experiment.id,
-                                typeId: Number(assayTypeToId.get(assayType)),
-                                conditionId: Number(
-                                    conditionToId.get(condition)
-                                ),
-                                target_date: dayjs(
-                                    experimentImportJSON.start_date
-                                )
-                                    .add(parseInt(week), "weeks")
-                                    .toDate(),
-                                result: null,
-                            });
-                            for (const assayResult of experimentImportJSON.assay_results) {
-                                if (
-                                    assayResult.condition === condition &&
-                                    assayResult.week === parseInt(week) &&
-                                    assayResult.assay_type === assayType
-                                ) {
-                                    assayCreationArgsArray[
-                                        assayCreationArgsArray.length - 1
-                                    ].result = assayResult.result;
-                                    break;
-                                }
+                        assayCreationArgsArray.push({
+                            experimentId: experimentResJson.experiment.id,
+                            typeId: Number(assayTypeToId.get(assayType)),
+                            conditionId: Number(
+                                conditionToId.get(condition)
+                            ),
+                            target_date: dayjs(
+                                experimentImportJSON.start_date
+                            )
+                                .add(parseInt(week), "weeks")
+                                .toDate(),
+                            result: null,
+                        });
+                        for (const assayResult of experimentImportJSON.assay_results) {
+                            if (
+                                assayResult.condition === condition &&
+                                assayResult.week === parseInt(week) &&
+                                assayResult.assay_type === assayType
+                            ) {
+                                assayCreationArgsArray[
+                                    assayCreationArgsArray.length - 1
+                                ].result = assayResult.result;
+                                break;
                             }
                         }
                     }
                 }
             }
-        );
-        await Promise.all(experimentPromises);
+        }
         console.log(
             "Sucessfully created experiments, assay types, and conditions!"
         );
