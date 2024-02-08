@@ -13,7 +13,7 @@ interface MyDatePickerProps {
 export const MyDatePicker : React.FC<MyDatePickerProps> = (props : MyDatePickerProps) => {
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker  value={dayjs(props.date)} label={props.label} onChange={(newDate : Dayjs | null) => {
+            <DatePicker timezone="UTC" value={dayjs(props.date)} label={props.label} onChange={(newDate : Dayjs | null) => {
                 if (newDate){
                     props.setDate(newDate.toDate());
                 }

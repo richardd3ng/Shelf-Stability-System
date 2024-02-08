@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { ExperimentEditorModal } from "../modifications/editorModals/experimentEditorModal";
 import { ExperimentEditingContext } from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { useContext, useState } from "react";
+import dayjs from "dayjs";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -25,7 +26,7 @@ export const ExperimentHeader = () => {
                             
                             <Typography align="center" variant="h4" style={{marginBottom : 8, marginTop : 8}}>Title: {data ? data.experiment.title : null}</Typography>
                             <Typography align="center" variant="h5" style={{marginBottom : 8}}>Description: {data ? data.experiment.description : null}</Typography>
-                            <Typography align="center" variant="h5" style={{marginBottom : 8}}>Start Date: {data ? data.experiment.start_date.toLocaleDateString() : null}</Typography>
+                            <Typography align="center" variant="h5" style={{marginBottom : 8}}>Start Date: {data ? dayjs.utc(data.experiment.start_date).format("YYYY-MM-DD") : null}</Typography>
                             {router.pathname.endsWith("report") 
                                 ? 
                                 null 

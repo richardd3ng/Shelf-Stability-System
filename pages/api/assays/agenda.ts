@@ -60,7 +60,7 @@ export default async function getAssays(req: NextApiRequest, res: NextApiRespons
 
     const [assays, totalRows] = await Promise.all([
         // TODO look at views instead?
-        db.$queryRaw<AssayInfo[]>`SELECT a.id, a.target_date as "targetDate", e.title, a."experimentId" as "experimentId", c.name as condition, t.name as type, ROUND((CAST(a.target_date AS DATE) - CAST(e.start_date AS DATE)) / 7.0) as week, a.result
+        db.$queryRaw<AssayInfo[]>`SELECT a.id, a.target_date as "targetDate", e.title, a."experimentId" as "experimentId", c.name as condition, t.name as type, ROUND((a.target_date - e.start_date) / 7.0) as week, a.result
             
             FROM public."Assay" a,
             LATERAL (SELECT title, start_date FROM public."Experiment" e WHERE a."experimentId" = id) e,

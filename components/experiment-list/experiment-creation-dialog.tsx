@@ -208,7 +208,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             const experimentData: ExperimentCreationArgs = {
                 title: title,
                 description: description,
-                start_date: date!.toISOString(),
+                start_date: dayjs.utc(date!).toISOString(),
                 assayTypeCreationArgsNoExperimentIdArray:
                     assayTypeCreationArgsNoExperimentIdArray,
                 conditionCreationArgsNoExperimentIdArray:
@@ -518,6 +518,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                     />
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
+                            timezone="UTC"
                             label="Start Date"
                             defaultValue={dayjs()}
                             onChange={handleDateChange}
