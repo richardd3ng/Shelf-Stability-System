@@ -57,6 +57,7 @@ export default async function getAssays(req: NextApiRequest, res: NextApiRespons
         return;
     }
 
+
     const [assays, totalRows] = await Promise.all([
         // TODO look at views instead?
         db.$queryRaw<any[]>`SELECT a.id, a.target_date, e.title, c.name as condition, t.name as type, ROUND(EXTRACT(DAY FROM a.target_date - e.start_date) / 7) as week, a.result

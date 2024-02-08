@@ -86,12 +86,14 @@ export const updateAssayResultThroughAPI = async (
     }
 };
 
-export const deleteAssayThroughAPI = async (assayId : number) => {
+export const deleteAssayThroughAPI = async (assayId : number) : Promise<number> => {
     await deleteEntity(`/api/assays/${assayId}/deleteAssay`);
+    return assayId;
 }
 
-export const deleteAssayResultThroughAPI = async (assayId : number) => {
+export const deleteAssayResultThroughAPI = async (assayId : number) : Promise<number> => {
     await deleteEntity(`/api/assays/${assayId}/deleteAssayResult`);
+    return assayId;
 }
 
 export interface UpdateAssayArgs {

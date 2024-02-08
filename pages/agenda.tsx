@@ -101,10 +101,11 @@ export default function AssayAgenda() {
     useEffect(() => {
         reload();
     }, [fromDate, toDate, recordedAssaysOnly]);
+    
 
     return (
         <Layout>
-            <AgendaContext.Provider value={{reload, rows, assayIdBeingEdited, setAssayIdBeingEdited, isEditing : isEditingAnAssay, setIsEditing : setIsEditingAnAssay}}>
+            <AgendaContext.Provider value={{reload, rows, setRows, assayIdBeingEdited, setAssayIdBeingEdited, isEditing : isEditingAnAssay, setIsEditing : setIsEditingAnAssay}}>
                 <Stack spacing={2}>
                     <Box display="flex" flexDirection="row" sx={{ px: 2 }}>
                         <Stack direction="row" spacing={2}>

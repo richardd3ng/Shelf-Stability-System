@@ -4,6 +4,7 @@ import { createContext } from "react";
 interface AgendaPageContextType {
     reload : () => void;
     rows : AssayInfo[];
+    setRows : (newRows : AssayInfo[]) => void;
     isEditing : boolean;
     setIsEditing : (b : boolean) => void;
     assayIdBeingEdited : number;
@@ -15,6 +16,7 @@ interface AgendaPageContextType {
 export const AgendaContext = createContext<AgendaPageContextType>({
     reload : () => {},
     rows : [],
+    setRows : (newRows : AssayInfo[]) => {},
     isEditing : false,
     setIsEditing : (b : boolean) => {},
     assayIdBeingEdited : 0,
