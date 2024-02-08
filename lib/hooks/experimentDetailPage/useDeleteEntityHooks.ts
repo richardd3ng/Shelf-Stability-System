@@ -5,6 +5,9 @@ import { useExperimentId } from "./useExperimentId";
 import { deleteCondition } from "@/lib/controllers/conditionController";
 import { deleteAssayResultThroughAPI, deleteAssayThroughAPI } from "@/lib/controllers/assayController";
 import deleteAssayResultAPI from "@/pages/api/assays/[assayId]/deleteAssayResult";
+import { deleteExperiment } from "@/lib/controllers/experimentController";
+import { useRouter } from "next/router";
+import { useAlert } from "@/lib/context/alert-context";
 
 type deleteFnType = (id : number) => Promise<void>;
 const useMutationToDelteEntity = (deleteFn : deleteFnType) => {
@@ -64,6 +67,21 @@ export const useMutationToDeleteAssayResult = () => {
         mutationFn : deleteAssayResultThroughAPI,
         onSuccess : () => {
             queryClient.invalidateQueries({queryKey : getQueryKeyForUseExperimentInfo(experimentId)});
+        }
+        
+    })
+}
+
+export const useMutationToDeleteExperiment = () => {
+    const queryClient = useQueryClient();
+    const experimentId = useExperimentId();
+    const router = useRouter();
+    const {showAlert} = useAlert();
+    return useMutation( {
+        mutationFn : deleteExperiment,
+        onSuccess : (experiment) => {
+            showAlert("success",  "Deleted experiment " + experiment.id)
+            router.push("/experiment-list")
         }
         
     })
