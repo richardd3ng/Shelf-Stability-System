@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+    createContext,
+    useContext,
+    useState,
+    ReactNode,
+    useEffect,
+} from "react";
 import { Alert, Container } from "@mui/material";
 
 type AlertType = "success" | "error" | "info" | "warning";
@@ -27,6 +33,13 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({
         setAlertQueue((prevQueue) => prevQueue.slice(1));
     };
 
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            hideAlert();
+        }, 5000);
+        return () => clearTimeout(timeout);
+    }, [alertQueue]);
+
     return (
         <AlertContext.Provider value={{ showAlert }}>
             {children}
@@ -46,7 +59,11 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({
                     <Alert
                         severity={alertQueue[0].type}
                         onClose={hideAlert}
-                        sx={{ width: "auto", borderRadius: 2 }}
+                        sx={{
+                            width: "auto",
+                            borderRadius: 2,
+                            opacity: 1,
+                        }}
                     >
                         {alertQueue[0].message}
                     </Alert>
