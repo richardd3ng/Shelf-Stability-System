@@ -15,7 +15,9 @@ interface TableProps {
     onDeleteRows?: (rows: GridRowSelectionModel) => void;
 }
 
-const Table: React.FC<TableProps & DataGridProps> = (props: TableProps & DataGridProps) => {
+const Table: React.FC<TableProps & DataGridProps> = (
+    props: TableProps & DataGridProps
+) => {
     const [selectedRows, setSelectedRows] =
         React.useState<GridRowSelectionModel>([]);
 
@@ -80,7 +82,7 @@ const Table: React.FC<TableProps & DataGridProps> = (props: TableProps & DataGri
                 disableColumnMenu
                 autoHeight
                 getRowHeight={() => "auto"}
-                pageSizeOptions={[10, 15]}
+                pageSizeOptions={[10, 25, 50, 100]}
                 checkboxSelection
                 disableRowSelectionOnClick
                 slots={{ footer: FooterComponent }}

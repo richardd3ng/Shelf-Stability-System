@@ -72,7 +72,8 @@ const ExperimentList: React.FC = () => {
             field: "startDate",
             headerName: "Start Date",
             type: "date",
-            valueFormatter: (params: any) => dayjs.utc(params.value).format("YYYY-MM-DD"),
+            valueFormatter: (params: any) =>
+                dayjs.utc(params.value).format("YYYY-MM-DD"),
             flex: 2,
         },
         {
@@ -234,7 +235,9 @@ const ExperimentList: React.FC = () => {
                     </Container>
                     <Button
                         sx={{
-                            border: "1px solid #ccc",
+                            backgroundColor: "white",
+                            opacity: 0.8,
+                            border: "1px solid",
                             borderRadius: "8px",
                             flex: 1,
                             marginLeft: "auto",
