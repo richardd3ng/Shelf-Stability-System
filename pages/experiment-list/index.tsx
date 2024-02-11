@@ -8,7 +8,6 @@ import Layout from "../../components/shared/layout";
 import SearchBar from "../../components/shared/search-bar";
 import Table from "../../components/shared/table";
 import ViewIcon from "@mui/icons-material/Visibility";
-import { LoadingContainer } from "@/components/shared/loading";
 import { getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import {
     deleteExperiment,
@@ -37,8 +36,6 @@ const ExperimentList: React.FC = () => {
     const [showCreationDialog, setShowCreationDialog] =
         useState<boolean>(false);
     const [showDeletionDialog, setShowDeletionDialog] =
-        useState<boolean>(false);
-    const [loadingExperiments, setLoadingExperiments] =
         useState<boolean>(false);
     const [debounce, setDebounce] = useState<boolean>(false);
     const [selectedExperimentIds, setSelectedExperimentIds] =
@@ -152,10 +149,8 @@ const ExperimentList: React.FC = () => {
     const reloadExperimentData = (
         paging: ServerPaginationArgs
     ): Promise<{ rows: ExperimentData[]; rowCount: number }> => {
-        setLoadingExperiments(true);
         return getExperiments(paging).then((fetchedData) => {
             setExperimentData(fetchedData.rows);
-            setLoadingExperiments(false);
             return fetchedData;
         });
     };
@@ -262,17 +257,15 @@ const ExperimentList: React.FC = () => {
                         Add Experiment
                     </Button>
                 </Box>
-                {loadingExperiments ? (
-                    <LoadingContainer text="Loading Experiments..." />
-                ) : (
-                    <Table
-                        columns={colDefs}
-                        rows={experimentData}
-                        pagination
-                        onDeleteRows={prepareForDeletion}
-                        {...paginationProps}
-                    />
-                )}
+
+                <Table
+                    columns={colDefs}
+                    rows={experimentData}
+                    pagination
+                    onDeleteRows={prepareForDeletion}
+                    {...paginationProps}
+                />
+
                 <ExperimentCreationDialog
                     open={showCreationDialog}
                     onClose={() => {
