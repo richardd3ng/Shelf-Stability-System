@@ -1,11 +1,4 @@
-import {
-    Alert,
-    Box,
-    Button,
-    Container,
-    IconButton,
-    Stack,
-} from "@mui/material";
+import { Box, Button, Container, IconButton, Stack } from "@mui/material";
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -50,9 +43,34 @@ const ExperimentList: React.FC = () => {
     const [debounce, setDebounce] = useState<boolean>(false);
     const [selectedExperimentIds, setSelectedExperimentIds] =
         useState<GridRowSelectionModel>([]);
-    const [searchQuery, setSearchQuery] = useState<string>("");
     const { showAlert } = useAlert();
     const router = useRouter();
+    const [searchQuery, setSearchQuery] = useState<string>(
+        router.query.search?.[0] || ""
+    );
+
+    useEffect(() => {
+        const { search } = router.query;
+        if (search) {
+            setSearchQuery(search[0] || "");
+        }
+    }, [router.query]);
+
+    useEffect(() => {
+        if (debounce) {
+            return;
+        }
+        setDebounce(true);
+        const queryParams = new URLSearchParams();
+        queryParams.set("search", searchQuery);
+        router.push(
+            { pathname: router.pathname, search: queryParams.toString() },
+            undefined,
+            { shallow: true }
+        );
+        reload();
+        setDebounce(false);
+    }, [searchQuery]);
 
     const colDefs: GridColDef[] = [
         {
@@ -151,15 +169,6 @@ const ExperimentList: React.FC = () => {
         }
     );
 
-    useEffect(() => {
-        if (debounce) {
-            return;
-        }
-        setDebounce(true);
-        reload();
-        setDebounce(false);
-    }, [searchQuery]);
-
     const handleView = (id: number) => {
         router.push(`/experiments/${id}`);
     };
@@ -169,8 +178,11 @@ const ExperimentList: React.FC = () => {
     };
 
     const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
-        setSelectedExperimentIds(selectedRows);
         setShowDeletionDialog(true);
+    };
+
+    const handleSearch = (query: string) => {
+        setSearchQuery(query);
     };
 
     const handleDeleteExperiments = async () => {
@@ -230,7 +242,8 @@ const ExperimentList: React.FC = () => {
                     <Container sx={{ flex: 2, marginRight: "25%" }}>
                         <SearchBar
                             placeholder="Enter Keyword"
-                            onSearch={setSearchQuery}
+                            value={searchQuery}
+                            onSearch={handleSearch}
                         />
                     </Container>
                     <Button

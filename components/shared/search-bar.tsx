@@ -6,6 +6,7 @@ import { Box, Button } from "@mui/material";
 
 interface SearchBarProps {
     placeholder: string;
+    value?: string;
     onSearch: (searchText: string) => void;
 }
 
@@ -43,7 +44,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
-    const [query, setQuery] = useState<string>("");
+    const [query, setQuery] = useState<string>(props.value || "");
 
     const handleKeyDown = (event: KeyboardEvent) => {
         if (event.key === "Enter") {
@@ -69,6 +70,7 @@ const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
                 </SearchIconWrapper>
                 <StyledInputBase
                     placeholder={props.placeholder}
+                    value={query}
                     inputProps={{ "aria-label": "search" }}
                     onKeyDown={handleKeyDown}
                     onChange={handleChange}
