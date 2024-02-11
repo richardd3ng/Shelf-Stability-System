@@ -178,6 +178,7 @@ const ExperimentList: React.FC = () => {
     };
 
     const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
+        setSelectedExperimentIds(selectedRows);
         setShowDeletionDialog(true);
     };
 
