@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -36,7 +37,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: "100%",
     "& .MuiInputBase-input": {
         padding: theme.spacing(1, 2, 1, 0),
-        // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create("width"),
         width: "100%",
@@ -45,6 +45,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
     const [query, setQuery] = useState<string>(props.value || "");
+
+    useEffect(() => {
+        setQuery(props.value || "");
+    }, [props.value]);
 
     const handleKeyDown = (event: KeyboardEvent) => {
         if (event.key === "Enter") {

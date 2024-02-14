@@ -37,36 +37,25 @@ const ExperimentList: React.FC = () => {
         useState<boolean>(false);
     const [showDeletionDialog, setShowDeletionDialog] =
         useState<boolean>(false);
-    const [debounce, setDebounce] = useState<boolean>(false);
     const [selectedExperimentIds, setSelectedExperimentIds] =
         useState<GridRowSelectionModel>([]);
     const { showAlert } = useAlert();
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState<string>(
-        router.query.search?.[0] || ""
+        router.asPath.split("search=")[1] ?? ""
     );
 
     useEffect(() => {
         const { search } = router.query;
         if (search) {
-            setSearchQuery(search[0] || "");
+            setSearchQuery(search.toString());
+        } else {
+            setSearchQuery("");
         }
     }, [router.query]);
 
     useEffect(() => {
-        if (debounce) {
-            return;
-        }
-        setDebounce(true);
-        const queryParams = new URLSearchParams();
-        queryParams.set("search", searchQuery);
-        router.push(
-            { pathname: router.pathname, search: queryParams.toString() },
-            undefined,
-            { shallow: true }
-        );
         reload();
-        setDebounce(false);
     }, [searchQuery]);
 
     const colDefs: GridColDef[] = [
@@ -178,7 +167,20 @@ const ExperimentList: React.FC = () => {
     };
 
     const handleSearch = (query: string) => {
-        setSearchQuery(query);
+        if (query.trim() !== "") {
+            const queryParams = new URLSearchParams();
+            queryParams.set("search", query);
+            router.push(
+                {
+                    pathname: router.pathname,
+                    search: queryParams.toString(),
+                },
+                undefined,
+                { shallow: true }
+            );
+        } else {
+            router.push("/experiment-list");
+        }
     };
 
     const handleDeleteExperiments = async () => {
