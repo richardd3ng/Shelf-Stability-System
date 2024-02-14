@@ -10,8 +10,6 @@ import {
 } from "@mui/x-data-grid";
 
 interface TableProps {
-    sortModel?: any;
-    footer?: React.JSXElementConstructor<any>;
     onDeleteRows?: (rows: GridRowSelectionModel) => void;
 }
 
@@ -64,7 +62,6 @@ const Table: React.FC<TableProps & DataGridProps> = (
                         border: "none",
                     }}
                 />
-                {props.footer && <props.footer />}
             </GridFooterContainer>
         );
     };
@@ -75,9 +72,6 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 hideFooterPagination={!props.pagination}
                 initialState={{
                     pagination: { paginationModel: { pageSize: 10 } },
-                    sorting: {
-                        sortModel: props.sortModel,
-                    },
                 }}
                 disableColumnMenu
                 autoHeight

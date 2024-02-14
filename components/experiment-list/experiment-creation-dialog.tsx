@@ -13,14 +13,8 @@ import {
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import {
-    GridColDef,
-    GridRowSelectionModel,
-    GridSortItem,
-} from "@mui/x-data-grid";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
-import Table from "../shared/table";
 import dayjs from "dayjs";
 import { createAssays } from "@/lib/controllers/assayController";
 import { fetchDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
@@ -128,28 +122,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         if (newDescription.length <= MAX_DESCRIPTION_LENGTH) {
             setDescription(newDescription);
         }
-    };
-
-    const handleAddWeek = () => {
-        const addedRow: WeekRow = {
-            id: idCounter,
-            week: 0,
-        };
-        setWeekRows([...weekRows, addedRow]);
-        setIdCounter(idCounter + 1);
-    };
-
-    const handleDeleteWeeks = (selectedRows: GridRowSelectionModel) => {
-        const newMap: AssayScheduleTypesMap = Object.fromEntries(
-            Object.entries(assayScheduleTypeMap).filter(
-                ([rowId]) => !selectedRows.includes(Number(rowId))
-            )
-        );
-        setAssayScheduleTypeMap(newMap);
-        const remainingRows: WeekRow[] = weekRows.filter(
-            (row) => !selectedRows.includes(row.id)
-        );
-        setWeekRows(remainingRows);
     };
 
     const checkMissingDetails = (): string[] => {
@@ -379,68 +351,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         setSelectedStorageConditions(newSelectedStorageConditions);
     };
 
-    const createTableColumns = (): GridColDef[] => {
-        const weekColumn: GridColDef = {
-            field: "week",
-            headerName: "Week",
-            type: "number",
-            width: 70,
-            align: "center",
-            headerAlign: "center",
-            disableColumnMenu: true,
-            editable: true,
-            sortable: false,
-        };
-        const storageConditionColumns: GridColDef[] =
-            selectedStorageConditions.map((condition) => ({
-                field: condition,
-                headerName: condition,
-                renderCell: (params) => {
-                    return (
-                        <MultiSelectDropdown
-                            items={selectedAssayTypes}
-                            label="Select Types"
-                            size="small"
-                            onChange={(newAssayTypes: string[]) =>
-                                setAssayScheduleTypeMap((prevMap) => {
-                                    const newMap: AssayScheduleTypesMap = {
-                                        ...prevMap,
-                                    };
-                                    if (params.row.id in newMap) {
-                                        newMap[params.row.id][condition] =
-                                            newAssayTypes;
-                                    } else {
-                                        newMap[params.row.id] = {
-                                            [condition]: newAssayTypes,
-                                        };
-                                    }
-                                    return newMap;
-                                })
-                            }
-                        />
-                    );
-                },
-                align: "center",
-                headerAlign: "center",
-                width: 175,
-                disableColumnMenu: true,
-                editable: true,
-                sortable: false,
-            }));
-        return [weekColumn, ...storageConditionColumns];
-    };
-
-    const handleWeekUpdate = (newRow: WeekRow): WeekRow => {
-        const rowIndex = weekRows.findIndex((row) => row.id === newRow.id);
-        if (rowIndex !== -1) {
-            const updatedRows: WeekRow[] = [...weekRows];
-            newRow.week = Math.max(0, newRow.week);
-            updatedRows[rowIndex] = newRow;
-            setWeekRows(updatedRows);
-        }
-        return newRow;
-    };
-
     const closeDialog = () => {
         resetFields();
         props.onClose();
@@ -459,27 +369,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         setWeekRows([]);
         setIdCounter(1);
         setAssayScheduleTypeMap({});
-    };
-
-    const tableAddWeekFooter: React.FC = () => {
-        return (
-            <Box
-                style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    padding: "10px",
-                }}
-            >
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddWeek}
-                >
-                    Add Week
-                </Button>
-            </Box>
-        );
     };
 
     return (
@@ -593,28 +482,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                             </Button>
                         </Box>
                     </Box>
-
-                    {selectedAssayTypes.length > 0 &&
-                        selectedStorageConditions.length > 0 && (
-                            <Stack>
-                                <DialogContentText>
-                                    Assay Schedule
-                                </DialogContentText>
-                                <Table
-                                    columns={createTableColumns()}
-                                    rows={weekRows}
-                                    footer={tableAddWeekFooter}
-                                    sortModel={[
-                                        {
-                                            field: "week",
-                                            sort: "asc",
-                                        } as GridSortItem,
-                                    ]}
-                                    onDeleteRows={handleDeleteWeeks}
-                                    processRowUpdate={handleWeekUpdate}
-                                />
-                            </Stack>
-                        )}
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ width: "100%" }}>
