@@ -31,12 +31,12 @@ export default function ExperimentPage() {
                 >
                     All Assays
                 </Typography>
-                <ExperimentTable
+                {/* <ExperimentTable
                     assayFilter={(experiment: ExperimentInfo) =>
                         experiment.assays
                     }
                     componentForAssay={AssayButtonInCell}
-                />
+                /> */}
             </Container>
             {data
                 ? data.assayTypes.map((type) => {
@@ -56,7 +56,7 @@ export default function ExperimentPage() {
                               >
                                   Assays Results for Type {type.name}
                               </Typography>
-                              <ExperimentTable
+                              {/* <ExperimentTable
                                   assayFilter={(
                                       experimentInfo: ExperimentInfo
                                   ) =>
@@ -65,7 +65,7 @@ export default function ExperimentPage() {
                                       )
                                   }
                                   componentForAssay={AssayResultInCell}
-                              />
+                              /> */}
                           </Container>
                       );
                   })
