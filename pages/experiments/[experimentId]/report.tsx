@@ -31,45 +31,7 @@ export default function ExperimentPage() {
                 >
                     All Assays
                 </Typography>
-                {/* <ExperimentTable
-                    assayFilter={(experiment: ExperimentInfo) =>
-                        experiment.assays
-                    }
-                    componentForAssay={AssayButtonInCell}
-                /> */}
             </Container>
-            {data
-                ? data.assayTypes.map((type) => {
-                      return (
-                          <Container
-                              key={type.id}
-                              style={{
-                                  marginBottom: 24,
-                                  marginTop: 64,
-                                  border: "2px solid black",
-                              }}
-                          >
-                              <Typography
-                                  variant="h5"
-                                  align="center"
-                                  style={{ marginTop: 8, marginBottom: 8 }}
-                              >
-                                  Assays Results for Type {type.name}
-                              </Typography>
-                              {/* <ExperimentTable
-                                  assayFilter={(
-                                      experimentInfo: ExperimentInfo
-                                  ) =>
-                                      experimentInfo.assays.filter(
-                                          (assay) => assay.typeId === type.id
-                                      )
-                                  }
-                                  componentForAssay={AssayResultInCell}
-                              /> */}
-                          </Container>
-                      );
-                  })
-                : null}
         </Container>
     );
 }

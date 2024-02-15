@@ -1,15 +1,6 @@
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import {
-    Container,
-    Typography,
-    Stack,
-    IconButton,
-    Button,
-} from "@mui/material";
-import { MoreVert } from "@mui/icons-material";
-import { ConditionsSummary } from "./conditionsSummary";
-import { AssayTypesSummary } from "./assayTypesSummary";
+import { Container, Typography, Button } from "@mui/material";
 import { useRouter } from "next/router";
 import { ExperimentEditorModal } from "../modifications/editorModals/experimentEditorModal";
 import { ExperimentEditingContext } from "@/lib/context/experimentDetailPage/experimentEditingContext";

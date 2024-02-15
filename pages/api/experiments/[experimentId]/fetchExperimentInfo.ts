@@ -18,7 +18,7 @@ export default async function getExperimentInfo(
         return;
     }
     try {
-        const [experiment, conditions, assays, assayTypes] = await Promise.all([
+        const [experiment, conditions, assays] = await Promise.all([
             db.experiment.findUnique({
                 where: { id: experimentId },
             }),
@@ -36,7 +36,6 @@ export default async function getExperimentInfo(
             res.status(200).json({
                 experiment,
                 conditions,
-                assayTypes,
                 assays,
             });
         } else {

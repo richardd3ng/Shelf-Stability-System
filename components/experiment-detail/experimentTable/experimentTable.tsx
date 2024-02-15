@@ -101,7 +101,7 @@ const ExperimentTable: React.FC = () => {
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
-            editable: true,
+            editable: false,
             sortable: false,
         };
         const conditionCols: GridColDef[] = data.conditions.map(
@@ -194,17 +194,6 @@ const ExperimentTable: React.FC = () => {
         setWeekRows(remainingRows);
     };
 
-    const handleWeekUpdate = (newRow: WeekRow): WeekRow => {
-        const rowIndex = weekRows.findIndex((row) => row.id === newRow.id);
-        if (rowIndex !== -1) {
-            const updatedRows: WeekRow[] = [...weekRows];
-            newRow.week = Math.max(0, newRow.week);
-            updatedRows[rowIndex] = newRow;
-            setWeekRows(updatedRows);
-        }
-        return newRow;
-    };
-
     const tableAddWeekFooter: React.FC = () => {
         return (
             <Box
@@ -245,7 +234,6 @@ const ExperimentTable: React.FC = () => {
                     } as GridSortItem,
                 ]}
                 onDeleteRows={handleDeleteWeeks}
-                processRowUpdate={handleWeekUpdate}
             />
         </>
     );

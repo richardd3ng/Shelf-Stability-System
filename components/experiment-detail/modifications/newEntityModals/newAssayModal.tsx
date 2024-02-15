@@ -3,6 +3,7 @@ import { CloseableModal } from "@/components/shared/closeableModal";
 import { useMutationToCreateAssay } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
+import { fetchDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
 import {
     FormControl,
     InputLabel,
@@ -68,9 +69,9 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
                                 }
                             }}
                         >
-                            {data.assayTypes.map((type) => (
-                                <MenuItem key={type.id} value={type.id}>
-                                    {type.name}
+                            {fetchDistinctAssayTypes().map((type: string) => (
+                                <MenuItem key={type} value={type}>
+                                    {type}
                                 </MenuItem>
                             ))}
                         </Select>
