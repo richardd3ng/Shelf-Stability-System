@@ -1,0 +1,34 @@
+{
+    "assay_types": [
+        {
+            "name": "Sensory",
+            "abbrev": "Sensory",
+            "units": "similarity"
+        },
+        {
+            "name": "Moisture",
+            "abbrev": "Moisture",
+            "units": "% moisture"
+        },
+        {
+            "name": "Hexanal",
+            "abbrev": "Hexanal",
+            "units": "ppm hexanal"
+        },
+        {
+            "name": "Peroxide value",
+            "abbrev": "PV",
+            "units": "meq O2/kg"
+        },
+        {
+            "name": "Anisidine",
+            "abbrev": "Anisidine",
+            "units": "AV"
+        },
+        {
+            "name": "Free fatty acid",
+            "abbrev": "FFA",
+            "units": "% FFA"
+        }
+    ]
+}
