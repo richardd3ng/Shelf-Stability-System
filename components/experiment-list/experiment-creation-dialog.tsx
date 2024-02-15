@@ -11,8 +11,6 @@ import {
     Stack,
     TextField,
 } from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
     GridColDef,
     GridRowSelectionModel,
@@ -21,7 +19,6 @@ import {
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import Table from "../shared/table";
-import dayjs from "dayjs";
 import { createAssays } from "@/lib/controllers/assayController";
 import { fetchDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
 import { fetchDistinctConditions } from "@/lib/controllers/conditionController";
@@ -39,6 +36,8 @@ import { AssayType, Condition } from "@prisma/client";
 import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useAlert } from "@/lib/context/alert-context";
 import { useRouter } from "next/router";
+import { LocalDate } from "@js-joda/core";
+import { MyDatePicker } from "../shared/myDatePicker";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -64,7 +63,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
 ) => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [date, setDate] = useState<Date | null>(dayjs().toDate());
+    const [date, setDate] = useState<LocalDate | null>(LocalDate.now());
     const [assayTypes, setAssayTypes] = useState<string[]>([]);
     const [storageConditions, setStorageConditions] = useState<string[]>([]);
     const [selectedAssayTypes, setSelectedAssayTypes] = useState<string[]>([]);
@@ -103,14 +102,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             setStorageConditions(distinctConditions);
         } catch (error) {
             showAlert("error", String(error));
-        }
-    };
-
-    const handleDateChange = (dayjs: dayjs.Dayjs | null) => {
-        if (dayjs) {
-            setDate(dayjs.toDate());
-        } else {
-            setDate(null);
         }
     };
 
@@ -208,7 +199,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             const experimentData: ExperimentCreationArgs = {
                 title: title,
                 description: description,
-                start_date: dayjs.utc(date!).toISOString(),
+                start_date: date!.toString(),
                 assayTypeCreationArgsNoExperimentIdArray:
                     assayTypeCreationArgsNoExperimentIdArray,
                 conditionCreationArgsNoExperimentIdArray:
@@ -257,13 +248,8 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                                     experimentId: experimentId,
                                     conditionId: conditionId,
                                     typeId: typeId,
-                                    target_date: dayjs()
-                                        .add(
-                                            rowIdToWeek.get(parseInt(rowId)) ||
-                                                0,
-                                            "weeks"
-                                        )
-                                        .toDate(),
+                                    target_date: LocalDate.now()
+                                        .plusWeeks(rowIdToWeek.get(parseInt(rowId)) || 0),
                                     result: null,
                                 });
                             });
@@ -449,7 +435,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const resetFields = () => {
         setTitle("");
         setDescription("");
-        setDate(dayjs().toDate());
+        setDate(LocalDate.now());
         setSelectedAssayTypes([]);
         setSelectedStorageConditions([]);
         setNewAssayType("");
@@ -516,19 +502,16 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         }}
                         helperText={`${description.length}/${MAX_DESCRIPTION_LENGTH} characters`}
                     />
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                            timezone="UTC"
-                            label="Start Date"
-                            defaultValue={dayjs()}
-                            onChange={handleDateChange}
-                            slotProps={{
-                                textField: {
-                                    required: true,
-                                },
-                            }}
-                        />
-                    </LocalizationProvider>
+                    <MyDatePicker
+                        label="Start Date"
+                        defaultValue={LocalDate.now()}
+                        onChange={setDate}
+                        slotProps={{
+                            textField: {
+                                required: true,
+                            },
+                        }}
+                    />
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <MultiSelectDropdown
                             items={assayTypes}

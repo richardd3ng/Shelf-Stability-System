@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { Button, AppBar, Toolbar, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 
 interface NavBarButtonProps {
@@ -19,8 +19,8 @@ const NavBar: React.FC = () => {
         { text: "Experiments", onClick: () => router.push("/experiment-list") },
         { text: "Assay Agenda", onClick: () => router.push("/agenda") },
         { text : "Change Password", onClick: () => router.push("/auth/updatePassword")}
-
     ]
+    
     return (
         <AppBar position="sticky" color="primary">
             <Toolbar >

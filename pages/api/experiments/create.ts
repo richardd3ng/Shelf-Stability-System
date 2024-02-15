@@ -10,6 +10,8 @@ import {
     ConditionCreationArgsNoExperimentId,
     ExperimentCreationResponse,
 } from "@/lib/controllers/types";
+import { LocalDate } from "@js-joda/core";
+import { localDateToJsDate } from "@/lib/datesUtils";
 
 export default async function createExperiment(
     req: NextApiRequest,
@@ -43,7 +45,7 @@ export default async function createExperiment(
             data: {
                 title,
                 description,
-                start_date,
+                start_date: localDateToJsDate(LocalDate.parse(start_date)),
             },
         });
 
@@ -97,8 +99,8 @@ export default async function createExperiment(
                 );
                 return;
             }
-            
         }
+
         res.status(500).json(
             getApiError(500, "Failed to create experiment on server")
         );

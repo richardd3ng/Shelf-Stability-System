@@ -20,19 +20,12 @@ import {
     ServerPaginationArgs,
     useServerPagination,
 } from "@/lib/hooks/useServerPagination";
-import { ExperimentTable } from "@/lib/controllers/types";
+import { ExperimentTable, ExperimentTableInfo } from "@/lib/controllers/types";
 import { useRouter } from "next/router";
-import dayjs from "dayjs";
-
-interface ExperimentData {
-    id: number;
-    title: string;
-    startDate: Date;
-    week: number;
-}
+import { LocalDate } from "@js-joda/core";
 
 const ExperimentList: React.FC = () => {
-    const [experimentData, setExperimentData] = useState<ExperimentData[]>([]);
+    const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>([]);
     const [showCreationDialog, setShowCreationDialog] =
         useState<boolean>(false);
     const [showDeletionDialog, setShowDeletionDialog] =
@@ -76,8 +69,7 @@ const ExperimentList: React.FC = () => {
             field: "startDate",
             headerName: "Start Date",
             type: "date",
-            valueFormatter: (params: any) =>
-                dayjs.utc(params.value).format("YYYY-MM-DD"),
+            valueFormatter: params => params.value?.toString() ?? "",
             flex: 2,
         },
         {
@@ -115,29 +107,17 @@ const ExperimentList: React.FC = () => {
 
     const getExperiments = (
         paging: ServerPaginationArgs
-    ): Promise<{ rows: ExperimentData[]; rowCount: number }> => {
+    ): Promise<ExperimentTable> => {
         return fetchExperimentList(searchQuery, paging)
             .catch((error) => {
                 showAlert("error", String(error));
                 return { rows: [], rowCount: 0 };
-            })
-            .then((table: ExperimentTable) => ({
-                rows: table.rows.map((experiment) => ({
-                    id: experiment.id,
-                    title: experiment.title,
-                    startDate: experiment.startDate,
-                    week: getNumWeeksAfterStartDate(
-                        experiment.startDate,
-                        new Date()
-                    ),
-                })),
-                rowCount: table.rowCount,
-            }));
+            });
     };
 
     const reloadExperimentData = (
         paging: ServerPaginationArgs
-    ): Promise<{ rows: ExperimentData[]; rowCount: number }> => {
+    ): Promise<ExperimentTable> => {
         return getExperiments(paging).then((fetchedData) => {
             setExperimentData(fetchedData.rows);
             return fetchedData;

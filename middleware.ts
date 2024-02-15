@@ -1,7 +1,9 @@
 import type { NextRequest } from "next/server";
 import { redirectOrBlockIfNotLoggedIn } from "./lib/middleware/checkIfLoggedIn";
 import { middlewareForFrontendAuthPages } from "./lib/middleware/mwForFrontendAuthPages";
-// This function can be marked `async` if using `await` inside
+
+// TODO: block by default and whitelist login page/change password (if no password set yet)
+
 export async function middleware(request: NextRequest) {
     let pathname = request.nextUrl.pathname;
     if (pathname.startsWith("/auth")) {

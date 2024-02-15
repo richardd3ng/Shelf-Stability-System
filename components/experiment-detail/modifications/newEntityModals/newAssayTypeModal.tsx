@@ -1,8 +1,7 @@
 import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
 import { CloseableModal } from "@/components/shared/closeableModal";
 import { ExperimentAdditionsContext } from "@/lib/context/experimentDetailPage/experimentAdditionsContext";
-import { useMutationToCreateAssayType, useMutationToCreateCondition } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
-import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
+import { useMutationToCreateAssayType } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Stack, TextField} from "@mui/material";
 import { useContext, useState } from "react";
@@ -10,7 +9,6 @@ import { useContext, useState } from "react";
 export const NewAssayTypeModal = () => {
     const {isAddingAssayType, setIsAddingAssayType} = useContext(ExperimentAdditionsContext);
     const experimentId = useExperimentId();
-    const {data} = useExperimentInfo(experimentId);
     const [name, setName] = useState<string>("");
     const {isPending, isError, error, mutate : createAssayType} = useMutationToCreateAssayType();
 

@@ -1,24 +1,30 @@
-import { LocalizationProvider } from "@mui/x-date-pickers"
+import { DatePickerProps, DateValidationError, LocalizationProvider, PickerChangeHandlerContext } from "@mui/x-date-pickers"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { Dayjs } from "dayjs"
 import dayjs from "dayjs";
+import { LocalDate, nativeJs } from "@js-joda/core";
 
-interface MyDatePickerProps {
-    label : string;
-    setDate : (d : Date) => void;
-    date : Date;
-}
+export type MyDatePickerProps = {
+    onChange?: ((value: LocalDate | null, context: PickerChangeHandlerContext<DateValidationError>) => void);
+    value?: LocalDate | null;
+    defaultValue?: LocalDate | null;
+} & Omit<DatePickerProps<Dayjs>, "value" | "onChange" | "defaultValue"> & React.RefAttributes<HTMLDivElement>;
 
-export const MyDatePicker : React.FC<MyDatePickerProps> = (props : MyDatePickerProps) => {
+export const MyDatePicker: React.FC<MyDatePickerProps> = props => {
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker timezone="UTC" value={dayjs(props.date)} label={props.label} onChange={(newDate : Dayjs | null) => {
-                if (newDate){
-                    props.setDate(newDate.toDate());
-                }
-            }}>
-
+            <DatePicker
+                timezone="UTC"
+                {...props}
+                value={props.value === null || props.value === undefined ? props.value : dayjs(props.value.toString())}
+                defaultValue={props.defaultValue === null || props.defaultValue === undefined ? props.defaultValue : dayjs(props.defaultValue.toString())}
+                onChange={(newDate: Dayjs | null, context) => {
+                    if (props.onChange !== undefined) {
+                        props.onChange(newDate !== null ? nativeJs(newDate).toLocalDate() : newDate, context);
+                    }
+                }}
+            >
             </DatePicker>
         </LocalizationProvider>
     )

@@ -1,26 +1,21 @@
 import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
 import { CloseableModal } from "@/components/shared/closeableModal";
 import { ExperimentAdditionsContext } from "@/lib/context/experimentDetailPage/experimentAdditionsContext";
-import { useMutationToCreateAssay, useMutationToCreateCondition } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
+import { useMutationToCreateAssay } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { FormControl, InputLabel, Stack, TextField, Select, MenuItem} from "@mui/material";
+import { FormControl, InputLabel, Stack, Select, MenuItem} from "@mui/material";
 import { useContext, useState } from "react";
-import MultiSelectDropdown from "@/components/shared/multi-select-dropdown";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { createAssays } from "@/lib/controllers/assayController";
+import { LocalDate } from "@js-joda/core";
+import { MyDatePicker } from "@/components/shared/myDatePicker";
 
 export const NewAssayModal = () => {
     const {isAddingAssay, setIsAddingAssay} = useContext(ExperimentAdditionsContext);
     const experimentId = useExperimentId();
     const {data} = useExperimentInfo(experimentId);
-    const [name, setName] = useState<string>("");
     const [conditionId, setConditionId] = useState<number>(-1);
     const [assayTyepId, setAssayTypeId] = useState<number>(-1);
-    const [targetDate, setTargetDate] = useState<Date>(new Date(Date.now()));
+    const [targetDate, setTargetDate] = useState<LocalDate | null>(LocalDate.now());
     const { isPending, isError, error, mutate : createAssayInDB} = useMutationToCreateAssay();
 
     const onSubmit = () => {
@@ -59,16 +54,7 @@ export const NewAssayModal = () => {
                         {data.assayTypes.map((type) => <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>)}
                     </Select>
                 </FormControl>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker timezone="UTC" label="Target Date" onChange={(newDate : Dayjs | null) => {
-                        if (newDate){
-                            setTargetDate(newDate.toDate())
-                        }
-                    }}>
-
-                    </DatePicker>
-                </LocalizationProvider>
-
+                <MyDatePicker label="Target Date" onChange={setTargetDate} value={targetDate} />
             </Stack>
             : 
             null}

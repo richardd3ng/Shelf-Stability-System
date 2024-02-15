@@ -9,7 +9,7 @@ import {
 import { JSONToExperiment } from "../lib/controllers/jsonConversions";
 import { ApiError } from "next/dist/server/api-utils";
 import { AssayType, Condition } from "@prisma/client";
-import dayjs from "dayjs";
+import { LocalDate } from "@js-joda/core";
 
 interface AssayScheduleImportJSON {
     [condition: string]: {
@@ -204,11 +204,9 @@ const importExperiments = async (filePath: string) => {
                             conditionId: Number(
                                 conditionToId.get(condition)
                             ),
-                            target_date: dayjs(
+                            target_date: LocalDate.parse(
                                 experimentImportJSON.start_date
-                            )
-                                .add(parseInt(week), "weeks")
-                                .toDate(),
+                            ).plusWeeks(parseInt(week)),
                             result: null,
                         });
                         for (const assayResult of experimentImportJSON.assay_results) {

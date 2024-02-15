@@ -1,22 +1,26 @@
+import { LocalDate } from "@js-joda/core";
 import { Experiment, Condition, Assay, AssayType } from "@prisma/client";
 
+// This isn't a good name, but I don't have a better idea
+export type ExperimentData = Omit<Experiment, "start_date"> & { start_date: LocalDate };
+
 export type ExperimentInfo = {
-    experiment: Experiment;
+    experiment: ExperimentData;
     conditions: Condition[];
     assayTypes: AssayType[];
     assays: Assay[];
 };
 
-export type ExerimentTableInfo = {
+export type ExperimentTableInfo = {
     id: number;
     title: string;
-    startDate: Date;
+    startDate: LocalDate;
     week: number;
 };
 
 export type ExperimentTable = {
     // Rows on this page
-    rows: ExerimentTableInfo[];
+    rows: ExperimentTableInfo[];
     // Rows in the whole table
     rowCount: number;
 };
@@ -39,7 +43,7 @@ export type AssayTable = {
     rowCount: number;
 };
 
-export type AssayCreationArgs = Omit<Assay, "id">;
+export type AssayCreationArgs = Omit<Assay, "id" | "target_date"> & { target_date: LocalDate | null };
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 export type ConditionCreationArgs = Omit<Condition, "id">;
 
@@ -57,11 +61,11 @@ export type ExperimentCreationArgs =
         description: string;
         start_date: string;
     } | {
-          assayTypeCreationArgsNoExperimentIdArray: AssayTypeCreationArgsNoExperimentId[];
-      }
+        assayTypeCreationArgsNoExperimentIdArray: AssayTypeCreationArgsNoExperimentId[];
+    }
     | {
-          conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
-      };
+        conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+    };
 
 export type ExperimentCreationResponse = Omit<ExperimentInfo, "assays">;
 

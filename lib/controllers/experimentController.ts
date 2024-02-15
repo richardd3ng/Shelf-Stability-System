@@ -8,11 +8,13 @@ import {
     ExperimentInfo,
     ExperimentCreationArgs,
     ExperimentCreationResponse,
-    ExperimentTable
+    ExperimentTable,
+    ExperimentData
 } from "./types";
 import { Experiment } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { encodePaging, relativeURL } from "./url";
+import { LocalDate } from "@js-joda/core";
 
 export const fetchExperimentList = async (searchQuery: string, paging: ServerPaginationArgs): Promise<ExperimentTable> => {
     const url = encodePaging(relativeURL("/api/experiments/search"), paging);
@@ -27,13 +29,13 @@ export const fetchExperimentList = async (searchQuery: string, paging: ServerPag
 
     const resJson = await response.json();
     if (response.ok) {
-        const table: ExperimentTable = resJson;
+        const table: { rows: any[], rowCount: number } = resJson;
         return {
             ...table,
             // Convert the startDate from string to Date
             rows: table.rows.map(experiment => ({
                 ...experiment,
-                startDate: new Date(experiment.startDate),
+                startDate: LocalDate.parse(experiment.startDate),
             }))
         }
     }
@@ -109,7 +111,7 @@ export const hasRecordedAssayResults = async (
 
 export const deleteExperiment = async (
     experimentId: number
-): Promise<Experiment> => {
+): Promise<ExperimentData> => {
     const endpoint = `/api/experiments/${experimentId.toString()}/delete`;
     const response = await fetch(endpoint, {
         method: "GET",
@@ -126,35 +128,36 @@ export const deleteExperiment = async (
 };
 
 export interface UpdateExperimentArgs {
-    experimentId : number;
-    newTitle : string;
-    newDescription : string | null;
-    newStartDate : Date;
-    shouldUpdateStartDate : boolean;
+    experimentId: number;
+    newTitle: string;
+    newDescription: string | null;
+    newStartDate: LocalDate | null;
+    shouldUpdateStartDate: boolean;
 
 }
 
 export const TITLE_IS_TAKEN_CODE = 400;
-export const updateExperimentThroughAPI = async (experimentInfo : UpdateExperimentArgs) : Promise<UpdateExperimentArgs> => {
+export const updateExperimentThroughAPI = async (experimentInfo: UpdateExperimentArgs): Promise<UpdateExperimentArgs> => {
     const apiResponse = await fetch("/api/experiments/" + experimentInfo.experimentId.toString() + "/updateExperiment", {
         method: "POST",
-        body : JSON.stringify( {
-            title : experimentInfo.newTitle, 
-            description : experimentInfo.newDescription,
-            startDate : experimentInfo.newStartDate,
-            shouldUpdateStartDate : experimentInfo.shouldUpdateStartDate
+        body: JSON.stringify({
+            title: experimentInfo.newTitle,
+            description: experimentInfo.newDescription,
+            startDate: experimentInfo.newStartDate,
+            shouldUpdateStartDate: experimentInfo.shouldUpdateStartDate
         }),
         headers: {
             "Content-Type": "application/json",
         },
     });
     if (apiResponse.status > 300) {
-        if (apiResponse.status === TITLE_IS_TAKEN_CODE){
+        // Note: this is broken, should probably use the error message from the server
+        if (apiResponse.status === TITLE_IS_TAKEN_CODE) {
             throw new Error("Title is taken already, pick another");
         } else {
             throw new Error("An error occurred");
         }
-        
+
     }
     return experimentInfo;
 }

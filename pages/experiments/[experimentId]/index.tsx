@@ -8,12 +8,7 @@ import { Container, Typography, Button, Stack } from "@mui/material";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useRouter } from "next/router";
 import { ModificationOptions } from "@/components/experiment-detail/modifications/modificationOptions";
-import { ButtonWithConfirmationLoadingAndError } from "@/components/shared/buttonWithConfirmationLoadingAndError";
 import { DeleteExperimentButton } from "@/components/experiment-detail/deleteExperimentButton";
-import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
-import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
-import { checkIfAnAssayHasResults } from "@/lib/checkIfAnAssayHasResults";
-import { Assay } from "@prisma/client";
 
 
 export default function ExperimentPage() {
@@ -21,8 +16,6 @@ export default function ExperimentPage() {
     const [assayIdBeingEdited, setAssayIdBeingEdited] = useState<number>(0);
     const experimentId = useExperimentId();
     const router = useRouter();
-    const {data} = useExperimentInfo(experimentId);
-    const {mutate : deleteExperiment, isPending, isError, error} = useMutationToDeleteExperiment();
 
     return (
         <Layout>
