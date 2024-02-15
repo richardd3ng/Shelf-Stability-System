@@ -1,16 +1,15 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
-import { AssayType, Condition, Experiment, Prisma } from "@prisma/client";
+import { Condition, Experiment, Prisma } from "@prisma/client";
 import { getApiError } from "@/lib/api/error";
 import {
-    AssayTypeCreationArgs,
-    AssayTypeCreationArgsNoExperimentId,
     ConditionCreationArgs,
     ConditionCreationArgsNoExperimentId,
     ExperimentCreationResponse,
+    ExperimentData,
 } from "@/lib/controllers/types";
-import { LocalDate } from "@js-joda/core";
+import { LocalDate, nativeJs } from "@js-joda/core";
 import { localDateToJsDate } from "@/lib/datesUtils";
 
 export default async function createExperiment(
@@ -22,50 +21,32 @@ export default async function createExperiment(
             title,
             description,
             start_date,
-            assayTypeCreationArgsNoExperimentIdArray,
             conditionCreationArgsNoExperimentIdArray,
         } = req.body;
         if (
             !title ||
             !start_date ||
-            !assayTypeCreationArgsNoExperimentIdArray ||
             !conditionCreationArgsNoExperimentIdArray ||
-            assayTypeCreationArgsNoExperimentIdArray.length === 0 ||
             conditionCreationArgsNoExperimentIdArray.length === 0
         ) {
             res.status(400).json(
                 getApiError(
                     400,
-                    "Title, Start Date, and at least one assay type and condition are required."
+                    "Title, Start Date, and at least one condition are required."
                 )
             );
             return;
         }
-        const createdExperiment: Experiment = await db.experiment.create({
+        const createdExperiment: ExperimentData = await db.experiment.create({
             data: {
                 title,
                 description,
                 start_date: localDateToJsDate(LocalDate.parse(start_date)),
             },
-        });
-
-        let assayTypeCreationArgsArray: AssayTypeCreationArgs[] =
-            assayTypeCreationArgsNoExperimentIdArray.map(
-                (assayType: AssayTypeCreationArgsNoExperimentId) => {
-                    return {
-                        ...assayType,
-                        experimentId: createdExperiment.id,
-                    };
-                }
-            );
-        await db.assayType.createMany({
-            data: assayTypeCreationArgsArray,
-        });
-        const createdAssayTypes: AssayType[] = await db.assayType.findMany({
-            where: {
-                experimentId: createdExperiment.id,
-            },
-        });
+        }).then((experiment) => ({
+            ...experiment,
+            start_date: nativeJs(experiment.start_date).toLocalDate(),
+        }));
 
         let conditionCreationArgsArray: ConditionCreationArgs[] =
             conditionCreationArgsNoExperimentIdArray.map(
@@ -87,15 +68,20 @@ export default async function createExperiment(
 
         res.status(200).json({
             experiment: createdExperiment,
-            assayTypes: createdAssayTypes,
             conditions: createdConditions,
         });
     } catch (error) {
         console.error(error);
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            if (error.code === "P2002" && (error.meta?.target as string[])?.includes("title")) {
+            if (
+                error.code === "P2002" &&
+                (error.meta?.target as string[])?.includes("title")
+            ) {
                 res.status(400).json(
-                    getApiError(400, `An experiment with the name "${req.body.title}" already exists.`)
+                    getApiError(
+                        400,
+                        `An experiment with the name "${req.body.title}" already exists.`
+                    )
                 );
                 return;
             }

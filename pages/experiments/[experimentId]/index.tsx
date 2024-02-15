@@ -1,4 +1,4 @@
-import { AssaysGroupedByType } from "@/components/experiment-detail/assaysGroupedByType";
+// import { AssaysGroupedByType } from "@/components/experiment-detail/assaysGroupedByType";
 import Layout from "@/components/shared/layout";
 import { AssayEditingContext } from "@/lib/context/experimentDetailPage/assayEditingContext";
 import { useState } from "react";
@@ -7,9 +7,8 @@ import { ExperimentHeader } from "@/components/experiment-detail/summary/experim
 import { Container, Typography, Button, Stack } from "@mui/material";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useRouter } from "next/router";
-import { ModificationOptions } from "@/components/experiment-detail/modifications/modificationOptions";
 import { DeleteExperimentButton } from "@/components/experiment-detail/deleteExperimentButton";
-
+import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
 
 export default function ExperimentPage() {
     const [isEditingAssay, setIsEditingAssay] = useState<boolean>(false);
@@ -19,28 +18,44 @@ export default function ExperimentPage() {
 
     return (
         <Layout>
-            <AssayEditingContext.Provider value={{isEditing : isEditingAssay, setIsEditing : setIsEditingAssay, assayIdBeingEdited, setAssayIdBeingEdited}}>
-                <ExperimentHeader/>
-                <ModificationOptions/>
-                <AssayEditorModal/>
-                <AssaysGroupedByType/>
-                
-                <Container maxWidth="sm" style={{marginTop : 24, marginBottom : 24}}>
+            <AssayEditingContext.Provider
+                value={{
+                    isEditing: isEditingAssay,
+                    setIsEditing: setIsEditingAssay,
+                    assayIdBeingEdited,
+                    setAssayIdBeingEdited,
+                }}
+            >
+                <ExperimentHeader />
+                <ExperimentTable />
+                <AssayEditorModal />
+                {/* <AssaysGroupedByType /> */}
+                <Container
+                    maxWidth="sm"
+                    style={{ marginTop: 24, marginBottom: 24 }}
+                >
                     <Stack>
-                        <Typography align="center" style={{marginBottom : 8}}>
-                            <Button variant="outlined" onClick={() => router.push("/experiments/" + experimentId.toString() + "/report")} style={{textTransform : "none"}}>
+                        <Typography align="center" style={{ marginBottom: 8 }}>
+                            <Button
+                                variant="outlined"
+                                onClick={() =>
+                                    router.push(
+                                        "/experiments/" +
+                                        experimentId.toString() +
+                                        "/report"
+                                    )
+                                }
+                                style={{ textTransform: "none" }}
+                            >
                                 <Typography align="center">
                                     Generate a report for this experiment
-                                </Typography> 
+                                </Typography>
                             </Button>
-                            
                         </Typography>
-                        <DeleteExperimentButton/>
+                        <DeleteExperimentButton />
                     </Stack>
-                    
                 </Container>
             </AssayEditingContext.Provider>
         </Layout>
-    )
-    
+    );
 }

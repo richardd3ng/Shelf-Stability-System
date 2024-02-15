@@ -1,9 +1,5 @@
 import { ServerPaginationArgs } from "../hooks/useServerPagination";
-import {
-    AssayJSON,
-    JSONToAssay,
-    JSONToExperiment
-} from "./jsonConversions";
+import { AssayJSON, JSONToAssay, JSONToExperiment } from "./jsonConversions";
 import {
     ExperimentInfo,
     ExperimentCreationArgs,
@@ -11,12 +7,14 @@ import {
     ExperimentTable,
     ExperimentData
 } from "./types";
-import { Experiment } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { encodePaging, relativeURL } from "./url";
 import { LocalDate } from "@js-joda/core";
 
-export const fetchExperimentList = async (searchQuery: string, paging: ServerPaginationArgs): Promise<ExperimentTable> => {
+export const fetchExperimentList = async (
+    searchQuery: string,
+    paging: ServerPaginationArgs
+): Promise<ExperimentTable> => {
     const url = encodePaging(relativeURL("/api/experiments/search"), paging);
     url.searchParams.set("query", searchQuery);
 
@@ -33,7 +31,7 @@ export const fetchExperimentList = async (searchQuery: string, paging: ServerPag
         return {
             ...table,
             // Convert the startDate from string to Date
-            rows: table.rows.map(experiment => ({
+            rows: table.rows.map((experiment) => ({
                 ...experiment,
                 startDate: LocalDate.parse(experiment.startDate),
             }))
@@ -59,7 +57,6 @@ export const createExperiment = async (
         return {
             experiment: JSONToExperiment(resJson.experiment),
             conditions: resJson.conditions,
-            assayTypes: resJson.assayTypes,
         };
     } else {
         throw new ApiError(response.status, resJson.message);
@@ -81,7 +78,6 @@ export const fetchExperimentInfo = async (
         return {
             experiment: JSONToExperiment(resJson.experiment),
             conditions: resJson.conditions,
-            assayTypes: resJson.assayTypes,
             assays: resJson.assays.map((assay: AssayJSON) =>
                 JSONToAssay(assay)
             ),
@@ -133,31 +129,37 @@ export interface UpdateExperimentArgs {
     newDescription: string | null;
     newStartDate: LocalDate | null;
     shouldUpdateStartDate: boolean;
-
 }
 
 export const TITLE_IS_TAKEN_CODE = 400;
-export const updateExperimentThroughAPI = async (experimentInfo: UpdateExperimentArgs): Promise<UpdateExperimentArgs> => {
-    const apiResponse = await fetch("/api/experiments/" + experimentInfo.experimentId.toString() + "/updateExperiment", {
-        method: "POST",
-        body: JSON.stringify({
-            title: experimentInfo.newTitle,
-            description: experimentInfo.newDescription,
-            startDate: experimentInfo.newStartDate,
-            shouldUpdateStartDate: experimentInfo.shouldUpdateStartDate
-        }),
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+export const updateExperimentThroughAPI = async (
+    experimentInfo: UpdateExperimentArgs
+): Promise<UpdateExperimentArgs> => {
+    const apiResponse = await fetch(
+        "/api/experiments/" +
+            experimentInfo.experimentId.toString() +
+            "/updateExperiment",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                title: experimentInfo.newTitle,
+                description: experimentInfo.newDescription,
+                startDate: experimentInfo.newStartDate,
+                shouldUpdateStartDate: experimentInfo.shouldUpdateStartDate,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+    
     if (apiResponse.status > 300) {
-        // Note: this is broken, should probably use the error message from the server
+        // Note: this is broken, should use some other error code, maybe in the API response
         if (apiResponse.status === TITLE_IS_TAKEN_CODE) {
             throw new Error("Title is taken already, pick another");
         } else {
             throw new Error("An error occurred");
         }
-
     }
     return experimentInfo;
-}
+};
