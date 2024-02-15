@@ -1,20 +1,19 @@
 import { ServerPaginationArgs } from "../hooks/useServerPagination";
-import {
-    AssayJSON,
-    JSONToAssay,
-    JSONToExperiment
-} from "./jsonConversions";
+import { AssayJSON, JSONToAssay, JSONToExperiment } from "./jsonConversions";
 import {
     ExperimentInfo,
     ExperimentCreationArgs,
     ExperimentCreationResponse,
-    ExperimentTable
+    ExperimentTable,
 } from "./types";
 import { Experiment } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { encodePaging, relativeURL } from "./url";
 
-export const fetchExperimentList = async (searchQuery: string, paging: ServerPaginationArgs): Promise<ExperimentTable> => {
+export const fetchExperimentList = async (
+    searchQuery: string,
+    paging: ServerPaginationArgs
+): Promise<ExperimentTable> => {
     const url = encodePaging(relativeURL("/api/experiments/search"), paging);
     url.searchParams.set("query", searchQuery);
 
@@ -31,11 +30,11 @@ export const fetchExperimentList = async (searchQuery: string, paging: ServerPag
         return {
             ...table,
             // Convert the startDate from string to Date
-            rows: table.rows.map(experiment => ({
+            rows: table.rows.map((experiment) => ({
                 ...experiment,
                 startDate: new Date(experiment.startDate),
-            }))
-        }
+            })),
+        };
     }
 
     throw new ApiError(response.status, resJson.message);
@@ -57,7 +56,6 @@ export const createExperiment = async (
         return {
             experiment: JSONToExperiment(resJson.experiment),
             conditions: resJson.conditions,
-            assayTypes: resJson.assayTypes,
         };
     } else {
         throw new ApiError(response.status, resJson.message);
@@ -79,7 +77,6 @@ export const fetchExperimentInfo = async (
         return {
             experiment: JSONToExperiment(resJson.experiment),
             conditions: resJson.conditions,
-            assayTypes: resJson.assayTypes,
             assays: resJson.assays.map((assay: AssayJSON) =>
                 JSONToAssay(assay)
             ),
@@ -126,35 +123,40 @@ export const deleteExperiment = async (
 };
 
 export interface UpdateExperimentArgs {
-    experimentId : number;
-    newTitle : string;
-    newDescription : string | null;
-    newStartDate : Date;
-    shouldUpdateStartDate : boolean;
-
+    experimentId: number;
+    newTitle: string;
+    newDescription: string | null;
+    newStartDate: Date;
+    shouldUpdateStartDate: boolean;
 }
 
 export const TITLE_IS_TAKEN_CODE = 400;
-export const updateExperimentThroughAPI = async (experimentInfo : UpdateExperimentArgs) : Promise<UpdateExperimentArgs> => {
-    const apiResponse = await fetch("/api/experiments/" + experimentInfo.experimentId.toString() + "/updateExperiment", {
-        method: "POST",
-        body : JSON.stringify( {
-            title : experimentInfo.newTitle, 
-            description : experimentInfo.newDescription,
-            startDate : experimentInfo.newStartDate,
-            shouldUpdateStartDate : experimentInfo.shouldUpdateStartDate
-        }),
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+export const updateExperimentThroughAPI = async (
+    experimentInfo: UpdateExperimentArgs
+): Promise<UpdateExperimentArgs> => {
+    const apiResponse = await fetch(
+        "/api/experiments/" +
+            experimentInfo.experimentId.toString() +
+            "/updateExperiment",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                title: experimentInfo.newTitle,
+                description: experimentInfo.newDescription,
+                startDate: experimentInfo.newStartDate,
+                shouldUpdateStartDate: experimentInfo.shouldUpdateStartDate,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
     if (apiResponse.status > 300) {
-        if (apiResponse.status === TITLE_IS_TAKEN_CODE){
+        if (apiResponse.status === TITLE_IS_TAKEN_CODE) {
             throw new Error("Title is taken already, pick another");
         } else {
             throw new Error("An error occurred");
         }
-        
     }
     return experimentInfo;
-}
+};
