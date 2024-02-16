@@ -141,8 +141,8 @@ const ExperimentTable: React.FC = () => {
                                 condition.id
                             ).map((assay) => {
                                 return (
-                                    <Typography key={assay.typeId}>
-                                        {assay.typeId}
+                                    <Typography key={assay.type}>
+                                        {assay.type}
                                     </Typography>
                                 );
                             })}

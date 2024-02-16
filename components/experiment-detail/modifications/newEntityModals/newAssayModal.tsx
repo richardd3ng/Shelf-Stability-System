@@ -39,7 +39,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
         createAssayInDB({
             experimentId: experimentId,
             conditionId: props.conditionId,
-            typeId: assayTypeId,
+            type: assayTypeId,
             target_date: data?.experiment.start_date
                 .plusWeeks(props.week) ?? null,
             result: null,
