@@ -38,6 +38,18 @@ export type AssayTable = {
     rowCount: number;
 };
 
+export type UserInfo = {
+    username: string;
+    isAdmin: boolean;
+};
+
+export type UserTable = {
+    // Rows on this page
+    rows: UserInfo[];
+    // Rows in the whole table
+    rowCount: number;
+};
+
 export type AssayCreationArgs = Omit<Assay, "id">;
 export type ConditionCreationArgs = Omit<Condition, "id">;
 
