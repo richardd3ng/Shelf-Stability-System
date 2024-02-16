@@ -8,11 +8,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Auth {
-  id          Int         @id @default(autoincrement())
-  username    String      @unique
-  password    String      
-  lastUpdated DateTime
+model User {
+  id             Int      @id @default(autoincrement())
+  username       String   @unique
+  password       String
+  is_admin       Boolean? @default(false)
+  is_super_admin Boolean? @default(false)
+  experiments    Experiment[]
 }
 
 
@@ -21,11 +23,10 @@ model Experiment {
   title       String      @unique
   description String?
   start_date  DateTime    @db.Date
-
-  conditions Condition[]  
-  assayTypes AssayType[]  
-
-  Assay Assay[]           
+  owner       User        @relation(fields: [ownerId], references: [id])
+  ownerId     Int 
+  conditions  Condition[]
+  assays      Assay[]          
 }
 
 model Assay {
@@ -34,19 +35,21 @@ model Assay {
   experimentId Int
   condition    Condition  @relation(fields: [conditionId], references: [id])
   conditionId  Int
-  type         AssayType  @relation(fields: [typeId], references: [id])
-  typeId       Int
-  target_date  DateTime   @db.Date
-  result       String?
+  result       AssayResult?
+  type         Int
+  week         Int
+  @@unique([experimentId, conditionId, week, type], name: "UniqueAssayTypePerWeekAndCondition")
 }
 
-model AssayType {
-  id           Int        @id @default(autoincrement())
-  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
-  experimentId Int
-  name         String
-  Assay        Assay[]
+model AssayResult {
+  id          Int      @id @default(autoincrement())
+  assay       Assay    @relation(fields: [assayId], references: [id])
+  assayId     Int      @unique
+  result      Float?
+  comment     String?
+  last_editor String
 }
+
 
 
 model Condition {
@@ -56,4 +59,6 @@ model Condition {
   name         String
   control      Boolean?   @default(false)
   Assay        Assay[]
+
+  @@unique([experimentId, name], name: "UniqueExperimentConditionName")
 }
