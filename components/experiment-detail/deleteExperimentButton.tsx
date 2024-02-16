@@ -1,6 +1,6 @@
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId"
 import { ButtonWithConfirmationLoadingAndError } from "../shared/buttonWithConfirmationLoadingAndError"
-import { Container, Typography } from "@mui/material"
+import { Typography } from "@mui/material"
 import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { checkIfAnAssayHasResults } from "@/lib/checkIfAnAssayHasResults";

@@ -3,7 +3,8 @@ import { Experiment, Prisma } from "@prisma/client";
 import { db } from "@/lib/api/db";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
-import { ExperimentTable } from "@/lib/controllers/types";
+import { ExperimentTable, ExperimentTableInfo } from "@/lib/controllers/types";
+import { LocalDate, nativeJs } from "@js-joda/core";
 
 // Be very careful with this function, it's very easy to introduce SQL injection vulnerabilities
 function convertSort(field: string | string[] | undefined, order: string | string[] | undefined) {
@@ -63,8 +64,8 @@ export default async function searchExperiments(
                 ${!isNaN(queryNumber) ? Prisma.sql`OR e.id = ${queryNumber}` : Prisma.empty}
                 ${orderBy !== undefined ? Prisma.raw(`ORDER BY ${orderBy.field} ${orderBy.order}`) : Prisma.empty}
                 LIMIT ${pageSize} OFFSET ${page * pageSize}`
-                .then<(Omit<Experiment, 'start_date'> & { startDate: Date, week: number })[]>(
-                    experiments => experiments.map(experiment => ({ ...experiment, start_date: undefined, startDate: experiment.start_date }))),
+                .then<ExperimentTableInfo[]>(
+                    experiments => experiments.map(experiment => ({ ...experiment, start_date: undefined, startDate: LocalDate.from(nativeJs(experiment.start_date)) }))),
             db.experiment.count({
                 where: {
                     OR: [

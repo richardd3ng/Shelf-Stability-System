@@ -12,8 +12,8 @@ import {
     MenuItem,
 } from "@mui/material";
 import { useState } from "react";
-
-import dayjs from "dayjs";
+import { LocalDate } from "@js-joda/core";
+import { MyDatePicker } from "@/components/shared/myDatePicker";
 
 interface NewAssayModalProps {
     open: boolean;
@@ -39,10 +39,9 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
         createAssayInDB({
             experimentId: experimentId,
             conditionId: props.conditionId,
-            typeId: assayTypeId,
-            target_date: dayjs(data?.experiment.start_date)
-                .add(props.week, "week")
-                .toDate(),
+            type: assayTypeId,
+            target_date: data?.experiment.start_date
+                .plusWeeks(props.week) ?? null,
             result: null,
         });
     };

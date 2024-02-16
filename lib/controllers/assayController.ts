@@ -1,20 +1,20 @@
 import { AssayCreationArgs } from "./types";
 import { AssayTable } from "./types";
 import { ApiError } from "next/dist/server/api-utils";
-import { Dayjs } from "dayjs";
 import { ServerPaginationArgs } from "../hooks/useServerPagination";
 import { encodePaging, relativeURL } from "./url";
 import { deleteEntity } from "./deletions";
+import { LocalDate } from "@js-joda/core";
 
-export const fetchAgendaList = async (minDate: Dayjs | null, maxDate: Dayjs | null, includeRecorded: boolean, paging: ServerPaginationArgs): Promise<AssayTable> => {
+export const fetchAgendaList = async (minDate: LocalDate | null, maxDate: LocalDate | null, includeRecorded: boolean, paging: ServerPaginationArgs): Promise<AssayTable> => {
     const url = encodePaging(relativeURL("/api/assays/agenda"), paging);
 
     url.searchParams.set("include_recorded", includeRecorded.toString());
     if (minDate !== null) {
-        url.searchParams.set("minDate", minDate.format('YYYY-MM-DD'));
+        url.searchParams.set("minDate", minDate.toString());
     }
     if (maxDate !== null) {
-        url.searchParams.set("maxDate", maxDate.format('YYYY-MM-DD'));
+        url.searchParams.set("maxDate", maxDate.toString());
     }
 
     const apiResponse = await fetch(url, {
