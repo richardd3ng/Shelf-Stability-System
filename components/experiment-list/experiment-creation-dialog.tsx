@@ -27,6 +27,7 @@ import { ExperimentCreationArgs } from "@/lib/controllers/types";
 import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useAlert } from "@/lib/context/alert-context";
 import { useRouter } from "next/router";
+import { getErrorMessage } from "@/lib/api/apiHelpers";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -63,7 +64,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 await fetchDistinctAssayTypes();
             setAssayTypes(distinctAssayTypes);
         } catch (error) {
-            showAlert("error", String(error));
+            showAlert("error", getErrorMessage(error));
         }
     };
 
@@ -73,7 +74,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 await fetchDistinctConditions();
             setStorageConditions(distinctConditions);
         } catch (error) {
-            showAlert("error", String(error));
+            showAlert("error", getErrorMessage(error));
         }
     };
 
@@ -159,7 +160,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 showAlert("error", "Experiment ID is invalid!");
             }
         } catch (error) {
-            showAlert("error", String(error));
+            showAlert("error", getErrorMessage(error));
         }
         setCreationLoading(false);
         if (experimentId !== INVALID_EXPERIMENT_ID) {

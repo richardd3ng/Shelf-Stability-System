@@ -95,9 +95,9 @@ const ExperimentTable: React.FC = () => {
     const createTableColumns = (): GridColDef[] => {
         const weekColumn: GridColDef = {
             field: "week",
-            headerName: "Week",
+            headerName: "Wk",
             type: "number",
-            width: 70,
+            width: 50,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,

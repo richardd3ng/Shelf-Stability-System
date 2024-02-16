@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ExperimentCreationDialog from "@/components/experiment-list/experiment-creation-dialog";
-import Layout from "../../components/shared/layout";
-import SearchBar from "../../components/shared/search-bar";
-import Table from "../../components/shared/table";
+import Layout from "../../../components/shared/layout";
+import SearchBar from "../../../components/shared/search-bar";
+import Table from "../../../components/shared/table";
 import ViewIcon from "@mui/icons-material/Visibility";
 import { getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import {
