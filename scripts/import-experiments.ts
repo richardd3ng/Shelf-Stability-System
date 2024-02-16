@@ -1,14 +1,15 @@
 // import fs from "fs";
 // import {
 //     AssayCreationArgs,
+//     AssayTypeCreationArgsNoExperimentId,
 //     ConditionCreationArgsNoExperimentId,
 //     ExperimentCreationArgs,
 //     ExperimentCreationResponse,
 // } from "../lib/controllers/types";
 // import { JSONToExperiment } from "../lib/controllers/jsonConversions";
 // import { ApiError } from "next/dist/server/api-utils";
-// import { Condition } from "@prisma/client";
-// import dayjs from "dayjs";
+// import { AssayType, Condition } from "@prisma/client";
+// import { LocalDate } from "@js-joda/core";
 
 // interface AssayScheduleImportJSON {
 //     [condition: string]: {
@@ -108,6 +109,7 @@
 //         return {
 //             experiment: JSONToExperiment(resJson.experiment),
 //             conditions: resJson.conditions,
+//             assayTypes: resJson.assayTypes,
 //         };
 //     } else {
 //         throw new ApiError(response.status, resJson.message);
@@ -136,6 +138,14 @@
 //         const jsonData: ExperimentImportJSON[] = await readFileToJSON(filePath);
 //         const assayCreationArgsArray: AssayCreationArgs[] = [];
 //         for (const experimentImportJSON of jsonData) {
+//             const assayTypeCreationArgsNoExperimentIdArray: AssayTypeCreationArgsNoExperimentId[] =
+//                 experimentImportJSON.assay_types.map(
+//                     (assayType: string) => {
+//                         return {
+//                             name: assayType,
+//                         };
+//                     }
+//                 );
 //             const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
 //                 experimentImportJSON.storage_conditions.map(
 //                     (condition: string, index: number) => {
@@ -151,6 +161,8 @@
 //                 start_date: new Date(
 //                     experimentImportJSON.start_date
 //                 ).toISOString(),
+//                 assayTypeCreationArgsNoExperimentIdArray:
+//                     assayTypeCreationArgsNoExperimentIdArray,
 //                 conditionCreationArgsNoExperimentIdArray:
 //                     conditionCreationArgsNoExperimentIdArray,
 //             };
@@ -158,7 +170,13 @@
 //                 experimentData
 //                 // cookie
 //             );
-//             const createdConditions: Condition[] = experimentResJson.conditions;
+//             const createdAssayTypes: AssayType[] =
+//                 experimentResJson.assayTypes;
+//             const createdConditions: Condition[] =
+//                 experimentResJson.conditions;
+//             const assayTypeToId = new Map<string, number>(
+//                 createdAssayTypes.map((type) => [type.name, type.id])
+//             );
 //             const conditionToId = new Map<string, number>(
 //                 createdConditions.map((condition) => [
 //                     condition.name,
@@ -166,9 +184,15 @@
 //                 ])
 //             );
 //             for (const condition in experimentImportJSON.assay_schedule) {
-//                 const schedule = experimentImportJSON.assay_schedule[condition];
+//                 const schedule =
+//                     experimentImportJSON.assay_schedule[condition];
 //                 for (const week in schedule) {
 //                     for (const assayType of schedule[week]) {
+//                         if (!assayTypeToId.has(assayType)) {
+//                             throw new Error(
+//                                 `Bad JSON data: Assay type ${assayType} not found in database`
+//                             );
+//                         }
 //                         if (!conditionToId.has(condition)) {
 //                             throw new Error(
 //                                 `Bad JSON data: Condition ${condition} not found in database`
@@ -177,10 +201,12 @@
 //                         assayCreationArgsArray.push({
 //                             experimentId: experimentResJson.experiment.id,
 //                             typeId: Number(assayTypeToId.get(assayType)),
-//                             conditionId: Number(conditionToId.get(condition)),
-//                             target_date: dayjs(experimentImportJSON.start_date)
-//                                 .add(parseInt(week), "weeks")
-//                                 .toDate(),
+//                             conditionId: Number(
+//                                 conditionToId.get(condition)
+//                             ),
+//                             target_date: LocalDate.parse(
+//                                 experimentImportJSON.start_date
+//                             ).plusWeeks(parseInt(week)),
 //                             result: null,
 //                         });
 //                         for (const assayResult of experimentImportJSON.assay_results) {

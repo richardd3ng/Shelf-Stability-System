@@ -8,6 +8,7 @@ import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoading
 import { ExperimentEditingContext } from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { checkIfAnAssayHasResults } from "../../../../lib/checkIfAnAssayHasResults";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
+import { LocalDate } from "@js-joda/core";
 
 export const ExperimentEditorModal = () => {
     const { isEditing, setIsEditing } = useContext(ExperimentEditingContext);
@@ -22,8 +23,8 @@ export const ExperimentEditorModal = () => {
     const DEFAULT_RESULT = "";
     const [newTitle, setNewTitle] = useState<string>(DEFAULT_RESULT);
     const [newDescription, setNewDescription] = useState<string | null>(null);
-    const [newStartDate, setNewStartDate] = useState<Date>(
-        new Date(Date.now())
+    const [newStartDate, setNewStartDate] = useState<LocalDate | null>(
+        LocalDate.now()
     );
 
     useEffect(() => {
@@ -62,8 +63,8 @@ export const ExperimentEditorModal = () => {
                 ) : (
                     <MyDatePicker
                         label="Start Date"
-                        setDate={setNewStartDate}
-                        date={newStartDate}
+                        onChange={setNewStartDate}
+                        value={newStartDate}
                     />
                 )}
 

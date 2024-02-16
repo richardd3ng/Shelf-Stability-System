@@ -13,7 +13,6 @@ import {
 } from "@mui/x-data-grid";
 import { LoadingContainer } from "@/components/shared/loading";
 import { Assay } from "@prisma/client";
-import { getDateAtMidnight, getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import Table from "@/components/shared/table";
 import AddIcon from "@mui/icons-material/Add";
@@ -37,31 +36,21 @@ interface AddAssayParams {
 
 export const getAssaysForWeekAndCondition = (
     assays: Assay[],
-    experimentStartDate: Date,
     weekNum: number,
     conditionId: number
 ): Assay[] => {
     return assays.filter((assay) => {
-        let weekDiff = getNumWeeksAfterStartDate(
-            getDateAtMidnight(experimentStartDate),
-            getDateAtMidnight(assay.target_date)
-        );
-        return weekDiff === weekNum && assay.conditionId === conditionId;
+        return assay.week === weekNum && assay.conditionId === conditionId;
     });
 };
 
 export const getAllWeeksCoveredByAssays = (
-    assays: Assay[],
-    experimentStartDate: Date
+    assays: Assay[]
 ): number[] => {
     let weeks: number[] = [];
     assays.forEach((assay) => {
-        let weekNum = getNumWeeksAfterStartDate(
-            getDateAtMidnight(experimentStartDate),
-            getDateAtMidnight(assay.target_date)
-        );
-        if (!weeks.includes(weekNum)) {
-            weeks.push(weekNum);
+        if (!weeks.includes(assay.week)){
+            weeks.push(assay.week);
         }
     });
     return weeks;
@@ -148,13 +137,12 @@ const ExperimentTable: React.FC = () => {
 
                             {getAssaysForWeekAndCondition(
                                 data.assays,
-                                data.experiment.start_date,
                                 params.row.week,
                                 condition.id
                             ).map((assay) => {
                                 return (
-                                    <Typography key={assay.typeId}>
-                                        {assay.typeId}
+                                    <Typography key={assay.type}>
+                                        {assay.type}
                                     </Typography>
                                 );
                             })}

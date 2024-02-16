@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { ExperimentEditorModal } from "../modifications/editorModals/experimentEditorModal";
 import { ExperimentEditingContext } from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { useState } from "react";
-import dayjs from "dayjs";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -50,11 +49,8 @@ export const ExperimentHeader = () => {
                                 style={{ marginBottom: 8 }}
                             >
                                 Started{" "}
-                                {data
-                                    ? dayjs
-                                          .utc(data.experiment.start_date)
-                                          .format("YYYY-MM-DD")
-                                    : null}{" "}
+                                {data?.experiment.start_date.toString() ?? null}
+                                {" "}
                                 by Richard Deng
                             </Typography>
                             {router.pathname.endsWith("report") ? null : (

@@ -5,10 +5,11 @@ import {
     ExperimentCreationArgs,
     ExperimentCreationResponse,
     ExperimentTable,
+    ExperimentData
 } from "./types";
-import { Experiment } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { encodePaging, relativeURL } from "./url";
+import { LocalDate } from "@js-joda/core";
 
 export const fetchExperimentList = async (
     searchQuery: string,
@@ -26,15 +27,15 @@ export const fetchExperimentList = async (
 
     const resJson = await response.json();
     if (response.ok) {
-        const table: ExperimentTable = resJson;
+        const table: { rows: any[], rowCount: number } = resJson;
         return {
             ...table,
             // Convert the startDate from string to Date
             rows: table.rows.map((experiment) => ({
                 ...experiment,
-                startDate: new Date(experiment.startDate),
-            })),
-        };
+                startDate: LocalDate.parse(experiment.startDate),
+            }))
+        }
     }
 
     throw new ApiError(response.status, resJson.message);
@@ -106,7 +107,7 @@ export const hasRecordedAssayResults = async (
 
 export const deleteExperiment = async (
     experimentId: number
-): Promise<Experiment> => {
+): Promise<ExperimentData> => {
     const endpoint = `/api/experiments/${experimentId.toString()}/delete`;
     const response = await fetch(endpoint, {
         method: "GET",
@@ -126,7 +127,7 @@ export interface UpdateExperimentArgs {
     experimentId: number;
     newTitle: string;
     newDescription: string | null;
-    newStartDate: Date;
+    newStartDate: LocalDate | null;
     shouldUpdateStartDate: boolean;
 }
 
@@ -151,7 +152,9 @@ export const updateExperimentThroughAPI = async (
             },
         }
     );
+    
     if (apiResponse.status > 300) {
+        // Note: this is broken, should use some other error code, maybe in the API response
         if (apiResponse.status === TITLE_IS_TAKEN_CODE) {
             throw new Error("Title is taken already, pick another");
         } else {

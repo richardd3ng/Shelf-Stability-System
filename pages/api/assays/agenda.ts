@@ -2,9 +2,10 @@ import {db} from "@/lib/api/db";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { AssayInfo, AssayTable } from "@/lib/controllers/types";
 import { Prisma } from "@prisma/client";
-import dayjs, { Dayjs } from "dayjs";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
+import { LocalDate, ZoneId, convert, nativeJs } from "@js-joda/core";
+import { localDateToJsDate } from "@/lib/datesUtils";
 
 // Be very careful with this function, it's very easy to introduce SQL injection vulnerabilities
 function convertSort(field: string | string[] | undefined, order: string | string[] | undefined) {
@@ -40,8 +41,9 @@ function convertSort(field: string | string[] | undefined, order: string | strin
 }
 
 export default async function getAssays(req: NextApiRequest, res: NextApiResponse<AssayTable | ApiError>) {
-    const minDate = req.query.minDate ? dayjs(req.query.minDate as string) : undefined;
-    const maxDate = req.query.maxDate ? dayjs(req.query.maxDate as string) : undefined;
+    // Convert to LocalDate and back for validation
+    const minDate = req.query.minDate ? localDateToJsDate(LocalDate.parse(req.query.minDate as string)) : undefined;
+    const maxDate = req.query.maxDate ? localDateToJsDate(LocalDate.parse(req.query.maxDate as string)) : undefined;
     const includeRecorded = req.query.include_recorded === "true";
 
     const orderBy = convertSort(req.query.sort_by, req.query.sort_order);
@@ -57,7 +59,6 @@ export default async function getAssays(req: NextApiRequest, res: NextApiRespons
         return;
     }
 
-
     const [assays, totalRows] = await Promise.all([
         // TODO look at views instead?
         db.$queryRaw<AssayInfo[]>`SELECT a.id, a.target_date as "targetDate", e.title, a."experimentId" as "experimentId", c.name as condition, t.name as type, ROUND((a.target_date - e.start_date) / 7.0) as week, a.result
@@ -68,8 +69,8 @@ export default async function getAssays(req: NextApiRequest, res: NextApiRespons
             LATERAL (SELECT name FROM public."AssayType" WHERE a."typeId" = id) t
         
             WHERE TRUE
-                ${maxDate !== undefined ? Prisma.sql`AND a.target_date <= ${maxDate.toDate()}` : Prisma.empty}
-                ${minDate !== undefined ? Prisma.sql`AND a.target_date >= ${minDate.toDate()}` : Prisma.empty}
+                ${maxDate !== undefined ? Prisma.sql`AND a.target_date <= ${maxDate}` : Prisma.empty}
+                ${minDate !== undefined ? Prisma.sql`AND a.target_date >= ${minDate}` : Prisma.empty}
                 ${includeRecorded ? Prisma.empty : Prisma.sql`AND a.result ISNULL`}
             ${orderBy !== undefined ? Prisma.raw(`ORDER BY ${orderBy.field} ${orderBy.order}`) : Prisma.empty}
             LIMIT ${pageSize} OFFSET ${page * pageSize}`
@@ -77,7 +78,7 @@ export default async function getAssays(req: NextApiRequest, res: NextApiRespons
             ,
         db.assay.count({
             where: {
-                target_date: { gte: minDate?.toDate(), lte: maxDate?.toDate() },
+                target_date: { gte: minDate, lte: maxDate },
                 result: includeRecorded ? undefined : null
             }
         })
