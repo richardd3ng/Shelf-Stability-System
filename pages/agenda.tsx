@@ -1,25 +1,32 @@
 import Layout from "@/components/shared/layout";
 import { fetchAgendaList } from "@/lib/controllers/assayController";
 import { AssayInfo, AssayTable } from "@/lib/controllers/types";
-import { Box, Stack, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import {
-    DataGrid,
-    GridColDef
-} from "@mui/x-data-grid";
+    Box,
+    Stack,
+    Checkbox,
+    FormControlLabel,
+    IconButton,
+} from "@mui/material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
-import { useServerPagination, ServerPaginationArgs } from "@/lib/hooks/useServerPagination";
+import {
+    useServerPagination,
+    ServerPaginationArgs,
+} from "@/lib/hooks/useServerPagination";
 import { AgendaContext } from "@/lib/context/agendaPage/agendaContext";
 import { AssayOptionsBox } from "@/components/agenda/assayOptionsBox";
-import { AssayResultEditorOnAgenda } from "@/components/agenda/assayResultEditorOnAgenda";
+// import { AssayResultEditorOnAgenda } from "@/components/agenda/assayResultEditorOnAgenda";
 
 const colDefs: GridColDef[] = [
     {
         field: "targetDate",
         headerName: "Target Date",
         type: "date",
-        valueFormatter: (params: any) => dayjs.utc(params.value).format("YYYY-MM-DD"),
+        valueFormatter: (params: any) =>
+            dayjs.utc(params.value).format("YYYY-MM-DD"),
         flex: 2,
     },
     {
@@ -54,16 +61,22 @@ const colDefs: GridColDef[] = [
         headerAlign: "center",
         disableColumnMenu: true,
         sortable: false,
-        renderCell: params => (
-            <AssayOptionsBox assayId={params.row.id} experimentId={params.row.experimentId}/>
+        renderCell: (params) => (
+            <AssayOptionsBox
+                assayId={params.row.id}
+                experimentId={params.row.experimentId}
+            />
         ),
     },
 ];
 
 export default function AssayAgenda() {
-    const [fromDate, setFromDate] = useState<Dayjs | null>(dayjs().subtract(1, "week"));
+    const [fromDate, setFromDate] = useState<Dayjs | null>(
+        dayjs().subtract(1, "week")
+    );
     const [toDate, setToDate] = useState<Dayjs | null>(null);
-    const [recordedAssaysOnly, setRecordedAssaysOnly] = useState<boolean>(false);
+    const [recordedAssaysOnly, setRecordedAssaysOnly] =
+        useState<boolean>(false);
     const [isEditingAnAssay, setIsEditingAnAssay] = useState<boolean>(false);
     const [assayIdBeingEdited, setAssayIdBeingEdited] = useState<number>(-1);
 
@@ -91,28 +104,46 @@ export default function AssayAgenda() {
         ],
         {
             pageSize: 15,
-            page: 0
-        });
+            page: 0,
+        }
+    );
 
     useEffect(() => {
         reload();
     }, [fromDate, toDate, recordedAssaysOnly]);
-    
 
     return (
         <Layout>
-            <AgendaContext.Provider value={{reload, rows, setRows, assayIdBeingEdited, setAssayIdBeingEdited, isEditing : isEditingAnAssay, setIsEditing : setIsEditingAnAssay}}>
+            <AgendaContext.Provider
+                value={{
+                    reload,
+                    rows,
+                    setRows,
+                    assayIdBeingEdited,
+                    setAssayIdBeingEdited,
+                    isEditing: isEditingAnAssay,
+                    setIsEditing: setIsEditingAnAssay,
+                }}
+            >
                 <Stack spacing={2}>
                     <Box display="flex" flexDirection="row" sx={{ px: 2 }}>
                         <Stack direction="row" spacing={2}>
                             <DatePicker
                                 value={fromDate}
-                                onChange={(val, context) => context.validationError === null ? setFromDate(val) : null}
+                                onChange={(val, context) =>
+                                    context.validationError === null
+                                        ? setFromDate(val)
+                                        : null
+                                }
                                 label="From"
                             />
                             <DatePicker
                                 value={toDate}
-                                onChange={(val, context) => context.validationError === null ? setToDate(val) : null}
+                                onChange={(val, context) =>
+                                    context.validationError === null
+                                        ? setToDate(val)
+                                        : null
+                                }
                                 label="To"
                             />
                         </Stack>
@@ -150,7 +181,7 @@ export default function AssayAgenda() {
                         }
                         disableColumnMenu
                     />
-                    <AssayResultEditorOnAgenda/>
+                    {/* <AssayResultEditorOnAgenda /> */}
                 </Stack>
             </AgendaContext.Provider>
         </Layout>

@@ -1,10 +1,11 @@
 import { ServerPaginationArgs } from "../hooks/useServerPagination";
-import { AssayJSON, JSONToAssay, JSONToExperiment } from "./jsonConversions";
+import { JSONToExperiment } from "./jsonConversions";
 import {
     ExperimentInfo,
     ExperimentCreationArgs,
     ExperimentCreationResponse,
     ExperimentTable,
+    ExperimentUpdateArgs,
 } from "./types";
 import { Experiment } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
@@ -16,14 +17,12 @@ export const fetchExperimentList = async (
 ): Promise<ExperimentTable> => {
     const url = encodePaging(relativeURL("/api/experiments/search"), paging);
     url.searchParams.set("query", searchQuery);
-
     const response = await fetch(url, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
     });
-
     const resJson = await response.json();
     if (response.ok) {
         const table: ExperimentTable = resJson;
@@ -36,13 +35,13 @@ export const fetchExperimentList = async (
             })),
         };
     }
-
     throw new ApiError(response.status, resJson.message);
 };
 
 export const createExperiment = async (
     experimentData: ExperimentCreationArgs
 ): Promise<ExperimentCreationResponse> => {
+    console.log("controller experimentData:", experimentData);
     const endpoint = "/api/experiments/create";
     const response = await fetch(endpoint, {
         method: "POST",
@@ -57,15 +56,14 @@ export const createExperiment = async (
             experiment: JSONToExperiment(resJson.experiment),
             conditions: resJson.conditions,
         };
-    } else {
-        throw new ApiError(response.status, resJson.message);
     }
+    throw new ApiError(response.status, resJson.message);
 };
 
 export const fetchExperimentInfo = async (
-    experimentId: number
+    id: number
 ): Promise<ExperimentInfo> => {
-    const endpoint = `/api/experiments/${experimentId.toString()}/fetchExperimentInfo`;
+    const endpoint = `/api/experiments/${id}/fetchExperimentInfo`;
     const response = await fetch(endpoint, {
         method: "GET",
         headers: {
@@ -77,19 +75,15 @@ export const fetchExperimentInfo = async (
         return {
             experiment: JSONToExperiment(resJson.experiment),
             conditions: resJson.conditions,
-            assays: resJson.assays.map((assay: AssayJSON) =>
-                JSONToAssay(assay)
-            ),
+            assays: resJson.assays,
+            assayResults: resJson.assayResults,
         };
-    } else {
-        throw new ApiError(response.status, resJson.message);
     }
+    throw new ApiError(response.status, resJson.message);
 };
 
-export const hasRecordedAssayResults = async (
-    experimentId: number
-): Promise<Boolean> => {
-    const endpoint = `/api/experiments/${experimentId.toString()}/hasRecordedResults`;
+export const hasRecordedAssayResults = async (id: number): Promise<Boolean> => {
+    const endpoint = `/api/experiments/${id}/hasRecordedResults`;
     const response = await fetch(endpoint, {
         method: "GET",
         headers: {
@@ -99,15 +93,12 @@ export const hasRecordedAssayResults = async (
     let resJson = await response.json();
     if (response.ok) {
         return resJson;
-    } else {
-        throw new ApiError(response.status, resJson.message);
     }
+    throw new ApiError(response.status, resJson.message);
 };
 
-export const deleteExperiment = async (
-    experimentId: number
-): Promise<Experiment> => {
-    const endpoint = `/api/experiments/${experimentId.toString()}/delete`;
+export const deleteExperiment = async (id: number): Promise<Experiment> => {
+    const endpoint = `/api/experiments/${id}/delete`;
     const response = await fetch(endpoint, {
         method: "GET",
         headers: {
@@ -117,46 +108,29 @@ export const deleteExperiment = async (
     let resJson = await response.json();
     if (response.ok) {
         return JSONToExperiment(resJson);
-    } else {
-        throw new ApiError(response.status, resJson.message);
     }
+    throw new ApiError(response.status, resJson.message);
 };
 
-export interface UpdateExperimentArgs {
-    experimentId: number;
-    newTitle: string;
-    newDescription: string | null;
-    newStartDate: Date;
-    shouldUpdateStartDate: boolean;
-}
-
-export const TITLE_IS_TAKEN_CODE = 400;
-export const updateExperimentThroughAPI = async (
-    experimentInfo: UpdateExperimentArgs
-): Promise<UpdateExperimentArgs> => {
-    const apiResponse = await fetch(
-        "/api/experiments/" +
-            experimentInfo.experimentId.toString() +
-            "/updateExperiment",
-        {
-            method: "POST",
-            body: JSON.stringify({
-                title: experimentInfo.newTitle,
-                description: experimentInfo.newDescription,
-                startDate: experimentInfo.newStartDate,
-                shouldUpdateStartDate: experimentInfo.shouldUpdateStartDate,
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
-    );
-    if (apiResponse.status > 300) {
-        if (apiResponse.status === TITLE_IS_TAKEN_CODE) {
-            throw new Error("Title is taken already, pick another");
-        } else {
-            throw new Error("An error occurred");
-        }
+export const updateExperiment = async (
+    experiment: ExperimentUpdateArgs
+): Promise<Experiment> => {
+    const endpoint = `/api/experiments/${experiment.id}/update`;
+    const response = await fetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify({
+            title: experiment.title,
+            description: experiment.description,
+            startDate: experiment.startDate,
+            ownerId: experiment.ownerId,
+        }),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
     }
-    return experimentInfo;
+    throw new ApiError(response.status, resJson.message);
 };

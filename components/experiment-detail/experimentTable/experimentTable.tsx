@@ -1,8 +1,5 @@
 import { ExperimentInfo } from "@/lib/controllers/types";
-import {
-    INVALID_EXPERIMENT_ID,
-    useExperimentId,
-} from "@/lib/hooks/experimentDetailPage/useExperimentId";
+import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import React, { useState } from "react";
 import { useAlert } from "@/lib/context/alert-context";
@@ -18,6 +15,7 @@ import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import Table from "@/components/shared/table";
 import AddIcon from "@mui/icons-material/Add";
 import { NewAssayModal } from "../modifications/newEntityModals/newAssayModal";
+import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 
 interface WeekRow {
     id: number;
@@ -37,31 +35,19 @@ interface AddAssayParams {
 
 export const getAssaysForWeekAndCondition = (
     assays: Assay[],
-    experimentStartDate: Date,
     weekNum: number,
     conditionId: number
 ): Assay[] => {
     return assays.filter((assay) => {
-        let weekDiff = getNumWeeksAfterStartDate(
-            getDateAtMidnight(experimentStartDate),
-            getDateAtMidnight(assay.target_date)
-        );
-        return weekDiff === weekNum && assay.conditionId === conditionId;
+        return assay.week === weekNum && assay.conditionId === conditionId;
     });
 };
 
-export const getAllWeeksCoveredByAssays = (
-    assays: Assay[],
-    experimentStartDate: Date
-): number[] => {
+export const getAllWeeksCoveredByAssays = (assays: Assay[]): number[] => {
     let weeks: number[] = [];
-    assays.forEach((assay) => {
-        let weekNum = getNumWeeksAfterStartDate(
-            getDateAtMidnight(experimentStartDate),
-            getDateAtMidnight(assay.target_date)
-        );
-        if (!weeks.includes(weekNum)) {
-            weeks.push(weekNum);
+    assays.forEach((assay: Assay) => {
+        if (!weeks.includes(assay.week)) {
+            weeks.push(assay.week);
         }
     });
     return weeks;
@@ -82,9 +68,6 @@ const ExperimentTable: React.FC = () => {
 
     if (isLoading) {
         return <LoadingContainer />;
-    } else if (experimentId === INVALID_EXPERIMENT_ID) {
-        showAlert("error", "Invalid experiment ID");
-        return <></>;
     } else if (isError) {
         showAlert("error", "Error loading experiment data");
         return <></>;
@@ -148,13 +131,12 @@ const ExperimentTable: React.FC = () => {
 
                             {getAssaysForWeekAndCondition(
                                 data.assays,
-                                data.experiment.start_date,
                                 params.row.week,
                                 condition.id
                             ).map((assay) => {
                                 return (
-                                    <Typography key={assay.typeId}>
-                                        {assay.typeId}
+                                    <Typography key={assay.type}>
+                                        {assayTypeIdToName(assay.type)}
                                     </Typography>
                                 );
                             })}

@@ -42,11 +42,8 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
         createAssayInDB({
             experimentId: experimentId,
             conditionId: props.conditionId,
-            typeId: assayTypeNameToId(selectedAssayType),
-            target_date: dayjs(data?.experiment.start_date)
-                .add(props.week, "week")
-                .toDate(),
-            result: null,
+            type: assayTypeNameToId(selectedAssayType),
+            week: props.week,
         });
     };
     return (

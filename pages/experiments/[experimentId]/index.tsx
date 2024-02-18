@@ -7,12 +7,9 @@ import { ExperimentHeader } from "@/components/experiment-detail/summary/experim
 import { Container, Typography, Button, Stack } from "@mui/material";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useRouter } from "next/router";
-import { ButtonWithConfirmationLoadingAndError } from "@/components/shared/buttonWithConfirmationLoadingAndError";
-import { DeleteExperimentButton } from "@/components/experiment-detail/deleteExperimentButton";
+// import { DeleteExperimentButton } from "@/components/experiment-detail/deleteExperimentButton";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
-import { checkIfAnAssayHasResults } from "@/lib/checkIfAnAssayHasResults";
-import { Assay } from "@prisma/client";
 import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
 
 export default function ExperimentPage() {
@@ -64,7 +61,7 @@ export default function ExperimentPage() {
                                 </Typography>
                             </Button>
                         </Typography>
-                        <DeleteExperimentButton />
+                        {/* <DeleteExperimentButton /> */}
                     </Stack>
                 </Container>
             </AssayEditingContext.Provider>

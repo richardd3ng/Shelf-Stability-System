@@ -3,33 +3,41 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { Experiment } from "@prisma/client";
 import { getApiError } from "@/lib/api/error";
-import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { getExperimentID } from "@/lib/api/apiHelpers";
-import { throwErrorIfExperimentHasAssaysWithResults } from "@/lib/api/checkForRecordedAssays";
+import { experimentHasAssaysWithResults } from "@/lib/api/validations";
+import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
+import { INVALID_EXPERIMENT_ID, getExperimentID } from "@/lib/api/apiHelpers";
 
-export default async function deleteExperiment(
+export default async function deleteExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<Experiment | ApiError>
 ) {
-    const experimentId = getExperimentID(req);
-    await throwErrorIfExperimentHasAssaysWithResults(experimentId);
-    if (experimentId === INVALID_EXPERIMENT_ID) {
+    const id = getExperimentID(req);
+    if (id === INVALID_EXPERIMENT_ID) {
         res.status(400).json(
             getApiError(400, "Valid Experiment ID is required.")
         );
         return;
     }
     try {
+        if (await experimentHasAssaysWithResults(id)) {
+            res.status(CONSTRAINT_ERROR_CODE).json(
+                getApiError(
+                    CONSTRAINT_ERROR_CODE,
+                    "Cannot delete experiment with recorded assay results"
+                )
+            );
+            return;
+        }
         const deletedExperiment: Experiment | null = await db.experiment.delete(
             {
-                where: { id: experimentId },
+                where: { id: id },
             }
         );
         if (!deletedExperiment) {
             res.status(404).json(
                 getApiError(
                     404,
-                    `Experiment ${experimentId} does not exist or was already deleted`,
+                    `Experiment ${id} does not exist or was already deleted`,
                     "Experiment Not Found"
                 )
             );
@@ -39,10 +47,7 @@ export default async function deleteExperiment(
     } catch (error) {
         console.error(error);
         res.status(500).json(
-            getApiError(
-                500,
-                `Failed to delete experiment ${experimentId} on server`
-            )
+            getApiError(500, `Failed to delete experiment ${id} on server`)
         );
     }
 }

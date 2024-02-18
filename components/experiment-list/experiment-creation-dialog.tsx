@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
     Box,
     Button,
@@ -16,15 +16,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
 import dayjs from "dayjs";
-import { fetchDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
-import { fetchDistinctConditions } from "@/lib/controllers/conditionController";
 import { createExperiment } from "@/lib/controllers/experimentController";
 import {
     ConditionCreationArgsNoExperimentId,
     ExperimentCreationResponse,
 } from "@/lib/controllers/types";
 import { ExperimentCreationArgs } from "@/lib/controllers/types";
-import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useAlert } from "@/lib/context/alert-context";
 import { useRouter } from "next/router";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
@@ -43,7 +40,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [date, setDate] = useState<Date | null>(dayjs().toDate());
-    const [assayTypes, setAssayTypes] = useState<string[]>([]);
     const [storageConditions, setStorageConditions] = useState<string[]>([]);
     const [selectedStorageConditions, setSelectedStorageConditions] = useState<
         string[]
@@ -52,31 +48,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [creationLoading, setCreationLoading] = useState<boolean>(false);
     const { showAlert } = useAlert();
     const router = useRouter();
-
-    useEffect(() => {
-        fetchAndSetAssayTypes();
-        fetchAndSetStorageConditions();
-    }, []);
-
-    const fetchAndSetAssayTypes = async () => {
-        try {
-            const distinctAssayTypes: string[] =
-                await fetchDistinctAssayTypes();
-            setAssayTypes(distinctAssayTypes);
-        } catch (error) {
-            showAlert("error", getErrorMessage(error));
-        }
-    };
-
-    const fetchAndSetStorageConditions = async () => {
-        try {
-            const distinctConditions: string[] =
-                await fetchDistinctConditions();
-            setStorageConditions(distinctConditions);
-        } catch (error) {
-            showAlert("error", getErrorMessage(error));
-        }
-    };
 
     const handleDateChange = (dayjs: dayjs.Dayjs | null) => {
         if (dayjs) {
@@ -135,7 +106,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             return;
         }
         setCreationLoading(true);
-        let experimentId = INVALID_EXPERIMENT_ID;
         try {
             const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
                 selectedStorageConditions.map(
@@ -152,25 +122,20 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 start_date: dayjs.utc(date!).toISOString(),
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
+                ownerId: 1, // TODO: Replace with actual owner ID
             };
             const experimentResJson: ExperimentCreationResponse =
                 await createExperiment(experimentData);
-            experimentId = experimentResJson.experiment.id;
-            if (experimentId === INVALID_EXPERIMENT_ID) {
-                showAlert("error", "Experiment ID is invalid!");
-            }
+            showAlert(
+                "success",
+                `Successfully created experiment ${experimentResJson.experiment.id}!`
+            );
+            router.push(`/experiments/${experimentResJson.experiment.id}`);
         } catch (error) {
             showAlert("error", getErrorMessage(error));
         }
         setCreationLoading(false);
-        if (experimentId !== INVALID_EXPERIMENT_ID) {
-            showAlert(
-                "success",
-                `Successfully created experiment ${experimentId}!`
-            );
-            router.push(`/experiments/${experimentId}`);
-            closeDialog();
-        }
+        closeDialog();
     };
 
     const handleAddStorageCondition = () => {

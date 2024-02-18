@@ -3,18 +3,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { Condition } from "@prisma/client";
 import { getApiError } from "@/lib/api/error";
-import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 
-export default async function createConditions(
+export default async function createConditionsAPI(
     req: NextApiRequest,
     res: NextApiResponse<Condition[] | ApiError>
 ) {
     try {
         const { experimentId, conditions } = req.body;
-        if (experimentId === INVALID_EXPERIMENT_ID) {
-            res.status(400).json(
-                getApiError(400, "Valid Experiment ID is required")
-            );
+        if (!experimentId) {
+            res.status(400).json(getApiError(400, "Experiment ID is required"));
             return;
         }
         if (!conditions || conditions.length === 0) {
@@ -29,6 +26,16 @@ export default async function createConditions(
                 experimentId: experimentId,
             },
         });
+        if (createdConditions.length === 0) {
+            res.status(404).json(
+                getApiError(
+                    404,
+                    "Valid experiment ID is required",
+                    "Experiment Not Found"
+                )
+            );
+            return;
+        }
         res.status(200).json(createdConditions);
     } catch (error) {
         console.error(error);

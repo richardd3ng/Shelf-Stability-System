@@ -2,7 +2,6 @@ import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDe
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Container, Typography, Button } from "@mui/material";
 import { useRouter } from "next/router";
-import { ExperimentEditorModal } from "../modifications/editorModals/experimentEditorModal";
 import { ExperimentEditingContext } from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { useState } from "react";
 import dayjs from "dayjs";
@@ -69,7 +68,6 @@ export const ExperimentHeader = () => {
                                     >
                                         <Typography>Edit Metadata</Typography>
                                     </Button>
-                                    <ExperimentEditorModal />
                                 </>
                             )}
                         </Container>

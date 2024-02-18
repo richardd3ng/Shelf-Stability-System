@@ -3,29 +3,22 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { Prisma } from "@prisma/client";
+import { getErrorMessage } from "@/lib/api/apiHelpers";
 
-export default async function createManyAssay(
+export default async function createManyAssayAPI(
     req: NextApiRequest,
-    res: NextApiResponse<Prisma.BatchPayload | never[] | ApiError>
+    res: NextApiResponse<Prisma.BatchPayload | ApiError>
 ) {
+    const { assays } = req.body;
     try {
-        const { assays } = req.body;
-        if (!assays || assays.length === 0) {
-            res.status(200).json([]);
-            return;
-        }
         const createdAssays: Prisma.BatchPayload = await db.assay.createMany({
             data: assays,
         });
         res.status(200).json(createdAssays);
     } catch (error) {
-        console.error(error);
+        console.error(getErrorMessage(error));
         res.status(500).json(
-            getApiError(
-                500,
-                "Failed to create assays",
-                "Assay Creation Internal Server Error"
-            )
+            getApiError(500, "Failed to create assays on server")
         );
     }
 }

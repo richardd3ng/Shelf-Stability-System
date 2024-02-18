@@ -9,36 +9,39 @@ import {
     ExperimentCreationResponse,
 } from "@/lib/controllers/types";
 
-export default async function createExperiment(
+export default async function createExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentCreationResponse | ApiError>
 ) {
+    const {
+        title,
+        description,
+        start_date,
+        conditionCreationArgsNoExperimentIdArray,
+        ownerId,
+    } = req.body;
+    if (
+        !title ||
+        !start_date ||
+        !ownerId ||
+        !conditionCreationArgsNoExperimentIdArray ||
+        conditionCreationArgsNoExperimentIdArray.length === 0
+    ) {
+        res.status(400).json(
+            getApiError(
+                400,
+                "Title, start date, and at least one condition are required."
+            )
+        );
+        return;
+    }
     try {
-        const {
-            title,
-            description,
-            start_date,
-            conditionCreationArgsNoExperimentIdArray,
-        } = req.body;
-        if (
-            !title ||
-            !start_date ||
-            !conditionCreationArgsNoExperimentIdArray ||
-            conditionCreationArgsNoExperimentIdArray.length === 0
-        ) {
-            res.status(400).json(
-                getApiError(
-                    400,
-                    "Title, Start Date, and at least one condition are required."
-                )
-            );
-            return;
-        }
         const createdExperiment: Experiment = await db.experiment.create({
             data: {
                 title,
                 description,
                 start_date,
+                ownerId,
             },
         });
 
@@ -74,7 +77,7 @@ export default async function createExperiment(
                 res.status(400).json(
                     getApiError(
                         400,
-                        `An experiment with the name "${req.body.title}" already exists.`
+                        `An experiment with the name "${title}" already exists.`
                     )
                 );
                 return;

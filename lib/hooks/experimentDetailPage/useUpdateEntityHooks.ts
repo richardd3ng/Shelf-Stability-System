@@ -1,21 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useExperimentId } from "./useExperimentId";
 import { getQueryKeyForUseExperimentInfo } from "./experimentDetailHooks";
+import { updateAssay } from "@/lib/controllers/assayController";
+import { updateAssayResult } from "@/lib/controllers/assayResultController";
 import {
-    updateAssayResultThroughAPI,
-    updateAssayThroughAPI,
-} from "@/lib/controllers/assayController";
-import {
-    makeConditionTheControlThroughAPI,
-    updateConditionThroughAPI,
+    setConditionAsControl,
+    updateCondition,
 } from "@/lib/controllers/conditionController";
-import { updateExperimentThroughAPI } from "@/lib/controllers/experimentController";
+import { updateExperiment } from "@/lib/controllers/experimentController";
 
 export const useMutationToUpdateAssayResult = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     return useMutation({
-        mutationFn: updateAssayResultThroughAPI,
+        mutationFn: updateAssayResult,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
@@ -28,7 +26,7 @@ export const useMutationToUpdateAssay = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     return useMutation({
-        mutationFn: updateAssayThroughAPI,
+        mutationFn: updateAssay,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
@@ -41,7 +39,7 @@ export const useMutationToUpdateCondition = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     return useMutation({
-        mutationFn: updateConditionThroughAPI,
+        mutationFn: updateCondition,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
@@ -55,7 +53,7 @@ export const useMutationToUpdateExperiment = () => {
     const experimentId = useExperimentId();
 
     return useMutation({
-        mutationFn: updateExperimentThroughAPI,
+        mutationFn: updateExperiment,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
@@ -69,7 +67,7 @@ export const useMutationToMakeConditionTheControl = () => {
     const experimentId = useExperimentId();
 
     return useMutation({
-        mutationFn: makeConditionTheControlThroughAPI,
+        mutationFn: setConditionAsControl,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
