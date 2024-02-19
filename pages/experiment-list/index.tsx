@@ -8,7 +8,6 @@ import Layout from "../../components/shared/layout";
 import SearchBar from "../../components/shared/search-bar";
 import Table from "../../components/shared/table";
 import ViewIcon from "@mui/icons-material/Visibility";
-import { getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import {
     deleteExperiment,
     fetchExperimentList,
@@ -22,10 +21,19 @@ import {
 } from "@/lib/hooks/useServerPagination";
 import { ExperimentTable, ExperimentTableInfo } from "@/lib/controllers/types";
 import { useRouter } from "next/router";
-import { LocalDate } from "@js-joda/core";
+import { getErrorMessage } from "@/lib/api/apiHelpers";
+
+interface ExperimentData {
+    id: number;
+    title: string;
+    startDate: Date;
+    week: number;
+}
 
 const ExperimentList: React.FC = () => {
-    const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>([]);
+    const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>(
+        []
+    );
     const [showCreationDialog, setShowCreationDialog] =
         useState<boolean>(false);
     const [showDeletionDialog, setShowDeletionDialog] =
@@ -69,7 +77,7 @@ const ExperimentList: React.FC = () => {
             field: "startDate",
             headerName: "Start Date",
             type: "date",
-            valueFormatter: params => params.value?.toString() ?? "",
+            valueFormatter: (params) => params.value?.toString() ?? "",
             flex: 2,
         },
         {
@@ -108,11 +116,10 @@ const ExperimentList: React.FC = () => {
     const getExperiments = (
         paging: ServerPaginationArgs
     ): Promise<ExperimentTable> => {
-        return fetchExperimentList(searchQuery, paging)
-            .catch((error) => {
-                showAlert("error", String(error));
-                return { rows: [], rowCount: 0 };
-            });
+        return fetchExperimentList(searchQuery, paging).catch((error) => {
+            showAlert("error", getErrorMessage(error));
+            return { rows: [], rowCount: 0 };
+        });
     };
 
     const reloadExperimentData = (
@@ -180,7 +187,7 @@ const ExperimentList: React.FC = () => {
                             deletedIds.push(experimentId);
                         }
                     } catch (error) {
-                        showAlert("error", String(error));
+                        showAlert("error", getErrorMessage(error));
                     }
                 }
             );
@@ -203,7 +210,7 @@ const ExperimentList: React.FC = () => {
                 );
             }
         } catch (error) {
-            showAlert("error", String(error));
+            showAlert("error", getErrorMessage(error));
         }
     };
 
@@ -244,6 +251,7 @@ const ExperimentList: React.FC = () => {
                     columns={colDefs}
                     rows={experimentData}
                     pagination
+                    checkboxSelection
                     onDeleteRows={prepareForDeletion}
                     {...paginationProps}
                 />

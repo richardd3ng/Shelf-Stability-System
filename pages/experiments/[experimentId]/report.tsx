@@ -1,3 +1,9 @@
+import { ExperimentInfo } from "@/lib/controllers/types";
+import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
+// import { AssaysGroupedByType } from "@/components/experiment-detail/assaysGroupedByType";
+import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
+import { useState } from "react";
+import { AssayEditorModal } from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
 import { ExperimentHeader } from "@/components/experiment-detail/summary/experimentHeader";
 import { Container, Typography } from "@mui/material";
 

@@ -1,13 +1,16 @@
 import { LocalDate } from "@js-joda/core";
-import { Experiment, Condition, Assay, AssayType } from "@prisma/client";
+import { Experiment, Condition, Assay, AssayResult } from "@prisma/client";
 
-// This isn't a good name, but I don't have a better idea
-export type ExperimentData = Omit<Experiment, "start_date"> & { start_date: LocalDate };
+/* ----- Experiment ----- */
+export type ExperimentWithLocalDate = Omit<Experiment, "start_date"> & {
+    start_date: LocalDate;
+};
 
 export type ExperimentInfo = {
-    experiment: ExperimentData;
+    experiment: ExperimentWithLocalDate;
     conditions: Condition[];
     assays: Assay[];
+    assayResults: AssayResult[];
 };
 
 export type ExperimentTableInfo = {
@@ -24,15 +27,40 @@ export type ExperimentTable = {
     rowCount: number;
 };
 
+export type ExperimentCreationArgs =
+    | Omit<ExperimentWithLocalDate, "id">
+    | {
+          conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+      };
+
+export type ExperimentCreationResponse = Omit<
+    ExperimentInfo,
+    "assays" | "assayResults"
+>;
+
+export type ExperimentUpdateArgs = {
+    id: number;
+    title?: string;
+    description?: string;
+    startDate?: LocalDate;
+    ownerId?: number;
+};
+
+export type ExperimentUpdateResponse = ExperimentCreationResponse;
+
+/* ----- Assay ----- */
 export type AssayInfo = {
     id: number;
     targetDate: Date;
     title: string;
     experimentId: number;
+    experimentOwnerId: number;
     condition: string;
     week: number;
     type: string;
-    result: string | null;
+    assayResultId: number | null;
+    result: number | null;
+    comment: string | null;
 };
 
 export type AssayTable = {
@@ -42,25 +70,34 @@ export type AssayTable = {
     rowCount: number;
 };
 
-export type AssayCreationArgs = Omit<Assay, "id" | "target_date"> & { target_date: LocalDate | null };
+export type AssayCreationArgs = Omit<Assay, "id">;
+
+export type AssayUpdateArgs = {
+    id: number;
+    conditionId?: number;
+    type?: number;
+    week?: number;
+};
+
+/* ----- Condition ----- */
 export type ConditionCreationArgs = Omit<Condition, "id">;
 
 export type ConditionCreationArgsNoExperimentId = Omit<
     ConditionCreationArgs,
     "experimentId"
 >;
-export type ExperimentCreationArgs =
-    | {
-          title: string;
-          description: string;
-          start_date: string;
-      }
-    | {
-        conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
-    };
 
-export type ExperimentCreationResponse = Omit<ExperimentInfo, "assays">;
+export type ConditionUpdateArgs = {
+    id: number;
+    name?: string;
+};
 
-export type ConditionNamesResponse = {
-    name: string;
+/* ----- Assay Result ----- */
+export type AssayResultCreationArgs = Omit<AssayResult, "id" | "last_editor">;
+
+export type AssayResultUpdateArgs = {
+    id: number;
+    result?: number;
+    comment?: string;
+    // get last edited user from the session token in the backend, see lib/middleware/checkIfLoggedIn.ts
 };

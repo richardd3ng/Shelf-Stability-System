@@ -7,46 +7,51 @@ import {
     ConditionCreationArgs,
     ConditionCreationArgsNoExperimentId,
     ExperimentCreationResponse,
-    ExperimentData,
+    ExperimentWithLocalDate,
 } from "@/lib/controllers/types";
 import { LocalDate, nativeJs } from "@js-joda/core";
 import { localDateToJsDate } from "@/lib/datesUtils";
 
-export default async function createExperiment(
+export default async function createExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentCreationResponse | ApiError>
 ) {
+    const {
+        title,
+        description,
+        start_date,
+        conditionCreationArgsNoExperimentIdArray,
+        ownerId,
+    } = req.body;
+    if (
+        !title ||
+        !start_date ||
+        !ownerId ||
+        !conditionCreationArgsNoExperimentIdArray ||
+        conditionCreationArgsNoExperimentIdArray.length === 0
+    ) {
+        res.status(400).json(
+            getApiError(
+                400,
+                "Title, start date, and at least one condition are required."
+            )
+        );
+        return;
+    }
     try {
-        const {
-            title,
-            description,
-            start_date,
-            conditionCreationArgsNoExperimentIdArray,
-        } = req.body;
-        if (
-            !title ||
-            !start_date ||
-            !conditionCreationArgsNoExperimentIdArray ||
-            conditionCreationArgsNoExperimentIdArray.length === 0
-        ) {
-            res.status(400).json(
-                getApiError(
-                    400,
-                    "Title, Start Date, and at least one condition are required."
-                )
-            );
-            return;
-        }
-        const createdExperiment: ExperimentData = await db.experiment.create({
-            data: {
-                title,
-                description,
-                start_date: localDateToJsDate(LocalDate.parse(start_date)),
-            },
-        }).then((experiment) => ({
-            ...experiment,
-            start_date: nativeJs(experiment.start_date).toLocalDate(),
-        }));
+        const createdExperiment: ExperimentWithLocalDate = await db.experiment
+            .create({
+                data: {
+                    title,
+                    description,
+                    start_date: localDateToJsDate(LocalDate.parse(start_date)),
+                    ownerId: ownerId,
+                },
+            })
+            .then((experiment: Experiment) => ({
+                ...experiment,
+                start_date: nativeJs(experiment.start_date).toLocalDate(),
+            }));
 
         let conditionCreationArgsArray: ConditionCreationArgs[] =
             conditionCreationArgsNoExperimentIdArray.map(
@@ -80,13 +85,12 @@ export default async function createExperiment(
                 res.status(400).json(
                     getApiError(
                         400,
-                        `An experiment with the name "${req.body.title}" already exists.`
+                        `An experiment with the name "${title}" already exists.`
                     )
                 );
                 return;
             }
         }
-
         res.status(500).json(
             getApiError(500, "Failed to create experiment on server")
         );

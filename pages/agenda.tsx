@@ -2,15 +2,18 @@ import Layout from "@/components/shared/layout";
 import { fetchAgendaList } from "@/lib/controllers/assayController";
 import { AssayInfo, AssayTable } from "@/lib/controllers/types";
 import { Box, Stack, Checkbox, FormControlLabel } from "@mui/material";
-import {
-    DataGrid,
-    GridColDef
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
-import { useServerPagination, ServerPaginationArgs } from "@/lib/hooks/useServerPagination";
+import {
+    useServerPagination,
+    ServerPaginationArgs,
+} from "@/lib/hooks/useServerPagination";
 import { AgendaContext } from "@/lib/context/agendaPage/agendaContext";
 import { AssayOptionsBox } from "@/components/agenda/assayOptionsBox";
 import { AssayResultEditorOnAgenda } from "@/components/agenda/assayResultEditorOnAgenda";
+import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
 
@@ -19,7 +22,7 @@ const colDefs: GridColDef[] = [
         field: "targetDate",
         headerName: "Target Date",
         type: "date",
-        valueFormatter: params => params.value?.toString() ?? "",
+        valueFormatter: (params) => params.value?.toString() ?? "",
         flex: 2,
     },
     {
@@ -54,16 +57,22 @@ const colDefs: GridColDef[] = [
         headerAlign: "center",
         disableColumnMenu: true,
         sortable: false,
-        renderCell: params => (
-            <AssayOptionsBox assayId={params.row.id} experimentId={params.row.experimentId}/>
+        renderCell: (params) => (
+            <AssayOptionsBox
+                assayId={params.row.id}
+                experimentId={params.row.experimentId}
+            />
         ),
     },
 ];
 
 export default function AssayAgenda() {
-    const [fromDate, setFromDate] = useState<LocalDate | null>(LocalDate.now().minusWeeks(1));
+    const [fromDate, setFromDate] = useState<LocalDate | null>(
+        LocalDate.now().minusWeeks(1)
+    );
     const [toDate, setToDate] = useState<LocalDate | null>(null);
-    const [recordedAssaysOnly, setRecordedAssaysOnly] = useState<boolean>(false);
+    const [recordedAssaysOnly, setRecordedAssaysOnly] =
+        useState<boolean>(false);
     const [isEditingAnAssay, setIsEditingAnAssay] = useState<boolean>(false);
     const [assayIdBeingEdited, setAssayIdBeingEdited] = useState<number>(-1);
 
@@ -91,68 +100,91 @@ export default function AssayAgenda() {
         ],
         {
             pageSize: 15,
-            page: 0
-        });
+            page: 0,
+        }
+    );
 
     useEffect(() => {
         reload();
     }, [fromDate, toDate, recordedAssaysOnly]);
-    
 
     return (
         <Layout>
-            <AgendaContext.Provider value={{reload, rows, setRows, assayIdBeingEdited, setAssayIdBeingEdited, isEditing : isEditingAnAssay, setIsEditing : setIsEditingAnAssay}}>
-                <Stack spacing={2}>
-                    <Box display="flex" flexDirection="row" sx={{ px: 2 }}>
-                        <Stack direction="row" spacing={2}>
-                            <MyDatePicker
-                                value={fromDate}
-                                onChange={(val, context) => context.validationError === null ? setFromDate(val) : null}
-                                label="From"
-                            />
-                            <MyDatePicker
-                                value={toDate}
-                                onChange={(val, context) => context.validationError === null ? setToDate(val) : null}
-                                label="To"
-                            />
-                        </Stack>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            justifyContent="flex-end "
-                            flexGrow="1"
-                        >
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        value={recordedAssaysOnly}
-                                        onChange={(_, val) =>
-                                            setRecordedAssaysOnly(val)
-                                        }
-                                    />
-                                }
-                                label="Include Recorded Assays"
-                            />
+            <AssayEditingContext.Provider
+                value={{
+                    assayIdBeingEdited,
+                    setAssayIdBeingEdited,
+                    isEditing: isEditingAnAssay,
+                    setIsEditing: setIsEditingAnAssay,
+                }}
+            >
+                <AgendaContext.Provider
+                    value={{
+                        reload,
+                        rows,
+                        setRows,
+                    }}
+                >
+                    <Stack spacing={2}>
+                        <Box display="flex" flexDirection="row" sx={{ px: 2 }}>
+                            <Stack direction="row" spacing={2}>
+                                <MyDatePicker
+                                    value={fromDate}
+                                    onChange={(val, context) =>
+                                        context.validationError === null
+                                            ? setFromDate(val)
+                                            : null
+                                    }
+                                    label="From"
+                                />
+                                <MyDatePicker
+                                    value={toDate}
+                                    onChange={(val, context) =>
+                                        context.validationError === null
+                                            ? setToDate(val)
+                                            : null
+                                    }
+                                    label="To"
+                                />
+                            </Stack>
+                            <Box
+                                display="flex"
+                                flexDirection="row"
+                                justifyContent="flex-end "
+                                flexGrow="1"
+                            >
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            value={recordedAssaysOnly}
+                                            onChange={(_, val) =>
+                                                setRecordedAssaysOnly(val)
+                                            }
+                                        />
+                                    }
+                                    label="Include Recorded Assays"
+                                />
+                            </Box>
                         </Box>
-                    </Box>
-                    <DataGrid
-                        rows={rows}
-                        columns={colDefs}
-                        {...paginationProps}
-                        rowSelection={false}
-                        autoHeight
-                        rowHeight={43}
-                        pageSizeOptions={[15, 30, 60, 100]}
-                        getCellClassName={(params) =>
-                            params.row.result !== null
-                                ? "assay-cell-recorded"
-                                : "assay-cell-not-recorded"
-                        }
-                        disableColumnMenu
-                    />
-                    <AssayResultEditorOnAgenda/>
-                </Stack>
-            </AgendaContext.Provider>
+                        <DataGrid
+                            rows={rows}
+                            columns={colDefs}
+                            {...paginationProps}
+                            rowSelection={false}
+                            autoHeight
+                            rowHeight={43}
+                            pageSizeOptions={[15, 30, 60, 100]}
+                            getCellClassName={(params) =>
+                                params.row.result !== null
+                                    ? "assay-cell-recorded"
+                                    : "assay-cell-not-recorded"
+                            }
+                            disableColumnMenu
+                        />
+                        <AssayResultEditorOnAgenda />
+                    </Stack>
+                </AgendaContext.Provider>
+            </AssayEditingContext.Provider>
         </Layout>
     );
 }

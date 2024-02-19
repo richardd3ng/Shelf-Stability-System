@@ -8,7 +8,7 @@ interface UpdatePasswordArgs {
 export const updatePasswordThroughAPI = async (
     newPasswordInfo: UpdatePasswordArgs
 ): Promise<UpdatePasswordArgs> => {
-    const apiResponse = await fetch("/api/auth/updatePassword", {
+    const response = await fetch("/api/auth/updatePassword", {
         method: "POST",
         body: JSON.stringify({
             newPassword: newPasswordInfo.newPassword,
@@ -18,28 +18,30 @@ export const updatePasswordThroughAPI = async (
             "Content-Type": "application/json",
         },
     });
-    const resJson = await apiResponse.json();
-    if (apiResponse.status > 300) {
-        throw new ApiError(apiResponse.status, resJson.message);
+    const resJson = await response.json();
+    if (response.ok) {
+        return newPasswordInfo;
     }
-    return newPasswordInfo;
+    throw new ApiError(response.status, resJson.message);
 };
 
 interface SetPasswordOnSetupArgs {
     newPassword: string;
 }
+
 export const setPasswordOnSetupThroughAPI = async (
     newPasswordInfo: SetPasswordOnSetupArgs
 ): Promise<SetPasswordOnSetupArgs> => {
-    const apiResponse = await fetch("/api/auth/setPasswordOnSetup", {
+    const response = await fetch("/api/auth/setPasswordOnSetup", {
         method: "POST",
         body: JSON.stringify({ newPassword: newPasswordInfo.newPassword }),
         headers: {
             "Content-Type": "application/json",
         },
     });
-    if (apiResponse.status > 300) {
-        throw new Error("An error occurred");
+    const resJson = await response.json();
+    if (response.ok) {
+        return newPasswordInfo;
     }
-    return newPasswordInfo;
+    throw new ApiError(response.status, resJson.message);
 };
