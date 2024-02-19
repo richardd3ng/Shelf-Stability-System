@@ -43,8 +43,9 @@ export type AssayTable = {
 };
 
 export type UserInfo = {
+    id: number;
     username: string;
-    isAdmin: boolean;
+    is_admin: boolean;
 };
 
 export type UserTable = {

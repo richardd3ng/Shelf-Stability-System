@@ -1,9 +1,13 @@
+import { ApiError } from "next/dist/server/api-utils";
 import { ServerPaginationArgs } from "../hooks/useServerPagination";
-import { AssayTable, UserTable } from "./types";
+import { UserTable } from "./types";
 import { encodePaging, relativeURL } from "./url";
+import { User } from "@prisma/client";
 
-export const fetchUsers = async (paging: ServerPaginationArgs): Promise<UserTable> => {
-    const url = encodePaging(relativeURL("/api/assays/agenda"), paging);
+export const fetchUserList = async (query: string, paging: ServerPaginationArgs): Promise<UserTable> => {
+    const url = encodePaging(relativeURL("/api/users/list"), paging);
+
+    url.searchParams.append("query", query);
 
     const apiResponse = await fetch(url, {
         method: "GET",
@@ -14,17 +18,65 @@ export const fetchUsers = async (paging: ServerPaginationArgs): Promise<UserTabl
 
     const resJson = await apiResponse.json();
     if (apiResponse.ok) {
-        const table: AssayTable = resJson;
-        return {
-            ...table,
-            // Convert the targetDate from string to Date
-            rows: table.rows.map(assay =>
-            ({
-                ...assay,
-                targetDate: new Date(assay.targetDate)
-            }))
-        }
+        return resJson;
     }
 
     throw new ApiError(apiResponse.status, resJson.message);
 }
+
+export const fetchUser = async (id: number): Promise<Omit<User, 'password'> | ApiError> => {
+    const response = await fetch(`/api/users/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    } else {
+        return new ApiError(response.status, resJson.message);
+    }
+};
+
+export const createUser = async (username: string, password: string, isAdmin: boolean): Promise<Omit<User, 'password'> | ApiError> => {
+    const response = await fetch("/api/users/create", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            username,
+            password,
+            isAdmin,
+        }),
+    });
+
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    } else {
+        return new ApiError(response.status, resJson.message);
+    }
+};
+
+export const updateUser = async (id: number, password: string, isAdmin: boolean): Promise<Omit<User, 'password'> | ApiError> => {
+    const response = await fetch(`/api/users/${id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            password,
+            isAdmin,
+        }),
+    });
+
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    } else {
+        return new ApiError(response.status, resJson.message);
+    }
+};

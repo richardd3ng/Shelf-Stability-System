@@ -70,3 +70,11 @@ a {
 .assay-cell-recorded {
   background-color: rgb(190, 198, 235);
 }
+
+.user-cell-admin {
+  background-color: rgb(207, 207, 207);
+}
+
+.user-row-clickable {
+  cursor: pointer;
+}
