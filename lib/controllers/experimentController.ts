@@ -39,7 +39,7 @@ export const fetchExperimentList = async (
 };
 
 export const createExperiment = async (
-    experimentData: ExperimentCreationArgs
+    experimentCreationArgs: ExperimentCreationArgs
 ): Promise<ExperimentCreationResponse> => {
     const endpoint = "/api/experiments/create";
     const response = await fetch(endpoint, {
@@ -47,7 +47,7 @@ export const createExperiment = async (
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(experimentData),
+        body: JSON.stringify(experimentCreationArgs),
     });
     const resJson = await response.json();
     if (response.ok) {

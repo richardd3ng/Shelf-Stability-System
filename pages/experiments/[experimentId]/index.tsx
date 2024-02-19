@@ -1,6 +1,6 @@
 // import { AssaysGroupedByType } from "@/components/experiment-detail/assaysGroupedByType";
 import Layout from "@/components/shared/layout";
-import { AssayEditingContext } from "@/lib/context/experimentDetailPage/assayEditingContext";
+import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
 import { useState } from "react";
 import { AssayEditorModal } from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
 import { ExperimentHeader } from "@/components/experiment-detail/summary/experimentHeader";

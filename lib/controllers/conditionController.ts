@@ -4,9 +4,12 @@ import { ApiError } from "next/dist/server/api-utils";
 import { deleteEntity } from "./deletions";
 
 export const createConditions = async (
-    conditions: ConditionCreationArgs[]
+    conditionCreationArgsArray: ConditionCreationArgs[]
 ): Promise<Condition[]> => {
-    if (!conditions || conditions.length === 0) {
+    if (
+        !conditionCreationArgsArray ||
+        conditionCreationArgsArray.length === 0
+    ) {
         return [];
     }
     const endpoint = "/api/conditions/createMany";
@@ -16,8 +19,8 @@ export const createConditions = async (
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            experimentId: conditions[0].experimentId,
-            conditions: conditions,
+            experimentId: conditionCreationArgsArray[0].experimentId,
+            conditions: conditionCreationArgsArray,
         }),
     });
     const resJson = await response.json();
@@ -28,12 +31,12 @@ export const createConditions = async (
 };
 
 export const updateCondition = async (
-    conditionInfo: ConditionUpdateArgs
+    conditionUpdateArgs: ConditionUpdateArgs
 ): Promise<Condition> => {
-    const endpoint = `/api/conditions/${conditionInfo.id}/update`;
+    const endpoint = `/api/conditions/${conditionUpdateArgs.id}/update`;
     const response = await fetch(endpoint, {
         method: "POST",
-        body: JSON.stringify({ name: conditionInfo.name }),
+        body: JSON.stringify({ name: conditionUpdateArgs.name }),
         headers: {
             "Content-Type": "application/json",
         },

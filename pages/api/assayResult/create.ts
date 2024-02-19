@@ -2,33 +2,33 @@ import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
-import { Assay } from "@prisma/client";
+import { AssayResult } from "@prisma/client";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 
-export default async function createAssayAPI(
+export default async function createAssayResultAPI(
     req: NextApiRequest,
-    res: NextApiResponse<Assay | ApiError>
+    res: NextApiResponse<AssayResult | ApiError>
 ) {
-    const { experimentId, conditionId, type, week } = req.body;
+    const { assayId, result, comment, last_editor } = req.body;
     if (
-        type === undefined ||
-        week === undefined ||
-        experimentId === undefined ||
-        conditionId === undefined
+        assayId === undefined ||
+        result === undefined ||
+        comment === undefined ||
+        last_editor === undefined
     ) {
         res.status(400).json(
             getApiError(
                 400,
-                "Assay type, week, experiment ID, and condition ID are required."
+                "Assay ID, result, comment, and last editor are required."
             )
         );
         return;
     }
     try {
-        const createdAssay: Assay = await db.assay.create({
+        const createdAssayResult: AssayResult = await db.assayResult.create({
             data: req.body,
         });
-        res.status(200).json(createdAssay);
+        res.status(200).json(createdAssayResult);
     } catch (error) {
         console.error(getErrorMessage(error));
         res.status(500).json(

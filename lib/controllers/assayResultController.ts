@@ -1,28 +1,35 @@
 import { deleteEntity } from "./deletions";
 import { ApiError } from "next/dist/server/api-utils";
 import { AssayResult } from "@prisma/client";
-import { AssayResultUpdateArgs } from "./types";
+import { AssayResultCreationArgs, AssayResultUpdateArgs } from "./types";
 
-export const deleteAssayResult = async (id: number): Promise<number> => {
-    const endpoint = `/api/assayResults/${id}/delete`;
-    try {
-        await deleteEntity(endpoint);
-        return id;
-    } catch (error) {
-        throw error;
+export const createAssayResult = async (
+    assayResultCreationArgs: AssayResultCreationArgs
+) => {
+    const endpoint = "/api/assayResults/create";
+    const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(assayResultCreationArgs),
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
     }
+    throw new ApiError(response.status, resJson.message);
 };
 
 export const updateAssayResult = async (
-    assayResult: AssayResultUpdateArgs
+    assayResultUpdateArgs: AssayResultUpdateArgs
 ): Promise<AssayResult> => {
-    const endpoint = `/api/assayResults/${assayResult.id}/update`;
+    const endpoint = `/api/assayResults/${assayResultUpdateArgs.id}/update`;
     const response = await fetch(endpoint, {
         method: "POST",
         body: JSON.stringify({
-            result: assayResult.result,
-            comment: assayResult.comment,
-            last_editor: assayResult.last_editor,
+            result: assayResultUpdateArgs.result,
+            comment: assayResultUpdateArgs.comment,
         }),
         headers: {
             "Content-Type": "application/json",
@@ -33,4 +40,13 @@ export const updateAssayResult = async (
         return resJson;
     }
     throw new ApiError(response.status, resJson.message);
+};
+
+export const deleteAssayResult = async (id: number): Promise<AssayResult> => {
+    const endpoint = `/api/assayResults/${id}/delete`;
+    try {
+        return deleteEntity(endpoint);
+    } catch (error) {
+        throw error;
+    }
 };

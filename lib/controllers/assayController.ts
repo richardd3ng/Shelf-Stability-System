@@ -44,15 +44,14 @@ export const fetchAgendaList = async (
     throw new ApiError(response.status, resJson.message);
 };
 
-export const createAssay = async (assayInfo: AssayCreationArgs) => {
-    console.log("controller assayInfo:", assayInfo);
+export const createAssay = async (assayCreationArgs: AssayCreationArgs) => {
     const endpoint = "/api/assays/create";
     const response = await fetch(endpoint, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(assayInfo),
+        body: JSON.stringify(assayCreationArgs),
     });
     const resJson = await response.json();
     if (response.ok) {

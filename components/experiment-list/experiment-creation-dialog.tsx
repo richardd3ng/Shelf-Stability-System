@@ -119,7 +119,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             const experimentData: ExperimentCreationArgs = {
                 title: title,
                 description: description,
-                start_date: dayjs.utc(date!).toISOString(),
+                start_date: date ? date : new Date(),
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
                 ownerId: 1, // TODO: Replace with actual owner ID

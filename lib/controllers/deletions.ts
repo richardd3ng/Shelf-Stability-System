@@ -1,6 +1,6 @@
 import { ApiError } from "next/dist/server/api-utils";
 
-export const deleteEntity = async (endpoint: string) => {
+export const deleteEntity = async (endpoint: string): Promise<any> => {
     const response = await fetch(endpoint, {
         method: "GET",
         headers: {

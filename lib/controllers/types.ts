@@ -23,12 +23,7 @@ export type ExperimentTable = {
 };
 
 export type ExperimentCreationArgs =
-    | {
-          title: string;
-          description: string;
-          start_date: string;
-          ownerId: number;
-      }
+    | Omit<Experiment, "id">
     | {
           conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
       };
@@ -54,10 +49,13 @@ export type AssayInfo = {
     targetDate: Date;
     title: string;
     experimentId: number;
+    experimentOwnerId: number;
     condition: string;
     week: number;
     type: string;
-    result: string | null;
+    assayResultId: number | null;
+    result: number | null;
+    comment: string | null;
 };
 
 export type AssayTable = {
@@ -90,7 +88,7 @@ export type ConditionUpdateArgs = {
 };
 
 /* ----- Assay Result ----- */
-export type AssayResultCreationArgs = Omit<AssayResult, "id">;
+export type AssayResultCreationArgs = Omit<AssayResult, "id" | "last_editor">;
 
 export type AssayResultUpdateArgs = {
     id: number;

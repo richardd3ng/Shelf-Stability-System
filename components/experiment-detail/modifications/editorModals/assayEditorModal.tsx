@@ -1,4 +1,4 @@
-import { AssayEditingContext } from "@/lib/context/experimentDetailPage/assayEditingContext";
+import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import {
     useMutationToUpdateAssay,

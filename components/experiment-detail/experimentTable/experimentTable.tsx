@@ -1,7 +1,7 @@
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAlert } from "@/lib/context/alert-context";
 import {
     GridColDef,
@@ -58,7 +58,7 @@ const ExperimentTable: React.FC = () => {
     const experimentId = useExperimentId();
     const { data, isLoading, isError } = useExperimentInfo(experimentId);
     const [weekRows, setWeekRows] = useState<WeekRow[]>([]);
-    const [idCounter, setIdCounter] = useState<number>(1000);
+    const [idCounter, setIdCounter] = useState<number>(0);
     const [assayScheduleMap, setAssayScheduleMap] = useState<AssayScheduleMap>(
         {}
     );
@@ -66,15 +66,34 @@ const ExperimentTable: React.FC = () => {
         null
     );
 
+    useEffect(() => {
+        if (isError) {
+            showAlert("error", "Error loading experiment data");
+        } else if (
+            !data ||
+            !data.experiment ||
+            !data.assays ||
+            !data.conditions
+        ) {
+            return;
+        } else {
+            const weeks: number[] = getAllWeeksCoveredByAssays(data.assays);
+            const initialWeekRows: WeekRow[] = [];
+            weeks.forEach((week: number, index: number) => {
+                initialWeekRows.push({
+                    id: index,
+                    week: week,
+                });
+            });
+            setWeekRows(initialWeekRows);
+            setIdCounter(weeks.length);
+        }
+    }, [data, isError]);
+
     if (isLoading) {
         return <LoadingContainer />;
-    } else if (isError) {
-        showAlert("error", "Error loading experiment data");
-        return <></>;
-    } else if (!data || !data.experiment || !data.assays || !data.conditions) {
-        showAlert("error", "Experiment data is missing");
-        return <></>;
     }
+
     const createTableColumns = (): GridColDef[] => {
         const weekColumn: GridColDef = {
             field: "week",
@@ -87,7 +106,7 @@ const ExperimentTable: React.FC = () => {
             editable: false,
             sortable: false,
         };
-        const conditionCols: GridColDef[] = data.conditions.map(
+        const conditionCols: GridColDef[] = (data?.conditions || []).map(
             (condition) => ({
                 field: condition.name,
                 headerName: condition.name,
@@ -130,7 +149,7 @@ const ExperimentTable: React.FC = () => {
                             </Box>
 
                             {getAssaysForWeekAndCondition(
-                                data.assays,
+                                data?.assays ?? [],
                                 params.row.week,
                                 condition.id
                             ).map((assay) => {
