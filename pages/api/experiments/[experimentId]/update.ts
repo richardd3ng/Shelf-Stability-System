@@ -21,13 +21,13 @@ export default async function updateExperimentAPI(
     const { title, description, startDate, ownerId } = req.body;
     try {
         const updateData: { [key: string]: any } = {};
-        if (title) {
+        if (title !== undefined) {
             updateData.title = title;
         }
-        if (description) {
+        if (description !== undefined) {
             updateData.description = description;
         }
-        if (startDate) {
+        if (startDate !== undefined) {
             if (await experimentHasAssaysWithResults(id)) {
                 res.status(CONSTRAINT_ERROR_CODE).json(
                     getApiError(
@@ -39,7 +39,7 @@ export default async function updateExperimentAPI(
             }
             updateData.start_date = startDate;
         }
-        if (ownerId) {
+        if (ownerId !== undefined) {
             updateData.ownerId = ownerId;
         }
         const updatedExperiment: Experiment | null = await db.experiment.update(

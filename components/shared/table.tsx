@@ -13,6 +13,7 @@ interface TableProps {
     sortModel?: any;
     footer?: React.JSXElementConstructor<any>;
     onDeleteRows?: (rows: GridRowSelectionModel) => void;
+    checkboxSelection?: boolean;
 }
 
 const Table: React.FC<TableProps & DataGridProps> = (
@@ -83,7 +84,7 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 autoHeight
                 getRowHeight={() => "auto"}
                 pageSizeOptions={[10, 25, 50, 100]}
-                checkboxSelection
+                checkboxSelection={props.checkboxSelection ?? false}
                 disableRowSelectionOnClick
                 slots={{ footer: FooterComponent }}
                 onRowSelectionModelChange={(

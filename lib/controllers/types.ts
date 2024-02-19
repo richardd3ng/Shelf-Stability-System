@@ -96,5 +96,5 @@ export type AssayResultUpdateArgs = {
     id: number;
     result?: number;
     comment?: string;
-    last_editor: string;
+    // get last edited user from the session token in the backend, see lib/middleware/checkIfLoggedIn.ts
 };

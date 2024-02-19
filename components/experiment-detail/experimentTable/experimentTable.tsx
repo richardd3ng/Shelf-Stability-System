@@ -163,19 +163,6 @@ const ExperimentTable: React.FC = () => {
         setIdCounter(idCounter + 1);
     };
 
-    const handleDeleteWeeks = (selectedRows: GridRowSelectionModel) => {
-        const newMap: AssayScheduleMap = Object.fromEntries(
-            Object.entries(assayScheduleMap).filter(
-                ([rowId]) => !selectedRows.includes(Number(rowId))
-            )
-        );
-        setAssayScheduleMap(newMap);
-        const remainingRows: WeekRow[] = weekRows.filter(
-            (row) => !selectedRows.includes(row.id)
-        );
-        setWeekRows(remainingRows);
-    };
-
     const tableAddWeekFooter: React.FC = () => {
         return (
             <Box
@@ -215,7 +202,6 @@ const ExperimentTable: React.FC = () => {
                         sort: "asc",
                     } as GridSortItem,
                 ]}
-                onDeleteRows={handleDeleteWeeks}
             />
         </>
     );

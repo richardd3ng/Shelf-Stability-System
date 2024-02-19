@@ -34,7 +34,7 @@ export default function ExperimentPage() {
                 }}
             >
                 <ExperimentHeader />
-                {/* <ExperimentTable /> */}
+                <ExperimentTable />
                 {/* <AssayEditorModal /> */}
                 {/* <AssaysGroupedByType /> */}
                 <Container

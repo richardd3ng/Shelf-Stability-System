@@ -17,6 +17,7 @@ import {
 import { useState } from "react";
 
 import dayjs from "dayjs";
+import { AssayCreationArgs } from "@/lib/controllers/types";
 
 interface NewAssayModalProps {
     open: boolean;
@@ -39,13 +40,16 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
     } = useMutationToCreateAssay();
 
     const onSubmit = () => {
-        createAssayInDB({
-            experimentId: experimentId,
-            conditionId: props.conditionId,
+        const assayInfo: AssayCreationArgs = {
             type: assayTypeNameToId(selectedAssayType),
             week: props.week,
-        });
+            experimentId: experimentId,
+            conditionId: props.conditionId,
+        };
+        console.log("assay info:", assayInfo);
+        createAssayInDB(assayInfo);
     };
+
     return (
         <CloseableModal
             open={props.open}

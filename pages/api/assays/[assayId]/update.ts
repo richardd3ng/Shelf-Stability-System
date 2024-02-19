@@ -29,13 +29,13 @@ export default async function updateAssayAPI(
             return;
         }
         const updateData: { [key: string]: any } = {};
-        if (conditionId) {
+        if (conditionId !== undefined) {
             updateData.conditionId = conditionId;
         }
-        if (type) {
+        if (type !== undefined) {
             updateData.type = type;
         }
-        if (week) {
+        if (week !== undefined) {
             updateData.week = week;
         }
         const updatedAssay: Assay = await db.assay.update({

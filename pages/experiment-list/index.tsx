@@ -265,6 +265,7 @@ const ExperimentList: React.FC = () => {
                     columns={colDefs}
                     rows={experimentData}
                     pagination
+                    checkboxSelection
                     onDeleteRows={prepareForDeletion}
                     {...paginationProps}
                 />

@@ -116,7 +116,6 @@ export const AssayEditorModal: React.FC = () => {
                             });
                             await updateAssayResult({
                                 id: assayIdBeingEdited,
-                                last_editor: "",
                             });
                         }}
                     />
