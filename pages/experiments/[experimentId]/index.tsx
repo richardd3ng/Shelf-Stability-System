@@ -7,9 +7,8 @@ import { ExperimentHeader } from "@/components/experiment-detail/summary/experim
 import { Container, Typography, Button, Stack } from "@mui/material";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useRouter } from "next/router";
-// import { DeleteExperimentButton } from "@/components/experiment-detail/deleteExperimentButton";
-import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
+import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 
 export default function ExperimentPage() {
     const [isEditingAssay, setIsEditingAssay] = useState<boolean>(false);
@@ -35,7 +34,7 @@ export default function ExperimentPage() {
             >
                 <ExperimentHeader />
                 <ExperimentTable />
-                {/* <AssayEditorModal /> */}
+                <AssayEditorModal />
                 {/* <AssaysGroupedByType /> */}
                 <Container
                     maxWidth="sm"

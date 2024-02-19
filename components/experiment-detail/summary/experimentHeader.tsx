@@ -1,9 +1,7 @@
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { Container, Typography, Button } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import dayjs from "dayjs";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -38,12 +36,7 @@ export const ExperimentHeader = () => {
                         variant="h5"
                         style={{ marginBottom: 8 }}
                     >
-                        Started{" "}
-                        {data
-                            ? dayjs
-                                  .utc(data.experiment.start_date)
-                                  .format("YYYY-MM-DD")
-                            : null}{" "}
+                        Started {data?.experiment.start_date.toString() ?? null}{" "}
                         by Richard Deng
                     </Typography>
                 </Container>

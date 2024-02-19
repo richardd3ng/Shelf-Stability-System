@@ -8,7 +8,6 @@ import Layout from "../../components/shared/layout";
 import SearchBar from "../../components/shared/search-bar";
 import Table from "../../components/shared/table";
 import ViewIcon from "@mui/icons-material/Visibility";
-import { getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import {
     deleteExperiment,
     fetchExperimentList,
@@ -20,9 +19,8 @@ import {
     ServerPaginationArgs,
     useServerPagination,
 } from "@/lib/hooks/useServerPagination";
-import { ExperimentTable } from "@/lib/controllers/types";
+import { ExperimentTable, ExperimentTableInfo } from "@/lib/controllers/types";
 import { useRouter } from "next/router";
-import dayjs from "dayjs";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 
 interface ExperimentData {
@@ -33,7 +31,9 @@ interface ExperimentData {
 }
 
 const ExperimentList: React.FC = () => {
-    const [experimentData, setExperimentData] = useState<ExperimentData[]>([]);
+    const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>(
+        []
+    );
     const [showCreationDialog, setShowCreationDialog] =
         useState<boolean>(false);
     const [showDeletionDialog, setShowDeletionDialog] =
@@ -77,8 +77,7 @@ const ExperimentList: React.FC = () => {
             field: "startDate",
             headerName: "Start Date",
             type: "date",
-            valueFormatter: (params: any) =>
-                dayjs.utc(params.value).format("YYYY-MM-DD"),
+            valueFormatter: (params) => params.value?.toString() ?? "",
             flex: 2,
         },
         {
@@ -116,29 +115,16 @@ const ExperimentList: React.FC = () => {
 
     const getExperiments = (
         paging: ServerPaginationArgs
-    ): Promise<{ rows: ExperimentData[]; rowCount: number }> => {
-        return fetchExperimentList(searchQuery, paging)
-            .catch((error) => {
-                showAlert("error", getErrorMessage(error));
-                return { rows: [], rowCount: 0 };
-            })
-            .then((table: ExperimentTable) => ({
-                rows: table.rows.map((experiment) => ({
-                    id: experiment.id,
-                    title: experiment.title,
-                    startDate: experiment.startDate,
-                    week: getNumWeeksAfterStartDate(
-                        experiment.startDate,
-                        new Date()
-                    ),
-                })),
-                rowCount: table.rowCount,
-            }));
+    ): Promise<ExperimentTable> => {
+        return fetchExperimentList(searchQuery, paging).catch((error) => {
+            showAlert("error", getErrorMessage(error));
+            return { rows: [], rowCount: 0 };
+        });
     };
 
     const reloadExperimentData = (
         paging: ServerPaginationArgs
-    ): Promise<{ rows: ExperimentData[]; rowCount: number }> => {
+    ): Promise<ExperimentTable> => {
         return getExperiments(paging).then((fetchedData) => {
             setExperimentData(fetchedData.rows);
             return fetchedData;

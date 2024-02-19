@@ -1,14 +1,14 @@
 import { ApiError } from "next/dist/server/api-utils";
-import { Dayjs } from "dayjs";
 import { ServerPaginationArgs } from "../hooks/useServerPagination";
 import { encodePaging, relativeURL } from "./url";
 import { deleteEntity } from "./deletions";
+import { LocalDate } from "@js-joda/core";
 import { Assay } from "@prisma/client";
 import { AssayCreationArgs, AssayTable, AssayUpdateArgs } from "./types";
 
 export const fetchAgendaList = async (
-    minDate: Dayjs | null,
-    maxDate: Dayjs | null,
+    minDate: LocalDate | null,
+    maxDate: LocalDate | null,
     includeRecorded: boolean,
     paging: ServerPaginationArgs
 ): Promise<AssayTable> => {
@@ -16,10 +16,10 @@ export const fetchAgendaList = async (
 
     url.searchParams.set("include_recorded", includeRecorded.toString());
     if (minDate !== null) {
-        url.searchParams.set("minDate", minDate.format("YYYY-MM-DD"));
+        url.searchParams.set("minDate", minDate.toString());
     }
     if (maxDate !== null) {
-        url.searchParams.set("maxDate", maxDate.format("YYYY-MM-DD"));
+        url.searchParams.set("maxDate", maxDate.toString());
     }
 
     const response = await fetch(url, {

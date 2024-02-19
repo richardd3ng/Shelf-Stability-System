@@ -11,11 +11,7 @@ import {
     Stack,
     TextField,
 } from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
-import dayjs from "dayjs";
 import { createExperiment } from "@/lib/controllers/experimentController";
 import {
     ConditionCreationArgsNoExperimentId,
@@ -24,6 +20,8 @@ import {
 import { ExperimentCreationArgs } from "@/lib/controllers/types";
 import { useAlert } from "@/lib/context/alert-context";
 import { useRouter } from "next/router";
+import { LocalDate } from "@js-joda/core";
+import { MyDatePicker } from "../shared/myDatePicker";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 
 interface ExperimentCreationDialogProps {
@@ -39,7 +37,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
 ) => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [date, setDate] = useState<Date | null>(dayjs().toDate());
+    const [date, setDate] = useState<LocalDate | null>(LocalDate.now());
     const [storageConditions, setStorageConditions] = useState<string[]>([]);
     const [selectedStorageConditions, setSelectedStorageConditions] = useState<
         string[]
@@ -48,14 +46,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [creationLoading, setCreationLoading] = useState<boolean>(false);
     const { showAlert } = useAlert();
     const router = useRouter();
-
-    const handleDateChange = (dayjs: dayjs.Dayjs | null) => {
-        if (dayjs) {
-            setDate(dayjs.toDate());
-        } else {
-            setDate(null);
-        }
-    };
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
@@ -119,7 +109,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             const experimentData: ExperimentCreationArgs = {
                 title: title,
                 description: description,
-                start_date: date ? date : new Date(),
+                start_date: date!,
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
                 ownerId: 1, // TODO: Replace with actual owner ID
@@ -158,7 +148,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const resetFields = () => {
         setTitle("");
         setDescription("");
-        setDate(dayjs().toDate());
+        setDate(LocalDate.now());
         setStorageConditions([]);
         setSelectedStorageConditions([]);
         setNewStorageCondition("");
@@ -198,19 +188,16 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         }}
                         helperText={`${description.length}/${MAX_DESCRIPTION_LENGTH} characters`}
                     />
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                            timezone="UTC"
-                            label="Start Date"
-                            defaultValue={dayjs()}
-                            onChange={handleDateChange}
-                            slotProps={{
-                                textField: {
-                                    required: true,
-                                },
-                            }}
-                        />
-                    </LocalizationProvider>
+                    <MyDatePicker
+                        label="Start Date"
+                        defaultValue={LocalDate.now()}
+                        onChange={setDate}
+                        slotProps={{
+                            textField: {
+                                required: true,
+                            },
+                        }}
+                    />
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <MultiSelectDropdown
                             items={storageConditions}

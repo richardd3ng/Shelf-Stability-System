@@ -10,7 +10,6 @@ import {
 } from "@mui/x-data-grid";
 import { LoadingContainer } from "@/components/shared/loading";
 import { Assay } from "@prisma/client";
-import { getDateAtMidnight, getNumWeeksAfterStartDate } from "@/lib/datesUtils";
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import Table from "@/components/shared/table";
 import AddIcon from "@mui/icons-material/Add";
@@ -39,6 +38,7 @@ export const getAssaysForWeekAndCondition = (
     conditionId: number
 ): Assay[] => {
     return assays.filter((assay) => {
+        return assay.week === weekNum && assay.conditionId === conditionId;
         return assay.week === weekNum && assay.conditionId === conditionId;
     });
 };

@@ -6,10 +6,11 @@ import {
     ExperimentCreationResponse,
     ExperimentTable,
     ExperimentUpdateArgs,
+    ExperimentWithLocalDate,
 } from "./types";
-import { Experiment } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { encodePaging, relativeURL } from "./url";
+import { LocalDate } from "@js-joda/core";
 
 export const fetchExperimentList = async (
     searchQuery: string,
@@ -25,13 +26,13 @@ export const fetchExperimentList = async (
     });
     const resJson = await response.json();
     if (response.ok) {
-        const table: ExperimentTable = resJson;
+        const table: { rows: any[]; rowCount: number } = resJson;
         return {
             ...table,
             // Convert the startDate from string to Date
             rows: table.rows.map((experiment) => ({
                 ...experiment,
-                startDate: new Date(experiment.startDate),
+                startDate: LocalDate.parse(experiment.startDate),
             })),
         };
     }
@@ -96,7 +97,9 @@ export const hasRecordedAssayResults = async (id: number): Promise<Boolean> => {
     throw new ApiError(response.status, resJson.message);
 };
 
-export const deleteExperiment = async (id: number): Promise<Experiment> => {
+export const deleteExperiment = async (
+    id: number
+): Promise<ExperimentWithLocalDate> => {
     const endpoint = `/api/experiments/${id}/delete`;
     const response = await fetch(endpoint, {
         method: "GET",
@@ -113,7 +116,7 @@ export const deleteExperiment = async (id: number): Promise<Experiment> => {
 
 export const updateExperiment = async (
     experiment: ExperimentUpdateArgs
-): Promise<Experiment> => {
+): Promise<ExperimentWithLocalDate> => {
     const endpoint = `/api/experiments/${experiment.id}/update`;
     const response = await fetch(endpoint, {
         method: "POST",
@@ -129,7 +132,7 @@ export const updateExperiment = async (
     });
     const resJson = await response.json();
     if (response.ok) {
-        return resJson;
+        return JSONToExperiment(resJson);
     }
     throw new ApiError(response.status, resJson.message);
 };

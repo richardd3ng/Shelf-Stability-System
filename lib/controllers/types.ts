@@ -1,29 +1,34 @@
+import { LocalDate } from "@js-joda/core";
 import { Experiment, Condition, Assay, AssayResult } from "@prisma/client";
 
 /* ----- Experiment ----- */
+export type ExperimentWithLocalDate = Omit<Experiment, "start_date"> & {
+    start_date: LocalDate;
+};
+
 export type ExperimentInfo = {
-    experiment: Experiment;
+    experiment: ExperimentWithLocalDate;
     conditions: Condition[];
     assays: Assay[];
     assayResults: AssayResult[];
 };
 
-export type ExerimentTableInfo = {
+export type ExperimentTableInfo = {
     id: number;
     title: string;
-    startDate: Date;
+    startDate: LocalDate;
     week: number;
 };
 
 export type ExperimentTable = {
     // Rows on this page
-    rows: ExerimentTableInfo[];
+    rows: ExperimentTableInfo[];
     // Rows in the whole table
     rowCount: number;
 };
 
 export type ExperimentCreationArgs =
-    | Omit<Experiment, "id">
+    | Omit<ExperimentWithLocalDate, "id">
     | {
           conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
       };
@@ -37,7 +42,7 @@ export type ExperimentUpdateArgs = {
     id: number;
     title?: string;
     description?: string;
-    startDate?: Date;
+    startDate?: LocalDate;
     ownerId?: number;
 };
 

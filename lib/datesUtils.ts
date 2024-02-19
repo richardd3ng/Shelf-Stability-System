@@ -1,11 +1,12 @@
-export const getDateAtMidnight = (date : Date) : Date => {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
-}
-export const getNumWeeksAfterStartDate = (startDate : Date, date : Date) : number => {
-    let startDateMidnight = getDateAtMidnight(startDate);
-    let dateAtMidnight = getDateAtMidnight(date);
-    let msDiff = dateAtMidnight.getTime() - startDateMidnight.getTime();
-    let daysDiff = msDiff / (1000 * 60 * 60 * 24);
+import { ChronoUnit, LocalDate, ZoneId, convert } from "@js-joda/core";
+
+export const getNumWeeksAfterStartDate = (startDate: LocalDate, date: LocalDate): number => {
+    const daysDiff = date.until(startDate, ChronoUnit.DAYS);
     let weeksDiff = Math.round(daysDiff / 7);
-    return weeksDiff;
+    // Return a negative number if the date is before the start date
+    return startDate.isAfter(date) ? -weeksDiff : weeksDiff;
+}
+
+export function localDateToJsDate(localDate: LocalDate): Date {
+    return convert(localDate.atStartOfDay().atZone(ZoneId.UTC)).toDate();
 }

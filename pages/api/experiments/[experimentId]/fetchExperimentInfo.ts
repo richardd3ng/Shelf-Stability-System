@@ -1,10 +1,16 @@
 import { db } from "@/lib/api/db";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ExperimentInfo } from "@/lib/controllers/types";
+import {
+    ExperimentInfo,
+    ExperimentWithLocalDate,
+} from "@/lib/controllers/types";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { Assay, AssayResult, Condition, Experiment } from "@prisma/client";
 import { getExperimentID, INVALID_EXPERIMENT_ID } from "@/lib/api/apiHelpers";
+import { JSONToExperiment } from "@/lib/controllers/jsonConversions";
+import { nativeJs } from "@js-joda/core";
+import { localDateToJsDate } from "@/lib/datesUtils";
 
 export default async function getExperimentInfoAPI(
     req: NextApiRequest,
@@ -19,13 +25,25 @@ export default async function getExperimentInfoAPI(
     }
     try {
         const [experiment, conditions, assays]: [
-            Experiment | null,
+            ExperimentWithLocalDate | null,
             Condition[],
             Assay[]
         ] = await Promise.all([
-            db.experiment.findUnique({
-                where: { id: id },
-            }),
+            db.experiment
+                .findUnique({
+                    where: { id: id },
+                })
+                .then((experiment: Experiment | null) => {
+                    if (!experiment) {
+                        return null;
+                    }
+                    return {
+                        ...experiment,
+                        start_date: nativeJs(
+                            experiment.start_date
+                        ).toLocalDate(),
+                    };
+                }),
             db.condition.findMany({
                 where: { experimentId: id },
             }),
@@ -51,7 +69,9 @@ export default async function getExperimentInfoAPI(
             experimentAssayResults.push(...assayResults);
         });
         res.status(200).json({
-            experiment: experiment,
+            experiment: JSONToExperiment(
+                JSON.parse(JSON.stringify(experiment))
+            ),
             conditions: conditions,
             assays: assays,
             assayResults: experimentAssayResults,

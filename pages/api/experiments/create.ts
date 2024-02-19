@@ -7,7 +7,10 @@ import {
     ConditionCreationArgs,
     ConditionCreationArgsNoExperimentId,
     ExperimentCreationResponse,
+    ExperimentWithLocalDate,
 } from "@/lib/controllers/types";
+import { LocalDate, nativeJs } from "@js-joda/core";
+import { localDateToJsDate } from "@/lib/datesUtils";
 
 export default async function createExperimentAPI(
     req: NextApiRequest,
@@ -36,14 +39,19 @@ export default async function createExperimentAPI(
         return;
     }
     try {
-        const createdExperiment: Experiment = await db.experiment.create({
-            data: {
-                title,
-                description,
-                start_date,
-                ownerId,
-            },
-        });
+        const createdExperiment: ExperimentWithLocalDate = await db.experiment
+            .create({
+                data: {
+                    title,
+                    description,
+                    start_date: localDateToJsDate(LocalDate.parse(start_date)),
+                    ownerId: ownerId,
+                },
+            })
+            .then((experiment: Experiment) => ({
+                ...experiment,
+                start_date: nativeJs(experiment.start_date).toLocalDate(),
+            }));
 
         let conditionCreationArgsArray: ConditionCreationArgs[] =
             conditionCreationArgsNoExperimentIdArray.map(

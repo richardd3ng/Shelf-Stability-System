@@ -14,14 +14,15 @@ import { AgendaContext } from "@/lib/context/agendaPage/agendaContext";
 import { AssayOptionsBox } from "@/components/agenda/assayOptionsBox";
 import { AssayResultEditorOnAgenda } from "@/components/agenda/assayResultEditorOnAgenda";
 import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
+import { LocalDate } from "@js-joda/core";
+import { MyDatePicker } from "@/components/shared/myDatePicker";
 
 const colDefs: GridColDef[] = [
     {
         field: "targetDate",
         headerName: "Target Date",
         type: "date",
-        valueFormatter: (params: any) =>
-            dayjs.utc(params.value).format("YYYY-MM-DD"),
+        valueFormatter: (params) => params.value?.toString() ?? "",
         flex: 2,
     },
     {
@@ -66,10 +67,10 @@ const colDefs: GridColDef[] = [
 ];
 
 export default function AssayAgenda() {
-    const [fromDate, setFromDate] = useState<Dayjs | null>(
-        dayjs().subtract(1, "week")
+    const [fromDate, setFromDate] = useState<LocalDate | null>(
+        LocalDate.now().minusWeeks(1)
     );
-    const [toDate, setToDate] = useState<Dayjs | null>(null);
+    const [toDate, setToDate] = useState<LocalDate | null>(null);
     const [recordedAssaysOnly, setRecordedAssaysOnly] =
         useState<boolean>(false);
     const [isEditingAnAssay, setIsEditingAnAssay] = useState<boolean>(false);
@@ -127,7 +128,7 @@ export default function AssayAgenda() {
                     <Stack spacing={2}>
                         <Box display="flex" flexDirection="row" sx={{ px: 2 }}>
                             <Stack direction="row" spacing={2}>
-                                <DatePicker
+                                <MyDatePicker
                                     value={fromDate}
                                     onChange={(val, context) =>
                                         context.validationError === null
@@ -136,7 +137,7 @@ export default function AssayAgenda() {
                                     }
                                     label="From"
                                 />
-                                <DatePicker
+                                <MyDatePicker
                                     value={toDate}
                                     onChange={(val, context) =>
                                         context.validationError === null

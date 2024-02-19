@@ -2,9 +2,10 @@ import { db } from "@/lib/api/db";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { AssayInfo, AssayTable } from "@/lib/controllers/types";
 import { Prisma } from "@prisma/client";
-import dayjs, { Dayjs } from "dayjs";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
+import { LocalDate, ZoneId, convert, nativeJs } from "@js-joda/core";
+import { localDateToJsDate } from "@/lib/datesUtils";
 
 // Be very careful with this function, it's very easy to introduce SQL injection vulnerabilities
 function convertSort(
@@ -48,15 +49,16 @@ function convertSort(
     return undefined;
 }
 
-export default async function getAssaysAPI(
+export default async function getAssays(
     req: NextApiRequest,
     res: NextApiResponse<AssayTable | ApiError>
 ) {
+    // Convert to LocalDate and back for validation
     const minDate = req.query.minDate
-        ? dayjs(req.query.minDate as string)
+        ? localDateToJsDate(LocalDate.parse(req.query.minDate as string))
         : undefined;
     const maxDate = req.query.maxDate
-        ? dayjs(req.query.maxDate as string)
+        ? localDateToJsDate(LocalDate.parse(req.query.maxDate as string))
         : undefined;
     const includeRecorded = req.query.include_recorded === "true";
 
@@ -85,12 +87,12 @@ export default async function getAssaysAPI(
             WHERE TRUE
                 ${
                     maxDate !== undefined
-                        ? Prisma.sql`AND a.target_date <= ${maxDate.toDate()}`
+                        ? Prisma.sql`AND a.target_date <= ${maxDate}`
                         : Prisma.empty
                 }
                 ${
                     minDate !== undefined
-                        ? Prisma.sql`AND a.target_date >= ${minDate.toDate()}`
+                        ? Prisma.sql`AND a.target_date >= ${minDate}`
                         : Prisma.empty
                 }
                 ${
@@ -107,8 +109,7 @@ export default async function getAssaysAPI(
         // .then<AssayInfo[]>(assays => assays.map(assay => ({...assay, target_date: undefined, targetDate: assay.target_date})))
         db.assay.count({
             where: {
-                // TODO: change this logic to use week
-                // target_date: { gte: minDate?.toDate(), lte: maxDate?.toDate() },
+                // target_date: { gte: minDate, lte: maxDate }, // TODO: update this logic with new week field
                 result: includeRecorded ? undefined : null,
             },
         }),

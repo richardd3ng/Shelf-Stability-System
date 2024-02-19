@@ -15,8 +15,6 @@ import {
     MenuItem,
 } from "@mui/material";
 import { useState } from "react";
-
-import dayjs from "dayjs";
 import { AssayCreationArgs } from "@/lib/controllers/types";
 
 interface NewAssayModalProps {
@@ -41,12 +39,11 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
 
     const onSubmit = () => {
         const assayInfo: AssayCreationArgs = {
-            type: assayTypeNameToId(selectedAssayType),
-            week: props.week,
             experimentId: experimentId,
             conditionId: props.conditionId,
+            type: assayTypeNameToId(selectedAssayType),
+            week: props.week,
         };
-        console.log("assay info:", assayInfo);
         createAssayInDB(assayInfo);
     };
 
