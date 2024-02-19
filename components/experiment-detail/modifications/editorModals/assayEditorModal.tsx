@@ -16,7 +16,6 @@ import {
 import { CloseableModal } from "@/components/shared/closeableModal";
 import { Assay } from "@prisma/client";
 import { useAlert } from "@/lib/context/alert-context";
-import { assayHasResult } from "@/lib/api/validations";
 import { updateAssayResult } from "@/lib/controllers/assayResultController";
 
 // TODO: determine how to handle changing weeks + results at the same time, and how to update assay + result
@@ -28,18 +27,10 @@ export const AssayEditorModal: React.FC = () => {
     const [newResult, setNewResult] = useState<string | null>(null);
     const [type, setType] = useState<number>(-1);
     const [week, setWeek] = useState<number>(-1);
-    const [hasResults, setHasResults] = useState<boolean>(false);
     const { showAlert } = useAlert();
 
     useEffect(() => {
-        const checkIfAssayHasResults = async (assay: Assay) => {
-            setHasResults(await assayHasResult(assay.id));
-        };
         if (!data) {
-            showAlert(
-                "error",
-                `Experiment ${experimentId} not found or has been deleted`
-            );
             return;
         }
         const currAssay = data.assays.find(
@@ -54,8 +45,7 @@ export const AssayEditorModal: React.FC = () => {
         }
         setWeek(currAssay.week);
         setType(currAssay.type);
-        checkIfAssayHasResults(currAssay);
-    }, [assayIdBeingEdited, data, experimentId]);
+    }, [data, assayIdBeingEdited, isEditing]);
 
     const {
         mutate: deleteAssay,
@@ -107,14 +97,12 @@ export const AssayEditorModal: React.FC = () => {
                             }
                         />
                     </Stack>
-                    {hasResults && (
-                        <TextField
-                            label="Week"
-                            style={{ marginLeft: 4, marginRight: 4 }}
-                            value={week}
-                            onChange={(e) => setNewResult(e.target.value)}
-                        />
-                    )}
+                    <TextField
+                        label="Week"
+                        style={{ marginLeft: 4, marginRight: 4 }}
+                        value={week}
+                        onChange={(e) => setWeek(parseInt(e.target.value))}
+                    />
 
                     <ButtonWithLoadingAndError
                         text="Submit New Result"
@@ -132,19 +120,13 @@ export const AssayEditorModal: React.FC = () => {
                             });
                         }}
                     />
-                    {hasResults ? (
-                        <Typography>
-                            You cannot delete an assay with recorded results
-                        </Typography>
-                    ) : (
-                        <ButtonWithConfirmationLoadingAndError
-                            text="Delete Assay"
-                            isLoading={isDeleting}
-                            isError={isErrorDeleting}
-                            error={errorDeleting}
-                            onSubmit={() => deleteAssay(assayIdBeingEdited)}
-                        />
-                    )}
+                    <ButtonWithConfirmationLoadingAndError
+                        text="Delete Assay"
+                        isLoading={isDeleting}
+                        isError={isErrorDeleting}
+                        error={errorDeleting}
+                        onSubmit={() => deleteAssay(assayIdBeingEdited)}
+                    />
                 </Stack>
             </CloseableModal>
         );

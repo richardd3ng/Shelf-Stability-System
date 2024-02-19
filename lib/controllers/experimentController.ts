@@ -41,7 +41,6 @@ export const fetchExperimentList = async (
 export const createExperiment = async (
     experimentData: ExperimentCreationArgs
 ): Promise<ExperimentCreationResponse> => {
-    console.log("controller experimentData:", experimentData);
     const endpoint = "/api/experiments/create";
     const response = await fetch(endpoint, {
         method: "POST",

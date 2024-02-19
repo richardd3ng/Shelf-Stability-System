@@ -8,7 +8,6 @@ import { Container, Typography, Button, Stack } from "@mui/material";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useRouter } from "next/router";
 // import { DeleteExperimentButton } from "@/components/experiment-detail/deleteExperimentButton";
-import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
 
@@ -17,7 +16,6 @@ export default function ExperimentPage() {
     const [assayIdBeingEdited, setAssayIdBeingEdited] = useState<number>(0);
     const experimentId = useExperimentId();
     const router = useRouter();
-    const { data } = useExperimentInfo(experimentId);
     const {
         mutate: deleteExperiment,
         isPending,
@@ -36,8 +34,8 @@ export default function ExperimentPage() {
                 }}
             >
                 <ExperimentHeader />
-                <ExperimentTable />
-                <AssayEditorModal />
+                {/* <ExperimentTable /> */}
+                {/* <AssayEditorModal /> */}
                 {/* <AssaysGroupedByType /> */}
                 <Container
                     maxWidth="sm"
@@ -49,9 +47,7 @@ export default function ExperimentPage() {
                                 variant="outlined"
                                 onClick={() =>
                                     router.push(
-                                        "/experiments/" +
-                                            experimentId.toString() +
-                                            "/report"
+                                        `/experiments/${experimentId}/report`
                                     )
                                 }
                                 style={{ textTransform: "none" }}

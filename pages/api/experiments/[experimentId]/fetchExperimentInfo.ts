@@ -50,12 +50,12 @@ export default async function getExperimentInfoAPI(
             });
             experimentAssayResults.push(...assayResults);
         });
-        return {
+        res.status(200).json({
             experiment: experiment,
             conditions: conditions,
             assays: assays,
             assayResults: experimentAssayResults,
-        };
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json(
