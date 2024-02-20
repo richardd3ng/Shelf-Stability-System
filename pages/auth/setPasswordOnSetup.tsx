@@ -4,7 +4,7 @@ import { AuthForm } from "@/components/shared/authForm";
 import { ErrorMessage } from "@/components/shared/errorMessage";
 import { YourButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
 import { useMutationToSetPasswordOnSetup } from "@/lib/hooks/authPages/setPasswordOnSetupHooks";
-import { checkIfPasswordHasBeenSet } from "@/lib/api/auth/authHelpers";
+import { checkIfAdminExists } from "@/lib/api/auth/authHelpers";
 
 export default function SetPasswordOnSetupPage(){
     const [password1, setPassword1] = useState<string>("");
@@ -18,12 +18,14 @@ export default function SetPasswordOnSetupPage(){
                     {
                         value : password1,
                         setValue : setPassword1,
-                        label : "Password"
+                        label : "Password",
+                        passwordType : true
                     },
                     {
                         value : password2,
                         setValue : setPassword2,
-                        label : "Confirm Password"
+                        label : "Confirm Password",
+                        passwordType : true
                     }
                 ]}
                 title="Set Password"
@@ -51,7 +53,7 @@ export default function SetPasswordOnSetupPage(){
 
 export async function getServerSideProps(){
     try{
-        const passwordHasBeenSet = await checkIfPasswordHasBeenSet();
+        const passwordHasBeenSet = await checkIfAdminExists();
         if (passwordHasBeenSet){
             return {
                 redirect : {
