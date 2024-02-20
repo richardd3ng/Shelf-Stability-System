@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { getServerSession } from 'next-auth';
-import { USER_ID } from '../api/auth/authHelpers';
 import { getToken } from 'next-auth/jwt';
+import { getApiError } from '../api/error';
 // This function can be marked `async` if using `await` inside
 export async function redirectOrBlockIfNotLoggedIn(request: NextRequest) {
-    console.log("blocking if not logged in");
     try{
         const token = await getToken({req : request});
         console.log("their token is ")
@@ -13,9 +11,8 @@ export async function redirectOrBlockIfNotLoggedIn(request: NextRequest) {
         
         
         if (!token){
-            if (request.url.startsWith("/api")){
-                console.log("non logged in guy is trying to reach api");
-                return NextResponse.json({message : "You are not logged in bruh"})
+            if (request.nextUrl.pathname.startsWith("/api")){
+                return NextResponse.json(getApiError(400, "You need to log in", "Not Logged in"))
             }
             return NextResponse.redirect(new URL('/auth/login'));
         }
