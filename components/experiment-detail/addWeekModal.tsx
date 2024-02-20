@@ -25,10 +25,7 @@ export const AddWeekModal: React.FC<AddWeekModalProps> = (
     const { showAlert } = useAlert();
 
     const onSubmit = () => {
-        if (!data) {
-            return;
-        }
-        if (getNumericalValidationError(week, "whole number")) {
+        if (!data || getNumericalValidationError(week, "whole number")) {
             return;
         }
         if (getAllWeeksCoveredByAssays(data.assays).includes(Number(week))) {

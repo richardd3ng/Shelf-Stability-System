@@ -3,19 +3,16 @@ import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentI
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import React, { useEffect, useState } from "react";
 import { useAlert } from "@/lib/context/alert-context";
-import {
-    GridColDef,
-    GridRowSelectionModel,
-    GridSortItem,
-} from "@mui/x-data-grid";
+import { GridColDef, GridSortItem } from "@mui/x-data-grid";
 import { LoadingContainer } from "@/components/shared/loading";
-import { Assay } from "@prisma/client";
+import { Assay, AssayResult } from "@prisma/client";
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import Table from "@/components/shared/table";
 import AddIcon from "@mui/icons-material/Add";
 import { NewAssayModal } from "../modifications/newEntityModals/newAssayModal";
 import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 import { AddWeekModal } from "../addWeekModal";
+import AssayChip from "./assayChip";
 
 interface WeekRow {
     id: number;
@@ -45,6 +42,20 @@ export const getAllWeeksCoveredByAssays = (assays: Assay[]): number[] => {
         }
     });
     return weeks;
+};
+
+const getAssayResultForAssay = (
+    assayResults: AssayResult[],
+    assay: Assay
+): AssayResult | null => {
+    let results: AssayResult[] = [];
+    for (let result of assayResults) {
+        if (result.assayId === assay.id) {
+            results.push(result);
+            return result;
+        }
+    }
+    return null;
 };
 
 const ExperimentTable: React.FC = () => {
@@ -144,11 +155,18 @@ const ExperimentTable: React.FC = () => {
                                 data?.assays ?? [],
                                 params.row.week,
                                 condition.id
-                            ).map((assay) => {
+                            ).map((assay: Assay) => {
+                                const assayResult: AssayResult | undefined =
+                                    getAssayResultForAssay(
+                                        data?.assayResults ?? [],
+                                        assay
+                                    ) ?? undefined;
                                 return (
-                                    <Typography key={assay.type}>
-                                        {assayTypeIdToName(assay.type)}
-                                    </Typography>
+                                    <AssayChip
+                                        key={assay.type}
+                                        assay={assay}
+                                        assayResult={assayResult}
+                                    ></AssayChip>
                                 );
                             })}
                         </Stack>
