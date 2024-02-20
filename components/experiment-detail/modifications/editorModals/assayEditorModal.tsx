@@ -9,10 +9,7 @@ import { TextField, Stack, Typography } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
 import { ButtonWithConfirmationLoadingAndError } from "@/components/shared/buttonWithConfirmationLoadingAndError";
-import {
-    useMutationToDeleteAssay,
-    useMutationToDeleteAssayResult,
-} from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
+import { useMutationToDeleteAssayResult } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import { CloseableModal } from "@/components/shared/closeableModal";
 import { Assay } from "@prisma/client";
 import { useAlert } from "@/lib/context/alert-context";
@@ -42,12 +39,6 @@ export const AssayEditorModal: React.FC = () => {
         setType(currAssay.type);
     }, [data, assayIdBeingEdited, isEditing]);
 
-    const {
-        mutate: deleteAssay,
-        isPending: isDeleting,
-        isError: isErrorDeleting,
-        error: errorDeleting,
-    } = useMutationToDeleteAssay();
     const {
         mutate: deleteAssayResult,
         isPending: isDeletingResult,

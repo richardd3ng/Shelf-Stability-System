@@ -7,6 +7,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import React, { useState } from "react";
 import { Assay, AssayResult } from "@prisma/client";
 import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
+import { useMutationToDeleteAssay } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
+import { useAlert } from "@/lib/context/alert-context";
 
 interface AssayChipProps {
     assay: Assay;
@@ -14,6 +16,16 @@ interface AssayChipProps {
 }
 
 const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
+    const {
+        mutate: deleteAssay,
+        isPending: isDeleting,
+        isError: isErrorDeleting,
+        error: errorDeleting,
+    } = useMutationToDeleteAssay();
+    const [showLastEditor, setShowLastEditor] = useState(false);
+    const [showComment, setShowComment] = useState(false);
+    const { showAlert } = useAlert();
+
     const units: string = getAssayTypeUnits(props.assay.type);
     const resultText: string = props.assayResult
         ? `${props.assayResult.result}${
@@ -21,15 +33,17 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
           }`
         : "No Result Recorded";
 
-    const [showLastEditor, setShowLastEditor] = useState(false);
-    const [showComment, setShowComment] = useState(false);
+    const handleDelete = () => {
+        deleteAssay(props.assay.id);
+        if (isErrorDeleting) {
+            showAlert("error", errorDeleting.message);
+        } else {
+            showAlert("success", "Assay deleted successfully.");
+        }
+    };
 
     const handleEdit = () => {
         // Implement edit functionality
-    };
-
-    const handleDelete = () => {
-        // Implement delete functionality
     };
 
     return (
