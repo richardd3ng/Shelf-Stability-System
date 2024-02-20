@@ -15,16 +15,11 @@ import Table from "@/components/shared/table";
 import AddIcon from "@mui/icons-material/Add";
 import { NewAssayModal } from "../modifications/newEntityModals/newAssayModal";
 import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
+import { AddWeekModal } from "../addWeekModal";
 
 interface WeekRow {
     id: number;
     week: number;
-}
-
-interface AssayScheduleMap {
-    [rowId: number]: {
-        [conditionId: number]: number[];
-    };
 }
 
 interface AddAssayParams {
@@ -38,7 +33,6 @@ export const getAssaysForWeekAndCondition = (
     conditionId: number
 ): Assay[] => {
     return assays.filter((assay) => {
-        return assay.week === weekNum && assay.conditionId === conditionId;
         return assay.week === weekNum && assay.conditionId === conditionId;
     });
 };
@@ -59,12 +53,10 @@ const ExperimentTable: React.FC = () => {
     const { data, isLoading, isError } = useExperimentInfo(experimentId);
     const [weekRows, setWeekRows] = useState<WeekRow[]>([]);
     const [idCounter, setIdCounter] = useState<number>(0);
-    const [assayScheduleMap, setAssayScheduleMap] = useState<AssayScheduleMap>(
-        {}
-    );
     const [addAssayParams, setAddAssayParams] = useState<AddAssayParams | null>(
         null
     );
+    const [showAddWeekModal, setShowAddWeekModal] = useState<boolean>(false);
 
     useEffect(() => {
         if (isError) {
@@ -173,10 +165,10 @@ const ExperimentTable: React.FC = () => {
         return [weekColumn, ...conditionCols];
     };
 
-    const handleAddWeek = () => {
+    const handleAddWeek = (week: number) => {
         const addedRow: WeekRow = {
             id: idCounter,
-            week: 0,
+            week: week,
         };
         setWeekRows([...weekRows, addedRow]);
         setIdCounter(idCounter + 1);
@@ -195,7 +187,7 @@ const ExperimentTable: React.FC = () => {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={handleAddWeek}
+                    onClick={() => setShowAddWeekModal(true)}
                 >
                     Add Week
                 </Button>
@@ -210,6 +202,11 @@ const ExperimentTable: React.FC = () => {
                 onClose={() => setAddAssayParams(null)}
                 week={addAssayParams?.week ?? -1}
                 conditionId={addAssayParams?.conditionId ?? -1}
+            />
+            <AddWeekModal
+                open={showAddWeekModal}
+                onClose={() => setShowAddWeekModal(false)}
+                onSubmit={handleAddWeek}
             />
             <Table
                 columns={createTableColumns()}

@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { AssayCreationArgs } from "@/lib/controllers/types";
+import { useAlert } from "@/lib/context/alert-context";
 
 interface NewAssayModalProps {
     open: boolean;
@@ -36,8 +37,13 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
         error,
         mutate: createAssayInDB,
     } = useMutationToCreateAssay();
+    const { showAlert } = useAlert();
 
     const onSubmit = () => {
+        if (!selectedAssayType) {
+            showAlert("error", "Please select an assay type.");
+            return;
+        }
         const assayInfo: AssayCreationArgs = {
             experimentId: experimentId,
             conditionId: props.conditionId,
@@ -45,6 +51,8 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
             week: props.week,
         };
         createAssayInDB(assayInfo);
+        showAlert("success", "Assay created successfully.");
+        props.onClose();
     };
 
     return (

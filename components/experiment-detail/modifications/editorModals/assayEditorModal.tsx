@@ -18,8 +18,6 @@ import { Assay } from "@prisma/client";
 import { useAlert } from "@/lib/context/alert-context";
 import { updateAssayResult } from "@/lib/controllers/assayResultController";
 
-// TODO: We'll be removing the date field, so make sure to clean out dayjs stuff at that time
-// TODO: determine how to handle changing weeks + results at the same time, and how to update assay + result
 export const AssayEditorModal: React.FC = () => {
     const { isEditing, setIsEditing, assayIdBeingEdited } =
         useContext(AssayEditingContext);
@@ -38,10 +36,6 @@ export const AssayEditorModal: React.FC = () => {
             (assay: Assay) => assay.id === assayIdBeingEdited
         );
         if (!currAssay) {
-            showAlert(
-                "error",
-                `Assay being edited is not found or has been deleted`
-            );
             return;
         }
         setWeek(currAssay.week);
