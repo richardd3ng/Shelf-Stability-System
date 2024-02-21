@@ -9,6 +9,7 @@ import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentI
 import { useRouter } from "next/router";
 import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
 import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
+import { GenerateReportsOptions } from "@/components/experiment-detail/generateReportsOptions/generateReportsOptions";
 
 export default function ExperimentPage() {
     const [isEditingAssay, setIsEditingAssay] = useState<boolean>(false);
@@ -41,21 +42,7 @@ export default function ExperimentPage() {
                     style={{ marginTop: 24, marginBottom: 24 }}
                 >
                     <Stack>
-                        <Typography align="center" style={{ marginBottom: 8 }}>
-                            <Button
-                                variant="outlined"
-                                onClick={() =>
-                                    router.push(
-                                        `/experiments/${experimentId}/report`
-                                    )
-                                }
-                                style={{ textTransform: "none" }}
-                            >
-                                <Typography align="center">
-                                    Generate a report for this experiment
-                                </Typography>
-                            </Button>
-                        </Typography>
+                        <GenerateReportsOptions/>
                         {/* <DeleteExperimentButton /> */}
                     </Stack>
                 </Container>

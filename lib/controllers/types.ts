@@ -13,6 +13,10 @@ export type ExperimentInfo = {
     assayResults: AssayResult[];
 };
 
+export type ExperimentOwner = {
+    username : string;
+}
+
 export type ExperimentTableInfo = {
     id: number;
     title: string;
