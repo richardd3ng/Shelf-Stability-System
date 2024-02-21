@@ -30,7 +30,7 @@ export const AssayEditorModal: React.FC = () => {
         setAssayResultIdBeingEdited,
     } = useContext(AssayResultEditingContext);
     const experimentId = useExperimentId();
-    const { data, isLoading, isError } = useExperimentInfo(experimentId);
+    const { data } = useExperimentInfo(experimentId);
     const [result, setResult] = useState<number | null>(null);
     const [comment, setComment] = useState<string | null>(null);
     const [type, setType] = useState<number>(-1);

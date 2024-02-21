@@ -35,7 +35,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
         isPending,
         isError,
         error,
-        mutate: createAssayInDB,
+        mutate: createAssay,
     } = useMutationToCreateAssay();
     const { showAlert } = useAlert();
 
@@ -50,7 +50,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
             type: assayTypeNameToId(selectedAssayType),
             week: props.week,
         };
-        await createAssayInDB(assayInfo);
+        await createAssay(assayInfo);
         props.onClose();
     };
 

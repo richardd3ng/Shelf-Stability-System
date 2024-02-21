@@ -3,6 +3,24 @@ import { ConditionCreationArgs, ConditionUpdateArgs } from "./types";
 import { ApiError } from "next/dist/server/api-utils";
 import { deleteEntity } from "./deletions";
 
+export const createCondition = async (
+    conditionCreationArgs: ConditionCreationArgs
+): Promise<Condition> => {
+    const endpoint = "/api/conditions/create";
+    const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(conditionCreationArgs),
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    }
+    throw new ApiError(response.status, resJson.message);
+}
+
 export const createConditions = async (
     conditionCreationArgsArray: ConditionCreationArgs[]
 ): Promise<Condition[]> => {
@@ -48,6 +66,15 @@ export const updateCondition = async (
     throw new ApiError(response.status, resJson.message);
 };
 
+export const deleteCondition = async (id: number): Promise<Condition> => {
+    const endpoint = `/api/conditions/${id}/delete`;
+    try {
+        return deleteEntity(endpoint);
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const setConditionAsControl = async (id: number): Promise<Condition> => {
     const endpoint = `/api/conditions/${id}/setAsControl`;
     const response = await fetch(endpoint, {
@@ -61,13 +88,4 @@ export const setConditionAsControl = async (id: number): Promise<Condition> => {
         return resJson;
     }
     throw new ApiError(response.status, resJson.message);
-};
-
-export const deleteCondition = async (id: number): Promise<Condition> => {
-    const endpoint = `/api/conditions/${id}/delete`;
-    try {
-        return deleteEntity(endpoint);
-    } catch (error) {
-        throw error;
-    }
 };

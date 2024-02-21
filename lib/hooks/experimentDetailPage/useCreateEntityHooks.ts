@@ -3,26 +3,33 @@ import { useExperimentId } from "./useExperimentId";
 import { getQueryKeyForUseExperimentInfo } from "./experimentDetailHooks";
 import { createAssay } from "@/lib/controllers/assayController";
 import { createAssayResult } from "@/lib/controllers/assayResultController";
+import { createCondition } from "@/lib/controllers/conditionController";
 import { useAlert } from "@/lib/context/alert-context";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { Assay, Condition } from "@prisma/client";
+import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 
-// export const useMutationToCreateCondition = () => {
-//     const queryClient = useQueryClient();
-//     const experimentId = useExperimentId();
-//     const { showAlert } = useAlert();
+export const useMutationToCreateCondition = () => {
+    const queryClient = useQueryClient();
+    const experimentId = useExperimentId();
+    const { showAlert } = useAlert();
 
-//     return useMutation({
-//         mutationFn: createCondition,
-//         onSuccess: () => {
-//             queryClient.invalidateQueries({
-//                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
-//             });
-//         },
-//         onError: (error) => {
-//             showAlert("error", getErrorMessage(error));
-//         },
-//     });
-// };
+    return useMutation({
+        mutationFn: createCondition,
+        onSuccess: (createdCondition: Condition) => {
+            queryClient.invalidateQueries({
+                queryKey: getQueryKeyForUseExperimentInfo(experimentId),
+            });
+            showAlert(
+                "success",
+                `Succesfully created condition ${createdCondition.name}`
+            );
+        },
+        onError: (error) => {
+            showAlert("error", getErrorMessage(error));
+        },
+    });
+};
 
 export const useMutationToCreateAssay = () => {
     const queryClient = useQueryClient();
@@ -31,11 +38,16 @@ export const useMutationToCreateAssay = () => {
 
     return useMutation({
         mutationFn: createAssay,
-        onSuccess: () => {
+        onSuccess: (createdAssay: Assay) => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
             });
-            showAlert("success", "Succesfully created assay");
+            showAlert(
+                "success",
+                `Succesfully created ${assayTypeIdToName(
+                    createdAssay.type
+                )} assay`
+            );
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
@@ -54,7 +66,7 @@ export const useMutationToCreateAssayResult = () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
             });
-            showAlert("success", "Succesfully created assay result");
+            showAlert("success", "Succesfully recorded assay result");
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));

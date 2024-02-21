@@ -79,7 +79,7 @@ export default async function setConditionAsControlAPI(
         });
         res.status(200).json(condition);
     } catch (error) {
-        console.log(getErrorMessage(error));
+        console.error(getErrorMessage(error));
         res.status(500).json(
             getApiError(500, `Failed to set condition as control on server`)
         );
