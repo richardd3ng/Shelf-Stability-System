@@ -33,7 +33,7 @@ model Assay {
   id           Int        @id @default(autoincrement())
   experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
   experimentId Int
-  condition    Condition  @relation(fields: [conditionId], references: [id])
+  condition    Condition  @relation(fields: [conditionId], references: [id], onDelete: Cascade)
   conditionId  Int
   result       AssayResult?
   type         Int
