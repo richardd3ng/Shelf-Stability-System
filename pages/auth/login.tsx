@@ -14,42 +14,48 @@ export default function LoginPage() {
 
     const handleSubmit = () => {
         setIsLoading(true);
-        signIn("credentials", { password, redirect: false }).then((d) => {
-            if (!d || (d && d.status > 300)) {
-                console.log("bad usenrmae")
-                setErrorMessage("Wrong username/password");
-            } else {
-                router.push("/experiment-list");
-            }
-
-        }).catch((reason) => {
-
-        });
+        signIn("credentials", { password, redirect: false })
+            .then((d) => {
+                if (!d || (d && d.status > 300)) {
+                    console.log("bad usenrmae");
+                    setErrorMessage("Wrong username/password");
+                } else {
+                    router.push("/experiment-list");
+                }
+            })
+            .catch((reason) => {});
         setIsLoading(false);
     };
     return (
         <Container maxWidth="sm" style={{ marginTop: 20, paddingTop: 20 }}>
-            <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                }}
+            >
                 <AuthForm
                     fields={[
                         {
                             value: password,
                             setValue: setPassword,
-                            label: "Password"
-                        }
+                            label: "Password",
+                        },
                     ]}
                     title="Login"
                 />
-                <YourButtonWithLoadingAndError isError={errorMessage.length > 0} error={new Error(errorMessage)} isLoading={isLoading}>
+                <YourButtonWithLoadingAndError
+                    isError={errorMessage.length > 0}
+                    error={new Error(errorMessage)}
+                    isLoading={isLoading}
+                >
                     <Button variant="contained" color="primary" type="submit">
-                        <Typography>
-                            Submit
-                        </Typography>
+                        <Typography>Submit</Typography>
                     </Button>
                 </YourButtonWithLoadingAndError>
             </form>
         </Container>
-    )
+    );
 }
 
 export async function getServerSideProps() {
@@ -58,20 +64,19 @@ export async function getServerSideProps() {
         if (!passwordHasBeenSet) {
             return {
                 redirect: {
-                    destination: '/auth/setPasswordOnSetup',
+                    destination: "/auth/setPasswordOnSetup",
                     permanent: false,
                 },
-            }
+            };
         } else {
             return { props: {} };
         }
     } catch {
         return {
             redirect: {
-                destination: '/auth/setPasswordOnSetup',
+                destination: "/auth/setPasswordOnSetup",
                 permanent: false,
             },
-        }
+        };
     }
-
 }

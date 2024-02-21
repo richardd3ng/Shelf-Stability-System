@@ -57,7 +57,7 @@ export const AddWeekModal: React.FC<AddWeekModalProps> = (
         if (e.key === "Enter") {
             onSubmit();
         }
-    }
+    };
 
     return (
         <CloseableModal

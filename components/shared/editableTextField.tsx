@@ -11,6 +11,7 @@ interface EditableTextFieldProps {
     value?: string;
     label?: string;
     numberType?: NumberType;
+    units?: string;
     defaultDisplayValue?: string;
     onChange: (value: string) => void;
     onSubmit: (value: string) => void;
@@ -65,7 +66,7 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
                     autoFocus
-                    sx={{ flex: 9 }}
+                    sx={{ flex: 9, paddingRight: 1 }}
                 />
             ) : (
                 <Box sx={{ flex: 9 }}>
@@ -73,6 +74,9 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
                         {value !== "" ? value : props.defaultDisplayValue}
                     </Typography>
                 </Box>
+            )}
+            {props.units && (
+                <Typography sx={{ paddingLeft: 0 }}>{props.units}</Typography>
             )}
             {isEditing ? (
                 <IconButton onClick={handleSubmit} sx={{ flex: 1 }}>

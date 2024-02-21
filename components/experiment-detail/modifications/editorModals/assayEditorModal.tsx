@@ -16,6 +16,7 @@ import EditableTextField from "@/components/shared/editableTextField";
 import { AssayResultEditingContext } from "@/lib/context/shared/assayResultEditingContext";
 import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
 import { useAlert } from "@/lib/context/alert-context";
+import { getAssayTypeUnits } from "@/lib/controllers/assayTypeController";
 
 export const AssayEditorModal: React.FC = () => {
     const {
@@ -35,7 +36,6 @@ export const AssayEditorModal: React.FC = () => {
     const [comment, setComment] = useState<string | null>(null);
     const [type, setType] = useState<number>(-1);
     const [week, setWeek] = useState<number>(-1);
-    const { showAlert } = useAlert();
 
     useEffect(() => {
         if (!data) {
@@ -59,28 +59,10 @@ export const AssayEditorModal: React.FC = () => {
         setComment(currAssayResult.comment);
     }, [data, assayIdBeingEdited, isEditingAssay]);
 
-    const {
-        mutate: updateAssay,
-        isPending: isUpdatingDB,
-        isError: isErrorUpdatingDB,
-        error: errorUpdatingAssay,
-    } = useMutationToUpdateAssay();
-    const {
-        mutate: createAssayResult,
-        isError: isErrorCreatingResult,
-        error: errorCreatingResult,
-    } = useMutationToCreateAssayResult();
-    const {
-        mutate: updateAssayResult,
-        isError: isErrorUpdatingResult,
-        error: errorUpdatingResult,
-    } = useMutationToUpdateAssayResult();
-    const {
-        mutate: deleteAssayResult,
-        isPending: isDeletingResult,
-        isError: isErrorDeletingResult,
-        error: errorDeletingResult,
-    } = useMutationToDeleteAssayResult();
+    const { mutate: updateAssay } = useMutationToUpdateAssay();
+    const { mutate: createAssayResult } = useMutationToCreateAssayResult();
+    const { mutate: updateAssayResult } = useMutationToUpdateAssayResult();
+    const { mutate: deleteAssayResult } = useMutationToDeleteAssayResult();
 
     const handleSubmit = () => {
         if (result) {
@@ -95,21 +77,12 @@ export const AssayEditorModal: React.FC = () => {
                     updateAssayResultArgs.comment = comment;
                 }
                 updateAssayResult(updateAssayResultArgs);
-                if (isErrorUpdatingResult) {
-                    showAlert("error", errorUpdatingResult.message);
-                    return;
-                }
             } else {
                 createAssayResult({
                     assayId: assayIdBeingEdited,
                     result: result,
                     comment: comment,
                 });
-                if (isErrorCreatingResult) {
-                    showAlert("error", errorCreatingResult.message);
-                    return;
-                }
-                showAlert("success", "Assay result created successfully.");
             }
         }
         setIsEditingAssayResult(false);
@@ -129,6 +102,7 @@ export const AssayEditorModal: React.FC = () => {
                         defaultDisplayValue="N/A"
                         label="Result:"
                         numberType="float"
+                        units={type !== -1 ? getAssayTypeUnits(type) : ""}
                         onChange={(value: string) =>
                             setResult(parseFloat(value))
                         }

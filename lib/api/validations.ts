@@ -7,7 +7,6 @@ export const assayHasResult = async (assayId: number): Promise<boolean> => {
             assayId: assayId,
         },
     });
-    console.log(`assay ${assayId} has assay result: ${assayResult}`);
     return assayResult !== null;
 };
 

@@ -39,7 +39,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
     } = useMutationToCreateAssay();
     const { showAlert } = useAlert();
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         if (!selectedAssayType) {
             showAlert("error", "Please select an assay type.");
             return;
@@ -50,8 +50,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
             type: assayTypeNameToId(selectedAssayType),
             week: props.week,
         };
-        createAssayInDB(assayInfo);
-        showAlert("success", "Assay created successfully.");
+        await createAssayInDB(assayInfo);
         props.onClose();
     };
 
