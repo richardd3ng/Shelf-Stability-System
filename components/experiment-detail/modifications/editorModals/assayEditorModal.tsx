@@ -15,7 +15,6 @@ import { AssayResultUpdateArgs } from "@/lib/controllers/types";
 import EditableTextField from "@/components/shared/editableTextField";
 import { AssayResultEditingContext } from "@/lib/context/shared/assayResultEditingContext";
 import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
-import { useAlert } from "@/lib/context/alert-context";
 import { getAssayTypeUnits } from "@/lib/controllers/assayTypeController";
 
 export const AssayEditorModal: React.FC = () => {
@@ -88,6 +87,14 @@ export const AssayEditorModal: React.FC = () => {
         setIsEditingAssayResult(false);
     };
 
+    const handleDelete = () => {
+        if (assayResultIdBeingEdited !== INVALID_ASSAY_RESULT_ID) {
+            deleteAssayResult(assayResultIdBeingEdited);
+            setResult(null);
+        }
+        setIsEditingAssayResult(false);
+    };
+
     return (
         <CloseableModal
             open={isEditingAssay}
@@ -107,6 +114,7 @@ export const AssayEditorModal: React.FC = () => {
                             setResult(parseFloat(value))
                         }
                         onSubmit={handleSubmit}
+                        onDelete={handleDelete}
                     />
                 </Stack>
             </Stack>

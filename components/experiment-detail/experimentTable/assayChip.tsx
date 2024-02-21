@@ -10,10 +10,7 @@ import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 import { useMutationToDeleteAssay } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import { AssayEditorModal } from "../modifications/editorModals/assayEditorModal";
 import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
-import {
-    INVALID_ASSAY_ID,
-    INVALID_ASSAY_RESULT_ID,
-} from "@/lib/api/apiHelpers";
+import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
 import { AssayResultEditingContext } from "@/lib/context/shared/assayResultEditingContext";
 
 interface AssayChipProps {
@@ -33,10 +30,6 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
               units.startsWith("%") ? units : ` ${units}`
           }`
         : "No Result Recorded";
-
-    const handleEdit = () => {
-        setIsEditing(true);
-    };
 
     return (
         <>
@@ -118,7 +111,7 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <IconButton onClick={handleEdit}>
+                        <IconButton onClick={() => setIsEditing(true)}>
                             <EditIcon sx={{ fontSize: 20, color: "gray" }} />
                         </IconButton>
                         <IconButton onClick={() => deleteAssay(props.assay.id)}>

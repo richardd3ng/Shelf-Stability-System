@@ -13,8 +13,10 @@ interface EditableTextFieldProps {
     numberType?: NumberType;
     units?: string;
     defaultDisplayValue?: string;
+    includeDelete?: boolean;
     onChange: (value: string) => void;
     onSubmit: (value: string) => void;
+    onDelete?: () => void;
 }
 
 const EditableLabel: React.FC<EditableTextFieldProps> = (
@@ -23,13 +25,23 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
     const [value, setValue] = useState<string>(props.value || "");
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const { showAlert } = useAlert();
+    const resultText: string =
+        value && props.units
+            ? `${value}${
+                  props.units.startsWith("%") ? props.units : ` ${props.units}`
+              }`
+            : props.defaultDisplayValue || "";
 
     const handleEdit = () => {
         setIsEditing(true);
     };
 
     const handleDelete = () => {
-        setIsEditing(true);
+        setIsEditing(false);
+        setValue("");
+        if (props.onDelete) {
+            props.onDelete();
+        }
     };
 
     const handleSubmit = () => {
@@ -57,7 +69,7 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
 
     return (
         <Box sx={{ alignItems: "center", display: "flex", width: "100%" }}>
-            {!isEditing && props.label && (
+            {props.label && !isEditing && (
                 <Typography sx={{ paddingRight: 2 }}>{props.label}</Typography>
             )}
             {isEditing ? (
@@ -70,12 +82,10 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
                 />
             ) : (
                 <Box sx={{ flex: 9 }}>
-                    <Typography width="100%">
-                        {value !== "" ? value : props.defaultDisplayValue}
-                    </Typography>
+                    <Typography width="100%">{resultText}</Typography>
                 </Box>
             )}
-            {props.units && (
+            {props.units && isEditing && (
                 <Typography sx={{ paddingLeft: 0 }}>{props.units}</Typography>
             )}
             {isEditing ? (
@@ -87,9 +97,11 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
                     <IconButton onClick={handleEdit} sx={{ marginRight: -1 }}>
                         <EditIcon />
                     </IconButton>
-                    <IconButton onClick={handleDelete}>
-                        <DeleteIcon />
-                    </IconButton>
+                    {props.onDelete && (
+                        <IconButton onClick={handleDelete}>
+                            <DeleteIcon />
+                        </IconButton>
+                    )}
                 </Box>
             )}
         </Box>
