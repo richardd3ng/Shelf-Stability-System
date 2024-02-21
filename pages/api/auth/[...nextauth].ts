@@ -14,27 +14,29 @@ export const authOptions = {
             // e.g. domain, username, password, 2FA token, etc.
             // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
+                username : { label: "Username", type : "username"},
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials, req) {
                 try {
+                    const username = credentials?.username;
                     const password = credentials?.password;
-                    if (password) {
-                        const ROOT_USER = await db.user.findUnique({
+                    if (username && password) {
+                        const user = await db.user.findUnique({
                             where: {
-                                username: USER_ID,
+                                username: username,
                             },
                         });
-                        if (ROOT_USER) {
+                        if (user) {
                             const correctPassword = await compare(
                                 password,
-                                ROOT_USER.password
+                                user.password
                             );
                             if (correctPassword) {
                                 return {
-                                    id: ROOT_USER.username,
-                                    name: ROOT_USER.username,
-                                    email: ROOT_USER.username,
+                                    id: user.id.toString(),
+                                    name: user.username,
+                                    email: user.username,
                                 };
                             } else {
                                 return null;
@@ -68,7 +70,7 @@ export const authOptions = {
         async jwt({ token, user }: { token: any; user: any }) {
             if (user) {
                 token.id = user.id;
-                token.name = user.id;
+                token.name = user.name;
                 token.email = user.name;
             }
             return token;

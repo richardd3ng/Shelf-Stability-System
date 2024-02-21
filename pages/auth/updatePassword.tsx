@@ -4,7 +4,7 @@ import { AuthForm } from "@/components/shared/authForm";
 import { ErrorMessage } from "@/components/shared/errorMessage";
 import { YourButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
 import { useMutationToUpdatePassword } from "@/lib/hooks/authPages/updatePasswordHooks";
-import { checkIfPasswordHasBeenSet } from "@/lib/api/auth/authHelpers";
+import { checkIfAdminExists } from "@/lib/api/auth/authHelpers";
 import Layout from "@/components/shared/layout";
 
 export default function UpdatePasswordPage(){
@@ -20,20 +20,23 @@ export default function UpdatePasswordPage(){
                         {
                             value : password1,
                             setValue : setPassword1,
-                            label : "Password"
+                            label : "Password",
+                            shouldBlurText : true
                         },
                         {
                             value : password2,
                             setValue : setPassword2,
-                            label : "Confirm Password"
+                            label : "Confirm Password",
+                            shouldBlurText : true
                         },
                         {
                             value : oldPassword, 
                             setValue : setOldPassword,
-                            label : "Please enter the old password"
+                            label : "Please enter your old password",
+                            shouldBlurText : true
                         }
                     ]}
-                    title="Update Password"
+                    title="Update Your Password"
                 />
                 {
                     (password1 !== password2) && (password1.length > 0 && password2.length > 0)
@@ -59,7 +62,7 @@ export default function UpdatePasswordPage(){
 
 export async function getServerSideProps(){
     try{
-        const passwordHasBeenSet = await checkIfPasswordHasBeenSet();
+        const passwordHasBeenSet = await checkIfAdminExists();
         if (!passwordHasBeenSet){
             return {
                 redirect : {
