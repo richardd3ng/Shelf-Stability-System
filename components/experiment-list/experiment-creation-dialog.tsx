@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
     Box,
     Button,
@@ -12,19 +12,17 @@ import {
     TextField,
 } from "@mui/material";
 import MultiSelectDropdown from "../shared/multi-select-dropdown";
-import { fetchDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
-import { fetchDistinctConditions } from "@/lib/controllers/conditionController";
 import { createExperiment } from "@/lib/controllers/experimentController";
 import {
     ConditionCreationArgsNoExperimentId,
     ExperimentCreationResponse,
 } from "@/lib/controllers/types";
 import { ExperimentCreationArgs } from "@/lib/controllers/types";
-import { INVALID_EXPERIMENT_ID } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useAlert } from "@/lib/context/alert-context";
 import { useRouter } from "next/router";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "../shared/myDatePicker";
+import { getErrorMessage } from "@/lib/api/apiHelpers";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -40,7 +38,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [date, setDate] = useState<LocalDate | null>(LocalDate.now());
-    const [assayTypes, setAssayTypes] = useState<string[]>([]);
     const [storageConditions, setStorageConditions] = useState<string[]>([]);
     const [selectedStorageConditions, setSelectedStorageConditions] = useState<
         string[]
@@ -49,31 +46,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [creationLoading, setCreationLoading] = useState<boolean>(false);
     const { showAlert } = useAlert();
     const router = useRouter();
-
-    useEffect(() => {
-        fetchAndSetAssayTypes();
-        fetchAndSetStorageConditions();
-    }, []);
-
-    const fetchAndSetAssayTypes = async () => {
-        try {
-            const distinctAssayTypes: string[] =
-                await fetchDistinctAssayTypes();
-            setAssayTypes(distinctAssayTypes);
-        } catch (error) {
-            showAlert("error", String(error));
-        }
-    };
-
-    const fetchAndSetStorageConditions = async () => {
-        try {
-            const distinctConditions: string[] =
-                await fetchDistinctConditions();
-            setStorageConditions(distinctConditions);
-        } catch (error) {
-            showAlert("error", String(error));
-        }
-    };
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
@@ -124,7 +96,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             return;
         }
         setCreationLoading(true);
-        let experimentId = INVALID_EXPERIMENT_ID;
         try {
             const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
                 selectedStorageConditions.map(
@@ -138,28 +109,23 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             const experimentData: ExperimentCreationArgs = {
                 title: title,
                 description: description,
-                start_date: date!.toString(),
+                start_date: date!,
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
+                ownerId: 1, // TODO: Replace with actual owner ID
             };
             const experimentResJson: ExperimentCreationResponse =
                 await createExperiment(experimentData);
-            experimentId = experimentResJson.experiment.id;
-            if (experimentId === INVALID_EXPERIMENT_ID) {
-                showAlert("error", "Experiment ID is invalid!");
-            }
-        } catch (error) {
-            showAlert("error", String(error));
-        }
-        setCreationLoading(false);
-        if (experimentId !== INVALID_EXPERIMENT_ID) {
             showAlert(
                 "success",
-                `Successfully created experiment ${experimentId}!`
+                `Successfully created experiment ${experimentResJson.experiment.id}!`
             );
-            router.push(`/experiments/${experimentId}`);
-            closeDialog();
+            router.push(`/experiments/${experimentResJson.experiment.id}`);
+        } catch (error) {
+            showAlert("error", getErrorMessage(error));
         }
+        setCreationLoading(false);
+        closeDialog();
     };
 
     const handleAddStorageCondition = () => {

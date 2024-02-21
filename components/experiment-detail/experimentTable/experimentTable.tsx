@@ -1,10 +1,7 @@
 import { ExperimentInfo } from "@/lib/controllers/types";
-import {
-    INVALID_EXPERIMENT_ID,
-    useExperimentId,
-} from "@/lib/hooks/experimentDetailPage/useExperimentId";
+import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAlert } from "@/lib/context/alert-context";
 import {
     GridColDef,
@@ -17,6 +14,7 @@ import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import Table from "@/components/shared/table";
 import AddIcon from "@mui/icons-material/Add";
 import { NewAssayModal } from "../modifications/newEntityModals/newAssayModal";
+import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 
 interface WeekRow {
     id: number;
@@ -41,15 +39,14 @@ export const getAssaysForWeekAndCondition = (
 ): Assay[] => {
     return assays.filter((assay) => {
         return assay.week === weekNum && assay.conditionId === conditionId;
+        return assay.week === weekNum && assay.conditionId === conditionId;
     });
 };
 
-export const getAllWeeksCoveredByAssays = (
-    assays: Assay[]
-): number[] => {
+export const getAllWeeksCoveredByAssays = (assays: Assay[]): number[] => {
     let weeks: number[] = [];
-    assays.forEach((assay) => {
-        if (!weeks.includes(assay.week)){
+    assays.forEach((assay: Assay) => {
+        if (!weeks.includes(assay.week)) {
             weeks.push(assay.week);
         }
     });
@@ -61,7 +58,7 @@ const ExperimentTable: React.FC = () => {
     const experimentId = useExperimentId();
     const { data, isLoading, isError } = useExperimentInfo(experimentId);
     const [weekRows, setWeekRows] = useState<WeekRow[]>([]);
-    const [idCounter, setIdCounter] = useState<number>(1000);
+    const [idCounter, setIdCounter] = useState<number>(0);
     const [assayScheduleMap, setAssayScheduleMap] = useState<AssayScheduleMap>(
         {}
     );
@@ -69,31 +66,47 @@ const ExperimentTable: React.FC = () => {
         null
     );
 
+    useEffect(() => {
+        if (isError) {
+            showAlert("error", "Error loading experiment data");
+        } else if (
+            !data ||
+            !data.experiment ||
+            !data.assays ||
+            !data.conditions
+        ) {
+            return;
+        } else {
+            const weeks: number[] = getAllWeeksCoveredByAssays(data.assays);
+            const initialWeekRows: WeekRow[] = [];
+            weeks.forEach((week: number, index: number) => {
+                initialWeekRows.push({
+                    id: index,
+                    week: week,
+                });
+            });
+            setWeekRows(initialWeekRows);
+            setIdCounter(weeks.length);
+        }
+    }, [data, isError]);
+
     if (isLoading) {
         return <LoadingContainer />;
-    } else if (experimentId === INVALID_EXPERIMENT_ID) {
-        showAlert("error", "Invalid experiment ID");
-        return <></>;
-    } else if (isError) {
-        showAlert("error", "Error loading experiment data");
-        return <></>;
-    } else if (!data || !data.experiment || !data.assays || !data.conditions) {
-        showAlert("error", "Experiment data is missing");
-        return <></>;
     }
+
     const createTableColumns = (): GridColDef[] => {
         const weekColumn: GridColDef = {
             field: "week",
-            headerName: "Week",
+            headerName: "Wk",
             type: "number",
-            width: 70,
+            width: 50,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
             editable: false,
             sortable: false,
         };
-        const conditionCols: GridColDef[] = data.conditions.map(
+        const conditionCols: GridColDef[] = (data?.conditions || []).map(
             (condition) => ({
                 field: condition.name,
                 headerName: condition.name,
@@ -136,13 +149,13 @@ const ExperimentTable: React.FC = () => {
                             </Box>
 
                             {getAssaysForWeekAndCondition(
-                                data.assays,
+                                data?.assays ?? [],
                                 params.row.week,
                                 condition.id
                             ).map((assay) => {
                                 return (
                                     <Typography key={assay.type}>
-                                        {assay.type}
+                                        {assayTypeIdToName(assay.type)}
                                     </Typography>
                                 );
                             })}
@@ -167,19 +180,6 @@ const ExperimentTable: React.FC = () => {
         };
         setWeekRows([...weekRows, addedRow]);
         setIdCounter(idCounter + 1);
-    };
-
-    const handleDeleteWeeks = (selectedRows: GridRowSelectionModel) => {
-        const newMap: AssayScheduleMap = Object.fromEntries(
-            Object.entries(assayScheduleMap).filter(
-                ([rowId]) => !selectedRows.includes(Number(rowId))
-            )
-        );
-        setAssayScheduleMap(newMap);
-        const remainingRows: WeekRow[] = weekRows.filter(
-            (row) => !selectedRows.includes(row.id)
-        );
-        setWeekRows(remainingRows);
     };
 
     const tableAddWeekFooter: React.FC = () => {
@@ -221,7 +221,6 @@ const ExperimentTable: React.FC = () => {
                         sort: "asc",
                     } as GridSortItem,
                 ]}
-                onDeleteRows={handleDeleteWeeks}
             />
         </>
     );

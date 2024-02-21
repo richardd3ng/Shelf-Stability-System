@@ -14,38 +14,46 @@ export const authOptions = {
             // e.g. domain, username, password, 2FA token, etc.
             // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
-                password: { label: "Password", type: "password" }
+                username : { label: "Username", type : "username"},
+                password: { label: "Password", type: "password" },
             },
             async authorize(credentials, req) {
-                try{
+                try {
+                    const username = credentials?.username;
                     const password = credentials?.password;
-                    if (password){
-                        const ROOT_USER = await db.auth.findUnique({
-                            where : {
-                                username : USER_ID
-                            }
-                        })
-                        if (ROOT_USER){
-                            const correctPassword = await compare(password, ROOT_USER.password)
-                            if (correctPassword){
-                                return {id : ROOT_USER.username, name : ROOT_USER.username, email : ROOT_USER.username}
+                    if (username && password) {
+                        const user = await db.user.findUnique({
+                            where: {
+                                username: username,
+                            },
+                        });
+                        if (user) {
+                            const correctPassword = await compare(
+                                password,
+                                user.password
+                            );
+                            if (correctPassword) {
+                                return {
+                                    id: user.id.toString(),
+                                    name: user.username,
+                                    email: user.username,
+                                };
                             } else {
                                 return null;
                             }
                         } else {
                             return null;
                         }
-                        
                     } else {
                         return null;
                     }
-                } catch{
+                } catch {
                     return null;
                 }
-            }
-        })
+            },
+        }),
     ],
-    
+
     secret: process.env.NEXTAUTH_SECRET,
 
     jwt: {
@@ -59,25 +67,28 @@ export const authOptions = {
     },
 
     callbacks: {
-        async jwt({ token, user} : {token : any, user : any}) {
+        async jwt({ token, user }: { token: any; user: any }) {
             if (user) {
-              token.id = user.id;
-              token.name = user.id;
-              token.email = user.name;
+                token.id = user.id;
+                token.name = user.name;
+                token.email = user.name;
             }
             return token;
-          },
-
-        async session({session, token, user} : {session : any, token : any, user : any}) {
-          session.user = token;
-          return session;
         },
 
-        
-      },
-
-
+        async session({
+            session,
+            token,
+            user,
+        }: {
+            session: any;
+            token: any;
+            user: any;
+        }) {
+            session.user = token;
+            return session;
+        },
+    },
 };
-
 
 export default NextAuth(authOptions);

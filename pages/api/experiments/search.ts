@@ -7,11 +7,20 @@ import { ExperimentTable, ExperimentTableInfo } from "@/lib/controllers/types";
 import { LocalDate, nativeJs } from "@js-joda/core";
 
 // Be very careful with this function, it's very easy to introduce SQL injection vulnerabilities
-function convertSort(field: string | string[] | undefined, order: string | string[] | undefined) {
-    if (field === undefined || order === undefined || Array.isArray(field) || Array.isArray(order)) {
+function convertSort(
+    field: string | string[] | undefined,
+    order: string | string[] | undefined
+) {
+    if (
+        field === undefined ||
+        order === undefined ||
+        Array.isArray(field) ||
+        Array.isArray(order)
+    ) {
         return undefined;
     }
-    const newOrder: "asc" | "desc" = order.toLowerCase() === "asc" ? "asc" : "desc";
+    const newOrder: "asc" | "desc" =
+        order.toLowerCase() === "asc" ? "asc" : "desc";
 
     switch (field) {
         case "startDate":
@@ -20,19 +29,19 @@ function convertSort(field: string | string[] | undefined, order: string | strin
         case "title":
             return {
                 field: "e." + field,
-                order: newOrder
+                order: newOrder,
             };
         case "week":
             return {
                 field: field,
-                order: newOrder
+                order: newOrder,
             };
     }
 
     return undefined;
 }
 
-export default async function searchExperiments(
+export default async function searchExperimentsAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentTable | ApiError>
 ) {
@@ -47,15 +56,15 @@ export default async function searchExperiments(
             page = parseInt(req.query.page as string);
             pageSize = parseInt(req.query.page_size as string);
         } catch (error) {
-            res.status(400).json(
-                getApiError(400, "Invalid page or page_size")
-            );
+            res.status(400).json(getApiError(400, "Invalid page or page_size"));
             return;
         }
 
         const [experiments, totalRows] = await Promise.all([
             // TODO look at views instead?
-            db.$queryRaw<any[]>`SELECT e.id, e.title, e.start_date, ROUND((CAST(CURRENT_DATE AS DATE) - e.start_date) / 7.0) as week
+            db.$queryRaw<
+                any[]
+            >`SELECT e.id, e.title, e.start_date, ROUND((CAST(CURRENT_DATE AS DATE) - e.start_date) / 7.0) as week
                 
                 FROM public."Experiment" e
 
@@ -72,26 +81,26 @@ export default async function searchExperiments(
                         {
                             title: {
                                 contains: query as string,
-                                mode: "insensitive"
-                            }
+                                mode: "insensitive",
+                            },
                         },
                         {
                             description: {
                                 contains: query as string,
-                                mode: "insensitive"
-                            }
+                                mode: "insensitive",
+                            },
                         },
                         {
-                            id: isNaN(queryNumber) ? undefined : queryNumber
-                        }
-                    ]
-                }
-            })
+                            id: isNaN(queryNumber) ? undefined : queryNumber,
+                        },
+                    ],
+                },
+            }),
         ]);
 
         res.status(200).json({
             rows: experiments,
-            rowCount: totalRows
+            rowCount: totalRows,
         });
     } catch (error) {
         console.error(error);

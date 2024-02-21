@@ -1,12 +1,15 @@
 import { Condition } from "@prisma/client";
-import { ConditionCreationArgs, ConditionNamesResponse } from "./types";
+import { ConditionCreationArgs, ConditionUpdateArgs } from "./types";
 import { ApiError } from "next/dist/server/api-utils";
 import { deleteEntity } from "./deletions";
 
 export const createConditions = async (
-    conditions: ConditionCreationArgs[]
+    conditionCreationArgsArray: ConditionCreationArgs[]
 ): Promise<Condition[]> => {
-    if (!conditions || conditions.length === 0) {
+    if (
+        !conditionCreationArgsArray ||
+        conditionCreationArgsArray.length === 0
+    ) {
         return [];
     }
     const endpoint = "/api/conditions/createMany";
@@ -16,73 +19,56 @@ export const createConditions = async (
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            experimentId: conditions[0].experimentId,
-            conditions: conditions,
+            experimentId: conditionCreationArgsArray[0].experimentId,
+            conditions: conditionCreationArgsArray,
         }),
     });
     const resJson = await response.json();
     if (response.ok) {
         return resJson;
-    } else {
-        throw new ApiError(response.status, resJson.message);
     }
+    throw new ApiError(response.status, resJson.message);
 };
 
-export const fetchDistinctConditions = async (): Promise<string[]> => {
-    const endpoint = "/api/conditions/fetchDistinct";
+export const updateCondition = async (
+    conditionUpdateArgs: ConditionUpdateArgs
+): Promise<Condition> => {
+    const endpoint = `/api/conditions/${conditionUpdateArgs.id}/update`;
     const response = await fetch(endpoint, {
-        method: "GET",
+        method: "POST",
+        body: JSON.stringify({ name: conditionUpdateArgs.name }),
         headers: {
             "Content-Type": "application/json",
         },
     });
     const resJson = await response.json();
     if (response.ok) {
-        const distinctConditions: string[] = resJson.map(
-            (condition: ConditionNamesResponse) => condition.name
-        );
-        return distinctConditions;
-    } else {
-        throw new ApiError(response.status, resJson.message);
+        return resJson;
     }
+    throw new ApiError(response.status, resJson.message);
 };
 
-interface UpdateConditionArgs {
-    conditionId : number;
-    newName : string;
-}
-export const updateConditionThroughAPI = async (conditionInfo : UpdateConditionArgs) : Promise<UpdateConditionArgs> => {
-    const apiResponse = await fetch("/api/conditions/" + conditionInfo.conditionId.toString() + "/updateCondition", {
+export const setConditionAsControl = async (id: number): Promise<Condition> => {
+    const endpoint = `/api/conditions/${id}/setAsControl`;
+    const response = await fetch(endpoint, {
         method: "POST",
-        body : JSON.stringify( {name : conditionInfo.newName}),
         headers: {
             "Content-Type": "application/json",
         },
     });
-    if (apiResponse.status > 300) {
-        throw new Error("An error occurred");
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
     }
-    return conditionInfo;
-}
+    throw new ApiError(response.status, resJson.message);
+};
 
-interface MakeConditionTheControlArgs {
-    conditionId : number;
-}
-export const makeConditionTheControlThroughAPI = async (conditionInfo : MakeConditionTheControlArgs) : Promise<MakeConditionTheControlArgs> => {
-    const apiResponse = await fetch("/api/conditions/" + conditionInfo.conditionId.toString() + "/makeTheControl", {
-        method: "POST",
-        body : JSON.stringify({}),
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-    if (apiResponse.status > 300) {
-        throw new Error("An error occurred");
+export const deleteCondition = async (id: number) => {
+    const endpoint = `/api/conditions/${id}/delete`;
+    try {
+        await deleteEntity(endpoint);
+        return id;
+    } catch (error) {
+        throw error;
     }
-    return conditionInfo;
-}
-
-
-export const deleteCondition = async (conditionId : number) => {
-    await deleteEntity("/api/conditions/" + conditionId.toString() + "/deleteCondition");
-}
+};

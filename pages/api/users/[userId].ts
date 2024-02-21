@@ -12,9 +12,16 @@ export default async function accessUserAPI(
         var userId: number;
         try {
             userId = Number(req.query.userId);
+
+            if (isNaN(userId)) {
+                res.status(400).json(
+                    getApiError(400, "Invalid user ID")
+                );
+                return;
+            }
         } catch (error) {
             res.status(400).json(
-                getApiError(400, "Invalid assay ID")
+                getApiError(400, "Invalid user ID")
             );
             return;
         }
@@ -23,6 +30,12 @@ export default async function accessUserAPI(
             await getUser(userId, res);
         } else if (req.method === "PATCH") {
             await updateUser(userId, req, res);
+        } else if (req.method === "DELETE") {
+            await deleteUser(userId, res);
+        } else {
+            res.status(405).json(
+                getApiError(405, "Method not allowed")
+            );
         }
     } catch (error) {
         console.error(error);
@@ -78,4 +91,46 @@ async function updateUser(userId: number, req: NextApiRequest, res: NextApiRespo
     };
 
     res.status(200).json(updatedUser);
+}
+
+async function deleteUser(userId: number, res: NextApiResponse<ApiError | null>): Promise<void> {
+    // Get the super admin's id
+    // Maybe should be in a library function
+    const admin = await db.user.findFirst({
+        where: {
+            is_super_admin: true
+        },
+        select: {
+            id: true
+        }
+    });
+
+    // Somehow we don't have a super admin, but we're logged in anyway
+    if (admin === null) {
+        res.status(500).json(
+            getApiError(500)
+        );
+        console.error("No super admin found, this should never happen");
+        return;
+    }
+
+    console.log(await db.$transaction([
+        db.experiment.updateMany({
+            where: {
+                ownerId: userId,
+            },
+            data: {
+                ownerId: admin?.id,
+            },
+        }),
+        db.user.delete({
+            where: {
+                id: userId,
+            },
+        }),
+    ]));
+
+    // TODO can I use the return type to check if the user actually exists
+
+    res.status(200).end();
 }

@@ -1,11 +1,12 @@
 import { useAlert } from "@/lib/context/alert-context";
-import { createUser, fetchUser, updateUser } from "@/lib/controllers/userController";
+import { createUser, deleteUser, fetchUser, updateUser } from "@/lib/controllers/userController";
 import { Button, Checkbox, FormControlLabel, Stack, TextField, Typography } from "@mui/material";
 import { User } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { LoadingCircle } from "../shared/loading";
+import { DeleteUserDialog } from "./deleteUserDialog";
 
 export interface UserFormProps {
     newUser: boolean;
@@ -18,6 +19,8 @@ export function UserForm(props: UserFormProps) {
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(!props.newUser);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+    const [ownedExperiments, setOwnedExperiments] = useState<string[]>([]);
     const alert = useAlert();
     const router = useRouter();
 
@@ -33,6 +36,15 @@ export function UserForm(props: UserFormProps) {
                 setIsAdmin(user.is_admin ?? false);
                 setLoading(false);
             });
+            setOwnedExperiments([]);
+            // fetchOwnedExperiments(props.userId!).then((experiments) => {
+            //     if (experiments instanceof ApiError) {
+            //         alert.showAlert("error", experiments.message);
+            //         return;
+            //     }
+
+            //     setOwnedExperiments(experiments);
+            // });
         }
     }, [props.newUser, props.userId]);
 
@@ -44,6 +56,8 @@ export function UserForm(props: UserFormProps) {
         // Blank passwords should be prevented by the "required" field, but it doesn't hurt to check
         if (passwordMismatch || (props.newUser && password === "")) return;
 
+        setLoading(true);
+
         var result: Omit<User, 'password'> | ApiError | undefined = undefined;
         if (props.newUser) {
             result = await createUser(username, password, isAdmin);
@@ -53,12 +67,28 @@ export function UserForm(props: UserFormProps) {
 
         if (result instanceof ApiError) {
             alert.showAlert("error", result.message);
+            setLoading(false);
         } else {
             if (props.newUser) {
                 router.push(`/users/${result.id}`);
             } else {
                 alert.showAlert("success", "User updated");
+                setLoading(false);
             }
+        }
+    }
+
+    async function handleDelete() {
+        setLoading(true);
+
+        const error = await deleteUser(props.userId!);
+
+        if (error instanceof ApiError) {
+            alert.showAlert("error", error.message);
+            setLoading(false);
+        } else {
+            alert.showAlert("success", "User deleted");
+            router.push("/users");
         }
     }
 
@@ -99,7 +129,14 @@ export function UserForm(props: UserFormProps) {
                     required={props.newUser || password.length > 0}
                 />
                 <Button type="submit" variant="contained" color="primary">{props.newUser ? "Submit" : "Update"}</Button>
+                {!props.newUser && <Button variant="contained" color="error" onClick={() => setDeleteDialogOpen(true)}>Delete</Button>}
             </Stack>
+            <DeleteUserDialog
+                open={deleteDialogOpen}
+                ownedExperiments={["1"]}
+                onClose={() => setDeleteDialogOpen(false)}
+                onDelete={handleDelete}
+            />
         </form>
     );
 };

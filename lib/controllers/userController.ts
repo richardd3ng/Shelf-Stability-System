@@ -80,3 +80,19 @@ export const updateUser = async (id: number, password: string, isAdmin: boolean)
         return new ApiError(response.status, resJson.message);
     }
 };
+
+export const deleteUser = async (id: number): Promise<ApiError | null> => {
+    const response = await fetch(`/api/users/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (response.ok) {
+        return null;
+    } else {
+        const resJson = await response.json();
+        return new ApiError(response.status, resJson.message);
+    }
+};

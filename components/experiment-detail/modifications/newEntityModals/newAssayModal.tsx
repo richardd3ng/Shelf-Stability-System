@@ -3,7 +3,10 @@ import { CloseableModal } from "@/components/shared/closeableModal";
 import { useMutationToCreateAssay } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { fetchDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
+import {
+    fetchDistinctAssayTypes,
+    assayTypeNameToId,
+} from "@/lib/controllers/assayTypeController";
 import {
     FormControl,
     InputLabel,
@@ -12,8 +15,7 @@ import {
     MenuItem,
 } from "@mui/material";
 import { useState } from "react";
-import { LocalDate } from "@js-joda/core";
-import { MyDatePicker } from "@/components/shared/myDatePicker";
+import { AssayCreationArgs } from "@/lib/controllers/types";
 
 interface NewAssayModalProps {
     open: boolean;
@@ -27,7 +29,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
 ) => {
     const experimentId = useExperimentId();
     const { data } = useExperimentInfo(experimentId);
-    const [assayTypeId, setAssayTypeId] = useState<number>(-1);
+    const [selectedAssayType, setSelectedAssayType] = useState<string>("");
     const {
         isPending,
         isError,
@@ -36,15 +38,15 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
     } = useMutationToCreateAssay();
 
     const onSubmit = () => {
-        createAssayInDB({
+        const assayInfo: AssayCreationArgs = {
             experimentId: experimentId,
             conditionId: props.conditionId,
-            type: assayTypeId,
-            target_date: data?.experiment.start_date
-                .plusWeeks(props.week) ?? null,
-            result: null,
-        });
+            type: assayTypeNameToId(selectedAssayType),
+            week: props.week,
+        };
+        createAssayInDB(assayInfo);
     };
+
     return (
         <CloseableModal
             open={props.open}
@@ -52,7 +54,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
             title={"Add New Assay"}
         >
             {data ? (
-                <Stack gap={1}>
+                <Stack gap={2}>
                     <FormControl fullWidth>
                         <InputLabel id="Assay Type Select Label">
                             Assay Type
@@ -60,12 +62,10 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
                         <Select
                             labelId="Assay Type Select Label"
                             id="Assay Type Selection"
-                            value={assayTypeId}
+                            value={selectedAssayType}
                             label="Assay Type"
                             onChange={(e) => {
-                                if (typeof e.target.value === "number") {
-                                    setAssayTypeId(e.target.value);
-                                }
+                                setSelectedAssayType(e.target.value);
                             }}
                         >
                             {fetchDistinctAssayTypes().map((type: string) => (

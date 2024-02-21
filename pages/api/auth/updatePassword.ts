@@ -2,31 +2,35 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { db } from "@/lib/api/db";
 import {
-    USER_ID,
-    checkIfPasswordHasBeenSet,
+    checkIfAdminExists,
     hashPassword,
 } from "@/lib/api/auth/authHelpers";
 import { compare } from "bcryptjs";
 import { getApiError } from "@/lib/api/error";
+import { getToken } from "next-auth/jwt";
 
 export default async function updatePasswordAPI(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
     try {
+        const token = await getToken({req : req});
+        if (!token || !token.name){
+            throw new Error("You must log in first");
+        }
+        const username = token.name;
         const jsonData = req.body;
 
-        const passwordHasBeenSet = await checkIfPasswordHasBeenSet();
+        const passwordHasBeenSet = await checkIfAdminExists();
         if (!passwordHasBeenSet) {
             throw new Error("Must go through the global setup process first");
         }
         const newPassword = await hashPassword(jsonData.newPassword);
         const oldPassword = jsonData.oldPassword;
 
-        const currentDate = new Date(Date.now());
-        const userInDB = await db.auth.findFirst({
+        const userInDB = await db.user.findFirst({
             where: {
-                username: USER_ID,
+                username: username,
             },
         });
 
@@ -38,13 +42,12 @@ export default async function updatePasswordAPI(
             if (!oldPasswordIsCorrect) {
                 throw new Error("Wrong previous password!");
             } else {
-                const result = await db.auth.update({
+                const result = await db.user.update({
                     where: {
-                        username: USER_ID,
+                        username: username,
                     },
                     data: {
                         password: newPassword,
-                        lastUpdated: currentDate,
                     },
                 });
                 if (!result) {
@@ -52,6 +55,8 @@ export default async function updatePasswordAPI(
                 }
                 res.status(200).json(jsonData);
             }
+        } else {
+            throw new Error("An error occurred - you are not in the db?")
         }
     } catch (error) {
         let errorMsg = getErrorMessage(error);
