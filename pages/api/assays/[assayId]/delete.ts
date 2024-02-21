@@ -22,10 +22,11 @@ export default async function deleteAssayAPI(
     }
     try {
         if (await assayHasResult(id)) {
+            console.log("Assay has recorded results");
             res.status(CONSTRAINT_ERROR_CODE).json(
                 getApiError(
                     CONSTRAINT_ERROR_CODE,
-                    "This assay has recorded results"
+                    "This assay has recorded results and cannot be deleted"
                 )
             );
             return;

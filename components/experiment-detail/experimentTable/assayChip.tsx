@@ -8,7 +8,13 @@ import React, { useState } from "react";
 import { Assay, AssayResult } from "@prisma/client";
 import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 import { useMutationToDeleteAssay } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
-import { useAlert } from "@/lib/context/alert-context";
+import { AssayEditorModal } from "../modifications/editorModals/assayEditorModal";
+import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
+import {
+    INVALID_ASSAY_ID,
+    INVALID_ASSAY_RESULT_ID,
+} from "@/lib/api/apiHelpers";
+import { AssayResultEditingContext } from "@/lib/context/shared/assayResultEditingContext";
 
 interface AssayChipProps {
     assay: Assay;
@@ -16,15 +22,10 @@ interface AssayChipProps {
 }
 
 const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
-    const {
-        mutate: deleteAssay,
-        isPending: isDeleting,
-        isError: isErrorDeleting,
-        error: errorDeleting,
-    } = useMutationToDeleteAssay();
+    const { mutate: deleteAssay } = useMutationToDeleteAssay();
     const [showLastEditor, setShowLastEditor] = useState(false);
     const [showComment, setShowComment] = useState(false);
-    const { showAlert } = useAlert();
+    const [isEditing, setIsEditing] = useState(false);
 
     const units: string = getAssayTypeUnits(props.assay.type);
     const resultText: string = props.assayResult
@@ -33,103 +34,120 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
           }`
         : "No Result Recorded";
 
-    const handleDelete = () => {
-        deleteAssay(props.assay.id);
-        if (isErrorDeleting) {
-            showAlert("error", errorDeleting.message);
-        } else {
-            showAlert("success", "Assay deleted successfully.");
-        }
-    };
-
     const handleEdit = () => {
-        // Implement edit functionality
+        setIsEditing(true);
     };
 
     return (
-        <Box
-            sx={{
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                padding: "4px",
-                display: "inline-block",
-                textAlign: "center",
-            }}
-        >
-            <Stack>
-                <Typography sx={{ fontSize: 16 }}>
-                    {assayTypeIdToName(props.assay.type)}
-                </Typography>
-                <Typography sx={{ fontSize: 12 }}>{resultText}</Typography>
-                <Box
-                    sx={{
-                        marginY: -0.5,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
+        <>
+            <Box
+                sx={{
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    padding: "4px",
+                    display: "inline-block",
+                    textAlign: "center",
+                }}
+            >
+                <Stack>
+                    <Typography sx={{ fontSize: 16 }}>
+                        {assayTypeIdToName(props.assay.type)}
+                    </Typography>
+                    <Typography sx={{ fontSize: 12 }}>{resultText}</Typography>
+                    <Box
+                        sx={{
+                            marginY: -0.5,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Tooltip
+                            title={`Author: ${
+                                props.assayResult?.last_editor ?? "N/A"
+                            }`}
+                            open={showLastEditor}
+                            arrow
+                            slotProps={{
+                                popper: {
+                                    modifiers: [
+                                        {
+                                            name: "offset",
+                                            options: {
+                                                offset: [0, -14],
+                                            },
+                                        },
+                                    ],
+                                },
+                            }}
+                        >
+                            <IconButton
+                                onMouseEnter={() => setShowLastEditor(true)}
+                                onMouseLeave={() => setShowLastEditor(false)}
+                            >
+                                <PersonIcon
+                                    sx={{ fontSize: 20, color: "gray" }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip
+                            title={`Comment: ${
+                                props.assayResult?.comment ?? "N/A"
+                            }`}
+                            open={showComment}
+                            arrow
+                            slotProps={{
+                                popper: {
+                                    modifiers: [
+                                        {
+                                            name: "offset",
+                                            options: {
+                                                offset: [0, -14],
+                                            },
+                                        },
+                                    ],
+                                },
+                            }}
+                        >
+                            <IconButton
+                                onMouseEnter={() => setShowComment(true)}
+                                onMouseLeave={() => setShowComment(false)}
+                            >
+                                <MessageIcon
+                                    sx={{ fontSize: 20, color: "gray" }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <IconButton onClick={handleEdit}>
+                            <EditIcon sx={{ fontSize: 20, color: "gray" }} />
+                        </IconButton>
+                        <IconButton onClick={() => deleteAssay(props.assay.id)}>
+                            <DeleteIcon sx={{ fontSize: 20, color: "gray" }} />
+                        </IconButton>
+                    </Box>
+                </Stack>
+            </Box>
+            <AssayEditingContext.Provider
+                value={{
+                    assayIdBeingEdited: props.assay.id,
+                    setAssayIdBeingEdited: () => {},
+                    isEditing,
+                    setIsEditing,
+                }}
+            >
+                <AssayResultEditingContext.Provider
+                    value={{
+                        assayResultIdBeingEdited:
+                            props.assayResult?.id ?? INVALID_ASSAY_RESULT_ID,
+                        setAssayResultIdBeingEdited: () => {},
+                        isEditing: false,
+                        setIsEditing: () => {},
                     }}
                 >
-                    <Tooltip
-                        title={`Author: ${
-                            props.assayResult?.last_editor ?? "N/A"
-                        }`}
-                        open={showLastEditor}
-                        arrow
-                        slotProps={{
-                            popper: {
-                                modifiers: [
-                                    {
-                                        name: "offset",
-                                        options: {
-                                            offset: [0, -14],
-                                        },
-                                    },
-                                ],
-                            },
-                        }}
-                    >
-                        <IconButton
-                            onMouseEnter={() => setShowLastEditor(true)}
-                            onMouseLeave={() => setShowLastEditor(false)}
-                        >
-                            <PersonIcon sx={{ fontSize: 20, color: "gray" }} />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip
-                        title={`Comment: ${
-                            props.assayResult?.comment ?? "N/A"
-                        }`}
-                        open={showComment}
-                        arrow
-                        slotProps={{
-                            popper: {
-                                modifiers: [
-                                    {
-                                        name: "offset",
-                                        options: {
-                                            offset: [0, -14],
-                                        },
-                                    },
-                                ],
-                            },
-                        }}
-                    >
-                        <IconButton
-                            onMouseEnter={() => setShowComment(true)}
-                            onMouseLeave={() => setShowComment(false)}
-                        >
-                            <MessageIcon sx={{ fontSize: 20, color: "gray" }} />
-                        </IconButton>
-                    </Tooltip>
-                    <IconButton onClick={handleEdit}>
-                        <EditIcon sx={{ fontSize: 20, color: "gray" }} />
-                    </IconButton>
-                    <IconButton onClick={handleDelete}>
-                        <DeleteIcon sx={{ fontSize: 20, color: "gray" }} />
-                    </IconButton>
-                </Box>
-            </Stack>
-        </Box>
+                    <AssayEditorModal />
+                </AssayResultEditingContext.Provider>
+            </AssayEditingContext.Provider>
+        </>
     );
 };
 

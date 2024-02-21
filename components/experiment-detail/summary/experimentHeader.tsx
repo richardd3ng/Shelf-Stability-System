@@ -1,12 +1,11 @@
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Container, Typography } from "@mui/material";
-import { useRouter } from "next/router";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
     const { data } = useExperimentInfo(experimentId);
-    const router = useRouter();
+    // make the number smaller next to the title
     return (
         <Container>
             {data ? (

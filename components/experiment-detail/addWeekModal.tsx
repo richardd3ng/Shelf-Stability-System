@@ -1,17 +1,17 @@
-import { FormControl, Stack } from "@mui/material";
+import { FormControl, Stack, TextField } from "@mui/material";
 import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
 import { CloseableModal } from "@/components/shared/closeableModal";
 import { getAllWeeksCoveredByAssays } from "./experimentTable/experimentTable";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { useAlert } from "@/lib/context/alert-context";
 import { useState } from "react";
-import NumericalTextField, {
-    getNumericalValidationError,
-} from "@/components/shared/numericalTextField";
+import { WeekRow } from "./experimentTable/experimentTable";
+import { getNumericalValidationError } from "@/lib/validationUtils";
+import { useAlert } from "@/lib/context/alert-context";
 
 interface AddWeekModalProps {
     open: boolean;
+    weekRows: WeekRow[];
     onClose: () => void;
     onSubmit: (week: number) => void;
 }
@@ -24,17 +24,40 @@ export const AddWeekModal: React.FC<AddWeekModalProps> = (
     const [week, setWeek] = useState<string>("");
     const { showAlert } = useAlert();
 
+    const duplicateWeekValidation = (week: string): string => {
+        const weekNumber = Number(week);
+        const weekExistsInTable: boolean = props.weekRows.some(
+            (row) => row.week === weekNumber
+        );
+        const weekExistsInAssays = getAllWeeksCoveredByAssays(
+            data?.assays || []
+        ).includes(weekNumber);
+
+        return weekExistsInTable || weekExistsInAssays
+            ? `Week ${week} already exists.`
+            : "";
+    };
+
     const onSubmit = () => {
-        if (!data || getNumericalValidationError(week, "whole number")) {
+        if (!data) {
             return;
         }
-        if (getAllWeeksCoveredByAssays(data.assays).includes(Number(week))) {
-            showAlert("error", `Week ${week} already exists.`);
+        const error: string =
+            getNumericalValidationError(week, "whole number") ||
+            duplicateWeekValidation(week);
+        if (error) {
+            showAlert("error", error);
             return;
         }
         props.onSubmit(Number(week));
         props.onClose();
     };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            onSubmit();
+        }
+    }
 
     return (
         <CloseableModal
@@ -45,12 +68,13 @@ export const AddWeekModal: React.FC<AddWeekModalProps> = (
             {data ? (
                 <Stack gap={2}>
                     <FormControl fullWidth>
-                        <NumericalTextField
+                        <TextField
+                            value={week}
                             label="Week #"
                             type="whole number"
-                            errorText="Please input a valid week number."
-                            onChange={setWeek}
+                            onChange={(e) => setWeek(e.target.value)}
                             onSubmit={onSubmit}
+                            onKeyDown={handleKeyDown}
                         />
                     </FormControl>
                 </Stack>

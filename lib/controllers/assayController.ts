@@ -60,11 +60,10 @@ export const createAssay = async (assayCreationArgs: AssayCreationArgs) => {
     throw new ApiError(response.status, resJson.message);
 };
 
-export const deleteAssay = async (id: number): Promise<number> => {
+export const deleteAssay = async (id: number): Promise<Assay> => {
     const endpoint = `/api/assays/${id}/delete`;
     try {
-        await deleteEntity(endpoint);
-        return id;
+        return deleteEntity(endpoint);
     } catch (error) {
         throw error;
     }

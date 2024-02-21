@@ -6,7 +6,7 @@ import { AssayResultCreationArgs, AssayResultUpdateArgs } from "./types";
 export const createAssayResult = async (
     assayResultCreationArgs: AssayResultCreationArgs
 ) => {
-    const endpoint = "/api/assayResults/create";
+    const endpoint = "/api/assayResult/create";
     const response = await fetch(endpoint, {
         method: "POST",
         headers: {
@@ -24,7 +24,7 @@ export const createAssayResult = async (
 export const updateAssayResult = async (
     assayResultUpdateArgs: AssayResultUpdateArgs
 ): Promise<AssayResult> => {
-    const endpoint = `/api/assayResults/${assayResultUpdateArgs.id}/update`;
+    const endpoint = `/api/assayResult/${assayResultUpdateArgs.id}/update`;
     const response = await fetch(endpoint, {
         method: "POST",
         body: JSON.stringify({
@@ -43,7 +43,7 @@ export const updateAssayResult = async (
 };
 
 export const deleteAssayResult = async (id: number): Promise<AssayResult> => {
-    const endpoint = `/api/assayResults/${id}/delete`;
+    const endpoint = `/api/assayResult/${id}/delete`;
     try {
         return deleteEntity(endpoint);
     } catch (error) {

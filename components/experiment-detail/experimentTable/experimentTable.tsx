@@ -3,18 +3,22 @@ import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentI
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import React, { useEffect, useState } from "react";
 import { useAlert } from "@/lib/context/alert-context";
-import { GridColDef, GridSortItem } from "@mui/x-data-grid";
+import {
+    GridColDef,
+    GridColumnHeaderParams,
+    GridDeleteIcon,
+    GridSortItem,
+} from "@mui/x-data-grid";
 import { LoadingContainer } from "@/components/shared/loading";
-import { Assay, AssayResult } from "@prisma/client";
+import { Assay, AssayResult, Condition } from "@prisma/client";
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import Table from "@/components/shared/table";
 import AddIcon from "@mui/icons-material/Add";
 import { NewAssayModal } from "../modifications/newEntityModals/newAssayModal";
-import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 import { AddWeekModal } from "../addWeekModal";
 import AssayChip from "./assayChip";
 
-interface WeekRow {
+export interface WeekRow {
     id: number;
     week: number;
 }
@@ -110,9 +114,28 @@ const ExperimentTable: React.FC = () => {
             sortable: false,
         };
         const conditionCols: GridColDef[] = (data?.conditions || []).map(
-            (condition) => ({
+            (condition: Condition) => ({
                 field: condition.name,
                 headerName: condition.name,
+                align: "center",
+                headerAlign: "center",
+                width: 175,
+                disableColumnMenu: true,
+                editable: false,
+                sortable: false,
+                renderHeader: (params: GridColumnHeaderParams) => (
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Typography
+                            variant="subtitle2"
+                            sx={{ flex: 1, textAlign: "center" }}
+                        >
+                            {params.field}
+                        </Typography>
+                        <IconButton sx={{ marginLeft: "auto" }}>
+                            <GridDeleteIcon />
+                        </IconButton>
+                    </Box>
+                ),
                 renderCell: (params) => {
                     return (
                         <Stack
@@ -172,12 +195,6 @@ const ExperimentTable: React.FC = () => {
                         </Stack>
                     );
                 },
-                align: "center",
-                headerAlign: "center",
-                width: 175,
-                disableColumnMenu: true,
-                editable: false,
-                sortable: false,
             })
         );
         return [weekColumn, ...conditionCols];
@@ -192,7 +209,7 @@ const ExperimentTable: React.FC = () => {
         setIdCounter(idCounter + 1);
     };
 
-    const tableAddWeekFooter: React.FC = () => {
+    const tableFooter: React.FC = () => {
         return (
             <Box
                 style={{
@@ -206,8 +223,17 @@ const ExperimentTable: React.FC = () => {
                     variant="contained"
                     color="primary"
                     onClick={() => setShowAddWeekModal(true)}
+                    sx={{ marginRight: 2, textTransform: "none" }}
                 >
-                    Add Week
+                    + Condition
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setShowAddWeekModal(true)}
+                    sx={{ textTransform: "none" }}
+                >
+                    + Week
                 </Button>
             </Box>
         );
@@ -223,13 +249,14 @@ const ExperimentTable: React.FC = () => {
             />
             <AddWeekModal
                 open={showAddWeekModal}
+                weekRows={weekRows}
                 onClose={() => setShowAddWeekModal(false)}
                 onSubmit={handleAddWeek}
             />
             <Table
                 columns={createTableColumns()}
                 rows={weekRows}
-                footer={tableAddWeekFooter}
+                footer={tableFooter}
                 sortModel={[
                     {
                         field: "week",

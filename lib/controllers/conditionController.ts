@@ -63,11 +63,10 @@ export const setConditionAsControl = async (id: number): Promise<Condition> => {
     throw new ApiError(response.status, resJson.message);
 };
 
-export const deleteCondition = async (id: number) => {
+export const deleteCondition = async (id: number): Promise<Condition> => {
     const endpoint = `/api/conditions/${id}/delete`;
     try {
-        await deleteEntity(endpoint);
-        return id;
+        return deleteEntity(endpoint);
     } catch (error) {
         throw error;
     }
