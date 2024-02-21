@@ -13,11 +13,12 @@ export const hashPassword = async (password: string): Promise<string> => {
 
 export const checkIfAdminExists = async (): Promise<boolean> => {
     try {
-        const existingAdmin = await db.user.findUnique({
-            where: {
-                username: ADMIN_USERNAME,
-            },
-        });
+
+        const existingAdmin = await db.user.findFirst({
+            where : {
+                is_super_admin : true
+            }
+        })
         if (existingAdmin) {
             return true;
         } else {
