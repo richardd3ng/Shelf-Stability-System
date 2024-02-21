@@ -83,6 +83,8 @@ export const AssayEditorModal: React.FC = () => {
                     comment: comment,
                 });
             }
+        } else {
+            handleDelete();
         }
         setIsEditingAssayResult(false);
     };
@@ -110,9 +112,9 @@ export const AssayEditorModal: React.FC = () => {
                         label="Result:"
                         numberType="float"
                         units={type !== -1 ? getAssayTypeUnits(type) : ""}
-                        onChange={(value: string) =>
-                            setResult(parseFloat(value))
-                        }
+                        onChange={(value: string) => {
+                            setResult(parseFloat(value));
+                        }}
                         onSubmit={handleSubmit}
                         onDelete={handleDelete}
                     />

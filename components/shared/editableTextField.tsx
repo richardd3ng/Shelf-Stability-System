@@ -25,12 +25,14 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
     const [value, setValue] = useState<string>(props.value || "");
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const { showAlert } = useAlert();
-    const resultText: string =
-        value && props.units
-            ? `${value}${
-                  props.units.startsWith("%") ? props.units : ` ${props.units}`
-              }`
-            : props.defaultDisplayValue || "";
+    let resultText: string = "";
+    if (value && props.units) {
+        resultText = `${value}${
+            props.units.startsWith("%") ? props.units : ` ${props.units}`
+        }`;
+    } else {
+        resultText = value || props.defaultDisplayValue || "";
+    }
 
     const handleEdit = () => {
         setIsEditing(true);

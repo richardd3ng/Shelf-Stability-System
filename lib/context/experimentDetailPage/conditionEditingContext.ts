@@ -11,7 +11,7 @@ interface ConditionEditingContextType {
 export const ConditionEditingContext =
     createContext<ConditionEditingContextType>({
         isEditing: false,
-        setIsEditing: (b: boolean) => {},
+        setIsEditing: (_b: boolean) => {},
         conditionIdBeingEdited: INVALID_CONDITION_ID,
-        setConditionIdBeingEdited: (n: number) => {},
+        setConditionIdBeingEdited: (_n: number) => {},
     });

@@ -29,7 +29,7 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
         ? `${props.assayResult.result}${
               units.startsWith("%") ? units : ` ${units}`
           }`
-        : "No Result Recorded";
+        : "N/A";
 
     return (
         <>
@@ -42,14 +42,14 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                     textAlign: "center",
                 }}
             >
-                <Stack>
+                <Stack sx={{ margin: -0.25 }}>
                     <Typography sx={{ fontSize: 16 }}>
                         {assayTypeIdToName(props.assay.type)}
                     </Typography>
                     <Typography sx={{ fontSize: 12 }}>{resultText}</Typography>
                     <Box
                         sx={{
-                            marginY: -0.5,
+                            marginY: -0.25,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -75,6 +75,8 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                             }}
                         >
                             <IconButton
+                                size="small"
+                                disableTouchRipple
                                 onMouseEnter={() => setShowLastEditor(true)}
                                 onMouseLeave={() => setShowLastEditor(false)}
                             >
@@ -103,6 +105,8 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                             }}
                         >
                             <IconButton
+                                size="small"
+                                disableTouchRipple
                                 onMouseEnter={() => setShowComment(true)}
                                 onMouseLeave={() => setShowComment(false)}
                             >
@@ -111,10 +115,16 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <IconButton onClick={() => setIsEditing(true)}>
+                        <IconButton
+                            size="small"
+                            onClick={() => setIsEditing(true)}
+                        >
                             <EditIcon sx={{ fontSize: 20, color: "gray" }} />
                         </IconButton>
-                        <IconButton onClick={() => deleteAssay(props.assay.id)}>
+                        <IconButton
+                            size="small"
+                            onClick={() => deleteAssay(props.assay.id)}
+                        >
                             <DeleteIcon sx={{ fontSize: 20, color: "gray" }} />
                         </IconButton>
                     </Box>

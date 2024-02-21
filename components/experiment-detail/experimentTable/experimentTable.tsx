@@ -28,6 +28,10 @@ import AssayChip from "./assayChip";
 import { NewConditionModal } from "../modifications/newEntityModals/newConditionModal";
 import { useMutationToDeleteCondition } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import StarIcon from "@mui/icons-material/Star";
+import Edit from "@mui/icons-material/Edit";
+import ConditionEditorModal from "../modifications/editorModals/conditionEditorModal";
+import { ConditionEditingContext } from "@/lib/context/experimentDetailPage/conditionEditingContext";
+import { INVALID_CONDITION_ID } from "@/lib/api/apiHelpers";
 
 export interface WeekRow {
     id: number;
@@ -94,6 +98,10 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
         useState<boolean>(false);
     const [showAddWeekModal, setShowAddWeekModal] = useState<boolean>(false);
     const { mutate: deleteCondition } = useMutationToDeleteCondition();
+    const [conditionIdBeingEdited, setConditionIdBeingEdited] =
+        useState<number>(INVALID_CONDITION_ID);
+    const WEEK_COL_WIDTH = 50;
+    const CONDITION_COL_WIDTH = 150;
 
     useEffect(() => {
         if (isError) {
@@ -125,11 +133,24 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
 
     const columnHeader = (condition: Condition): React.JSX.Element => {
         return (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-                {condition.control && (
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    minWidth: CONDITION_COL_WIDTH,
+                }}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        paddingLeft: 1.5,
+                    }}
+                >
                     <Box
                         sx={{
-                            paddingRight: 0.5,
+                            paddingRight: 3,
                             display: "flex",
                             alignItems: "center",
                         }}
@@ -150,23 +171,45 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                                 },
                             }}
                         >
-                            <StarIcon sx={{ fontSize: 16 }} color="primary" />
+                            <StarIcon
+                                sx={{ fontSize: 16 }}
+                                color="primary"
+                                visibility={condition.control ? "" : "hidden"}
+                            />
                         </Tooltip>
                     </Box>
-                )}
+                </Box>
                 <Typography
                     variant="subtitle2"
-                    sx={{ flex: 1, textAlign: "center" }}
+                    sx={{
+                        flex: 1,
+                        textAlign: "center",
+                    }}
                 >
                     {condition.name}
                 </Typography>
-
-                <IconButton
-                    sx={{ marginLeft: "auto" }}
-                    onClick={() => deleteCondition(condition.id)}
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        paddingRight: 3,
+                    }}
                 >
-                    <GridDeleteIcon />
-                </IconButton>
+                    <IconButton
+                        size="small"
+                        onClick={() => setConditionIdBeingEdited(condition.id)}
+                    >
+                        <Edit sx={{ fontSize: 20 }} />
+                    </IconButton>
+                    <IconButton
+                        size="small"
+                        sx={{ marginLeft: -1 }}
+                        onClick={() => deleteCondition(condition.id)}
+                    >
+                        <GridDeleteIcon sx={{ fontSize: 20 }} />
+                    </IconButton>
+                </Box>
             </Box>
         );
     };
@@ -241,7 +284,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
             field: "week",
             headerName: "Wk",
             type: "number",
-            width: 50,
+            width: WEEK_COL_WIDTH,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
@@ -254,7 +297,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                 headerName: condition.name,
                 align: "center",
                 headerAlign: "center",
-                width: 175,
+                width: CONDITION_COL_WIDTH,
                 disableColumnMenu: true,
                 editable: false,
                 sortable: false,
@@ -312,6 +355,18 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                 onClose={() => setShowAddWeekModal(false)}
                 onSubmit={handleAddWeek}
             />
+            <ConditionEditingContext.Provider
+                value={{
+                    isEditing: conditionIdBeingEdited !== INVALID_CONDITION_ID,
+                    setIsEditing: () => {
+                        setConditionIdBeingEdited(INVALID_CONDITION_ID);
+                    },
+                    conditionIdBeingEdited,
+                    setConditionIdBeingEdited,
+                }}
+            >
+                <ConditionEditorModal />
+            </ConditionEditingContext.Provider>
             <NewAssayModal
                 open={addAssayParams !== null}
                 onClose={() => setAddAssayParams(null)}

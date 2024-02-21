@@ -2,7 +2,6 @@ import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDe
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import {
     Accordion,
-    Button,
     Container,
     Typography,
     AccordionSummary,

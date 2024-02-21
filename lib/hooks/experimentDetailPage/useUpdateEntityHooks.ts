@@ -100,7 +100,7 @@ export const useMutationToUpdateExperiment = () => {
     });
 };
 
-export const useMutationToMakeConditionTheControl = () => {
+export const useMutationToSetConditionAsControl = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     const { showAlert } = useAlert();

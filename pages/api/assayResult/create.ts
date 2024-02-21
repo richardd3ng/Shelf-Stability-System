@@ -4,7 +4,6 @@ import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { AssayResult } from "@prisma/client";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
-import { AssayResultCreationArgs } from "@/lib/controllers/types";
 
 export default async function createAssayResultAPI(
     req: NextApiRequest,

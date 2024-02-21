@@ -21,12 +21,10 @@ export default async function createExperimentAPI(
         description,
         start_date,
         conditionCreationArgsNoExperimentIdArray,
-        ownerId,
     } = req.body;
     if (
         !title ||
         !start_date ||
-        !ownerId ||
         !conditionCreationArgsNoExperimentIdArray ||
         conditionCreationArgsNoExperimentIdArray.length === 0
     ) {
@@ -45,7 +43,7 @@ export default async function createExperimentAPI(
                     title,
                     description,
                     start_date: localDateToJsDate(LocalDate.parse(start_date)),
-                    ownerId: ownerId,
+                    ownerId: 100,
                 },
             })
             .then((experiment: Experiment) => ({
