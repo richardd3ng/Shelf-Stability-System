@@ -1,7 +1,7 @@
 import assayTypesJSON from "@/data/assayTypes.json";
 import { ApiError } from "next/dist/server/api-utils";
 
-export const fetchDistinctAssayTypes = (): string[] => {
+export const getDistinctAssayTypes = (): string[] => {
     return assayTypesJSON.assay_types.map((assayType) => assayType.name);
 };
 

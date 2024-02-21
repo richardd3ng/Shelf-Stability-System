@@ -1,6 +1,7 @@
 // import { AssaysGroupedByType } from "@/components/experiment-detail/assaysGroupedByType";
 import Layout from "@/components/shared/layout";
 import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
+import AssaysGroupedByType from "@/components/experiment-detail/assaysGroupedByType";
 import { useState } from "react";
 import { AssayEditorModal } from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
 import { ExperimentHeader } from "@/components/experiment-detail/summary/experimentHeader";
@@ -33,9 +34,8 @@ export default function ExperimentPage() {
                 }}
             >
                 <ExperimentHeader />
-                <ExperimentTable />
                 <AssayEditorModal />
-                {/* <AssaysGroupedByType /> */}
+                <AssaysGroupedByType />
                 <Container
                     maxWidth="sm"
                     style={{ marginTop: 24, marginBottom: 24 }}

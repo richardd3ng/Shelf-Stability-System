@@ -4,7 +4,7 @@ import { useMutationToCreateAssay } from "@/lib/hooks/experimentDetailPage/useCr
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import {
-    fetchDistinctAssayTypes,
+    getDistinctAssayTypes,
     assayTypeNameToId,
 } from "@/lib/controllers/assayTypeController";
 import {
@@ -75,7 +75,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
                                 setSelectedAssayType(e.target.value);
                             }}
                         >
-                            {fetchDistinctAssayTypes().map((type: string) => (
+                            {getDistinctAssayTypes().map((type: string) => (
                                 <MenuItem key={type} value={type}>
                                     {type}
                                 </MenuItem>

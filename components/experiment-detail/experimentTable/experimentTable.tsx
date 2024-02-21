@@ -39,6 +39,11 @@ interface AddAssayParams {
     conditionId: number;
 }
 
+interface ExperimentTableProps {
+    assayFilter: (experimentInfo: ExperimentInfo) => Assay[];
+    readOnly: boolean;
+}
+
 export const getAssaysForWeekAndCondition = (
     assays: Assay[],
     weekNum: number,
@@ -73,7 +78,10 @@ const getAssayResultForAssay = (
     return null;
 };
 
-const ExperimentTable: React.FC = () => {
+const ExperimentTable: React.FC<ExperimentTableProps> = (
+    props: ExperimentTableProps
+) => {
+    const readOnly: boolean = props.assayFilter === undefined;
     const { showAlert } = useAlert();
     const experimentId = useExperimentId();
     const { data, isLoading, isError } = useExperimentInfo(experimentId);
@@ -205,7 +213,7 @@ const ExperimentTable: React.FC = () => {
                 </Box>
 
                 {getAssaysForWeekAndCondition(
-                    data?.assays ?? [],
+                    data ? props.assayFilter(data) : [],
                     params.row.week,
                     condition.id
                 ).map((assay: Assay) => {
@@ -214,7 +222,9 @@ const ExperimentTable: React.FC = () => {
                             data?.assayResults ?? [],
                             assay
                         ) ?? undefined;
-                    return (
+                    return readOnly ? (
+                        <></>
+                    ) : (
                         <AssayChip
                             key={assay.type}
                             assay={assay}
@@ -315,7 +325,7 @@ const ExperimentTable: React.FC = () => {
             <Table
                 columns={createTableColumns()}
                 rows={weekRows}
-                footer={tableFooter}
+                footer={(!readOnly && tableFooter) || undefined}
                 sortModel={[
                     {
                         field: "week",
