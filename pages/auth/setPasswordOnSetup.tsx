@@ -19,16 +19,16 @@ export default function SetPasswordOnSetupPage(){
                         value : password1,
                         setValue : setPassword1,
                         label : "Password",
-                        passwordType : true
+                        shouldBlurText : true
                     },
                     {
                         value : password2,
                         setValue : setPassword2,
                         label : "Confirm Password",
-                        passwordType : true
+                        shouldBlurText : true
                     }
                 ]}
-                title="Set Password"
+                title="Set Admin Password"
             />
             {
                 (password1 !== password2) && (password1.length > 0 && password2.length > 0)

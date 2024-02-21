@@ -40,13 +40,13 @@ export default function LoginPage() {
                             value : username, 
                             setValue : setUsername,
                             label: "Username",
-                            passwordType : false
+                            shouldBlurText : false
                         },
                         {
                             value: password,
                             setValue: setPassword,
                             label: "Password",
-                            passwordType : true
+                            shouldBlurText : true
                         }
                     ]}
                     title="Login"

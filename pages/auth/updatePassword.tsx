@@ -21,22 +21,22 @@ export default function UpdatePasswordPage(){
                             value : password1,
                             setValue : setPassword1,
                             label : "Password",
-                            passwordType : true
+                            shouldBlurText : true
                         },
                         {
                             value : password2,
                             setValue : setPassword2,
                             label : "Confirm Password",
-                            passwordType : true
+                            shouldBlurText : true
                         },
                         {
                             value : oldPassword, 
                             setValue : setOldPassword,
-                            label : "Please enter the old password",
-                            passwordType : true
+                            label : "Please enter your old password",
+                            shouldBlurText : true
                         }
                     ]}
-                    title="Update Password"
+                    title="Update Your Password"
                 />
                 {
                     (password1 !== password2) && (password1.length > 0 && password2.length > 0)

@@ -6,7 +6,7 @@ interface AuthFieldInfo {
     value : string;
     setValue : (s : string) => void;
     label : string;
-    passwordType : boolean;
+    shouldBlurText : boolean;
 }
 interface AuthFormProps {
     fields : AuthFieldInfo[]
@@ -20,7 +20,7 @@ export const AuthForm : React.FC<AuthFormProps> = (props : AuthFormProps) => {
             <Stack style={{marginBottom : 16}}>
                 {props.fields.map((field, index) => {
                     return (
-                        <TextField style={{marginBottom : 8}} label={field.label} key={index} type={field.passwordType ? "password" : "text"} value= {field.value} onChange={(e) => field.setValue(e.target.value)}/>
+                        <TextField style={{marginBottom : 8}} label={field.label} key={index} type={field.shouldBlurText ? "password" : "text"} value= {field.value} onChange={(e) => field.setValue(e.target.value)}/>
                     )
                 })}
             </Stack>

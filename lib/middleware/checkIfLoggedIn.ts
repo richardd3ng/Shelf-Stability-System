@@ -6,10 +6,7 @@ import { getApiError } from '../api/error';
 export async function redirectOrBlockIfNotLoggedIn(request: NextRequest) {
     try{
         const token = await getToken({req : request});
-        console.log("their token is ")
-        console.log(token);
-        
-        
+                
         if (!token){
             if (request.nextUrl.pathname.startsWith("/api")){
                 return NextResponse.json(getApiError(400, "You need to log in", "Not Logged in"))
