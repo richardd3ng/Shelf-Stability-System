@@ -4,9 +4,10 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { AuthForm } from "@/components/shared/authForm";
 import { YourButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
-import { checkIfPasswordHasBeenSet } from "@/lib/api/auth/authHelpers";
+import { checkIfAdminExists } from "@/lib/api/auth/authHelpers";
 
 export default function LoginPage() {
+    const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -14,17 +15,21 @@ export default function LoginPage() {
 
     const handleSubmit = () => {
         setIsLoading(true);
-        signIn("credentials", { password, redirect: false })
-            .then((d) => {
-                if (!d || (d && d.status > 300)) {
-                    console.log("bad usenrmae");
-                    setErrorMessage("Wrong username/password");
-                } else {
-                    router.push("/experiment-list");
-                }
-            })
-            .catch((reason) => {});
-        setIsLoading(false);
+        signIn("credentials", { username, password, redirect: false }).then((d) => {
+            if (!d || (d && d.status > 300)) {
+                console.log("bad usenrmae")
+                setErrorMessage("Wrong username/password");
+            } else {
+                console.log("trying to push to experiment list page")
+                router.push("/experiment-list");
+            }
+
+        }).catch((reason) => {
+
+        }).finally(() => {
+            setIsLoading(false);
+        });
+
     };
     return (
         <Container maxWidth="sm" style={{ marginTop: 20, paddingTop: 20 }}>
@@ -37,10 +42,17 @@ export default function LoginPage() {
                 <AuthForm
                     fields={[
                         {
+                            value : username, 
+                            setValue : setUsername,
+                            label: "Username",
+                            shouldBlurText : false
+                        },
+                        {
                             value: password,
                             setValue: setPassword,
                             label: "Password",
-                        },
+                            shouldBlurText : true
+                        }
                     ]}
                     title="Login"
                 />
@@ -58,9 +70,10 @@ export default function LoginPage() {
     );
 }
 
+
 export async function getServerSideProps() {
     try {
-        const passwordHasBeenSet = await checkIfPasswordHasBeenSet();
+        const passwordHasBeenSet = await checkIfAdminExists();
         if (!passwordHasBeenSet) {
             return {
                 redirect: {

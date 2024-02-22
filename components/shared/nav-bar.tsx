@@ -18,7 +18,8 @@ const NavBar: React.FC = () => {
     const options: NavBarButtonProps[] = [
         { text: "Experiments", onClick: () => router.push("/experiment-list") },
         { text: "Assay Agenda", onClick: () => router.push("/agenda") },
-        { text : "Change Password", onClick: () => router.push("/auth/updatePassword")}
+        { text : "Change Password", onClick: () => router.push("/auth/updatePassword")},
+        { text : "Sign Out", onClick: () => router.push("/auth/signOut")}
     ]
     
     return (

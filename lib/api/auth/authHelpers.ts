@@ -3,6 +3,7 @@ import { db } from "@/lib/api/db";
 import { getErrorMessage } from "../apiHelpers";
 
 export const USER_ID = "ROOT_USER_afuqioweruwnvasf";
+export const ADMIN_USERNAME = "admin";
 
 const SALT = 15;
 
@@ -10,14 +11,15 @@ export const hashPassword = async (password: string): Promise<string> => {
     return await hash(password, SALT);
 };
 
-export const checkIfPasswordHasBeenSet = async (): Promise<boolean> => {
+export const checkIfAdminExists = async (): Promise<boolean> => {
     try {
-        const existingPwd = await db.user.findUnique({
-            where: {
-                username: USER_ID,
-            },
-        });
-        if (existingPwd) {
+
+        const existingAdmin = await db.user.findFirst({
+            where : {
+                is_super_admin : true
+            }
+        })
+        if (existingAdmin) {
             return true;
         } else {
             return false;
