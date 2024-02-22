@@ -89,15 +89,17 @@ export const useMutationToCreateAssayResult = () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
             });
-            showAlert("success", "Succesfully recorded assay result/comment");
+            showAlert("success", "Succesfully updated assay data");
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
         onMutate: (assayResultCreationArgs: AssayResultCreationArgs) => {
-            const loadingText: string = `Recording assay ${
-                assayResultCreationArgs.result ? "result" : "comment"
-            }`;
+            const loadingText: string = `Updating assay ${
+                assayResultCreationArgs.result !== undefined
+                    ? "result"
+                    : "comment"
+            }...`;
             showLoading(loadingText);
         },
         onSettled: () => {

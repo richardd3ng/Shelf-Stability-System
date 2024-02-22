@@ -31,15 +31,22 @@ export const useMutationToUpdateAssayResult = () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
             });
-            showAlert("success", "Succesfully recorded assay data");
+            showAlert("success", "Succesfully updated assay data");
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
         onMutate: (assayResultUpdateArgs: AssayResultUpdateArgs) => {
-            const loadingText: string = `Recording assay ${
-                assayResultUpdateArgs.result ? "result" : "comment"
-            }`;
+            const action: string =
+                assayResultUpdateArgs.result === null ||
+                assayResultUpdateArgs.comment === null
+                    ? "Deleting"
+                    : "Updating";
+            const loadingText: string = `${action} assay ${
+                assayResultUpdateArgs.result !== undefined
+                    ? "result"
+                    : "comment"
+            }...`;
             showLoading(loadingText);
         },
         onSettled: () => {

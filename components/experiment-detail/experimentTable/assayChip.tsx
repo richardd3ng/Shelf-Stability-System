@@ -25,11 +25,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
     const [isEditing, setIsEditing] = useState(false);
 
     const units: string = getAssayTypeUnits(props.assay.type);
-    const resultText: string = props.assayResult
-        ? `${props.assayResult.result}${
-              units.startsWith("%") ? units : ` ${units}`
-          }`
-        : "N/A";
+    const resultText: string =
+        props.assayResult && props.assayResult.result
+            ? `${props.assayResult.result}${
+                  units.startsWith("%") ? units : ` ${units}`
+              }`
+            : "N/A";
 
     return (
         <>
