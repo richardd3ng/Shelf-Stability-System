@@ -4,7 +4,7 @@ import { getQueryKeyForUseExperimentInfo } from "./experimentDetailHooks";
 import { createAssay } from "@/lib/controllers/assayController";
 import { createAssayResult } from "@/lib/controllers/assayResultController";
 import { createCondition } from "@/lib/controllers/conditionController";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { Assay, Condition } from "@prisma/client";
 import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";

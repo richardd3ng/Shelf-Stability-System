@@ -15,6 +15,7 @@ import {
     useMutationToUpdateCondition,
     useMutationToSetConditionAsControl,
 } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
+import { useAlert } from "@/lib/context/shared/alertContext";
 
 const ConditionEditorModal: React.FC = () => {
     const { isEditing, setIsEditing, conditionIdBeingEdited } = useContext(
@@ -28,6 +29,7 @@ const ConditionEditorModal: React.FC = () => {
     const { mutate: updateCondition } = useMutationToUpdateCondition();
     const { mutate: setConditionAsControl } =
         useMutationToSetConditionAsControl();
+    const { showAlert } = useAlert();
 
     useEffect(() => {
         if (!data) {
@@ -44,13 +46,14 @@ const ConditionEditorModal: React.FC = () => {
         setControl(condition.control || false);
     }, [conditionIdBeingEdited, data]);
 
-    const handleChangeName = () => {
-        if (name) {
+    const handleSubmitName = (newName: string) => {
+        if (newName) {
             updateCondition({
                 id: conditionIdBeingEdited,
-                name: name,
+                name: newName,
             });
         } else {
+            showAlert("error", "Condition name cannot be empty");
             setName(originalName);
         }
     };
@@ -66,8 +69,7 @@ const ConditionEditorModal: React.FC = () => {
                 <EditableTextField
                     value={name?.toString()}
                     label="Name:"
-                    onChange={setName}
-                    onSubmit={handleChangeName}
+                    onSubmit={handleSubmitName}
                 />
                 {(!control && (
                     <FormControlLabel

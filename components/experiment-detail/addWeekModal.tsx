@@ -7,7 +7,7 @@ import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentI
 import { useState } from "react";
 import { WeekRow } from "./experimentTable/experimentTable";
 import { getNumericalValidationError } from "@/lib/validationUtils";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 
 interface AddWeekModalProps {
     open: boolean;

@@ -3,8 +3,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import type { AppProps } from "next/app";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { AlertProvider } from "@/lib/context/alert-context";
+import { AlertProvider } from "@/lib/context/shared/alertContext";
 import Head from "next/head";
+import { LoadingProvider } from "@/lib/context/shared/loadingContext";
 
 const queryClient = new QueryClient();
 export default function App({ Component, pageProps }: AppProps) {
@@ -15,11 +16,13 @@ export default function App({ Component, pageProps }: AppProps) {
                 <title>Shelf Stability System</title>
             </Head>
             <QueryClientProvider client={queryClient}>
-                <AlertProvider>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <Component {...pageProps} />
-                    </ LocalizationProvider>
-                </AlertProvider>
+                <LoadingProvider>
+                    <AlertProvider>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <Component {...pageProps} />
+                        </LocalizationProvider>
+                    </AlertProvider>
+                </LoadingProvider>
             </QueryClientProvider>
         </>
     );

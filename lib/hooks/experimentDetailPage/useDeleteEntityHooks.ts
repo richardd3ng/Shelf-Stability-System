@@ -6,7 +6,7 @@ import { deleteAssay } from "@/lib/controllers/assayController";
 import { deleteAssayResult } from "@/lib/controllers/assayResultController";
 import { deleteExperiment } from "@/lib/controllers/experimentController";
 import { useRouter } from "next/router";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 import { AssayResult, Condition } from "@prisma/client";
 import { ExperimentWithLocalDate } from "@/lib/controllers/types";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
@@ -92,6 +92,6 @@ export const useMutationToDeleteExperiment = () => {
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
-        }
+        },
     });
 };

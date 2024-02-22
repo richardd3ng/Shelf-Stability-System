@@ -2,7 +2,7 @@ import { ExperimentInfo } from "@/lib/controllers/types";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import React, { useEffect, useState } from "react";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 import {
     GridColDef,
     GridDeleteIcon,
@@ -45,7 +45,6 @@ interface AddAssayParams {
 
 interface ExperimentTableProps {
     assayFilter: (experimentInfo: ExperimentInfo) => Assay[];
-    readOnly: boolean;
 }
 
 export const getAssaysForWeekAndCondition = (
@@ -137,7 +136,6 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                 sx={{
                     display: "flex",
                     alignItems: "center",
-                    minWidth: CONDITION_COL_WIDTH,
                 }}
             >
                 <Box
@@ -145,12 +143,10 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "flex-start",
-                        paddingLeft: 1.5,
                     }}
                 >
                     <Box
                         sx={{
-                            paddingRight: 3,
                             display: "flex",
                             alignItems: "center",
                         }}
@@ -265,9 +261,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                             data?.assayResults ?? [],
                             assay
                         ) ?? undefined;
-                    return readOnly ? (
-                        <></>
-                    ) : (
+                    return (
                         <AssayChip
                             key={assay.type}
                             assay={assay}
@@ -380,7 +374,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
             <Table
                 columns={createTableColumns()}
                 rows={weekRows}
-                footer={(!readOnly && tableFooter) || undefined}
+                footer={tableFooter}
                 sortModel={[
                     {
                         field: "week",

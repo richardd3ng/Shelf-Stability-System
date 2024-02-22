@@ -31,6 +31,20 @@ import { LoadingContainer } from "@/components/shared/loading";
 import { ErrorMessage } from "@/components/shared/errorMessage";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 
+interface EditingState {
+    isEditingType: boolean;
+    isEditingWeek: boolean;
+    isEditingResult: boolean;
+    isEditingComment: boolean;
+}
+
+const initialEditingState: EditingState = {
+    isEditingType: false,
+    isEditingWeek: false,
+    isEditingResult: false,
+    isEditingComment: false,
+};
+
 export const AssayEditorModal: React.FC = () => {
     const {
         isEditing: isEditingAssay,
@@ -45,10 +59,19 @@ export const AssayEditorModal: React.FC = () => {
     } = useContext(AssayResultEditingContext);
     const experimentId = useExperimentId();
     const { data, isLoading, isError, error } = useExperimentInfo(experimentId);
-    const [result, setResult] = useState<number | null>(null);
-    const [comment, setComment] = useState<string | null>(null);
     const [type, setType] = useState<number>(-1);
     const [week, setWeek] = useState<number>(-1);
+    const [result, setResult] = useState<number | null>(null);
+    const [comment, setComment] = useState<string | null>(null);
+    const [editingState, setEditingState] =
+        useState<EditingState>(initialEditingState);
+
+    const startEditing = (field: keyof EditingState) => {
+        setEditingState({
+            ...initialEditingState,
+            [field]: true,
+        });
+    };
 
     useEffect(() => {
         if (!data) {
@@ -76,12 +99,12 @@ export const AssayEditorModal: React.FC = () => {
     const { mutate: createAssayResult } = useMutationToCreateAssayResult();
     const { mutate: updateAssayResult } = useMutationToUpdateAssayResult();
     const { mutate: deleteAssayResult } = useMutationToDeleteAssayResult();
-
     const handleEditWeek = () => {
         updateAssay({
             id: assayIdBeingEdited,
             week: week,
         });
+        setEditingState(initialEditingState);
     };
 
     const handleSelectAssayTypeChange = (assayTypeName: string) => {
@@ -91,6 +114,7 @@ export const AssayEditorModal: React.FC = () => {
             id: assayIdBeingEdited,
             type: typeId,
         });
+        setEditingState(initialEditingState);
     };
 
     const handleEditAssayResult = () => {
@@ -114,15 +138,16 @@ export const AssayEditorModal: React.FC = () => {
                 });
             }
         } else {
-            handleDelete();
+            // handleDelete();
         }
+        setEditingState(initialEditingState);
     };
 
-    const handleDelete = () => {
-        if (assayResultIdBeingEdited !== INVALID_ASSAY_RESULT_ID) {
-            deleteAssayResult(assayResultIdBeingEdited);
-        }
-    };
+    // const handleDelete = () => {
+    //     if (assayResultIdBeingEdited !== INVALID_ASSAY_RESULT_ID) {
+    //         deleteAssayResult(assayResultIdBeingEdited);
+    //     }
+    // };
     if (type === -1 || week === -1) {
         return <></>;
     }
@@ -138,56 +163,56 @@ export const AssayEditorModal: React.FC = () => {
             closeFn={() => setIsEditingAssay(false)}
             title="Edit Assay"
         >
-            <Stack>
-                <Stack style={{ marginBottom: 8, marginRight: 4 }}>
-                    <FormControl fullWidth>
-                        <InputLabel id="Assay Type Select Label">
-                            Assay Type
-                        </InputLabel>
-                        <Select
-                            labelId="Assay Type Select Label"
-                            id="Assay Type Selection"
-                            value={assayTypeIdToName(type)}
-                            label="Assay Type"
-                            onChange={(e) =>
-                                handleSelectAssayTypeChange(e.target.value)
-                            }
-                        >
-                            {getDistinctAssayTypes().map((type: string) => (
-                                <MenuItem key={type} value={type}>
-                                    {type}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <EditableTextField
-                        value={week?.toString()}
-                        label="Week:"
-                        numberType="whole number"
-                        onChange={(value: string) => {
-                            setWeek(parseFloat(value));
-                        }}
-                        onSubmit={handleEditWeek}
-                    />
-                    <EditableTextField
-                        value={result?.toString()}
-                        defaultDisplayValue="N/A"
-                        label="Result:"
-                        numberType="float"
-                        units={getAssayTypeUnits(type)}
-                        onChange={(value: string) => {
-                            setResult(parseFloat(value));
-                        }}
-                        onSubmit={handleEditAssayResult}
-                    />
-                    <EditableTextField
-                        value={comment?.toString()}
-                        defaultDisplayValue="N/A"
-                        label="Comment:"
-                        onChange={setComment}
-                        onSubmit={handleEditAssayResult}
-                    />
-                </Stack>
+            <Stack style={{ marginBottom: 8, marginRight: 4 }} spacing={1}>
+                <FormControl fullWidth>
+                    <InputLabel id="Assay Type Select Label">
+                        Assay Type
+                    </InputLabel>
+                    <Select
+                        labelId="Assay Type Select Label"
+                        id="Assay Type Selection"
+                        value={assayTypeIdToName(type)}
+                        label="Assay Type"
+                        onOpen={() => startEditing("isEditingType")}
+                        onChange={(e) =>
+                            handleSelectAssayTypeChange(e.target.value)
+                        }
+                        onClose={() => setEditingState(initialEditingState)}
+                    >
+                        {getDistinctAssayTypes().map((type: string) => (
+                            <MenuItem key={type} value={type}>
+                                {type}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <EditableTextField
+                    value={week?.toString()}
+                    label="Week:"
+                    numberType="whole number"
+                    onSubmit={handleEditWeek}
+                    onEdit={() => startEditing("isEditingWeek")}
+                    isEditing={editingState["isEditingWeek"]}
+                />
+                <EditableTextField
+                    value={result?.toString()}
+                    defaultDisplayValue="N/A"
+                    label="Result:"
+                    numberType="float"
+                    units={getAssayTypeUnits(type)}
+                    onSubmit={handleEditAssayResult}
+                    onEdit={() => startEditing("isEditingResult")}
+                    isEditing={editingState["isEditingResult"]}
+                />
+                <EditableTextField
+                    value={comment?.toString()}
+                    defaultDisplayValue="N/A"
+                    label="Comment:"
+                    multiline
+                    onSubmit={handleEditAssayResult}
+                    onEdit={() => startEditing("isEditingComment")}
+                    isEditing={editingState["isEditingComment"]}
+                />
             </Stack>
         </CloseableModal>
     );

@@ -55,7 +55,6 @@ const AssaysGroupedByType: React.FC = () => {
                             assayFilter={(experimentInfo: ExperimentInfo) =>
                                 experimentInfo.assays
                             }
-                            readOnly={false}
                         />
                     </Stack>
                 </AccordionDetails>
@@ -76,7 +75,6 @@ const AssaysGroupedByType: React.FC = () => {
                                         (assay) => assay.type === typeId
                                     )
                                 }
-                                readOnly={true}
                             />
                         </AccordionDetails>
                     </Accordion>

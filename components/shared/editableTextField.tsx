@@ -1,10 +1,16 @@
-import React, { useState } from "react";
-import { Box, Typography, TextField, IconButton } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+    Box,
+    Typography,
+    TextField,
+    IconButton,
+    CircularProgress,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import { NumberType } from "@/lib/validationUtils";
 import { getNumericalValidationError } from "@/lib/validationUtils";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 
 interface EditableTextFieldProps {
     value?: string;
@@ -14,7 +20,8 @@ interface EditableTextFieldProps {
     defaultDisplayValue?: string;
     includeDelete?: boolean;
     multiline?: boolean;
-    onChange: (value: string) => void;
+    isEditing?: boolean;
+    onEdit?: () => void;
     onSubmit: (value: string) => void;
 }
 
@@ -22,22 +29,46 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
     props: EditableTextFieldProps
 ) => {
     const [value, setValue] = useState<string>(props.value || "");
-    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [isEditing, setIsEditing] = useState<boolean>(
+        props.isEditing || false
+    );
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // State to track submission progress
     const { showAlert } = useAlert();
-    let resultText: string = "";
-    if (value && props.units) {
-        resultText = `${value}${
-            props.units.startsWith("%") ? props.units : ` ${props.units}`
-        }`;
-    } else {
-        resultText = value || props.defaultDisplayValue || "";
-    }
+    const [resultText, setResultText] = useState<string>("");
+
+    useEffect(() => {
+        if ((props.value || value) && props.units) {
+            setResultText(
+                `${props.value || value}${
+                    props.units.startsWith("%")
+                        ? props.units
+                        : ` ${props.units}`
+                }`
+            );
+        } else {
+            setResultText(
+                props.value || value || props.defaultDisplayValue || ""
+            );
+        }
+    }, [props.value, value, isEditing, props.units, props.defaultDisplayValue]);
+
+    useEffect(() => {
+        setIsEditing(props.isEditing || false);
+    }, [props.isEditing]);
+
+    useEffect(() => {
+        setValue(props.value || "");
+    }, [props.value]);
 
     const handleEdit = () => {
         setIsEditing(true);
+        if (props.onEdit) {
+            props.onEdit();
+        }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        setIsSubmitting(true); // Set submission in progress
         if (props.numberType) {
             const error = getNumericalValidationError(value, props.numberType);
             if (error) {
@@ -45,8 +76,9 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
                 return;
             }
         }
+        props.onSubmit(value); // Assuming onSubmit is an asynchronous operation
         setIsEditing(false);
-        props.onSubmit(value);
+        setIsSubmitting(false); // Reset submission status after completion
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -57,7 +89,6 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value);
-        props.onChange(e.target.value);
     };
 
     return (
@@ -84,9 +115,13 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
                 <Typography sx={{ paddingLeft: 0 }}>{props.units}</Typography>
             )}
             {isEditing ? (
-                <IconButton onClick={handleSubmit} sx={{ flex: 1 }}>
-                    <CheckIcon sx={{ color: "green" }} />
-                </IconButton>
+                isSubmitting ? (
+                    <CircularProgress sx={{ flex: 1 }} />
+                ) : (
+                    <IconButton onClick={handleSubmit} sx={{ flex: 1 }}>
+                        <CheckIcon sx={{ color: "green" }} />
+                    </IconButton>
+                )
             ) : (
                 <IconButton onClick={handleEdit} sx={{ marginRight: -1 }}>
                     <EditIcon />

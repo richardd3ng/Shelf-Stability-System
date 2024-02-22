@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { AssayCreationArgs } from "@/lib/controllers/types";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 
 interface NewAssayModalProps {
     open: boolean;

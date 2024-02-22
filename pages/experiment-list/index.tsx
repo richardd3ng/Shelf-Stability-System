@@ -14,7 +14,7 @@ import {
     hasRecordedAssayResults,
 } from "@/lib/controllers/experimentController";
 import ExperimentDeletionDialog from "@/components/experiment-list/experiment-deletion-dialog";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 import {
     ServerPaginationArgs,
     useServerPagination,

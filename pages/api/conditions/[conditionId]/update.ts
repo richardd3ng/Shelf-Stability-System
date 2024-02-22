@@ -40,6 +40,7 @@ export default async function updateConditionAPI(
             },
             data: updateData,
         });
+        console.log(updatedCondition);
         res.status(200).json(updatedCondition);
     } catch (error) {
         console.error(getErrorMessage(error));
