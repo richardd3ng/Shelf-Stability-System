@@ -33,7 +33,12 @@ export default function LoginPage() {
     };
     return (
         <Container maxWidth="sm" style={{ marginTop: 20, paddingTop: 20 }}>
-            <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                }}
+            >
                 <AuthForm
                     fields={[
                         {
@@ -51,16 +56,18 @@ export default function LoginPage() {
                     ]}
                     title="Login"
                 />
-                <YourButtonWithLoadingAndError isError={errorMessage.length > 0} error={new Error(errorMessage)} isLoading={isLoading}>
+                <YourButtonWithLoadingAndError
+                    isError={errorMessage.length > 0}
+                    error={new Error(errorMessage)}
+                    isLoading={isLoading}
+                >
                     <Button variant="contained" color="primary" type="submit">
-                        <Typography>
-                            Submit
-                        </Typography>
+                        <Typography>Submit</Typography>
                     </Button>
                 </YourButtonWithLoadingAndError>
             </form>
         </Container>
-    )
+    );
 }
 
 
@@ -70,20 +77,19 @@ export async function getServerSideProps() {
         if (!passwordHasBeenSet) {
             return {
                 redirect: {
-                    destination: '/auth/setPasswordOnSetup',
+                    destination: "/auth/setPasswordOnSetup",
                     permanent: false,
                 },
-            }
+            };
         } else {
             return { props: {} };
         }
     } catch {
         return {
             redirect: {
-                destination: '/auth/setPasswordOnSetup',
+                destination: "/auth/setPasswordOnSetup",
                 permanent: false,
             },
-        }
+        };
     }
-
 }

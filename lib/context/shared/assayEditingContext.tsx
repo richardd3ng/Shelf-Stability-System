@@ -1,3 +1,4 @@
+import { INVALID_ASSAY_ID } from "@/lib/api/apiHelpers";
 import { createContext } from "react";
 
 interface AssayEditingContextType {
@@ -10,6 +11,6 @@ interface AssayEditingContextType {
 export const AssayEditingContext = createContext<AssayEditingContextType>({
     isEditing: false,
     setIsEditing: (_b: boolean) => {},
-    assayIdBeingEdited: 0,
+    assayIdBeingEdited: INVALID_ASSAY_ID,
     setAssayIdBeingEdited: (_n: number) => {},
 });

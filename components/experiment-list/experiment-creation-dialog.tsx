@@ -18,7 +18,7 @@ import {
     ExperimentCreationResponse,
 } from "@/lib/controllers/types";
 import { ExperimentCreationArgs } from "@/lib/controllers/types";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 import { useRouter } from "next/router";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "../shared/myDatePicker";
@@ -112,7 +112,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 start_date: date!,
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
-                ownerId: 1, // TODO: Replace with actual owner ID
             };
             const experimentResJson: ExperimentCreationResponse =
                 await createExperiment(experimentData);

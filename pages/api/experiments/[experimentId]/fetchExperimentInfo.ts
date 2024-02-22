@@ -62,12 +62,15 @@ export default async function getExperimentInfoAPI(
             return;
         }
         const experimentAssayResults: AssayResult[] = [];
-        assays.forEach(async (assay: Assay) => {
-            const assayResults: AssayResult[] = await db.assayResult.findMany({
-                where: { assayId: assay.id },
-            });
-            experimentAssayResults.push(...assayResults);
-        });
+        await Promise.all(
+            assays.map(async (assay: Assay) => {
+                const assayResults: AssayResult[] =
+                    await db.assayResult.findMany({
+                        where: { assayId: assay.id },
+                    });
+                experimentAssayResults.push(...assayResults);
+            })
+        );
         res.status(200).json({
             experiment: JSONToExperiment(
                 JSON.parse(JSON.stringify(experiment))

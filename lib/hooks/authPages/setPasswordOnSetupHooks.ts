@@ -1,4 +1,4 @@
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 import { setPasswordOnSetupThroughAPI } from "@/lib/controllers/authController";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";

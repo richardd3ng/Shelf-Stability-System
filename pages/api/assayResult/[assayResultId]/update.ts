@@ -18,8 +18,8 @@ export default async function updateAssayResultAPI(
         res.status(400).json(getApiError(400, "Assay result ID is required"));
         return;
     }
-    const { result, comment, last_editor } = req.body;
-    const updateData: { [key: string]: any } = { last_editor: last_editor };
+    const { result, comment } = req.body;
+    const updateData: { [key: string]: any } = { last_editor: "rld39" };
     if (result) {
         updateData.result = result;
     }
@@ -32,9 +32,7 @@ export default async function updateAssayResultAPI(
                 where: {
                     id: id,
                 },
-                data: {
-                    result: result,
-                },
+                data: updateData,
             });
         if (!updatedAssayResult) {
             res.status(404).json(
@@ -44,6 +42,7 @@ export default async function updateAssayResultAPI(
                     "Assay Result Not Found"
                 )
             );
+            return;
         }
         res.status(200).json(updatedAssayResult);
     } catch (error) {

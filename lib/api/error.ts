@@ -7,7 +7,7 @@ interface ErrorDefaults {
     };
 }
 
-export const CONSTRAINT_ERROR_CODE = 1001;
+export const CONSTRAINT_ERROR_CODE = 409;
 
 const defaults: ErrorDefaults = {
     400: { message: "Bad Request Format", name: "Bad Request" },

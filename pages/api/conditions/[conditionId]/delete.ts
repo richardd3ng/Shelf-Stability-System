@@ -57,7 +57,7 @@ export default async function deleteConditionAPI(
         }
         res.status(200).json(deletedCondition);
     } catch (error) {
-        console.log(getErrorMessage(error));
+        console.error(getErrorMessage(error));
         res.status(500).json(
             getApiError(500, "Failed to delete condition on server")
         );
