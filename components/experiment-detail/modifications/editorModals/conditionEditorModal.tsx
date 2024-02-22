@@ -1,12 +1,6 @@
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import {
-    Box,
-    Checkbox,
-    FormControlLabel,
-    Stack,
-    Typography,
-} from "@mui/material";
+import { Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { CloseableModal } from "@/components/shared/closeableModal";
 import EditableTextField from "@/components/shared/editableTextField";
@@ -62,7 +56,9 @@ const ConditionEditorModal: React.FC = () => {
         <CloseableModal
             open={isEditing}
             hideBackdrop
-            closeFn={() => setIsEditing(false)}
+            closeFn={() => {
+                setIsEditing(false);
+            }}
             title="Edit Condition"
         >
             <Stack style={{ marginBottom: 8, marginRight: 4 }}>

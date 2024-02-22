@@ -58,7 +58,7 @@ export const useMutationToDeleteAssay = () => {
             showAlert("error", getErrorMessage(error));
         },
         onMutate: () => {
-            showLoading("Deleting condition...");
+            showLoading("Deleting assay...");
         },
         onSettled: () => {
             hideLoading();

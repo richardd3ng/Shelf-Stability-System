@@ -1,5 +1,4 @@
-import { FormControl, Stack, TextField } from "@mui/material";
-import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
+import { Button, FormControl, Stack, TextField } from "@mui/material";
 import { CloseableModal } from "@/components/shared/closeableModal";
 import { getAllWeeksCoveredByAssays } from "./experimentTable/experimentTable";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
@@ -59,34 +58,36 @@ export const AddWeekModal: React.FC<AddWeekModalProps> = (
         }
     };
 
+    if (!data) {
+        return <></>;
+    }
+
     return (
         <CloseableModal
             open={props.open}
             closeFn={props.onClose}
             title={"Add New Week"}
         >
-            {data ? (
-                <Stack gap={2}>
-                    <FormControl fullWidth>
-                        <TextField
-                            value={week}
-                            label="Week #"
-                            type="whole number"
-                            onChange={(e) => setWeek(e.target.value)}
-                            onSubmit={onSubmit}
-                            onKeyDown={handleKeyDown}
-                        />
-                    </FormControl>
-                </Stack>
-            ) : null}
-
-            <ButtonWithLoadingAndError
-                text="Submit"
-                isLoading={false}
-                isError={false}
-                error={""}
-                onSubmit={onSubmit}
-            />
+            <Stack gap={1}>
+                <FormControl fullWidth>
+                    <TextField
+                        value={week}
+                        label="Week #"
+                        type="whole number"
+                        onChange={(e) => setWeek(e.target.value)}
+                        onSubmit={onSubmit}
+                        onKeyDown={handleKeyDown}
+                    />
+                </FormControl>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={onSubmit}
+                    sx={{ textTransform: "none" }}
+                >
+                    Submit
+                </Button>
+            </Stack>
         </CloseableModal>
     );
 };

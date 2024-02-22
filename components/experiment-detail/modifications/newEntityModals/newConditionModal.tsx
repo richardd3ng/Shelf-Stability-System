@@ -1,8 +1,7 @@
-import { ButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
 import { CloseableModal } from "@/components/shared/closeableModal";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { FormControl, Stack, TextField } from "@mui/material";
+import { Button, FormControl, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 import { ConditionCreationArgs } from "@/lib/controllers/types";
 import { useMutationToCreateCondition } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
@@ -18,12 +17,7 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
     const experimentId = useExperimentId();
     const { data } = useExperimentInfo(experimentId);
     const [condition, setCondition] = useState<string>("");
-    const {
-        isPending,
-        isError,
-        error,
-        mutate: createCondition,
-    } = useMutationToCreateCondition();
+    const { mutate: createCondition } = useMutationToCreateCondition();
 
     const onSubmit = () => {
         if (!condition) {
@@ -38,32 +32,34 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
         props.onClose();
     };
 
+    if (!data) {
+        return <></>;
+    }
+
     return (
         <CloseableModal
             open={props.open}
             closeFn={props.onClose}
             title={"Add New Condition"}
         >
-            {data ? (
-                <Stack gap={2}>
-                    <FormControl fullWidth>
-                        <TextField
-                            label="Condition"
-                            style={{ marginLeft: 4, marginRight: 4 }}
-                            value={condition}
-                            onChange={(e) => setCondition(e.target.value)}
-                        />
-                    </FormControl>
-                </Stack>
-            ) : null}
-
-            <ButtonWithLoadingAndError
-                text="Submit"
-                isLoading={isPending}
-                isError={isError}
-                error={error}
-                onSubmit={onSubmit}
-            />
+            <Stack gap={1}>
+                <FormControl fullWidth>
+                    <TextField
+                        label="Condition"
+                        style={{ marginLeft: 4, marginRight: 4 }}
+                        value={condition}
+                        onChange={(e) => setCondition(e.target.value)}
+                    />
+                </FormControl>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={onSubmit}
+                    sx={{ textTransform: "none" }}
+                >
+                    Submit
+                </Button>
+            </Stack>
         </CloseableModal>
     );
 };

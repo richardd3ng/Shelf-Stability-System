@@ -17,7 +17,6 @@ import {
 import React, { useContext, useState, useEffect } from "react";
 import { CloseableModal } from "@/components/shared/closeableModal";
 import { Assay, AssayResult } from "@prisma/client";
-import { AssayResultUpdateArgs } from "@/lib/controllers/types";
 import EditableTextField from "@/components/shared/editableTextField";
 import { AssayResultEditingContext } from "@/lib/context/shared/assayResultEditingContext";
 import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
@@ -51,12 +50,7 @@ export const AssayEditorModal: React.FC = () => {
         setIsEditing: setIsEditingAssay,
         assayIdBeingEdited,
     } = useContext(AssayEditingContext);
-    const {
-        isEditing: isEditingAssayResult,
-        setIsEditing: setIsEditingAssayResult,
-        assayResultIdBeingEdited,
-        setAssayResultIdBeingEdited,
-    } = useContext(AssayResultEditingContext);
+    const { assayResultIdBeingEdited } = useContext(AssayResultEditingContext);
     const experimentId = useExperimentId();
     const { data, isLoading, isError, error } = useExperimentInfo(experimentId);
     const [type, setType] = useState<number>(-1);
@@ -98,11 +92,11 @@ export const AssayEditorModal: React.FC = () => {
     const { mutate: updateAssay } = useMutationToUpdateAssay();
     const { mutate: createAssayResult } = useMutationToCreateAssayResult();
     const { mutate: updateAssayResult } = useMutationToUpdateAssayResult();
-    const { mutate: deleteAssayResult } = useMutationToDeleteAssayResult();
-    const handleEditWeek = () => {
+
+    const handleSubmitWeek = (newWeek: string) => {
         updateAssay({
             id: assayIdBeingEdited,
-            week: week,
+            week: parseInt(newWeek),
         });
         setEditingState(initialEditingState);
     };
@@ -117,37 +111,38 @@ export const AssayEditorModal: React.FC = () => {
         setEditingState(initialEditingState);
     };
 
-    const handleEditAssayResult = () => {
-        if (result) {
-            if (assayResultIdBeingEdited !== INVALID_ASSAY_RESULT_ID) {
-                const updateAssayResultArgs: AssayResultUpdateArgs = {
-                    id: assayResultIdBeingEdited,
-                };
-                if (result) {
-                    updateAssayResultArgs.result = result;
-                }
-                if (comment) {
-                    updateAssayResultArgs.comment = comment;
-                }
-                updateAssayResult(updateAssayResultArgs);
-            } else {
-                createAssayResult({
-                    assayId: assayIdBeingEdited,
-                    result: result,
-                    comment: comment,
-                });
-            }
+    const handleSubmitResult = (newResult: string) => {
+        if (assayResultIdBeingEdited !== INVALID_ASSAY_RESULT_ID) {
+            updateAssayResult({
+                id: assayResultIdBeingEdited,
+                result: parseFloat(newResult),
+            });
         } else {
-            // handleDelete();
+            createAssayResult({
+                assayId: assayIdBeingEdited,
+                result: newResult ? parseFloat(newResult) : null,
+                comment: null,
+            });
         }
         setEditingState(initialEditingState);
     };
 
-    // const handleDelete = () => {
-    //     if (assayResultIdBeingEdited !== INVALID_ASSAY_RESULT_ID) {
-    //         deleteAssayResult(assayResultIdBeingEdited);
-    //     }
-    // };
+    const handleSubmitComment = (newComment: string) => {
+        if (assayResultIdBeingEdited !== INVALID_ASSAY_RESULT_ID) {
+            updateAssayResult({
+                id: assayResultIdBeingEdited,
+                comment: newComment,
+            });
+        } else {
+            createAssayResult({
+                assayId: assayIdBeingEdited,
+                result: null,
+                comment: newComment,
+            });
+        }
+        setEditingState(initialEditingState);
+    };
+
     if (type === -1 || week === -1) {
         return <></>;
     }
@@ -160,7 +155,9 @@ export const AssayEditorModal: React.FC = () => {
         <CloseableModal
             open={isEditingAssay}
             hideBackdrop
-            closeFn={() => setIsEditingAssay(false)}
+            closeFn={() => {
+                setIsEditingAssay(false);
+            }}
             title="Edit Assay"
         >
             <Stack style={{ marginBottom: 8, marginRight: 4 }} spacing={1}>
@@ -190,7 +187,7 @@ export const AssayEditorModal: React.FC = () => {
                     value={week?.toString()}
                     label="Week:"
                     numberType="whole number"
-                    onSubmit={handleEditWeek}
+                    onSubmit={handleSubmitWeek}
                     onEdit={() => startEditing("isEditingWeek")}
                     isEditing={editingState["isEditingWeek"]}
                 />
@@ -200,7 +197,7 @@ export const AssayEditorModal: React.FC = () => {
                     label="Result:"
                     numberType="float"
                     units={getAssayTypeUnits(type)}
-                    onSubmit={handleEditAssayResult}
+                    onSubmit={handleSubmitResult}
                     onEdit={() => startEditing("isEditingResult")}
                     isEditing={editingState["isEditingResult"]}
                 />
@@ -209,7 +206,7 @@ export const AssayEditorModal: React.FC = () => {
                     defaultDisplayValue="N/A"
                     label="Comment:"
                     multiline
-                    onSubmit={handleEditAssayResult}
+                    onSubmit={handleSubmitComment}
                     onEdit={() => startEditing("isEditingComment")}
                     isEditing={editingState["isEditingComment"]}
                 />
