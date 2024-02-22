@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-    Box,
-    Typography,
-    TextField,
-    IconButton,
-    CircularProgress,
-} from "@mui/material";
+import { Box, Typography, TextField, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import { NumberType } from "@/lib/validationUtils";
@@ -32,7 +26,6 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
     const [isEditing, setIsEditing] = useState<boolean>(
         props.isEditing || false
     );
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // State to track submission progress
     const { showAlert } = useAlert();
     const [resultText, setResultText] = useState<string>("");
 
@@ -68,7 +61,6 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
     };
 
     const handleSubmit = async () => {
-        setIsSubmitting(true); // Set submission in progress
         if (props.numberType) {
             const error = getNumericalValidationError(value, props.numberType);
             if (error) {
@@ -78,7 +70,6 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
         }
         props.onSubmit(value); // Assuming onSubmit is an asynchronous operation
         setIsEditing(false);
-        setIsSubmitting(false); // Reset submission status after completion
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -115,13 +106,9 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
                 <Typography sx={{ paddingLeft: 0 }}>{props.units}</Typography>
             )}
             {isEditing ? (
-                isSubmitting ? (
-                    <CircularProgress sx={{ flex: 1 }} />
-                ) : (
-                    <IconButton onClick={handleSubmit} sx={{ flex: 1 }}>
-                        <CheckIcon sx={{ color: "green" }} />
-                    </IconButton>
-                )
+                <IconButton onClick={handleSubmit} sx={{ flex: 1 }}>
+                    <CheckIcon sx={{ color: "green" }} />
+                </IconButton>
             ) : (
                 <IconButton onClick={handleEdit} sx={{ marginRight: -1 }}>
                     <EditIcon />

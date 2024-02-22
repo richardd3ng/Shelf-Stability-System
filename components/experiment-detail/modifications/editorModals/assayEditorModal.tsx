@@ -5,7 +5,6 @@ import {
     useMutationToUpdateAssay,
     useMutationToUpdateAssayResult,
 } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
-import { useMutationToDeleteAssayResult } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import {
     FormControl,
@@ -37,7 +36,7 @@ interface EditingState {
     isEditingComment: boolean;
 }
 
-const initialEditingState: EditingState = {
+const INITIAL_EDITING_STATE: EditingState = {
     isEditingType: false,
     isEditingWeek: false,
     isEditingResult: false,
@@ -53,16 +52,17 @@ export const AssayEditorModal: React.FC = () => {
     const { assayResultIdBeingEdited } = useContext(AssayResultEditingContext);
     const experimentId = useExperimentId();
     const { data, isLoading, isError, error } = useExperimentInfo(experimentId);
-    const [type, setType] = useState<number>(-1);
-    const [week, setWeek] = useState<number>(-1);
-    const [result, setResult] = useState<number | null>(null);
-    const [comment, setComment] = useState<string | null>(null);
-    const [editingState, setEditingState] =
-        useState<EditingState>(initialEditingState);
+    const [type, setType] = useState<string>("");
+    const [week, setWeek] = useState<string>("");
+    const [result, setResult] = useState<string>("");
+    const [comment, setComment] = useState<string>("");
+    const [editingState, setEditingState] = useState<EditingState>(
+        INITIAL_EDITING_STATE
+    );
 
     const startEditing = (field: keyof EditingState) => {
         setEditingState({
-            ...initialEditingState,
+            ...INITIAL_EDITING_STATE,
             [field]: true,
         });
     };
@@ -77,16 +77,18 @@ export const AssayEditorModal: React.FC = () => {
         if (!currAssay) {
             return;
         }
-        setWeek(currAssay.week);
-        setType(currAssay.type);
+        setWeek(currAssay.week.toString());
+        setType(assayTypeIdToName(currAssay.type));
         const currAssayResult: AssayResult | undefined = data.assayResults.find(
             (result) => result.assayId === currAssay.id
         );
         if (!currAssayResult) {
             return;
         }
-        setResult(currAssayResult.result);
-        setComment(currAssayResult.comment);
+        setResult(
+            currAssayResult.result ? currAssayResult.result.toString() : ""
+        );
+        setComment(currAssayResult.comment ? currAssayResult.comment : "");
     }, [data, assayIdBeingEdited, isEditingAssay]);
 
     const { mutate: updateAssay } = useMutationToUpdateAssay();
@@ -98,52 +100,63 @@ export const AssayEditorModal: React.FC = () => {
             id: assayIdBeingEdited,
             week: parseInt(newWeek),
         });
-        setEditingState(initialEditingState);
+        setEditingState(INITIAL_EDITING_STATE);
+        setWeek(newWeek);
     };
 
     const handleSelectAssayTypeChange = (assayTypeName: string) => {
-        const typeId: number = assayTypeNameToId(assayTypeName);
-        setType(typeId);
         updateAssay({
             id: assayIdBeingEdited,
-            type: typeId,
+            type: assayTypeNameToId(assayTypeName),
         });
-        setEditingState(initialEditingState);
+        setType(assayTypeName);
+        setEditingState(INITIAL_EDITING_STATE);
     };
 
     const handleSubmitResult = (newResult: string) => {
         if (assayResultIdBeingEdited !== INVALID_ASSAY_RESULT_ID) {
             updateAssayResult({
                 id: assayResultIdBeingEdited,
-                result: parseFloat(newResult),
+                result: newResult ? parseFloat(newResult) : null,
+                last_editor: "rld39",
             });
-        } else {
+        } else if (newResult) {
             createAssayResult({
                 assayId: assayIdBeingEdited,
-                result: newResult ? parseFloat(newResult) : null,
+                result: parseFloat(newResult),
                 comment: null,
+                last_editor: "rld39",
             });
         }
-        setEditingState(initialEditingState);
+        setResult(newResult);
+        setEditingState(INITIAL_EDITING_STATE);
     };
 
     const handleSubmitComment = (newComment: string) => {
         if (assayResultIdBeingEdited !== INVALID_ASSAY_RESULT_ID) {
             updateAssayResult({
                 id: assayResultIdBeingEdited,
-                comment: newComment,
+                comment: newComment ? newComment : null,
+                last_editor: "rld39",
             });
-        } else {
+        } else if (newComment) {
             createAssayResult({
                 assayId: assayIdBeingEdited,
                 result: null,
                 comment: newComment,
+                last_editor: "rld39",
             });
         }
-        setEditingState(initialEditingState);
+        setComment(newComment);
+        setEditingState(INITIAL_EDITING_STATE);
     };
 
-    if (type === -1 || week === -1) {
+    const handleClose = () => {
+        setEditingState(INITIAL_EDITING_STATE);
+        setIsEditingAssay(false);
+    };
+
+    if (!type || !week) {
         return <></>;
     }
     if (isLoading) {
@@ -155,9 +168,7 @@ export const AssayEditorModal: React.FC = () => {
         <CloseableModal
             open={isEditingAssay}
             hideBackdrop
-            closeFn={() => {
-                setIsEditingAssay(false);
-            }}
+            closeFn={handleClose}
             title="Edit Assay"
         >
             <Stack style={{ marginBottom: 8, marginRight: 4 }} spacing={1}>
@@ -168,13 +179,13 @@ export const AssayEditorModal: React.FC = () => {
                     <Select
                         labelId="Assay Type Select Label"
                         id="Assay Type Selection"
-                        value={assayTypeIdToName(type)}
+                        value={type}
                         label="Assay Type"
                         onOpen={() => startEditing("isEditingType")}
                         onChange={(e) =>
                             handleSelectAssayTypeChange(e.target.value)
                         }
-                        onClose={() => setEditingState(initialEditingState)}
+                        onClose={() => setEditingState(INITIAL_EDITING_STATE)}
                     >
                         {getDistinctAssayTypes().map((type: string) => (
                             <MenuItem key={type} value={type}>

@@ -64,6 +64,7 @@ export const AssayResultEditorOnAgenda = () => {
         if (assayResultId) {
             const updateAssayResultArgs: AssayResultUpdateArgs = {
                 id: assayResultId,
+                last_editor: "rld39",
             };
             if (result) {
                 updateAssayResultArgs.result = result;
@@ -77,6 +78,7 @@ export const AssayResultEditorOnAgenda = () => {
                 assayId: assayIdBeingEdited,
                 result: result,
                 comment: comment,
+                last_editor: "rld39",
             });
         }
     };

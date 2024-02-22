@@ -30,16 +30,16 @@ export default async function updateAssayAPI(
             return;
         }
         const updateData: { [key: string]: any } = {};
-        if (conditionId !== undefined) {
+        if (conditionId !== null && conditionId !== undefined) {
             updateData.conditionId = conditionId;
         }
-        if (type !== undefined) {
+        if (type !== null && type !== undefined) {
             updateData.type = type;
         }
-        if (week !== undefined) {
+        if (week !== null && week !== undefined) {
             updateData.week = week;
         }
-        const updatedAssay: Assay = await db.assay.update({
+        const updatedAssay: Assay | null = await db.assay.update({
             where: {
                 id: id,
             },
