@@ -8,26 +8,42 @@ import {
     updateCondition,
 } from "@/lib/controllers/conditionController";
 import { updateExperiment } from "@/lib/controllers/experimentController";
-import { useAlert } from "@/lib/context/alert-context";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
-import { Assay, Condition } from "@prisma/client";
+import { Assay, AssayResult, Condition } from "@prisma/client";
 import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
-import { ExperimentWithLocalDate } from "@/lib/controllers/types";
+import {
+    AssayResultUpdateArgs,
+    ExperimentUpdateArgs,
+    ExperimentWithLocalDate,
+} from "@/lib/controllers/types";
+import { useAlert } from "@/lib/context/shared/alertContext";
+import { useLoading } from "@/lib/context/shared/loadingContext";
 
 export const useMutationToUpdateAssayResult = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
     return useMutation({
         mutationFn: updateAssayResult,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
             });
-            showAlert("success", "Succesfully updated assay result");
+            showAlert("success", "Succesfully recorded assay data");
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
+        },
+        onMutate: (assayResultUpdateArgs: AssayResultUpdateArgs) => {
+            const loadingText: string = `Recording assay ${
+                assayResultUpdateArgs.result ? "result" : "comment"
+            }`;
+            showLoading(loadingText);
+        },
+        onSettled: () => {
+            hideLoading();
         },
     });
 };
@@ -36,6 +52,7 @@ export const useMutationToUpdateAssay = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
 
     return useMutation({
         mutationFn: updateAssay,
@@ -45,13 +62,19 @@ export const useMutationToUpdateAssay = () => {
             });
             showAlert(
                 "success",
-                `Succesfully updated assay ${assayTypeIdToName(
+                `Succesfully updated ${assayTypeIdToName(
                     updatedAssay.type
-                )}`
+                )} assay`
             );
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
+        },
+        onMutate: () => {
+            showLoading("Updating assay...");
+        },
+        onSettled: () => {
+            hideLoading();
         },
     });
 };
@@ -60,6 +83,7 @@ export const useMutationToUpdateCondition = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
 
     return useMutation({
         mutationFn: updateCondition,
@@ -75,19 +99,25 @@ export const useMutationToUpdateCondition = () => {
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
+        onMutate: () => {
+            showLoading("Updating condition...");
+        },
+        onSettled: () => {
+            hideLoading();
+        },
     });
 };
 
 export const useMutationToUpdateExperiment = () => {
     const queryClient = useQueryClient();
-    const experimentId = useExperimentId();
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
 
     return useMutation({
         mutationFn: updateExperiment,
         onSuccess: (updatedExperiment: ExperimentWithLocalDate) => {
             queryClient.invalidateQueries({
-                queryKey: getQueryKeyForUseExperimentInfo(experimentId),
+                queryKey: getQueryKeyForUseExperimentInfo(updatedExperiment.id),
             });
             showAlert(
                 "success",
@@ -97,6 +127,12 @@ export const useMutationToUpdateExperiment = () => {
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
+        onMutate: (experimentUpdateArgs: ExperimentUpdateArgs) => {
+            showLoading(`Updating experiment ${experimentUpdateArgs.id}...`);
+        },
+        onSettled: () => {
+            hideLoading();
+        },
     });
 };
 
@@ -104,6 +140,7 @@ export const useMutationToSetConditionAsControl = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
 
     return useMutation({
         mutationFn: setConditionAsControl,
@@ -118,6 +155,12 @@ export const useMutationToSetConditionAsControl = () => {
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
+        },
+        onMutate: () => {
+            showLoading("Setting condition as control...");
+        },
+        onSettled: () => {
+            hideLoading();
         },
     });
 };

@@ -6,15 +6,17 @@ import { deleteAssay } from "@/lib/controllers/assayController";
 import { deleteAssayResult } from "@/lib/controllers/assayResultController";
 import { deleteExperiment } from "@/lib/controllers/experimentController";
 import { useRouter } from "next/router";
-import { useAlert } from "@/lib/context/shared/alertContext";
 import { AssayResult, Condition } from "@prisma/client";
-import { ExperimentWithLocalDate } from "@/lib/controllers/types";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { useAlert } from "@/lib/context/shared/alertContext";
+import { useLoading } from "@/lib/context/shared/loadingContext";
 
 export const useMutationToDeleteCondition = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
     return useMutation({
         mutationFn: deleteCondition,
         onSuccess: (condition: Condition) => {
@@ -29,6 +31,12 @@ export const useMutationToDeleteCondition = () => {
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
+        onMutate: () => {
+            showLoading("Deleting condition...");
+        },
+        onSettled: () => {
+            hideLoading();
+        },
     });
 };
 
@@ -36,6 +44,8 @@ export const useMutationToDeleteAssay = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
     return useMutation({
         mutationFn: deleteAssay,
         onSuccess: () => {
@@ -46,6 +56,12 @@ export const useMutationToDeleteAssay = () => {
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
+        },
+        onMutate: () => {
+            showLoading("Deleting condition...");
+        },
+        onSettled: () => {
+            hideLoading();
         },
     });
 };
@@ -59,6 +75,8 @@ export const useMutationToDeleteAssayResult = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
     return useMutation({
         mutationFn: deleteAssayResultMutationFn,
         onSuccess: () => {
@@ -70,19 +88,22 @@ export const useMutationToDeleteAssayResult = () => {
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
+        onMutate: () => {
+            showLoading("Deleting assay result...");
+        },
+        onSettled: () => {
+            hideLoading();
+        },
     });
 };
 
-const deleteExperimentMutationFn = async (
-    id: number
-): Promise<ExperimentWithLocalDate> => {
-    return await deleteExperiment(id);
-};
 export const useMutationToDeleteExperiment = () => {
     const router = useRouter();
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
     return useMutation({
-        mutationFn: deleteExperimentMutationFn,
+        mutationFn: deleteExperiment,
         onSuccess: (experiment) => {
             router.push("/experiment-list");
             showAlert(
@@ -92,6 +113,12 @@ export const useMutationToDeleteExperiment = () => {
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
+        },
+        onMutate: (id: number) => {
+            showLoading(`Deleting experiment ${id}...`);
+        },
+        onSettled: () => {
+            hideLoading();
         },
     });
 };
