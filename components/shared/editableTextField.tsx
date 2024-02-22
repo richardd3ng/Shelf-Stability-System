@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Box, Typography, TextField, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { NumberType } from "@/lib/validationUtils";
 import { getNumericalValidationError } from "@/lib/validationUtils";
 import { useAlert } from "@/lib/context/alert-context";
@@ -14,9 +13,9 @@ interface EditableTextFieldProps {
     units?: string;
     defaultDisplayValue?: string;
     includeDelete?: boolean;
+    multiline?: boolean;
     onChange: (value: string) => void;
     onSubmit: (value: string) => void;
-    onDelete?: () => void;
 }
 
 const EditableLabel: React.FC<EditableTextFieldProps> = (
@@ -36,14 +35,6 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
 
     const handleEdit = () => {
         setIsEditing(true);
-    };
-
-    const handleDelete = () => {
-        setIsEditing(false);
-        setValue("");
-        if (props.onDelete) {
-            props.onDelete();
-        }
     };
 
     const handleSubmit = () => {
@@ -76,6 +67,8 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
             )}
             {isEditing ? (
                 <TextField
+                    label={props.label}
+                    multiline={props.multiline}
                     value={value}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
@@ -84,7 +77,7 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
                 />
             ) : (
                 <Box sx={{ flex: 9 }}>
-                    <Typography width="100%">{resultText}</Typography>
+                    <Typography>{resultText}</Typography>
                 </Box>
             )}
             {props.units && isEditing && (
@@ -95,16 +88,9 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
                     <CheckIcon sx={{ color: "green" }} />
                 </IconButton>
             ) : (
-                <Box sx={{ alignItems: "center", display: "flex", flex: 1 }}>
-                    <IconButton onClick={handleEdit} sx={{ marginRight: -1 }}>
-                        <EditIcon />
-                    </IconButton>
-                    {props.onDelete && (
-                        <IconButton onClick={handleDelete}>
-                            <DeleteIcon />
-                        </IconButton>
-                    )}
-                </Box>
+                <IconButton onClick={handleEdit} sx={{ marginRight: -1 }}>
+                    <EditIcon />
+                </IconButton>
             )}
         </Box>
     );

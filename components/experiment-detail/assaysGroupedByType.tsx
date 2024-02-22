@@ -42,51 +42,48 @@ const AssaysGroupedByType: React.FC = () => {
         return <LoadingContainer />;
     } else if (isError || !data) {
         return <ErrorMessage message={getErrorMessage(error)} />;
-    } else {
-        return (
-            <Container style={{ marginTop: 24 }}>
-                <Accordion defaultExpanded>
-                    <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography variant="h6">All Assays</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Stack>
+    }
+    return (
+        <Container style={{ marginTop: 24 }}>
+            <Accordion defaultExpanded>
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                    <Typography variant="h6">All Assays</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Stack>
+                        <ExperimentTable
+                            assayFilter={(experimentInfo: ExperimentInfo) =>
+                                experimentInfo.assays
+                            }
+                            readOnly={false}
+                        />
+                    </Stack>
+                </AccordionDetails>
+            </Accordion>
+            {assayTypesCovered.map((name: string) => {
+                const typeId: number = assayTypeNameToId(name);
+                return (
+                    <Accordion key={typeId}>
+                        <AccordionSummary expandIcon={<ExpandMore />}>
+                            <Typography>
+                                Assays Results for Type {name}
+                            </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
                             <ExperimentTable
                                 assayFilter={(experimentInfo: ExperimentInfo) =>
-                                    experimentInfo.assays
+                                    experimentInfo.assays.filter(
+                                        (assay) => assay.type === typeId
+                                    )
                                 }
-                                readOnly={false}
+                                readOnly={true}
                             />
-                        </Stack>
-                    </AccordionDetails>
-                </Accordion>
-                {assayTypesCovered.map((name: string) => {
-                    const typeId: number = assayTypeNameToId(name);
-                    return (
-                        <Accordion key={typeId}>
-                            <AccordionSummary expandIcon={<ExpandMore />}>
-                                <Typography>
-                                    Assays Results for Type {name}
-                                </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <ExperimentTable
-                                    assayFilter={(
-                                        experimentInfo: ExperimentInfo
-                                    ) =>
-                                        experimentInfo.assays.filter(
-                                            (assay) => assay.type === typeId
-                                        )
-                                    }
-                                    readOnly={true}
-                                />
-                            </AccordionDetails>
-                        </Accordion>
-                    );
-                })}
-            </Container>
-        );
-    }
+                        </AccordionDetails>
+                    </Accordion>
+                );
+            })}
+        </Container>
+    );
 };
 
 export default AssaysGroupedByType;

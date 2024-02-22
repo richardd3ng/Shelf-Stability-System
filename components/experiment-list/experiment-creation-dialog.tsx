@@ -112,7 +112,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 start_date: date!,
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
-                ownerId: 1, // TODO: Replace with actual owner ID
             };
             const experimentResJson: ExperimentCreationResponse =
                 await createExperiment(experimentData);
