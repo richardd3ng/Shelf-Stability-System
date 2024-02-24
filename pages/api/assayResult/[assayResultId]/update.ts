@@ -18,32 +18,46 @@ export default async function updateAssayResultAPI(
         res.status(400).json(getApiError(400, "Assay result ID is required"));
         return;
     }
-    const { result, comment, last_editor } = req.body;
-    const updateData: { [key: string]: any } = { last_editor: last_editor };
-    if (result) {
-        updateData.result = result;
-    }
-    if (comment) {
-        updateData.comment = comment;
-    }
     try {
         const updatedAssayResult: AssayResult | null =
             await db.assayResult.update({
                 where: {
                     id: id,
                 },
-                data: {
-                    result: result,
-                },
+                data: req.body,
             });
+
         if (!updatedAssayResult) {
             res.status(404).json(
                 getApiError(
                     404,
-                    "Assay result does not exist",
+                    "Assay result to update does not exist",
                     "Assay Result Not Found"
                 )
             );
+            return;
+        }
+        // delete if both result and comment are empty
+        if (
+            updatedAssayResult.result === null &&
+            updatedAssayResult.comment === null
+        ) {
+            const deletedAssayResult: AssayResult | null =
+                await db.assayResult.delete({
+                    where: { id: id },
+                });
+            if (!deletedAssayResult) {
+                res.status(404).json(
+                    getApiError(
+                        404,
+                        "Assay result to delete does not exist",
+                        "Assay Result Not Found"
+                    )
+                );
+                return;
+            }
+            res.status(200).json(deletedAssayResult);
+            return;
         }
         res.status(200).json(updatedAssayResult);
     } catch (error) {

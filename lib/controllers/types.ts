@@ -2,6 +2,7 @@ import { LocalDate } from "@js-joda/core";
 import { Experiment, Condition, Assay, AssayResult } from "@prisma/client";
 
 /* ----- Experiment ----- */
+
 export type ExperimentWithLocalDate = Omit<Experiment, "start_date"> & {
     start_date: LocalDate;
 };
@@ -11,6 +12,10 @@ export type ExperimentInfo = {
     conditions: Condition[];
     assays: Assay[];
     assayResults: AssayResult[];
+};
+
+export type ExperimentOwner = {
+    username: string;
 };
 
 export type ExperimentTableInfo = {
@@ -28,7 +33,7 @@ export type ExperimentTable = {
 };
 
 export type ExperimentCreationArgs =
-    | Omit<ExperimentWithLocalDate, "id">
+    | Omit<ExperimentWithLocalDate, "id" | "ownerId">
     | {
           conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
       };
@@ -49,6 +54,7 @@ export type ExperimentUpdateArgs = {
 export type ExperimentUpdateResponse = ExperimentCreationResponse;
 
 /* ----- Assay ----- */
+
 export type AssayInfo = {
     id: number;
     targetDate: Date;
@@ -93,6 +99,7 @@ export type AssayUpdateArgs = {
 };
 
 /* ----- Condition ----- */
+
 export type ConditionCreationArgs = Omit<Condition, "id">;
 
 export type ConditionCreationArgsNoExperimentId = Omit<
@@ -106,11 +113,12 @@ export type ConditionUpdateArgs = {
 };
 
 /* ----- Assay Result ----- */
-export type AssayResultCreationArgs = Omit<AssayResult, "id" | "last_editor">;
+
+export type AssayResultCreationArgs = Omit<AssayResult, "id">;
 
 export type AssayResultUpdateArgs = {
     id: number;
-    result?: number;
-    comment?: string;
-    // get last edited user from the session token in the backend, see lib/middleware/checkIfLoggedIn.ts
+    result?: number | null;
+    comment?: string | null;
+    last_editor: string;
 };

@@ -42,7 +42,7 @@ export default async function updateConditionAPI(
         });
         res.status(200).json(updatedCondition);
     } catch (error) {
-        console.log(getErrorMessage(error));
+        console.error(getErrorMessage(error));
         res.status(500).json(
             getApiError(500, `Failed to update condition ${name} on server`)
         );

@@ -1,6 +1,7 @@
 // import { AssaysGroupedByType } from "@/components/experiment-detail/assaysGroupedByType";
 import Layout from "@/components/shared/layout";
 import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
+import AssaysGroupedByType from "@/components/experiment-detail/assaysGroupedByType";
 import { useState } from "react";
 import { AssayEditorModal } from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
 import { ExperimentHeader } from "@/components/experiment-detail/summary/experimentHeader";
@@ -9,6 +10,7 @@ import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentI
 import { useRouter } from "next/router";
 import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
 import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
+import { GenerateReportsOptions } from "@/components/experiment-detail/generateReportsOptions/generateReportsOptions";
 
 export default function ExperimentPage() {
     const [isEditingAssay, setIsEditingAssay] = useState<boolean>(false);
@@ -33,29 +35,14 @@ export default function ExperimentPage() {
                 }}
             >
                 <ExperimentHeader />
-                <ExperimentTable />
                 <AssayEditorModal />
-                {/* <AssaysGroupedByType /> */}
+                <AssaysGroupedByType />
                 <Container
                     maxWidth="sm"
                     style={{ marginTop: 24, marginBottom: 24 }}
                 >
                     <Stack>
-                        <Typography align="center" style={{ marginBottom: 8 }}>
-                            <Button
-                                variant="outlined"
-                                onClick={() =>
-                                    router.push(
-                                        `/experiments/${experimentId}/report`
-                                    )
-                                }
-                                style={{ textTransform: "none" }}
-                            >
-                                <Typography align="center">
-                                    Generate a report for this experiment
-                                </Typography>
-                            </Button>
-                        </Typography>
+                        <GenerateReportsOptions/>
                         {/* <DeleteExperimentButton /> */}
                     </Stack>
                 </Container>

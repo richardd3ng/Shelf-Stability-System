@@ -7,6 +7,7 @@ import {
     ExperimentTable,
     ExperimentUpdateArgs,
     ExperimentWithLocalDate,
+    ExperimentOwner,
 } from "./types";
 import { ApiError } from "next/dist/server/api-utils";
 import { encodePaging, relativeURL } from "./url";
@@ -94,6 +95,25 @@ export const fetchExperimentInfo = async (
             conditions: resJson.conditions,
             assays: resJson.assays,
             assayResults: resJson.assayResults,
+        };
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
+export const fetchExperimentOwner = async (
+    id: number
+): Promise<ExperimentOwner> => {
+    const endpoint = `/api/experiments/${id}/fetchExperimentOwner`;
+    const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    let resJson = await response.json();
+    if (response.ok) {
+        return {
+            username : resJson.username
         };
     }
     throw new ApiError(response.status, resJson.message);

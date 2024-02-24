@@ -14,7 +14,7 @@ import {
     hasRecordedAssayResults,
 } from "@/lib/controllers/experimentController";
 import ExperimentDeletionDialog from "@/components/experiment-list/experiment-deletion-dialog";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 import {
     ServerPaginationArgs,
     useServerPagination,
@@ -22,13 +22,6 @@ import {
 import { ExperimentTable, ExperimentTableInfo } from "@/lib/controllers/types";
 import { useRouter } from "next/router";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
-
-interface ExperimentData {
-    id: number;
-    title: string;
-    startDate: Date;
-    week: number;
-}
 
 const ExperimentList: React.FC = () => {
     const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>(

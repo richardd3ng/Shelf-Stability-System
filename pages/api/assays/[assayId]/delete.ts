@@ -25,7 +25,7 @@ export default async function deleteAssayAPI(
             res.status(CONSTRAINT_ERROR_CODE).json(
                 getApiError(
                     CONSTRAINT_ERROR_CODE,
-                    "This assay has recorded results"
+                    "This assay has recorded results and/or comments and cannot be deleted"
                 )
             );
             return;

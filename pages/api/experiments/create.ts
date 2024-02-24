@@ -21,19 +21,17 @@ export default async function createExperimentAPI(
         description,
         start_date,
         conditionCreationArgsNoExperimentIdArray,
-        ownerId,
     } = req.body;
     if (
         !title ||
         !start_date ||
-        !ownerId ||
         !conditionCreationArgsNoExperimentIdArray ||
         conditionCreationArgsNoExperimentIdArray.length === 0
     ) {
         res.status(400).json(
             getApiError(
                 400,
-                "Title, start date, and at least one condition are required."
+                "Title, start date, and at least one condition are required"
             )
         );
         return;
@@ -45,7 +43,7 @@ export default async function createExperimentAPI(
                     title,
                     description,
                     start_date: localDateToJsDate(LocalDate.parse(start_date)),
-                    ownerId: ownerId,
+                    ownerId: 100,
                 },
             })
             .then((experiment: Experiment) => ({
@@ -85,7 +83,7 @@ export default async function createExperimentAPI(
                 res.status(400).json(
                     getApiError(
                         400,
-                        `An experiment with the name "${title}" already exists.`
+                        `An experiment with the name "${title}" already exists`
                     )
                 );
                 return;

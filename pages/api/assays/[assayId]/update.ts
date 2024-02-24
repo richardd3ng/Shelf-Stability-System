@@ -7,6 +7,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import { assayHasResult } from "@/lib/api/validations";
 import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { getAssayID, INVALID_ASSAY_ID } from "@/lib/api/apiHelpers";
+import { Prisma } from "@prisma/client";
 
 export default async function updateAssayAPI(
     req: NextApiRequest,
@@ -29,16 +30,16 @@ export default async function updateAssayAPI(
             return;
         }
         const updateData: { [key: string]: any } = {};
-        if (conditionId !== undefined) {
+        if (conditionId !== null && conditionId !== undefined) {
             updateData.conditionId = conditionId;
         }
-        if (type !== undefined) {
+        if (type !== null && type !== undefined) {
             updateData.type = type;
         }
-        if (week !== undefined) {
+        if (week !== null && week !== undefined) {
             updateData.week = week;
         }
-        const updatedAssay: Assay = await db.assay.update({
+        const updatedAssay: Assay | null = await db.assay.update({
             where: {
                 id: id,
             },
@@ -47,6 +48,24 @@ export default async function updateAssayAPI(
         res.status(200).json(updatedAssay);
     } catch (error) {
         console.error(getErrorMessage(error));
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            const prismError = error as Prisma.PrismaClientKnownRequestError;
+            if (
+                prismError.code === "P2002" &&
+                Array.isArray(prismError.meta?.target) &&
+                ["experimentId", "conditionId", "week", "type"].every((value) =>
+                    (prismError.meta?.target as string[]).includes(value)
+                )
+            ) {
+                res.status(CONSTRAINT_ERROR_CODE).json(
+                    getApiError(
+                        CONSTRAINT_ERROR_CODE,
+                        "Assay with the same type and week already exists for this condition"
+                    )
+                );
+                return;
+            }
+        }
         res.status(500).json(
             getApiError(500, "Failed to update assay result on server")
         );

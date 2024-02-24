@@ -10,7 +10,7 @@ import {
 import { Stack, TextField } from "@mui/material";
 import { ButtonWithLoadingAndError } from "../shared/buttonWithLoadingAndError";
 import { AssayInfo, AssayResultUpdateArgs } from "@/lib/controllers/types";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 
 export const AssayResultEditorOnAgenda = () => {
     const { rows } = useContext(AgendaContext);
@@ -64,6 +64,7 @@ export const AssayResultEditorOnAgenda = () => {
         if (assayResultId) {
             const updateAssayResultArgs: AssayResultUpdateArgs = {
                 id: assayResultId,
+                last_editor: "rld39",
             };
             if (result) {
                 updateAssayResultArgs.result = result;
@@ -77,6 +78,7 @@ export const AssayResultEditorOnAgenda = () => {
                 assayId: assayIdBeingEdited,
                 result: result,
                 comment: comment,
+                last_editor: "rld39",
             });
         }
     };
