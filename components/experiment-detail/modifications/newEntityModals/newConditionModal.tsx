@@ -29,6 +29,7 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
             control: null,
         };
         createCondition(conditionInfo);
+        setCondition("");
         props.onClose();
     };
 

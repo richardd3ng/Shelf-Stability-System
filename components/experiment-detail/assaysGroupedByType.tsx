@@ -9,7 +9,6 @@ import {
     Stack,
 } from "@mui/material";
 import React, { useEffect } from "react";
-import { LoadingContainer } from "../shared/loading";
 import { ErrorMessage } from "../shared/errorMessage";
 import ExperimentTable from "./experimentTable/experimentTable";
 import { ExperimentInfo } from "@/lib/controllers/types";
@@ -39,12 +38,12 @@ const AssaysGroupedByType: React.FC = () => {
         );
     }, [data]);
     if (isLoading) {
-        return <LoadingContainer />;
+        return <></>;
     } else if (isError || !data) {
         return <ErrorMessage message={getErrorMessage(error)} />;
     }
     return (
-        <Container style={{ marginTop: 24 }}>
+        <Container sx={{ marginTop: 2 }}>
             <Accordion defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore />}>
                     <Typography variant="h6">All Assays</Typography>

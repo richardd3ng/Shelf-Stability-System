@@ -9,9 +9,9 @@ import { Assay, AssayResult } from "@prisma/client";
 import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 import { useMutationToDeleteAssay } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import { AssayEditorModal } from "../modifications/editorModals/assayEditorModal";
-import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
+import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
-import { AssayResultEditingContext } from "@/lib/context/shared/assayResultEditingContext";
+import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 
 interface AssayChipProps {
     assay: Assay;
@@ -133,19 +133,18 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
             </Box>
             <AssayEditingContext.Provider
                 value={{
-                    assayIdBeingEdited: props.assay.id,
-                    setAssayIdBeingEdited: () => {},
+                    id: props.assay.id,
+                    setId: () => {},
                     isEditing,
                     setIsEditing,
                 }}
             >
                 <AssayResultEditingContext.Provider
                     value={{
-                        assayResultIdBeingEdited:
-                            props.assayResult?.id ?? INVALID_ASSAY_RESULT_ID,
-                        setAssayResultIdBeingEdited: () => {},
-                        isEditing: false,
-                        setIsEditing: () => {},
+                        id: props.assayResult?.id ?? INVALID_ASSAY_RESULT_ID,
+                        setId: () => {},
+                        isEditing,
+                        setIsEditing,
                     }}
                 >
                     <AssayEditorModal />

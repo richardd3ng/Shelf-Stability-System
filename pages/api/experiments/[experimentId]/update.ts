@@ -6,10 +6,13 @@ import { ApiError } from "next/dist/server/api-utils";
 import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { experimentHasAssaysWithResults } from "@/lib/api/validations";
 import { INVALID_EXPERIMENT_ID, getExperimentID } from "@/lib/api/apiHelpers";
+import { localDateToJsDate } from "@/lib/datesUtils";
+import { LocalDate, nativeJs } from "@js-joda/core";
+import { ExperimentWithLocalDate } from "@/lib/controllers/types";
 
 export default async function updateExperimentAPI(
     req: NextApiRequest,
-    res: NextApiResponse<Experiment | ApiError>
+    res: NextApiResponse<ExperimentWithLocalDate | ApiError>
 ) {
     const id = getExperimentID(req);
     if (id === INVALID_EXPERIMENT_ID) {
@@ -18,16 +21,31 @@ export default async function updateExperimentAPI(
         );
         return;
     }
-    const { title, description, startDate, ownerId } = req.body;
+    const { title, description, startDate, userId } = req.body;
+    if (userId === undefined) {
+        // TODO: also check if userId is an admin
+        res.status(409).json(
+            getApiError(409, "You must be an admin to update an experiment")
+        );
+        return;
+    }
+    if (!title) {
+        res.status(400).json(
+            getApiError(400, "Experiment title cannot be empty")
+        );
+        return;
+    }
+    if (startDate === null) {
+        res.status(400).json(
+            getApiError(
+                400,
+                "If provided, experiment start date cannot be empty"
+            )
+        );
+        return;
+    }
     try {
-        const updateData: { [key: string]: any } = {};
-        if (title !== undefined) {
-            updateData.title = title;
-        }
-        if (description !== undefined) {
-            updateData.description = description;
-        }
-        if (startDate !== undefined) {
+        if (startDate) {
             if (await experimentHasAssaysWithResults(id)) {
                 res.status(CONSTRAINT_ERROR_CODE).json(
                     getApiError(
@@ -37,20 +55,27 @@ export default async function updateExperimentAPI(
                 );
                 return;
             }
-            updateData.start_date = startDate;
         }
-        if (ownerId !== undefined) {
-            updateData.ownerId = ownerId;
+        const updateData: { [key: string]: any } = {
+            title: title,
+            description: description,
+        };
+        if (startDate) {
+            updateData.start_date = localDateToJsDate(
+                LocalDate.parse(startDate)
+            );
         }
-        const updatedExperiment: Experiment | null = await db.experiment.update(
-            {
+        const updatedExperiment: ExperimentWithLocalDate = await db.experiment
+            .update({
                 where: {
                     id: id,
                 },
                 data: updateData,
-            }
-        );
-
+            })
+            .then((experiment: Experiment) => ({
+                ...experiment,
+                start_date: nativeJs(experiment.start_date).toLocalDate(),
+            }));
         if (!updatedExperiment) {
             res.status(404).json(
                 getApiError(
@@ -63,6 +88,7 @@ export default async function updateExperimentAPI(
         }
         res.status(200).json(updatedExperiment);
     } catch (error) {
+        console.error(error);
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (
                 error.code === "P2002" &&
@@ -71,14 +97,14 @@ export default async function updateExperimentAPI(
                 res.status(CONSTRAINT_ERROR_CODE).json(
                     getApiError(
                         CONSTRAINT_ERROR_CODE,
-                        `An experiment with the name ${req.body.title} already exists.`
+                        `An experiment with the name ${req.body.title} already exists`
                     )
                 );
                 return;
             }
         }
         res.status(500).json(
-            getApiError(500, "Failed to update experiment on server")
+            getApiError(500, `Failed to update experiment ${id} on server`)
         );
     }
 }

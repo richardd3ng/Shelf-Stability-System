@@ -1,4 +1,3 @@
-import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useMutationToCreateAssayResult } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import {
@@ -17,7 +16,8 @@ import React, { useContext, useState, useEffect } from "react";
 import { CloseableModal } from "@/components/shared/closeableModal";
 import { Assay, AssayResult } from "@prisma/client";
 import EditableTextField from "@/components/shared/editableTextField";
-import { AssayResultEditingContext } from "@/lib/context/shared/assayResultEditingContext";
+import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
+import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
 import {
     assayTypeIdToName,
@@ -25,7 +25,6 @@ import {
     getAssayTypeUnits,
 } from "@/lib/controllers/assayTypeController";
 import { getDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
-import { LoadingContainer } from "@/components/shared/loading";
 import { ErrorMessage } from "@/components/shared/errorMessage";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 
@@ -47,9 +46,11 @@ export const AssayEditorModal: React.FC = () => {
     const {
         isEditing: isEditingAssay,
         setIsEditing: setIsEditingAssay,
-        assayIdBeingEdited,
+        id: assayIdBeingEdited,
     } = useContext(AssayEditingContext);
-    const { assayResultIdBeingEdited } = useContext(AssayResultEditingContext);
+    const { id: assayResultIdBeingEdited } = useContext(
+        AssayResultEditingContext
+    );
     const experimentId = useExperimentId();
     const { data, isLoading, isError, error } = useExperimentInfo(experimentId);
     const [type, setType] = useState<string>("");
@@ -156,11 +157,8 @@ export const AssayEditorModal: React.FC = () => {
         setIsEditingAssay(false);
     };
 
-    if (!type || !week) {
+    if (!type || !week || isLoading) {
         return <></>;
-    }
-    if (isLoading) {
-        return <LoadingContainer />;
     } else if (isError || !data) {
         return <ErrorMessage message={getErrorMessage(error)} />;
     }

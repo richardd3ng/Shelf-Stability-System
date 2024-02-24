@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { CONSTRAINT_ERROR_CODE, getApiError } from "@/lib/api/error";
 import { Assay } from "@prisma/client";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { Prisma } from "@prisma/client";
 
 export default async function createAssayAPI(
@@ -31,7 +30,7 @@ export default async function createAssayAPI(
         });
         res.status(200).json(createdAssay);
     } catch (error) {
-        console.error(getErrorMessage(error));
+        console.error(error);
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             const prismError = error as Prisma.PrismaClientKnownRequestError;
             if (

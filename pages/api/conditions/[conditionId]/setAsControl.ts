@@ -1,9 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-    INVALID_CONDITION_ID,
-    getConditionID,
-    getErrorMessage,
-} from "@/lib/api/apiHelpers";
+import { INVALID_CONDITION_ID, getConditionID } from "@/lib/api/apiHelpers";
 import { conditionHasAssaysWithResults } from "@/lib/api/validations";
 import { CONSTRAINT_ERROR_CODE, getApiError } from "@/lib/api/error";
 import { ApiError } from "next/dist/server/api-utils";
@@ -79,7 +75,7 @@ export default async function setConditionAsControlAPI(
         });
         res.status(200).json(condition);
     } catch (error) {
-        console.error(getErrorMessage(error));
+        console.error(error);
         res.status(500).json(
             getApiError(500, `Failed to set condition as control on server`)
         );

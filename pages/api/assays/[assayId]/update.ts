@@ -1,4 +1,3 @@
-import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getApiError } from "@/lib/api/error";
@@ -47,7 +46,7 @@ export default async function updateAssayAPI(
         });
         res.status(200).json(updatedAssay);
     } catch (error) {
-        console.error(getErrorMessage(error));
+        console.error(error);
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             const prismError = error as Prisma.PrismaClientKnownRequestError;
             if (

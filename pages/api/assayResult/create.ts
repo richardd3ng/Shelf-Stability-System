@@ -31,7 +31,7 @@ export default async function createAssayResultAPI(
         });
         res.status(200).json(createdAssayResult);
     } catch (error) {
-        console.error(getErrorMessage(error));
+        console.error(error);
         res.status(500).json(
             getApiError(500, "Failed to create assays on server")
         );
