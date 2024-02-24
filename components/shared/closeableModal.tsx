@@ -16,7 +16,7 @@ interface CloseableModalProps {
     hideBackdrop?: true;
 }
 
-export const CloseableModal: React.FC<CloseableModalProps> = (
+const CloseableModal: React.FC<CloseableModalProps> = (
     props: CloseableModalProps
 ) => {
     return (
@@ -62,3 +62,5 @@ export const CloseableModal: React.FC<CloseableModalProps> = (
         </Dialog>
     );
 };
+
+export default CloseableModal;

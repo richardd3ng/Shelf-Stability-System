@@ -1,23 +1,23 @@
-// import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId"
-// import { ButtonWithConfirmationLoadingAndError } from "../shared/buttonWithConfirmationLoadingAndError"
-// import { Container, Typography } from "@mui/material"
-// import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
-// import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
-// import { Assay } from "@prisma/client";
+import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
+import { Box, Button, Typography } from "@mui/material";
+import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 
-// export const DeleteExperimentButton = () => {
-//     const experimentId = useExperimentId();
-//     const {data} = useExperimentInfo(experimentId);
-//     const {mutate : deleteExperiment, isPending, isError, error} = useMutationToDeleteExperiment();
+const DeleteExperimentButton = () => {
+    const experimentId = useExperimentId();
+    const { mutate: deleteExperiment } = useMutationToDeleteExperiment();
 
-//     if (!checkIfAnAssayHasResults(data, (assay : Assay) => true)){
-//         return (
-//             <ButtonWithConfirmationLoadingAndError text="Delete Experiment" isLoading={isPending} isError={isError} error={error} onSubmit={() => {
-//                 deleteExperiment(experimentId);
-//             }}/>
-//         )
+    return (
+        <Box alignSelf="center">
+            <Button
+                variant="contained"
+                color="error"
+                onClick={() => deleteExperiment(experimentId)}
+                sx={{ textTransform: "none" }}
+            >
+                <Typography align="center">Delete Experiment</Typography>
+            </Button>
+        </Box>
+    );
+};
 
-//     } else return (
-//         <Typography>Cannot delete this experiment, because it has assay results recorded</Typography>
-//     )
-// }
+export default DeleteExperimentButton;

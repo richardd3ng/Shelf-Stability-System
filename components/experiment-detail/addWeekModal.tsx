@@ -1,5 +1,5 @@
 import { Button, FormControl, Stack, TextField } from "@mui/material";
-import { CloseableModal } from "@/components/shared/closeableModal";
+import CloseableModal from "@/components/shared/closeableModal";
 import { getAllWeeksCoveredByAssays } from "./experimentTable/experimentTable";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";

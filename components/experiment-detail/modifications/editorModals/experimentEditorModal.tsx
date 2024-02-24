@@ -4,7 +4,7 @@ import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentI
 import { Button, Stack, TextField } from "@mui/material";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
 import React, { useContext, useState, useEffect } from "react";
-import { CloseableModal } from "@/components/shared/closeableModal";
+import CloseableModal from "@/components/shared/closeableModal";
 import { ErrorMessage } from "@/components/shared/errorMessage";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { LocalDate } from "@js-joda/core";

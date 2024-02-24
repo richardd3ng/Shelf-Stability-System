@@ -1,10 +1,9 @@
 import Layout from "@/components/shared/layout";
 import AssaysGroupedByType from "@/components/experiment-detail/assaysGroupedByType";
-import { AssayEditorModal } from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
-import { ExperimentHeader } from "@/components/experiment-detail/summary/experimentHeader";
-import { Container, Stack } from "@mui/material";
-import { GenerateReportsOptions } from "@/components/experiment-detail/generateReportsOptions/generateReportsOptions";
-import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
+import AssayEditorModal from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
+import { ExperimentHeader } from "@/components/experiment-detail/header/experimentHeader";
+import { Box } from "@mui/material";
+import DeleteExperimentButton from "@/components/experiment-detail/deleteExperimentButton";
 
 const ExperimentPage = () => {
     return (
@@ -12,15 +11,11 @@ const ExperimentPage = () => {
             <ExperimentHeader />
             <AssayEditorModal />
             <AssaysGroupedByType />
-            <Container
-                maxWidth="sm"
-                style={{ marginTop: 24, marginBottom: 24 }}
+            <Box
+                sx={{ display: "flex", justifyContent: "center", paddingY: 2 }}
             >
-                <Stack>
-                    <GenerateReportsOptions />
-                    {/* <DeleteExperimentButton /> */}
-                </Stack>
-            </Container>
+                <DeleteExperimentButton />
+            </Box>
         </Layout>
     );
 };

@@ -1,4 +1,4 @@
-import { CloseableModal } from "@/components/shared/closeableModal";
+import CloseableModal from "@/components/shared/closeableModal";
 import { useMutationToCreateAssay } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";

@@ -4,13 +4,15 @@ import {
     useExperimentOwner,
 } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { Box, Typography, IconButton } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import { Box, Typography } from "@mui/material";
 import ExperimentEditorModal from "../modifications/editorModals/experimentEditorModal";
 import { ErrorMessage } from "@/components/shared/errorMessage";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import ExperimentEditingContext from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
+import GenerateExcelReportButton from "./generateExcelReportButton";
+import GeneratePrintableReportButton from "./generatePrintableReportButton";
+import EditExperimentButton from "./editExperimentButton";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -21,8 +23,8 @@ export const ExperimentHeader = () => {
         error,
     } = useExperimentInfo(experimentId);
     const { data: owner } = useExperimentOwner(experimentId);
-    const [isEditing, setIsEditing] = useState<boolean>(false);
     const { showLoading, hideLoading } = useLoading();
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         if (isLoading) {
@@ -60,13 +62,15 @@ export const ExperimentHeader = () => {
                     <Typography sx={{ fontSize: "small", marginLeft: 0.5 }}>
                         #{experimentId}
                     </Typography>
-                    <IconButton
-                        aria-label="edit"
-                        onClick={() => setIsEditing(true)}
-                        sx={{ position: "absolute", top: 0, right: 0 }}
-                    >
-                        <EditIcon />
-                    </IconButton>
+                    <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+                        <ExperimentEditingContext.Provider
+                            value={{ isEditing, setIsEditing }}
+                        >
+                            <EditExperimentButton />
+                        </ExperimentEditingContext.Provider>
+                        <GeneratePrintableReportButton />
+                        <GenerateExcelReportButton />
+                    </Box>
                 </Box>
                 <Typography
                     align="center"

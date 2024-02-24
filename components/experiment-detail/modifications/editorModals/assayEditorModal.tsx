@@ -13,7 +13,7 @@ import {
     Stack,
 } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
-import { CloseableModal } from "@/components/shared/closeableModal";
+import CloseableModal from "@/components/shared/closeableModal";
 import { Assay, AssayResult } from "@prisma/client";
 import EditableTextField from "@/components/shared/editableTextField";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
@@ -25,7 +25,6 @@ import {
     getAssayTypeUnits,
 } from "@/lib/controllers/assayTypeController";
 import { getDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
-import { ErrorMessage } from "@/components/shared/errorMessage";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 
 interface EditingState {
@@ -42,7 +41,7 @@ const INITIAL_EDITING_STATE: EditingState = {
     isEditingComment: false,
 };
 
-export const AssayEditorModal: React.FC = () => {
+const AssayEditorModal: React.FC = () => {
     const {
         isEditing: isEditingAssay,
         setIsEditing: setIsEditingAssay,
@@ -52,7 +51,7 @@ export const AssayEditorModal: React.FC = () => {
         AssayResultEditingContext
     );
     const experimentId = useExperimentId();
-    const { data, isLoading, isError, error } = useExperimentInfo(experimentId);
+    const { data } = useExperimentInfo(experimentId);
     const [type, setType] = useState<string>("");
     const [week, setWeek] = useState<string>("");
     const [result, setResult] = useState<string>("");
@@ -157,10 +156,8 @@ export const AssayEditorModal: React.FC = () => {
         setIsEditingAssay(false);
     };
 
-    if (!type || !week || isLoading) {
+    if (!data || !type || !week) {
         return <></>;
-    } else if (isError || !data) {
-        return <ErrorMessage message={getErrorMessage(error)} />;
     }
     return (
         <CloseableModal
@@ -223,3 +220,5 @@ export const AssayEditorModal: React.FC = () => {
         </CloseableModal>
     );
 };
+
+export default AssayEditorModal;

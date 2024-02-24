@@ -2,7 +2,7 @@ import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDe
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { CloseableModal } from "@/components/shared/closeableModal";
+import CloseableModal from "@/components/shared/closeableModal";
 import EditableTextField from "@/components/shared/editableTextField";
 import ConditionEditingContext from "@/lib/context/experimentDetailPage/conditionEditingContext";
 import {

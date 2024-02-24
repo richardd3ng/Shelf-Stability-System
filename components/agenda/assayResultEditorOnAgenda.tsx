@@ -1,6 +1,6 @@
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { useContext, useState, useEffect } from "react";
-import { CloseableModal } from "../shared/closeableModal";
+import CloseableModal from "../shared/closeableModal";
 import { AgendaContext } from "@/lib/context/agendaPage/agendaContext";
 import {
     useMutationToCreateAssayResultFromAgenda,

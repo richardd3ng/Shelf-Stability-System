@@ -9,7 +9,6 @@ import {
     Stack,
 } from "@mui/material";
 import React, { useEffect } from "react";
-import { ErrorMessage } from "../shared/errorMessage";
 import ExperimentTable from "./experimentTable/experimentTable";
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { ExpandMore } from "@mui/icons-material";
@@ -17,7 +16,6 @@ import {
     assayTypeNameToId,
     getDistinctAssayTypes,
 } from "@/lib/controllers/assayTypeController";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
 
 const AssaysGroupedByType: React.FC = () => {
     const experimentId = useExperimentId();
@@ -37,10 +35,8 @@ const AssaysGroupedByType: React.FC = () => {
             )
         );
     }, [data]);
-    if (isLoading) {
+    if (isLoading || isError || !data) {
         return <></>;
-    } else if (isError || !data) {
-        return <ErrorMessage message={getErrorMessage(error)} />;
     }
     return (
         <Container sx={{ marginTop: 2 }}>
@@ -63,9 +59,7 @@ const AssaysGroupedByType: React.FC = () => {
                 return (
                     <Accordion key={typeId}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
-                            <Typography>
-                                Assays Results for Type {name}
-                            </Typography>
+                            <Typography>Assays of type {name}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <ExperimentTable
