@@ -5,6 +5,7 @@ import type { AppProps } from "next/app";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { AlertProvider } from "@/lib/context/alert-context";
 import Head from "next/head";
+import { CurrentUserProvider } from "@/lib/context/users/currentUserContext";
 
 const queryClient = new QueryClient();
 export default function App({ Component, pageProps }: AppProps) {
@@ -17,7 +18,9 @@ export default function App({ Component, pageProps }: AppProps) {
             <QueryClientProvider client={queryClient}>
                 <AlertProvider>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <Component {...pageProps} />
+                        <CurrentUserProvider>
+                            <Component {...pageProps} />
+                        </CurrentUserProvider>
                     </ LocalizationProvider>
                 </AlertProvider>
             </QueryClientProvider>

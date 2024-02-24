@@ -17,7 +17,7 @@ const colDefs: GridColDef[] = [
         type: "boolean",
         sortable: false,
         width: 100,
-        renderCell: (params) => (params.value === true ? "Admin" : ""),
+        renderCell: (params) => (params.value === true ? <><img src="/crown.png" width={35} /> Admin</>  : ''),
     },
     {
         field: "username",

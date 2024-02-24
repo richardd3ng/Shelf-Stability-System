@@ -4,9 +4,11 @@ import { Button, Checkbox, FormControlLabel, Stack, TextField, Typography } from
 import { User } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LoadingCircle } from "../shared/loading";
 import { DeleteUserDialog } from "./deleteUserDialog";
+import { fetchOwnedExperiments } from "@/lib/controllers/experimentController";
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
 export interface UserFormProps {
     newUser: boolean;
@@ -16,13 +18,19 @@ export interface UserFormProps {
 export function UserForm(props: UserFormProps) {
     const [username, setUsername] = useState<string>("");
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+
     const [loading, setLoading] = useState<boolean>(!props.newUser);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
     const [ownedExperiments, setOwnedExperiments] = useState<string[]>([]);
+
     const alert = useAlert();
     const router = useRouter();
+    const { user } = useContext(CurrentUserContext);
+
+    const majorEditsAllowed = user !== undefined && !isSuperAdmin && user.id !== props.userId;
 
     useEffect(() => {
         if (!props.newUser && props.userId !== undefined) {
@@ -34,17 +42,18 @@ export function UserForm(props: UserFormProps) {
 
                 setUsername(user.username);
                 setIsAdmin(user.is_admin ?? false);
+                setIsSuperAdmin(user.is_super_admin ?? false);
                 setLoading(false);
             });
             setOwnedExperiments([]);
-            // fetchOwnedExperiments(props.userId!).then((experiments) => {
-            //     if (experiments instanceof ApiError) {
-            //         alert.showAlert("error", experiments.message);
-            //         return;
-            //     }
+            fetchOwnedExperiments(props.userId!).then((experiments) => {
+                if (experiments instanceof ApiError) {
+                    alert.showAlert("error", experiments.message);
+                    return;
+                }
 
-            //     setOwnedExperiments(experiments);
-            // });
+                setOwnedExperiments(experiments.map(exp => `${exp.id} - ${exp.title}`));
+            });
         }
     }, [props.newUser, props.userId]);
 
@@ -110,7 +119,11 @@ export function UserForm(props: UserFormProps) {
                     />
                     : <Typography variant="h5">{username}</Typography>}
                 <FormControlLabel control={
-                    <Checkbox checked={isAdmin} onChange={(_, val) => setIsAdmin(val)} />
+                    <Checkbox
+                        checked={isAdmin}
+                        onChange={(_, val) => setIsAdmin(val)}
+                        disabled={!majorEditsAllowed}
+                    />
                 } label="Admin" />
                 <TextField
                     label={props.newUser ? "Password" : "Change Password"}
@@ -129,11 +142,11 @@ export function UserForm(props: UserFormProps) {
                     required={props.newUser || password.length > 0}
                 />
                 <Button type="submit" variant="contained" color="primary">{props.newUser ? "Submit" : "Update"}</Button>
-                {!props.newUser && <Button variant="contained" color="error" onClick={() => setDeleteDialogOpen(true)}>Delete</Button>}
+                {(majorEditsAllowed && !props.newUser) && <Button variant="contained" color="error" onClick={() => setDeleteDialogOpen(true)}>Delete</Button>}
             </Stack>
             <DeleteUserDialog
                 open={deleteDialogOpen}
-                ownedExperiments={["1"]}
+                ownedExperiments={ownedExperiments}
                 onClose={() => setDeleteDialogOpen(false)}
                 onDelete={handleDelete}
             />

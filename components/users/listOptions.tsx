@@ -17,7 +17,7 @@ export default function UserListOptions() {
             <SearchBar placeholder={"Search"} onSearch={setQuery} />
             <Box
                 display="flex"
-                justifyContent="flex-end "
+                justifyContent="flex-end"
                 flexGrow="1"
             >
                 <Button
