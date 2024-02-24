@@ -96,7 +96,6 @@ const ExperimentEditorModal: React.FC = () => {
                         label="Start Date"
                         value={startDate}
                         onChange={(date) => {
-                            console.log("date change: ", date);
                             setStartDate(date);
                         }}
                     />

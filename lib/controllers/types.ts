@@ -33,7 +33,7 @@ export type ExperimentTable = {
 };
 
 export type ExperimentCreationArgs =
-    | Omit<ExperimentWithLocalDate, "id" | "ownerId">
+    | Omit<ExperimentWithLocalDate, "id">
     | {
           conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
       };

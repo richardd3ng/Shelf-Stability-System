@@ -47,7 +47,6 @@ export const MyDatePicker: React.FC<MyDatePickerProps> = (props) => {
                                 context
                             );
                         } catch (error) {
-                            console.log(error);
                             props.onChange(null, context);
                         }
                     }

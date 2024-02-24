@@ -43,7 +43,7 @@ export default async function deleteAssayAPI(
         }
         res.status(200).json(deletedAssay);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json(
             getApiError(500, `Failed to delete assay on server`)
         );

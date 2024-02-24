@@ -11,7 +11,7 @@ import {
     Stack,
     TextField,
 } from "@mui/material";
-import MultiSelectDropdown from "../shared/multi-select-dropdown";
+import MultiSelectDropdown from "../shared/multiSelectDropdown";
 import { createExperiment } from "@/lib/controllers/experimentController";
 import {
     ConditionCreationArgsNoExperimentId,
@@ -23,6 +23,7 @@ import { useRouter } from "next/router";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "../shared/myDatePicker";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { useUserInfo } from "@/lib/hooks/useUserInfo";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -45,6 +46,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [newStorageCondition, setNewStorageCondition] = useState<string>("");
     const [creationLoading, setCreationLoading] = useState<boolean>(false);
     const { showAlert } = useAlert();
+    const userInfo = useUserInfo();
     const router = useRouter();
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,6 +114,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 start_date: date!,
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
+                ownerId: userInfo.userId,
             };
             const experimentResJson: ExperimentCreationResponse =
                 await createExperiment(experimentData);

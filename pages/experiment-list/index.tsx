@@ -3,9 +3,9 @@ import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DescriptionIcon from "@mui/icons-material/Description";
-import ExperimentCreationDialog from "@/components/experiment-list/experiment-creation-dialog";
+import ExperimentCreationDialog from "@/components/experiment-list/experimentCreationModal";
 import Layout from "../../components/shared/layout";
-import SearchBar from "../../components/shared/search-bar";
+import SearchBar from "../../components/shared/searchBar";
 import Table from "../../components/shared/table";
 import ViewIcon from "@mui/icons-material/Visibility";
 import {
@@ -13,7 +13,7 @@ import {
     fetchExperimentList,
     hasRecordedAssayResults,
 } from "@/lib/controllers/experimentController";
-import ExperimentDeletionDialog from "@/components/experiment-list/experiment-deletion-dialog";
+import ExperimentDeletionDialog from "@/components/experiment-list/experimentDeletionModal";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import {
     ServerPaginationArgs,
