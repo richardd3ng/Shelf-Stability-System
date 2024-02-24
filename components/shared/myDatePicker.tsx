@@ -41,12 +41,14 @@ export const MyDatePicker: React.FC<MyDatePickerProps> = (props) => {
                 }
                 onChange={(newDate: Dayjs | null, context) => {
                     if (props.onChange !== undefined) {
-                        props.onChange(
-                            newDate !== null
-                                ? nativeJs(newDate).toLocalDate()
-                                : newDate,
-                            context
-                        );
+                        try {
+                            props.onChange(
+                                nativeJs(newDate).toLocalDate(),
+                                context
+                            );
+                        } catch (error) {
+                            props.onChange(null, context);
+                        }
                     }
                 }}
             ></DatePicker>

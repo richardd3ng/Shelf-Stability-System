@@ -1,17 +1,9 @@
 import { db } from "@/lib/api/db";
 import type { NextApiRequest, NextApiResponse } from "next";
-import {
-    ExperimentInfo,
-    ExperimentOwner,
-    ExperimentWithLocalDate,
-} from "@/lib/controllers/types";
+import { ExperimentOwner } from "@/lib/controllers/types";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
-import { Assay, AssayResult, Condition, Experiment } from "@prisma/client";
 import { getExperimentID, INVALID_EXPERIMENT_ID } from "@/lib/api/apiHelpers";
-import { JSONToExperiment } from "@/lib/controllers/jsonConversions";
-import { nativeJs } from "@js-joda/core";
-import { localDateToJsDate } from "@/lib/datesUtils";
 
 export default async function getExperimentOwnerAPI(
     req: NextApiRequest,
@@ -24,21 +16,25 @@ export default async function getExperimentOwnerAPI(
         );
         return;
     }
-    try{
+    try {
         const experiment = await db.experiment.findUnique({
-            where : {
-                id : id
+            where: {
+                id: id,
             },
-            include : {
-                owner : true
-            }
+            include: {
+                owner: true,
+            },
         });
-        if (experiment){
-            res.status(200).json({username : experiment.owner.username})
+        if (experiment) {
+            res.status(200).json({ username: experiment.owner.username });
         }
-    } catch {
-        res.status(400).json(
-            getApiError(400, "An error occurred.")
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(
+            getApiError(
+                500,
+                `Failed to fetch owner for experiment ${id} on server`
+            )
         );
     }
 }

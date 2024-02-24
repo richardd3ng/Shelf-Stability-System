@@ -12,11 +12,12 @@ export const CONSTRAINT_ERROR_CODE = 409;
 const defaults: ErrorDefaults = {
     400: { message: "Bad Request Format", name: "Bad Request" },
     404: { message: "Resource Not Found", name: "Not Found" },
-    500: { message: "Internal Server Error", name: "Server Error" },
+    403: { message: "Unauthorized Access", name: "Forbidden" },
     [CONSTRAINT_ERROR_CODE]: {
         message: "Constraint Validation Failed",
         name: "Constraint Error",
     },
+    500: { message: "Internal Server Error", name: "Server Error" },
 };
 
 export const getApiError = (

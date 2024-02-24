@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Experiment, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { db } from "@/lib/api/db";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
@@ -70,11 +70,27 @@ export default async function searchExperimentsAPI(
 
                 WHERE e.title ILIKE ${`%${query}%`}
                 OR e.description ILIKE ${`%${query}%`}
-                ${!isNaN(queryNumber) ? Prisma.sql`OR e.id = ${queryNumber}` : Prisma.empty}
-                ${orderBy !== undefined ? Prisma.raw(`ORDER BY ${orderBy.field} ${orderBy.order}`) : Prisma.empty}
-                LIMIT ${pageSize} OFFSET ${page * pageSize}`
-                .then<ExperimentTableInfo[]>(
-                    experiments => experiments.map(experiment => ({ ...experiment, start_date: undefined, startDate: LocalDate.from(nativeJs(experiment.start_date)) }))),
+                ${
+                    !isNaN(queryNumber)
+                        ? Prisma.sql`OR e.id = ${queryNumber}`
+                        : Prisma.empty
+                }
+                ${
+                    orderBy !== undefined
+                        ? Prisma.raw(
+                              `ORDER BY ${orderBy.field} ${orderBy.order}`
+                          )
+                        : Prisma.empty
+                }
+                LIMIT ${pageSize} OFFSET ${page * pageSize}`.then<
+                ExperimentTableInfo[]
+            >((experiments) =>
+                experiments.map((experiment) => ({
+                    ...experiment,
+                    start_date: undefined,
+                    startDate: LocalDate.from(nativeJs(experiment.start_date)),
+                }))
+            ),
             db.experiment.count({
                 where: {
                     OR: [

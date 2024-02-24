@@ -3,8 +3,6 @@ import { fetchAgendaList } from "@/lib/controllers/assayController";
 import { AssayInfo, AssayTable } from "@/lib/controllers/types";
 import { Box, Stack, Checkbox, FormControlLabel } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { DatePicker } from "@mui/x-date-pickers";
-import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import {
     useServerPagination,
@@ -13,7 +11,7 @@ import {
 import { AgendaContext } from "@/lib/context/agendaPage/agendaContext";
 import { AssayOptionsBox } from "@/components/agenda/assayOptionsBox";
 import { AssayResultEditorOnAgenda } from "@/components/agenda/assayResultEditorOnAgenda";
-import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
+import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
 
@@ -112,8 +110,8 @@ export default function AssayAgenda() {
         <Layout>
             <AssayEditingContext.Provider
                 value={{
-                    assayIdBeingEdited,
-                    setAssayIdBeingEdited,
+                    id: assayIdBeingEdited,
+                    setId: setAssayIdBeingEdited,
                     isEditing: isEditingAnAssay,
                     setIsEditing: setIsEditingAnAssay,
                 }}

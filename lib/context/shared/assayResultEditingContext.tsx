@@ -1,17 +1,18 @@
-import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
 import { createContext } from "react";
+import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
 
 interface AssayResultEditingContextType {
+    id: number;
+    setId: (id: number) => void;
     isEditing: boolean;
     setIsEditing: (b: boolean) => void;
-    assayResultIdBeingEdited: number;
-    setAssayResultIdBeingEdited: (n: number) => void;
 }
 
-export const AssayResultEditingContext =
-    createContext<AssayResultEditingContextType>({
-        isEditing: false,
-        setIsEditing: (_b: boolean) => {},
-        assayResultIdBeingEdited: INVALID_ASSAY_RESULT_ID,
-        setAssayResultIdBeingEdited: (_n: number) => {},
-    });
+const AssayResultEditingContext = createContext<AssayResultEditingContextType>({
+    id: INVALID_ASSAY_RESULT_ID,
+    setId: (_id: number) => {},
+    isEditing: false,
+    setIsEditing: (_b: boolean) => {},
+});
+
+export default AssayResultEditingContext;

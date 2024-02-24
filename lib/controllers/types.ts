@@ -33,7 +33,7 @@ export type ExperimentTable = {
 };
 
 export type ExperimentCreationArgs =
-    | Omit<ExperimentWithLocalDate, "id" | "ownerId">
+    | Omit<ExperimentWithLocalDate, "id">
     | {
           conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
       };
@@ -43,15 +43,14 @@ export type ExperimentCreationResponse = Omit<
     "assays" | "assayResults"
 >;
 
+// experiment updates are done in a single atomic transaction
 export type ExperimentUpdateArgs = {
     id: number;
-    title?: string;
-    description?: string;
+    title: string;
+    description: string | null;
     startDate?: LocalDate;
-    ownerId?: number;
+    userId: number;
 };
-
-export type ExperimentUpdateResponse = ExperimentCreationResponse;
 
 /* ----- Assay ----- */
 
@@ -78,6 +77,7 @@ export type AssayTable = {
 
 export type AssayCreationArgs = Omit<Assay, "id">;
 
+// experiment updates can be done by individual fields
 export type AssayUpdateArgs = {
     id: number;
     conditionId?: number;
@@ -103,6 +103,7 @@ export type ConditionUpdateArgs = {
 
 export type AssayResultCreationArgs = Omit<AssayResult, "id">;
 
+// assay result updates can be done by individual fields
 export type AssayResultUpdateArgs = {
     id: number;
     result?: number | null;

@@ -10,7 +10,6 @@ import {
     GridSortItem,
     GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
-import { LoadingContainer } from "@/components/shared/loading";
 import { Assay, AssayResult, Condition } from "@prisma/client";
 import {
     Box,
@@ -30,7 +29,7 @@ import { useMutationToDeleteCondition } from "@/lib/hooks/experimentDetailPage/u
 import StarIcon from "@mui/icons-material/Star";
 import Edit from "@mui/icons-material/Edit";
 import ConditionEditorModal from "../modifications/editorModals/conditionEditorModal";
-import { ConditionEditingContext } from "@/lib/context/experimentDetailPage/conditionEditingContext";
+import ConditionEditingContext from "@/lib/context/experimentDetailPage/conditionEditingContext";
 import { INVALID_CONDITION_ID } from "@/lib/api/apiHelpers";
 
 export interface WeekRow {
@@ -84,10 +83,9 @@ const getAssayResultForAssay = (
 const ExperimentTable: React.FC<ExperimentTableProps> = (
     props: ExperimentTableProps
 ) => {
-    const readOnly: boolean = props.assayFilter === undefined;
     const { showAlert } = useAlert();
     const experimentId = useExperimentId();
-    const { data, isLoading, isError } = useExperimentInfo(experimentId);
+    const { data } = useExperimentInfo(experimentId);
     const [weekRows, setWeekRows] = useState<WeekRow[]>([]);
     const [idCounter, setIdCounter] = useState<number>(0);
     const [addAssayParams, setAddAssayParams] = useState<AddAssayParams | null>(
@@ -103,14 +101,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
     const CONDITION_COL_WIDTH = 150;
 
     useEffect(() => {
-        if (isError) {
-            showAlert("error", "Error loading experiment data");
-        } else if (
-            !data ||
-            !data.experiment ||
-            !data.assays ||
-            !data.conditions
-        ) {
+        if (!data) {
             return;
         } else {
             const weeks: number[] = getAllWeeksCoveredByAssays(data.assays);
@@ -124,11 +115,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
             setWeekRows(initialWeekRows);
             setIdCounter(weeks.length);
         }
-    }, [data, isError]);
-
-    if (isLoading) {
-        return <LoadingContainer />;
-    }
+    }, [data]);
 
     const columnHeader = (condition: Condition): React.JSX.Element => {
         return (
@@ -351,12 +338,12 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
             />
             <ConditionEditingContext.Provider
                 value={{
+                    id: conditionIdBeingEdited,
+                    setId: setConditionIdBeingEdited,
                     isEditing: conditionIdBeingEdited !== INVALID_CONDITION_ID,
                     setIsEditing: () => {
                         setConditionIdBeingEdited(INVALID_CONDITION_ID);
                     },
-                    conditionIdBeingEdited,
-                    setConditionIdBeingEdited,
                 }}
             >
                 <ConditionEditorModal />

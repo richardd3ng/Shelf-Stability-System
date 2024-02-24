@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getApiError } from "@/lib/api/error";
 import { ApiError } from "next/dist/server/api-utils";
 import { AssayResult } from "@prisma/client";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
 import {
     INVALID_ASSAY_RESULT_ID,
     getAssayResultID,
@@ -16,6 +15,12 @@ export default async function updateAssayResultAPI(
     const id = getAssayResultID(req);
     if (id === INVALID_ASSAY_RESULT_ID) {
         res.status(400).json(getApiError(400, "Assay result ID is required"));
+        return;
+    }
+    if (!req.body.last_editor) {
+        res.status(400).json(
+            getApiError(400, "Last editor is required to update assay result")
+        );
         return;
     }
     try {
@@ -61,7 +66,7 @@ export default async function updateAssayResultAPI(
         }
         res.status(200).json(updatedAssayResult);
     } catch (error) {
-        console.error(getErrorMessage(error));
+        console.error(error);
         res.status(500).json(
             getApiError(500, `Failed to update assay result on server`)
         );

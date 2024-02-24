@@ -1,4 +1,3 @@
-import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useMutationToCreateAssayResult } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import {
@@ -14,10 +13,11 @@ import {
     Stack,
 } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
-import { CloseableModal } from "@/components/shared/closeableModal";
+import CloseableModal from "@/components/shared/closeableModal";
 import { Assay, AssayResult } from "@prisma/client";
 import EditableTextField from "@/components/shared/editableTextField";
-import { AssayResultEditingContext } from "@/lib/context/shared/assayResultEditingContext";
+import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
+import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
 import {
     assayTypeIdToName,
@@ -25,8 +25,6 @@ import {
     getAssayTypeUnits,
 } from "@/lib/controllers/assayTypeController";
 import { getDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
-import { LoadingContainer } from "@/components/shared/loading";
-import { ErrorMessage } from "@/components/shared/errorMessage";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 
 interface EditingState {
@@ -43,15 +41,17 @@ const INITIAL_EDITING_STATE: EditingState = {
     isEditingComment: false,
 };
 
-export const AssayEditorModal: React.FC = () => {
+const AssayEditorModal: React.FC = () => {
     const {
         isEditing: isEditingAssay,
         setIsEditing: setIsEditingAssay,
-        assayIdBeingEdited,
+        id: assayIdBeingEdited,
     } = useContext(AssayEditingContext);
-    const { assayResultIdBeingEdited } = useContext(AssayResultEditingContext);
+    const { id: assayResultIdBeingEdited } = useContext(
+        AssayResultEditingContext
+    );
     const experimentId = useExperimentId();
-    const { data, isLoading, isError, error } = useExperimentInfo(experimentId);
+    const { data } = useExperimentInfo(experimentId);
     const [type, setType] = useState<string>("");
     const [week, setWeek] = useState<string>("");
     const [result, setResult] = useState<string>("");
@@ -156,13 +156,8 @@ export const AssayEditorModal: React.FC = () => {
         setIsEditingAssay(false);
     };
 
-    if (!type || !week) {
+    if (!data || !type || !week) {
         return <></>;
-    }
-    if (isLoading) {
-        return <LoadingContainer />;
-    } else if (isError || !data) {
-        return <ErrorMessage message={getErrorMessage(error)} />;
     }
     return (
         <CloseableModal
@@ -225,3 +220,5 @@ export const AssayEditorModal: React.FC = () => {
         </CloseableModal>
     );
 };
+
+export default AssayEditorModal;

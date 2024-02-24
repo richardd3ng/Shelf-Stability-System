@@ -96,7 +96,7 @@ export const fetchExperimentOwner = async (
     let resJson = await response.json();
     if (response.ok) {
         return {
-            username : resJson.username
+            username: resJson.username,
         };
     }
     throw new ApiError(response.status, resJson.message);
@@ -135,17 +135,12 @@ export const deleteExperiment = async (
 };
 
 export const updateExperiment = async (
-    experiment: ExperimentUpdateArgs
+    experimentUpdateArgs: ExperimentUpdateArgs
 ): Promise<ExperimentWithLocalDate> => {
-    const endpoint = `/api/experiments/${experiment.id}/update`;
+    const endpoint = `/api/experiments/${experimentUpdateArgs.id}/update`;
     const response = await fetch(endpoint, {
         method: "POST",
-        body: JSON.stringify({
-            title: experiment.title,
-            description: experiment.description,
-            startDate: experiment.startDate,
-            ownerId: experiment.ownerId,
-        }),
+        body: JSON.stringify(experimentUpdateArgs),
         headers: {
             "Content-Type": "application/json",
         },
