@@ -12,7 +12,6 @@ export const useUserInfo = () : UserInfo => {
     const isLoggedIn = status === "authenticated";
     const username = data?.user?.name;
     const user : any = data?.user;
-    const id = user?.id 
-    console.log(data);
+    const id = user?.id ;
     return {username, isLoggedIn, userId: id}
 }
