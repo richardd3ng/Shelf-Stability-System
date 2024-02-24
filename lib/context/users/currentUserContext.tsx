@@ -1,6 +1,6 @@
 import { fetchUser } from "@/lib/controllers/userController";
+import { useUserInfo } from "@/lib/hooks/useUserInfo";
 import { User } from "@prisma/client";
-import { getSession } from "next-auth/react";
 import { ApiError } from "next/dist/server/api-utils";
 import React, {
     createContext,
@@ -8,63 +8,45 @@ import React, {
     ReactNode,
     useEffect,
 } from "react";
+import { useAlert } from "../shared/alertContext";
 
 export const CurrentUserContext = createContext<{
-    refreshUser: () => void;
     user: Omit<User, 'password'> | undefined;
 }>({
-    refreshUser: () => { },
     user: undefined,
 });
 
 export const CurrentUserProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
-    const [userId, setUserId] = useState<number>(-1);
     const [user, setUser] = useState<Omit<User, 'password'> | undefined>(undefined);
+    const userInfo = useUserInfo();
+    const alert = useAlert();
 
-    function refreshId() {
-        getSession().then((session) => {
-            const userId = session?.user?.id;
-            if (userId === null || userId === undefined) {
-                return;
-            }
+    async function updateUser(userId: number) {
+        const user = await fetchUser(userId);
 
-            setUserId(userId);
-        });
-    }
-
-    async function updateUser() {
-        const startUserId = userId;
-        let user;
-        // Keep retrying until it works
-        do {
-            user = await fetchUser(userId);
-
-            // If the user id has changed, end this
-            if (userId !== startUserId) {
-                return;
-            }
-        } while (user instanceof ApiError);
+        if (user instanceof ApiError) {
+            alert.showAlert("error", user.message);
+            return;
+        }
 
         setUser(user);
     }
 
     useEffect(() => {
+        const userId = userInfo.userId;
         setUser(undefined);
-        if (userId < 0) {
+        
+        if (userId === undefined || userId < 0) {
             return;
         }
 
-        updateUser();
-    }, [userId]);
-
-    useEffect(() => {
-        refreshId();
-    }, []);
+        updateUser(userId);
+    }, [userInfo.userId]);
 
     return (
-        <CurrentUserContext.Provider value={{ refreshUser: refreshId, user }}>
+        <CurrentUserContext.Provider value={{ user }}>
             {children}
         </CurrentUserContext.Provider>
     );

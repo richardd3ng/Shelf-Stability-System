@@ -1,4 +1,4 @@
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 import { createUser, deleteUser, fetchUser, updateUser } from "@/lib/controllers/userController";
 import { Button, Checkbox, FormControlLabel, Stack, TextField, Typography } from "@mui/material";
 import { User } from "@prisma/client";
