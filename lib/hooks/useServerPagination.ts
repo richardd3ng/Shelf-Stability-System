@@ -11,7 +11,7 @@ export function useServerPaginationNoSort(reload: (paging: ServerPaginationArgs)
     : [ServerPaginationProps, () => void] {
     const [pagination, setPagination] = useState<GridPaginationModel>(defaultPagination);
 
-    return paginationHelper(reload, { pagination }, [pagination, setPagination]);
+    return usePaginationHelper(reload, { pagination }, [pagination, setPagination]);
 }
 
 export function useServerPagination(reload: (paging: ServerPaginationArgs) => Promise<{ rowCount: number }>, defaultSort: GridSortModel, defaultPagination: GridPaginationModel)
@@ -21,7 +21,7 @@ export function useServerPagination(reload: (paging: ServerPaginationArgs) => Pr
 
     const paginationArgs = { sortModel, pagination };
 
-    const [ props, newReload ] = paginationHelper(reload, paginationArgs, [pagination, setPagination]);
+    const [ props, newReload ] = usePaginationHelper(reload, paginationArgs, [pagination, setPagination]);
 
     useEffect(() => {
         // When sorting changes, only reload if paging is happening
@@ -40,7 +40,7 @@ export function useServerPagination(reload: (paging: ServerPaginationArgs) => Pr
     ];
 }
 
-function paginationHelper(reload: (paging: ServerPaginationArgs) => Promise<{ rowCount: number }>, reloadArgs: ServerPaginationArgs, [pagination, setPagination]: [GridPaginationModel, (model: GridPaginationModel) => void]): [ServerPaginationProps, () => void] {
+function usePaginationHelper(reload: (paging: ServerPaginationArgs) => Promise<{ rowCount: number }>, reloadArgs: ServerPaginationArgs, [pagination, setPagination]: [GridPaginationModel, (model: GridPaginationModel) => void]): [ServerPaginationProps, () => void] {
     const [rowCount, setRowCount] = useState<number>(0);
 
     const newReload = async () => {

@@ -44,7 +44,7 @@ export const DeleteUserDialog: React.FC<DeleteUserDialogProps> = (
                                 padding: 5
                             }}>
                                 {props.ownedExperiments.map((exp) => (
-                                    <p>{exp}</p>
+                                    <p key={exp}>{exp}</p>
                                 ))}
                             </div>
                         </>)

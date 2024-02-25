@@ -10,6 +10,7 @@ import { Stack } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Image from 'next/image';
 
 const colDefs: GridColDef[] = [
     {
@@ -18,7 +19,7 @@ const colDefs: GridColDef[] = [
         type: "boolean",
         sortable: false,
         width: 100,
-        renderCell: (params) => (params.value === true ? <><img src="/crown.png" width={35} /> Admin</>  : ''),
+        renderCell: (params) => (params.value === true ? <><Image src="/crown.png" width={35} alt="Crown indicating an admin" /> Admin</>  : ''),
     },
     {
         field: "username",
