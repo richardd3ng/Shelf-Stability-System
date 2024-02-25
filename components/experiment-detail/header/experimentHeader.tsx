@@ -68,7 +68,7 @@ export const ExperimentHeader = () => {
                         >
                             <EditExperimentButton />
                         </ExperimentEditingContext.Provider>
-                        <GenerateReportIconButton />
+                        <GenerateReportIconButton experimentId={experimentId} />
                         <DownloadExcelIconButton />
                     </Box>
                 </Box>

@@ -1,6 +1,8 @@
 import { useSession } from "next-auth/react";
 
 export const BAD_ID = -1;
+export const INVALID_USERNAME = "INVALID_USER";
+
 export interface UserInfo {
     username: string | null | undefined;
     isLoggedIn: boolean;

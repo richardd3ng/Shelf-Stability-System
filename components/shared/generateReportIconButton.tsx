@@ -1,16 +1,22 @@
-import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useRouter } from "next/router";
 import DescriptionIcon from "@mui/icons-material/Description";
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 
-const GenerateReportIconButton: React.FC = () => {
+interface GenerateReportIconButtonProps {
+    experimentId: number;
+}
+
+const GenerateReportIconButton: React.FC<GenerateReportIconButtonProps> = (
+    props: GenerateReportIconButtonProps
+) => {
     const router = useRouter();
-    const experimentId = useExperimentId();
     return (
         <IconButtonWithTooltip
             text="Generate Report"
             icon={DescriptionIcon}
-            onClick={() => router.push(`/experiments/${experimentId}/report`)}
+            onClick={() =>
+                router.push(`/experiments/${props.experimentId}/report`)
+            }
         />
     );
 };
