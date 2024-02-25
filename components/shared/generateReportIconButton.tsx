@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import DescriptionIcon from "@mui/icons-material/Description";
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 
-const GeneratePrintableReportButton: React.FC = () => {
+const GenerateReportIconButton: React.FC = () => {
     const router = useRouter();
     const experimentId = useExperimentId();
     return (
@@ -15,4 +15,4 @@ const GeneratePrintableReportButton: React.FC = () => {
     );
 };
 
-export default GeneratePrintableReportButton;
+export default GenerateReportIconButton;

@@ -10,8 +10,8 @@ import { ErrorMessage } from "@/components/shared/errorMessage";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import ExperimentEditingContext from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
-import GenerateExcelReportButton from "./generateExcelReportButton";
-import GeneratePrintableReportButton from "./generatePrintableReportButton";
+import DownloadExcelIconButton from "./downloadExcelIconButton";
+import GenerateReportIconButton from "@/components/shared/generateReportIconButton";
 import EditExperimentButton from "./editExperimentButton";
 
 export const ExperimentHeader = () => {
@@ -68,8 +68,8 @@ export const ExperimentHeader = () => {
                         >
                             <EditExperimentButton />
                         </ExperimentEditingContext.Provider>
-                        <GeneratePrintableReportButton />
-                        <GenerateExcelReportButton />
+                        <GenerateReportIconButton />
+                        <DownloadExcelIconButton />
                     </Box>
                 </Box>
                 <Typography

@@ -7,7 +7,7 @@ import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentI
 import DownloadIcon from "@mui/icons-material/Download";
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 
-const GenerateExcelReportButton: React.FC = () => {
+const DownloadExcelIconButton: React.FC = () => {
     const experimentId = useExperimentId();
     const { data: experiment } = useExperimentInfo(experimentId);
     const { data: owner } = useExperimentOwner(experimentId);
@@ -21,4 +21,4 @@ const GenerateExcelReportButton: React.FC = () => {
     ) : null;
 };
 
-export default GenerateExcelReportButton;
+export default DownloadExcelIconButton;
