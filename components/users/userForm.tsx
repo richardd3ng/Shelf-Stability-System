@@ -5,10 +5,10 @@ import { User } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-import { LoadingCircle } from "../shared/loading";
 import { DeleteUserDialog } from "./deleteUserDialog";
 import { fetchOwnedExperiments } from "@/lib/controllers/experimentController";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import { useLoading } from "@/lib/context/shared/loadingContext";
 
 export interface UserFormProps {
     newUser: boolean;
@@ -22,7 +22,7 @@ export function UserForm(props: UserFormProps) {
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-    const [loading, setLoading] = useState<boolean>(!props.newUser);
+    const { showLoading, hideLoading } = useLoading();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
     const [ownedExperiments, setOwnedExperiments] = useState<string[]>([]);
 
@@ -34,7 +34,8 @@ export function UserForm(props: UserFormProps) {
 
     useEffect(() => {
         if (!props.newUser && props.userId !== undefined) {
-            fetchUser(props.userId!).then((user) => {
+            showLoading("Loading user...");
+            fetchUser(props.userId).then((user) => {
                 if (user instanceof ApiError) {
                     alert.showAlert("error", user.message);
                     return;
@@ -43,7 +44,7 @@ export function UserForm(props: UserFormProps) {
                 setUsername(user.username);
                 setIsAdmin(user.is_admin ?? false);
                 setIsSuperAdmin(user.is_super_admin ?? false);
-                setLoading(false);
+                hideLoading();
             });
             setOwnedExperiments([]);
             fetchOwnedExperiments(props.userId!).then((experiments) => {
@@ -65,46 +66,42 @@ export function UserForm(props: UserFormProps) {
         // Blank passwords should be prevented by the "required" field, but it doesn't hurt to check
         if (passwordMismatch || (props.newUser && password === "")) return;
 
-        setLoading(true);
+        
 
         var result: Omit<User, 'password'> | ApiError | undefined = undefined;
         if (props.newUser) {
+            showLoading("Creating user...");
             result = await createUser(username, password, isAdmin);
         } else {
+            showLoading("Updating user...");
             result = await updateUser(props.userId!, password, isAdmin);
         }
 
         if (result instanceof ApiError) {
             alert.showAlert("error", result.message);
-            setLoading(false);
+            hideLoading();
         } else {
             if (props.newUser) {
                 router.push(`/users/${result.id}`);
             } else {
                 alert.showAlert("success", "User updated");
-                setLoading(false);
+                hideLoading();
             }
         }
     }
 
     async function handleDelete() {
-        setLoading(true);
+        showLoading("Deleting user...");
 
         const error = await deleteUser(props.userId!);
 
         if (error instanceof ApiError) {
             alert.showAlert("error", error.message);
-            setLoading(false);
+            hideLoading();
         } else {
             alert.showAlert("success", "User deleted");
             router.push("/users");
         }
-    }
-
-    if (loading) {
-        return (
-            <LoadingCircle />
-        );
     }
 
     return (

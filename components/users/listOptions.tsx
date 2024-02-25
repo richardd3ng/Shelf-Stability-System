@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import SearchBar from "../shared/search-bar";
+import SearchBar from "../shared/searchBar";
 import { useContext } from "react";
 import { UserListContext } from "@/lib/context/users/userListContext";
 import { useRouter } from "next/router";
