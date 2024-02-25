@@ -3,7 +3,7 @@ import Link from "next/link";
 import { IconButton, Box } from "@mui/material";
 import ViewIcon from "@mui/icons-material/Visibility";
 import { Edit } from "@mui/icons-material";
-import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
+import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 
 interface AssayOptionsBoxProps {
     experimentId: number;
@@ -13,8 +13,7 @@ interface AssayOptionsBoxProps {
 export const AssayOptionsBox: React.FC<AssayOptionsBoxProps> = (
     props: AssayOptionsBoxProps
 ) => {
-    const { setIsEditing, setAssayIdBeingEdited } =
-        useContext(AssayEditingContext);
+    const { setId, setIsEditing } = useContext(AssayEditingContext);
     return (
         <Box sx={{ display: "flex" }}>
             <IconButton
@@ -25,7 +24,7 @@ export const AssayOptionsBox: React.FC<AssayOptionsBoxProps> = (
             </IconButton>
             <IconButton
                 onClick={() => {
-                    setAssayIdBeingEdited(props.assayId);
+                    setId(props.assayId);
                     setIsEditing(true);
                 }}
             >

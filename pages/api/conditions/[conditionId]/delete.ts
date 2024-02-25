@@ -1,10 +1,6 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-    INVALID_CONDITION_ID,
-    getConditionID,
-    getErrorMessage,
-} from "@/lib/api/apiHelpers";
+import { INVALID_CONDITION_ID, getConditionID } from "@/lib/api/apiHelpers";
 import {
     conditionHasAssaysWithResults,
     conditionIsControl,
@@ -57,7 +53,7 @@ export default async function deleteConditionAPI(
         }
         res.status(200).json(deletedCondition);
     } catch (error) {
-        console.error(getErrorMessage(error));
+        console.error(error);
         res.status(500).json(
             getApiError(500, "Failed to delete condition on server")
         );

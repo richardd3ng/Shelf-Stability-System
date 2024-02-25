@@ -10,7 +10,6 @@ import { Assay, AssayResult, Condition, Experiment } from "@prisma/client";
 import { getExperimentID, INVALID_EXPERIMENT_ID } from "@/lib/api/apiHelpers";
 import { JSONToExperiment } from "@/lib/controllers/jsonConversions";
 import { nativeJs } from "@js-joda/core";
-import { localDateToJsDate } from "@/lib/datesUtils";
 
 export default async function getExperimentInfoAPI(
     req: NextApiRequest,

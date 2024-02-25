@@ -1,6 +1,7 @@
 import { Assay, AssayResult, Condition } from "@prisma/client";
 import { db } from "./db";
 
+// note: these functions must be called on the server side they rely on the db object
 export const assayHasResult = async (assayId: number): Promise<boolean> => {
     const assayResult: AssayResult | null = await db.assayResult.findFirst({
         where: {

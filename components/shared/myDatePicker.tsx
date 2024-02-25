@@ -1,7 +1,6 @@
 import {
     DatePickerProps,
     DateValidationError,
-    LocalizationProvider,
     PickerChangeHandlerContext,
 } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -33,18 +32,22 @@ export const MyDatePicker: React.FC<MyDatePickerProps> = (props) => {
             }
             defaultValue={
                 props.defaultValue === null ||
-                props.defaultValue === undefined
+                    props.defaultValue === undefined
                     ? props.defaultValue
                     : dayjs(props.defaultValue.toString())
             }
             onChange={(newDate: Dayjs | null, context) => {
                 if (props.onChange !== undefined) {
-                    props.onChange(
-                        newDate !== null
-                            ? nativeJs(newDate).toLocalDate()
-                            : newDate,
-                        context
-                    );
+                    try {
+                        props.onChange(
+                            newDate !== null
+                                ? nativeJs(newDate).toLocalDate()
+                                : newDate,
+                            context
+                        );
+                    } catch (error) {
+                        props.onChange(null, context);
+                    }
                 }
             }}
         />
