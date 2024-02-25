@@ -1,19 +1,16 @@
-import { Box, Button, Container, IconButton, Stack } from "@mui/material";
+import { Box, Button, Container, Stack } from "@mui/material";
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DescriptionIcon from "@mui/icons-material/Description";
-import ExperimentCreationDialog from "@/components/experiment-list/experimentCreationModal";
+import ExperimentCreationDialog from "@/components/experiment-list/experimentCreationDialog";
 import Layout from "../../components/shared/layout";
 import SearchBar from "../../components/shared/searchBar";
 import Table from "../../components/shared/table";
-import ViewIcon from "@mui/icons-material/Visibility";
 import {
     deleteExperiment,
     fetchExperimentList,
     hasRecordedAssayResults,
 } from "@/lib/controllers/experimentController";
-import ExperimentDeletionDialog from "@/components/experiment-list/experimentDeletionModal";
+import ExperimentDeletionDialog from "@/components/shared/experimentDeletionDialog";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import {
     ServerPaginationArgs,
@@ -22,6 +19,10 @@ import {
 import { ExperimentTable, ExperimentTableInfo } from "@/lib/controllers/types";
 import { useRouter } from "next/router";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
+import GeneratePrintableReportButton from "@/components/shared/generateReportIconButton";
+import ViewExperimentButton from "@/components/experiment-list/viewExperimentButton";
+import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
+import Delete from "@mui/icons-material/Delete";
 
 const ExperimentList: React.FC = () => {
     const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>(
@@ -88,19 +89,13 @@ const ExperimentList: React.FC = () => {
             sortable: false,
             renderCell: (params) => (
                 <Box sx={{ display: "flex" }}>
-                    <IconButton onClick={() => handleView(params.row.id)}>
-                        <ViewIcon />
-                    </IconButton>
-                    <IconButton
-                        onClick={() => handleGenerateReport(params.row.id)}
-                    >
-                        <DescriptionIcon />
-                    </IconButton>
-                    <IconButton
+                    <ViewExperimentButton experimentId={params.row.id} />
+                    <GeneratePrintableReportButton />
+                    <IconButtonWithTooltip
+                        text="Delete"
+                        icon={Delete}
                         onClick={() => prepareForDeletion([params.row.id])}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
+                    ></IconButtonWithTooltip>
                 </Box>
             ),
         },
@@ -115,13 +110,12 @@ const ExperimentList: React.FC = () => {
         });
     };
 
-    const reloadExperimentData = (
+    const reloadExperimentData = async (
         paging: ServerPaginationArgs
     ): Promise<ExperimentTable> => {
-        return getExperiments(paging).then((fetchedData) => {
-            setExperimentData(fetchedData.rows);
-            return fetchedData;
-        });
+        const fetchedData = await getExperiments(paging);
+        setExperimentData(fetchedData.rows);
+        return fetchedData;
     };
 
     const [paginationProps, reload] = useServerPagination(
@@ -132,14 +126,6 @@ const ExperimentList: React.FC = () => {
             page: 0,
         }
     );
-
-    const handleView = (id: number) => {
-        router.push(`/experiments/${id}`);
-    };
-
-    const handleGenerateReport = (id: number) => {
-        router.push(`/experiments/${id}/report`);
-    };
 
     const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
         setSelectedExperimentIds(selectedRows);
@@ -185,7 +171,7 @@ const ExperimentList: React.FC = () => {
                 }
             );
             await Promise.all(deletePromises);
-            await reload();
+            reload();
             if (deletedIds.length > 0) {
                 showAlert(
                     "success",
@@ -246,6 +232,11 @@ const ExperimentList: React.FC = () => {
                     pagination
                     checkboxSelection
                     onDeleteRows={prepareForDeletion}
+                    onCellClick={(cell) => {
+                        if (cell.field !== "actions") {
+                            router.push(`/experiments/${cell.id}`);
+                        }
+                    }}
                     {...paginationProps}
                 />
 

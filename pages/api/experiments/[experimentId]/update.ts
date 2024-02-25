@@ -65,17 +65,18 @@ export default async function updateExperimentAPI(
                 LocalDate.parse(startDate)
             );
         }
-        const updatedExperiment: ExperimentWithLocalDate = await db.experiment
-            .update({
-                where: {
-                    id: id,
-                },
-                data: updateData,
-            })
-            .then((experiment: Experiment) => ({
-                ...experiment,
-                start_date: nativeJs(experiment.start_date).toLocalDate(),
-            }));
+        const updatedExperiment: ExperimentWithLocalDate | null =
+            await db.experiment
+                .update({
+                    where: {
+                        id: id,
+                    },
+                    data: updateData,
+                })
+                .then((experiment: Experiment) => ({
+                    ...experiment,
+                    start_date: nativeJs(experiment.start_date).toLocalDate(),
+                }));
         if (!updatedExperiment) {
             res.status(404).json(
                 getApiError(

@@ -4,6 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {
     DataGrid,
     DataGridProps,
+    GridEventListener,
     GridFooter,
     GridFooterContainer,
     GridRowSelectionModel,
@@ -11,9 +12,10 @@ import {
 
 interface TableProps {
     sortModel?: any;
+    checkboxSelection?: boolean;
     footer?: React.JSXElementConstructor<any>;
     onDeleteRows?: (rows: GridRowSelectionModel) => void;
-    checkboxSelection?: boolean;
+    handleCellClick?: (params: any) => void;
 }
 
 const Table: React.FC<TableProps & DataGridProps> = (
@@ -28,15 +30,6 @@ const Table: React.FC<TableProps & DataGridProps> = (
         }
         setSelectedRows([]);
     };
-
-    const DeleteButton: React.FC = () => (
-        <IconButton
-            disabled={selectedRows.length === 0}
-            onClick={handleDeleteRows}
-        >
-            <DeleteIcon />
-        </IconButton>
-    );
 
     const FooterComponent: React.FC = () => {
         return (
@@ -55,7 +48,12 @@ const Table: React.FC<TableProps & DataGridProps> = (
                                 <Typography variant="body2" component="span">
                                     Delete {selectedRows.length} rows
                                 </Typography>
-                                {DeleteButton({})}
+                                <IconButton
+                                    disabled={selectedRows.length === 0}
+                                    onClick={handleDeleteRows}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
                             </Box>
                         )}
                     </Box>
@@ -87,6 +85,7 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 checkboxSelection={props.checkboxSelection ?? false}
                 disableRowSelectionOnClick
                 slots={{ footer: FooterComponent }}
+                onCellClick={props.handleCellClick}
                 onRowSelectionModelChange={(
                     newSelectedRows: GridRowSelectionModel
                 ) => {

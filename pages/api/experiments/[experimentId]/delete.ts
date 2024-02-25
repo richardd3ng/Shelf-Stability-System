@@ -6,10 +6,12 @@ import { getApiError } from "@/lib/api/error";
 import { experimentHasAssaysWithResults } from "@/lib/api/validations";
 import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { INVALID_EXPERIMENT_ID, getExperimentID } from "@/lib/api/apiHelpers";
+import { nativeJs } from "@js-joda/core";
+import { ExperimentWithLocalDate } from "@/lib/controllers/types";
 
 export default async function deleteExperimentAPI(
     req: NextApiRequest,
-    res: NextApiResponse<Experiment | ApiError>
+    res: NextApiResponse<ExperimentWithLocalDate | ApiError>
 ) {
     const id = getExperimentID(req);
     if (id === INVALID_EXPERIMENT_ID) {
@@ -28,11 +30,15 @@ export default async function deleteExperimentAPI(
             );
             return;
         }
-        const deletedExperiment: Experiment | null = await db.experiment.delete(
-            {
-                where: { id: id },
-            }
-        );
+        const deletedExperiment: ExperimentWithLocalDate | null =
+            await db.experiment
+                .delete({
+                    where: { id: id },
+                })
+                .then((experiment: Experiment) => ({
+                    ...experiment,
+                    start_date: nativeJs(experiment.start_date).toLocalDate(),
+                }));
         if (!deletedExperiment) {
             res.status(404).json(
                 getApiError(
