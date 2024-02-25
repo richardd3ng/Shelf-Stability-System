@@ -23,6 +23,7 @@ import GeneratePrintableReportButton from "@/components/shared/generateReportIco
 import ViewExperimentButton from "@/components/experiment-list/viewExperimentButton";
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 import Delete from "@mui/icons-material/Delete";
+import { useUserInfo } from "@/lib/hooks/useUserInfo";
 
 const ExperimentList: React.FC = () => {
     const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>(
@@ -39,6 +40,7 @@ const ExperimentList: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>(
         router.asPath.split("search=")[1] ?? ""
     );
+    const userInfo = useUserInfo();
 
     useEffect(() => {
         const { search } = router.query;
@@ -90,7 +92,7 @@ const ExperimentList: React.FC = () => {
             renderCell: (params) => (
                 <Box sx={{ display: "flex" }}>
                     <ViewExperimentButton experimentId={params.row.id} />
-                    <GeneratePrintableReportButton />
+                    <GeneratePrintableReportButton experimentId={params.row.id}/>
                     <IconButtonWithTooltip
                         text="Delete"
                         icon={Delete}
@@ -219,6 +221,7 @@ const ExperimentList: React.FC = () => {
                             flex: 1,
                             marginLeft: "auto",
                             textTransform: "none",
+                            // visibility: "hidden", TODO: admin only
                         }}
                         onClick={() => setShowCreationDialog(true)}
                     >

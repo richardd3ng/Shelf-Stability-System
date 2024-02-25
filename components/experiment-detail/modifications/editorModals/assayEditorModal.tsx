@@ -25,7 +25,7 @@ import {
     getAssayTypeUnits,
 } from "@/lib/controllers/assayTypeController";
 import { getDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { useUserInfo, INVALID_USERNAME } from "@/lib/hooks/useUserInfo";
 
 interface EditingState {
     isEditingType: boolean;
@@ -59,6 +59,7 @@ const AssayEditorModal: React.FC = () => {
     const [editingState, setEditingState] = useState<EditingState>(
         INITIAL_EDITING_STATE
     );
+    const userInfo = useUserInfo();
 
     const startEditing = (field: keyof EditingState) => {
         setEditingState({
@@ -118,14 +119,14 @@ const AssayEditorModal: React.FC = () => {
             updateAssayResult({
                 id: assayResultIdBeingEdited,
                 result: newResult ? parseFloat(newResult) : null,
-                last_editor: "rld39",
+                last_editor: userInfo.username ?? INVALID_USERNAME,
             });
         } else if (newResult) {
             createAssayResult({
                 assayId: assayIdBeingEdited,
                 result: parseFloat(newResult),
                 comment: null,
-                last_editor: "rld39",
+                last_editor: userInfo.username ?? INVALID_USERNAME,
             });
         }
         setResult(newResult);
@@ -137,14 +138,14 @@ const AssayEditorModal: React.FC = () => {
             updateAssayResult({
                 id: assayResultIdBeingEdited,
                 comment: newComment ? newComment : null,
-                last_editor: "rld39",
+                last_editor: userInfo.username ?? INVALID_USERNAME,
             });
         } else if (newComment) {
             createAssayResult({
                 assayId: assayIdBeingEdited,
                 result: null,
                 comment: newComment,
-                last_editor: "rld39",
+                last_editor: userInfo.username ?? INVALID_USERNAME,
             });
         }
         setComment(newComment);
@@ -153,6 +154,10 @@ const AssayEditorModal: React.FC = () => {
 
     const handleClose = () => {
         setEditingState(INITIAL_EDITING_STATE);
+        setComment("");
+        setResult("");
+        setWeek("");
+        setType("");
         setIsEditingAssay(false);
     };
 

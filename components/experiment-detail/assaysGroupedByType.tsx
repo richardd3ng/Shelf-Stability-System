@@ -9,6 +9,7 @@ import {
     Stack,
 } from "@mui/material";
 import React, { useEffect } from "react";
+import { Assay } from "@prisma/client";
 import ExperimentTable from "./experimentTable/experimentTable";
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { ExpandMore } from "@mui/icons-material";
@@ -17,9 +18,15 @@ import {
     getDistinctAssayTypes,
 } from "@/lib/controllers/assayTypeController";
 
+export const getAssayTypesCoveredByAssays = (assays: Assay[]): string[] => {
+    return getDistinctAssayTypes().filter((type: string) =>
+        assays.some((assay) => assay.type === assayTypeNameToId(type))
+    );
+};
+
 const AssaysGroupedByType: React.FC = () => {
     const experimentId = useExperimentId();
-    const { data, isLoading, isError, error } = useExperimentInfo(experimentId);
+    const { data, isLoading, isError } = useExperimentInfo(experimentId);
     const [assayTypesCovered, setAssayTypesCovered] = React.useState<string[]>(
         []
     );
@@ -27,22 +34,16 @@ const AssaysGroupedByType: React.FC = () => {
         if (!data) {
             return;
         }
-        setAssayTypesCovered(
-            getDistinctAssayTypes().filter((type: string) =>
-                data.assays.some(
-                    (assay) => assay.type === assayTypeNameToId(type)
-                )
-            )
-        );
+        setAssayTypesCovered(getAssayTypesCoveredByAssays(data.assays));
     }, [data]);
     if (isLoading || isError || !data) {
         return <></>;
     }
     return (
-        <Container sx={{ marginTop: 2 }}>
+        <Container sx={{ marginTop: 2, minWidth: "100%" }}>
             <Accordion defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore />}>
-                    <Typography variant="h6">All Assays</Typography>
+                    <Typography variant="h6">Assay Schedule</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Stack>

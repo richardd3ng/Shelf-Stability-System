@@ -66,7 +66,7 @@ export const getAllWeeksCoveredByAssays = (assays: Assay[]): number[] => {
     return weeks;
 };
 
-const getAssayResultForAssay = (
+export const getAssayResultForAssay = (
     assayResults: AssayResult[],
     assay: Assay
 ): AssayResult | null => {
@@ -204,7 +204,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
         return (
             <Stack
                 sx={{
-                    width: "100%",
+                    minWidth: CONDITION_COL_WIDTH,
                     height: "100%",
                     border: "1px solid #ccc",
                 }}

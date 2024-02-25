@@ -4,7 +4,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {
     DataGrid,
     DataGridProps,
-    GridEventListener,
     GridFooter,
     GridFooterContainer,
     GridRowSelectionModel,
@@ -32,6 +31,9 @@ const Table: React.FC<TableProps & DataGridProps> = (
     };
 
     const FooterComponent: React.FC = () => {
+        if (!props.footer && selectedRows.length === 0) {
+            return null;
+        }
         return (
             <GridFooterContainer>
                 <Box
@@ -92,6 +94,7 @@ const Table: React.FC<TableProps & DataGridProps> = (
                     setSelectedRows(newSelectedRows);
                 }}
                 {...props}
+                sx={{ "@media print": { breakInside: "avoid" } }}
             />
         </Box>
     );
