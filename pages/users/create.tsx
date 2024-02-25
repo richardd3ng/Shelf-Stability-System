@@ -1,5 +1,6 @@
 import Layout from "@/components/shared/layout";
 import { UserForm } from "@/components/users/userForm";
+import { requiresAdminProps } from "@/lib/serverProps";
 import { Button, Stack, Typography } from "@mui/material";
 
 export default function CreateUser() {
@@ -15,3 +16,5 @@ export default function CreateUser() {
         </Layout>
     )
 }
+
+export const getServerSideProps = requiresAdminProps;

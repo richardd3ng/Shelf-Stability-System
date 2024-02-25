@@ -4,12 +4,21 @@ import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { Prisma, User } from "@prisma/client";
 import { hashPassword } from "@/lib/api/auth/authHelpers";
+import { checkIfUserIsAdmin } from "@/lib/api/auth/checkIfAdminOrExperimentOwner";
+import { getToken } from "next-auth/jwt";
 
 export default async function createUser(
     req: NextApiRequest,
     res: NextApiResponse<Omit<User, 'password'> | ApiError>
 ) {
     try {
+        const token = await getToken({ req });
+
+        if (token === null || !token.name || !(await checkIfUserIsAdmin(token.name))) {
+            res.status(403).json(getApiError(403, "You are not authorized to create a user"));
+            return;
+        }
+
         const { username, password, isAdmin } = req.body;
         if (typeof username !== "string" || username === "" || typeof password !== "string" || password === "" || typeof isAdmin !== "boolean") {
             res.status(400).json(getApiError(400, "Invalid username, password, or isAdmin"));

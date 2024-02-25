@@ -1,4 +1,3 @@
-import { Construction } from "@mui/icons-material";
 import { useSession } from "next-auth/react"
 
 export const BAD_ID = -1;

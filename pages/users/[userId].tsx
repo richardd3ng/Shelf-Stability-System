@@ -1,5 +1,6 @@
 import Layout from "@/components/shared/layout";
 import { UserForm } from "@/components/users/userForm";
+import { requiresAdminProps } from "@/lib/serverProps";
 import { Button, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 
@@ -18,3 +19,5 @@ export default function EditUser() {
         </Layout>
     )
 }
+
+export const getServerSideProps = requiresAdminProps;

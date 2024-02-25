@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, AppBar, Toolbar, Typography } from "@mui/material";
 import { useRouter } from "next/router";
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
 interface NavBarButtonProps {
     text: string;
     onClick: () => void;
+    hidden?: boolean;
 }
 const NavBarButton: React.FC<NavBarButtonProps> = (props: NavBarButtonProps) => {
     return (
@@ -15,9 +17,12 @@ const NavBarButton: React.FC<NavBarButtonProps> = (props: NavBarButtonProps) => 
 }
 const NavBar: React.FC = () => {
     const router = useRouter();
+    const { user } = useContext(CurrentUserContext);
+
     const options: NavBarButtonProps[] = [
         { text: "Experiments", onClick: () => router.push("/experiment-list") },
         { text: "Assay Agenda", onClick: () => router.push("/agenda") },
+        { text: "Users", onClick: () => router.push("/users"), hidden: !user?.is_admin },
         { text : "Change Password", onClick: () => router.push("/auth/updatePassword")},
         { text : "Sign Out", onClick: () => router.push("/auth/signOut")}
     ]
@@ -29,7 +34,7 @@ const NavBar: React.FC = () => {
                     Shelf Stability Tracking System
                 </Typography>
 
-                {options.map((option, index) => <NavBarButton key={index} text={option.text} onClick={option.onClick} />)}
+                {options.filter(option => !option.hidden).map((option, index) => <NavBarButton key={index} text={option.text} onClick={option.onClick} />)}
 
             </Toolbar>
         </AppBar>

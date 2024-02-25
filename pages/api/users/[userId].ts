@@ -4,6 +4,8 @@ import { getApiError } from "@/lib/api/error";
 import { Prisma, User } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { getToken } from "next-auth/jwt";
+import { checkIfUserIsAdmin } from "@/lib/api/auth/checkIfAdminOrExperimentOwner";
 
 const selectExceptPassword = {
     id: true,
@@ -35,11 +37,11 @@ export default async function accessUserAPI(
         }
 
         if (req.method === "GET") {
-            await getUser(userId, res);
+            await getUser(userId, req, res);
         } else if (req.method === "PATCH") {
             await updateUser(userId, req, res);
         } else if (req.method === "DELETE") {
-            await deleteUser(userId, res);
+            await deleteUser(userId, req, res);
         } else {
             res.status(405).json(
                 getApiError(405, "Method not allowed")
@@ -53,7 +55,7 @@ export default async function accessUserAPI(
     }
 }
 
-async function getUser(userId: number, res: NextApiResponse<Omit<User, 'password'> | ApiError>): Promise<void> {
+async function getUser(userId: number, _req: NextApiRequest, res: NextApiResponse<Omit<User, 'password'> | ApiError>): Promise<void> {
     const user = await db.user.findUnique({
         where: {
             id: userId,
@@ -71,25 +73,39 @@ async function getUser(userId: number, res: NextApiResponse<Omit<User, 'password
 }
 
 async function updateUser(userId: number, req: NextApiRequest, res: NextApiResponse<Omit<User, 'password'> | ApiError>): Promise<void> {
+    const token = await getToken({ req });
+
+    if (token === null || !token.name || !(await checkIfUserIsAdmin(token.name))) {
+        res.status(403).json(getApiError(403, "You are not authorized to update a user"));
+        return;
+    }
+
     const { password, isAdmin } = req.body;
 
     // TODO prevent updating own admin status or superadmin status
 
     const updatedUser = await db.user.update({
-            where: {
-                id: userId,
-            },
-            select: selectExceptPassword,
-            data: {
-                password: password === "" ? undefined : password,
-                is_admin: isAdmin,
-            },
-        });
+        where: {
+            id: userId,
+        },
+        select: selectExceptPassword,
+        data: {
+            password: password === "" ? undefined : password,
+            is_admin: isAdmin,
+        },
+    });
 
     res.status(200).json(updatedUser);
 }
 
-async function deleteUser(userId: number, res: NextApiResponse<Omit<User, 'password'> | ApiError>): Promise<void> {
+async function deleteUser(userId: number, req: NextApiRequest, res: NextApiResponse<Omit<User, 'password'> | ApiError>): Promise<void> {
+    const token = await getToken({ req });
+
+    if (token === null || !token.name || !(await checkIfUserIsAdmin(token.name))) {
+        res.status(403).json(getApiError(403, "You are not authorized to delete a user"));
+        return;
+    }
+
     // Get the super admin's id
     // Maybe should be in a library function
     const admin = await db.user.findFirst({

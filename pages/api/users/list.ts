@@ -3,11 +3,20 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { UserTable } from "@/lib/controllers/types";
 import { getApiError } from "@/lib/api/error";
+import { checkIfUserIsAdmin } from "@/lib/api/auth/checkIfAdminOrExperimentOwner";
+import { getToken } from "next-auth/jwt";
 
 export default async function fetchUserList(
     req: NextApiRequest,
     res: NextApiResponse<UserTable | ApiError>
 ) {
+    const token = await getToken({ req });
+
+    if (token === null || !token.name || !(await checkIfUserIsAdmin(token.name))) {
+        res.status(403).json(getApiError(403, "You are not authorized to view the list of users"));
+        return;
+    }
+
     var page;
     var pageSize;
     try {
@@ -38,7 +47,7 @@ export default async function fetchUserList(
                         mode: "insensitive",
                     }
                 }
-            }).then((users) => users.map((user) => ({ ...user, is_admin: user.is_admin === true}))), // Account for null is_admin
+            }).then((users) => users.map((user) => ({ ...user, is_admin: user.is_admin === true }))), // Account for null is_admin
             rowCount: await db.user.count(),
         };
         res.status(200).json(userTable);

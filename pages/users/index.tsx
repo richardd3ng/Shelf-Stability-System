@@ -5,6 +5,7 @@ import { UserListContext } from "@/lib/context/users/userListContext";
 import { UserInfo } from "@/lib/controllers/types";
 import { fetchUserList } from "@/lib/controllers/userController";
 import { ServerPaginationArgs, useServerPaginationNoSort } from "@/lib/hooks/useServerPagination";
+import { requiresAdminProps } from "@/lib/serverProps";
 import { Stack } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
@@ -84,3 +85,5 @@ export default function Users() {
         </Layout>
     );
 }
+
+export const getServerSideProps = requiresAdminProps;
