@@ -75,6 +75,19 @@ export type AssayTable = {
     rowCount: number;
 };
 
+export type UserInfo = {
+    id: number;
+    username: string;
+    is_admin: boolean;
+};
+
+export type UserTable = {
+    // Rows on this page
+    rows: UserInfo[];
+    // Rows in the whole table
+    rowCount: number;
+};
+
 export type AssayCreationArgs = Omit<Assay, "id">;
 
 // experiment updates can be done by individual fields

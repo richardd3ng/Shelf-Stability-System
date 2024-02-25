@@ -28,6 +28,6 @@ export const getApiError = (
     return {
         statusCode: statusCode,
         message: message || defaults[statusCode].message || "Unknown Error",
-        name: name || defaults[statusCode].message || "Unknown",
+        name: name || defaults[statusCode]?.message || "Unknown",
     };
 };

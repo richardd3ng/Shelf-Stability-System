@@ -44,7 +44,7 @@ async function redirectOrBlock(req : NextRequest, res : NextApiResponse){
     };
 }
 
-const checkIfUserIsAdmin = async ( username : string ) : Promise<boolean> => {
+export const checkIfUserIsAdmin = async ( username : string ) : Promise<boolean> => {
     try{
         const user = await db.user.findUnique({
             where : {

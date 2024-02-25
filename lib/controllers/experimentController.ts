@@ -40,6 +40,23 @@ export const fetchExperimentList = async (
     throw new ApiError(response.status, resJson.message);
 };
 
+export const fetchOwnedExperiments = async (
+    ownerId: number
+): Promise<ExperimentWithLocalDate[] | ApiError> => {
+    const endpoint = `/api/experiments/with-owner?id=${ownerId}`;
+    const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson.map(JSONToExperiment);
+    }
+    return new ApiError(response.status, resJson.message);
+}
+
 export const createExperiment = async (
     experimentCreationArgs: ExperimentCreationArgs
 ): Promise<ExperimentCreationResponse> => {
