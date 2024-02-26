@@ -39,6 +39,19 @@ import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 import Delete from "@mui/icons-material/Delete";
 import { useUserInfo } from "@/lib/hooks/useUserInfo";
 
+interface QueryParams {
+    search: string;
+    owner: string;
+}
+
+const getQueryParamsFromURL = (): QueryParams => {
+    const params: URLSearchParams = new URLSearchParams(window.location.search);
+    return {
+        search: params.get("search") ?? "",
+        owner: params.get("owner") ?? "",
+    };
+};
+
 const ExperimentList: React.FC = () => {
     const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>(
         []
@@ -52,33 +65,49 @@ const ExperimentList: React.FC = () => {
     const { showAlert } = useAlert();
     const { showLoading, hideLoading } = useLoading();
     const router = useRouter();
-    const [searchQuery, setSearchQuery] = useState<string>(
-        router.asPath.split("search=")[1] ?? ""
-    );
-    const [ownerFilter, setOwnerFilter] = useState<string>("");
+    const [queryParams, setQueryParams] = useState<QueryParams>({
+        search: "",
+        owner: "",
+    });
+    const [initialized, setInitialized] = useState<boolean>(false); // hacky way to make reload() run once on first render
+    // TODO: this is still fetching the data twice, so it's not a perfect solution
+
     const [ownerList, setOwnerList] = useState<UserInfo[] | null>(null);
     const userInfo = useUserInfo();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setOwnerList(await fetchOwners());
-        };
-        fetchData();
+    const reloadExperimentData = async (
+        paging: ServerPaginationArgs
+    ): Promise<ExperimentTable> => {
         showLoading("Loading experiments...");
+        const fetchedData = await getExperiments(paging);
+        setExperimentData(fetchedData.rows);
+        hideLoading();
+        return fetchedData;
+    };
+
+    const [paginationProps, reload] = useServerPagination(
+        reloadExperimentData,
+        [],
+        {
+            pageSize: 10,
+            page: 0,
+        }
+    );
+
+    useEffect(() => {
+        const fetchOwnerData = async () => {
+            setOwnerList(await fetchOwners());
+            setQueryParams(getQueryParamsFromURL());
+            setInitialized(true);
+        };
+        fetchOwnerData();
     }, []);
 
     useEffect(() => {
-        const { search } = router.query;
-        if (search) {
-            setSearchQuery(search.toString());
-        } else {
-            setSearchQuery("");
+        if (initialized) {
+            reload();
         }
-    }, [router.query]);
-
-    useEffect(() => {
-        reload();
-    }, [searchQuery]);
+    }, [queryParams]);
 
     const colDefs: GridColDef[] = [
         {
@@ -140,40 +169,29 @@ const ExperimentList: React.FC = () => {
         paging: ServerPaginationArgs
     ): Promise<ExperimentTable> => {
         try {
-            return await fetchExperimentList(searchQuery, paging);
+            return await fetchExperimentList(
+                queryParams.search,
+                queryParams.owner,
+                paging
+            );
         } catch (error) {
             showAlert("error", getErrorMessage(error));
             return { rows: [], rowCount: 0 };
         }
     };
 
-    const reloadExperimentData = async (
-        paging: ServerPaginationArgs
-    ): Promise<ExperimentTable> => {
-        const fetchedData = await getExperiments(paging);
-        setExperimentData(fetchedData.rows);
-        hideLoading();
-        return fetchedData;
-    };
-
-    const [paginationProps, reload] = useServerPagination(
-        reloadExperimentData,
-        [],
-        {
-            pageSize: 10,
-            page: 0,
-        }
-    );
-
     const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
         setSelectedExperimentIds(selectedRows);
         setShowDeletionDialog(true);
     };
 
-    const handleSearch = (query: string) => {
-        if (query.trim() !== "") {
-            const queryParams = new URLSearchParams();
-            queryParams.set("search", query);
+    const handleSearch = (query: string, owner: string) => {
+        const queryParams = new URLSearchParams();
+        queryParams.set("search", query);
+        queryParams.set("owner", owner);
+        if (!query && !owner) {
+            router.push("/experiment-list");
+        } else {
             router.push(
                 {
                     pathname: router.pathname,
@@ -182,8 +200,6 @@ const ExperimentList: React.FC = () => {
                 undefined,
                 { shallow: true }
             );
-        } else {
-            router.push("/experiment-list");
         }
     };
 
@@ -245,8 +261,14 @@ const ExperimentList: React.FC = () => {
                     <Box sx={{ flex: 2 }}>
                         <SearchBar
                             placeholder="Enter Keyword"
-                            value={searchQuery}
-                            onSearch={handleSearch}
+                            value={queryParams.search}
+                            onSearch={(query: string) => {
+                                setQueryParams({
+                                    search: query,
+                                    owner: queryParams.owner,
+                                });
+                                handleSearch(query, queryParams.owner);
+                            }}
                         />
                     </Box>
                     <Box sx={{ flex: 1, paddingX: 10 }}>
@@ -256,10 +278,17 @@ const ExperimentList: React.FC = () => {
                             </InputLabel>
                             <Select
                                 id="Owner Filter Selection"
-                                value={ownerFilter}
+                                value={queryParams.owner}
                                 label="Owner Filter"
                                 onChange={(e) => {
-                                    setOwnerFilter(e.target.value);
+                                    setQueryParams({
+                                        search: queryParams.search,
+                                        owner: e.target.value,
+                                    });
+                                    handleSearch(
+                                        queryParams.search,
+                                        e.target.value
+                                    );
                                 }}
                             >
                                 <MenuItem key={0} value={""}>

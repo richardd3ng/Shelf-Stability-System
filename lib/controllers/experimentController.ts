@@ -15,10 +15,12 @@ import { LocalDate } from "@js-joda/core";
 
 export const fetchExperimentList = async (
     searchQuery: string,
+    ownerFilter: string,
     paging: ServerPaginationArgs
 ): Promise<ExperimentTable> => {
     const url = encodePaging(relativeURL("/api/experiments/search"), paging);
     url.searchParams.set("query", searchQuery);
+    url.searchParams.set("owner", ownerFilter);
     const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -55,7 +57,7 @@ export const fetchOwnedExperiments = async (
         return resJson.map(JSONToExperiment);
     }
     return new ApiError(response.status, resJson.message);
-}
+};
 
 export const createExperiment = async (
     experimentCreationArgs: ExperimentCreationArgs

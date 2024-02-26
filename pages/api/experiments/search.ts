@@ -47,6 +47,7 @@ export default async function searchExperimentsAPI(
 ) {
     try {
         const query = req.query.query !== undefined ? req.query.query : "";
+        const owner = req.query.owner !== undefined ? req.query.owner : "";
         const queryNumber = Number(query);
 
         const orderBy = convertSort(req.query.sort_by, req.query.sort_order);
@@ -68,8 +69,13 @@ export default async function searchExperimentsAPI(
                 
                 FROM public."Experiment" e
                 JOIN public."User" u ON e."ownerId" = u.id
-                WHERE e.title ILIKE ${`%${query}%`}
-                OR e.description ILIKE ${`%${query}%`}
+                WHERE (e.title ILIKE ${`%${query}%`}
+                OR e.description ILIKE ${`%${query}%`})
+                ${
+                    owner !== ""
+                        ? Prisma.raw(`AND u.username = '${owner}'`)
+                        : Prisma.empty
+                }                
                 ${
                     !isNaN(queryNumber)
                         ? Prisma.sql`OR e.id = ${queryNumber}`
