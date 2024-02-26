@@ -36,8 +36,8 @@ def main():
         bump_backups(config, latestDaily)
         save_config(config)
         edit_webhook(webhook_id, "✅ Backup complete")
-    except:
-        post_webhook("❌ Backup failed @everyone - " + traceback.format_exc())
+    except Exception as e:
+        post_webhook("❌ Backup failed @everyone - " + repr(e) + '\n' + traceback.format_exc())
 
 def load_config():
     config_path = os.path.join(BACKUPS_FOLDER, CONFIG_FILE)
@@ -112,7 +112,7 @@ def save_config(config: dict):
 def post_webhook(message):
     res = requests.post(f'{WEBHOOK_URL}?wait=true', {
         "username": "Backup Alerts",
-        "content": message
+        "content": message[:1999]
     })
     return res.json()['id']
 
