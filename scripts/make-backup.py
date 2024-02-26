@@ -40,13 +40,14 @@ def main():
         post_webhook("❌ Backup failed @everyone - " + traceback.format_exc())
 
 def load_config():
+    config_path = os.path.join(BACKUPS_FOLDER, CONFIG_FILE)
     # Load the config file
-    if not os.path.exists(CONFIG_FILE):
-        config = open(CONFIG_FILE, 'w')
+    if not os.path.exists(config_path):
+        config = open(config_path, 'w')
         config.write('{"daily": [], "weekly": [], "monthly": []}')
         config.close()
 
-    with open(CONFIG_FILE) as f:
+    with open(config_path) as f:
         config = json.load(f)
         return config
 
@@ -64,7 +65,7 @@ def daily_backup(config: dict):
     now = datetime.now()
     dateStr = now.strftime(DATE_FORMAT)
     latestFile = f'daily-{dateStr}.sql'
-    file = open(latestFile, 'wb')
+    file = open(os.path.join(BACKUPS_FOLDER, latestFile), 'wb')
     file.write(result)
     return dateStr
 
@@ -82,9 +83,9 @@ def bump_backups(config: dict, latestDaily: str):
         if latestWeekly == None \
             or latestWeekly <= oldestDaily - timedelta(days=7):
             config['weekly'].append(removed)
-            os.rename(f'daily-{removed}.sql', f'weekly-{removed}.sql')
+            os.rename(os.path.join(BACKUPS_FOLDER, f'daily-{removed}.sql'), os.path.join(BACKUPS_FOLDER, f'weekly-{removed}.sql'))
         else:
-            os.remove(f'daily-{removed}.sql')
+            os.remove(os.path.join(BACKUPS_FOLDER, f'daily-{removed}.sql'))
 
     oldestWeekly = datetime.strptime(config['weekly'][0], DATE_FORMAT).date() if len(config['weekly']) > 0 else None
 
@@ -95,17 +96,17 @@ def bump_backups(config: dict, latestDaily: str):
         if latestMonthly == None \
             or latestMonthly <= oldestWeekly - timedelta(days=30):
             config['monthly'].append(removed)
-            os.rename(f'weekly-{removed}.sql', f'monthly-{removed}.sql')
+            os.rename(os.path.join(BACKUPS_FOLDER, f'weekly-{removed}.sql'), os.path.join(BACKUPS_FOLDER, f'monthly-{removed}.sql'))
         else:
-            os.remove(f'weekly-{removed}.sql')
+            os.remove(os.path.join(BACKUPS_FOLDER, f'weekly-{removed}.sql'))
 
     # Too many monthly backups, delete oldest
     if len(config['monthly']) > MONTHLY_BACKUPS:
         removed = config['monthly'].pop(0)
-        os.remove(f'monthyl-{removed}.sql')
+        os.remove(os.path.join(BACKUPS_FOLDER, f'monthly-{removed}.sql'))
 
 def save_config(config: dict):
-    with open(CONFIG_FILE, 'w') as f:
+    with open(os.path.join(BACKUPS_FOLDER, CONFIG_FILE), 'w') as f:
         json.dump(config, f)
 
 def post_webhook(message):
