@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
     useExperimentInfo,
     useExperimentOwner,
@@ -13,6 +13,7 @@ import { useLoading } from "@/lib/context/shared/loadingContext";
 import DownloadExcelIconButton from "./downloadExcelIconButton";
 import GenerateReportIconButton from "@/components/shared/generateReportIconButton";
 import EditExperimentButton from "./editExperimentButton";
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -25,6 +26,8 @@ export const ExperimentHeader = () => {
     const { data: owner } = useExperimentOwner(experimentId);
     const { showLoading, hideLoading } = useLoading();
     const [isEditing, setIsEditing] = useState(false);
+    const { user } = useContext(CurrentUserContext);
+    const isAdmin: boolean = user?.is_admin ?? false;
 
     useEffect(() => {
         if (isLoading) {
@@ -63,11 +66,13 @@ export const ExperimentHeader = () => {
                         #{experimentId}
                     </Typography>
                     <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-                        <ExperimentEditingContext.Provider
-                            value={{ isEditing, setIsEditing }}
-                        >
-                            <EditExperimentButton />
-                        </ExperimentEditingContext.Provider>
+                        {isAdmin && (
+                            <ExperimentEditingContext.Provider
+                                value={{ isEditing, setIsEditing }}
+                            >
+                                <EditExperimentButton />
+                            </ExperimentEditingContext.Provider>
+                        )}
                         <GenerateReportIconButton experimentId={experimentId} />
                         <DownloadExcelIconButton />
                     </Box>

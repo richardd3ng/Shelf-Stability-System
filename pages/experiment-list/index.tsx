@@ -8,7 +8,7 @@ import {
     Stack,
 } from "@mui/material";
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ExperimentCreationDialog from "@/components/experiment-list/experimentCreationDialog";
 import Layout from "../../components/shared/layout";
 import SearchBar from "../../components/shared/searchBar";
@@ -37,7 +37,7 @@ import GeneratePrintableReportButton from "@/components/shared/generateReportIco
 import ViewExperimentButton from "@/components/experiment-list/viewExperimentButton";
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 import Delete from "@mui/icons-material/Delete";
-import { useUserInfo } from "@/lib/hooks/useUserInfo";
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
 interface QueryParams {
     search: string;
@@ -73,7 +73,8 @@ const ExperimentList: React.FC = () => {
     // TODO: this is still fetching the data twice, so it's not a perfect solution
 
     const [ownerList, setOwnerList] = useState<UserInfo[] | null>(null);
-    const userInfo = useUserInfo();
+    const { user } = useContext(CurrentUserContext);
+    const isAdmin: boolean = user?.is_admin ?? false;
 
     const reloadExperimentData = async (
         paging: ServerPaginationArgs
@@ -155,11 +156,13 @@ const ExperimentList: React.FC = () => {
                     <GeneratePrintableReportButton
                         experimentId={params.row.id}
                     />
-                    <IconButtonWithTooltip
-                        text="Delete"
-                        icon={Delete}
-                        onClick={() => prepareForDeletion([params.row.id])}
-                    ></IconButtonWithTooltip>
+                    {isAdmin && (
+                        <IconButtonWithTooltip
+                            text="Delete"
+                            icon={Delete}
+                            onClick={() => prepareForDeletion([params.row.id])}
+                        ></IconButtonWithTooltip>
+                    )}
                 </Box>
             ),
         },
@@ -309,7 +312,11 @@ const ExperimentList: React.FC = () => {
                         variant="contained"
                         color="primary"
                         onClick={() => setShowCreationDialog(true)}
-                        sx={{ flex: 1, textTransform: "none" }}
+                        sx={{
+                            flex: 1,
+                            textTransform: "none",
+                            visibility: isAdmin ? "visible" : "hidden",
+                        }}
                     >
                         Add Experiment
                     </Button>
@@ -319,7 +326,7 @@ const ExperimentList: React.FC = () => {
                     columns={colDefs}
                     rows={experimentData}
                     pagination
-                    checkboxSelection
+                    checkboxSelection={isAdmin}
                     onDeleteRows={prepareForDeletion}
                     onCellClick={(cell) => {
                         if (cell.field !== "actions") {
