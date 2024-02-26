@@ -1,5 +1,7 @@
 #!/bin/python3
 
+# Intended to be used as a cron job in /etc/cron.daily, hence the lack of extension
+
 import os
 import paramiko 
 from datetime import datetime, timedelta
