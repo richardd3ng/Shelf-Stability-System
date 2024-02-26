@@ -1,10 +1,28 @@
 import { ApiError } from "next/dist/server/api-utils";
 import { ServerPaginationArgs } from "../hooks/useServerPagination";
-import { UserTable } from "./types";
+import { UserInfo, UserTable } from "./types";
 import { encodePaging, relativeURL } from "./url";
 import { User } from "@prisma/client";
 
-export const fetchUserList = async (query: string, paging: ServerPaginationArgs): Promise<UserTable> => {
+export const fetchOwners = async (): Promise<UserInfo[]> => {
+    const endpoint = "/api/users/owners";
+    const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
+export const fetchUserList = async (
+    query: string,
+    paging: ServerPaginationArgs
+): Promise<UserTable> => {
     const url = encodePaging(relativeURL("/api/users/list"), paging);
 
     url.searchParams.append("query", query);
@@ -22,14 +40,16 @@ export const fetchUserList = async (query: string, paging: ServerPaginationArgs)
     }
 
     throw new ApiError(apiResponse.status, resJson.message);
-}
+};
 
-export const fetchUser = async (id: number): Promise<Omit<User, 'password'> | ApiError> => {
+export const fetchUser = async (
+    id: number
+): Promise<Omit<User, "password"> | ApiError> => {
     const response = await fetch(`/api/users/${id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-        }
+        },
     });
 
     const resJson = await response.json();
@@ -40,7 +60,11 @@ export const fetchUser = async (id: number): Promise<Omit<User, 'password'> | Ap
     }
 };
 
-export const createUser = async (username: string, password: string, isAdmin: boolean): Promise<Omit<User, 'password'> | ApiError> => {
+export const createUser = async (
+    username: string,
+    password: string,
+    isAdmin: boolean
+): Promise<Omit<User, "password"> | ApiError> => {
     const response = await fetch("/api/users/create", {
         method: "POST",
         headers: {
@@ -61,7 +85,11 @@ export const createUser = async (username: string, password: string, isAdmin: bo
     }
 };
 
-export const updateUser = async (id: number, password: string, isAdmin: boolean): Promise<Omit<User, 'password'> | ApiError> => {
+export const updateUser = async (
+    id: number,
+    password: string,
+    isAdmin: boolean
+): Promise<Omit<User, "password"> | ApiError> => {
     const response = await fetch(`/api/users/${id}`, {
         method: "PATCH",
         headers: {

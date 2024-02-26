@@ -26,11 +26,17 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
         const conditionInfo: ConditionCreationArgs = {
             experimentId: experimentId,
             name: condition,
-            control: null,
+            control: false,
         };
         createCondition(conditionInfo);
         setCondition("");
         props.onClose();
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            onSubmit();
+        }
     };
 
     if (!data) {
@@ -50,6 +56,7 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
                         style={{ marginLeft: 4, marginRight: 4 }}
                         value={condition}
                         onChange={(e) => setCondition(e.target.value)}
+                        onKeyDown={handleKeyDown}
                     />
                 </FormControl>
                 <Button
