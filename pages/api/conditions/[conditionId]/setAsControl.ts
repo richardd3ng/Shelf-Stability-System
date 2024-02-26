@@ -25,6 +25,7 @@ export default async function setConditionAsControlAPI(
             );
             return;
         }
+        let newControlCondition: Condition | null = null;
         await db.$transaction(async (tx) => {
             const controlCondition: Condition | null =
                 await tx.condition.findFirst({
@@ -42,7 +43,6 @@ export default async function setConditionAsControlAPI(
                 );
                 return;
             }
-
             await tx.condition.update({
                 where: {
                     id: controlCondition.id,
@@ -51,23 +51,11 @@ export default async function setConditionAsControlAPI(
                     control: false,
                 },
             });
-
-            const condition: Condition | null = await tx.condition.findUnique({
+            newControlCondition = await tx.condition.findUnique({
                 where: {
                     id: id,
                 },
             });
-            if (!condition) {
-                res.status(404).json(
-                    getApiError(
-                        404,
-                        `Condition ${id} does not exist or was deleted`,
-                        "Condition Not Found"
-                    )
-                );
-                return;
-            }
-
             await tx.condition.update({
                 where: {
                     id: id,
@@ -76,8 +64,18 @@ export default async function setConditionAsControlAPI(
                     control: true,
                 },
             });
-            res.status(200).json(condition);
         });
+        if (!newControlCondition) {
+            res.status(404).json(
+                getApiError(
+                    404,
+                    `Condition ${id} does not exist or was deleted`,
+                    "Condition Not Found"
+                )
+            );
+            return;
+        }
+        res.status(200).json(newControlCondition);
     } catch (error) {
         console.error(error);
         res.status(500).json(
