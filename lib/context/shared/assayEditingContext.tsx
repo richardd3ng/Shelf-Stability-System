@@ -1,15 +1,18 @@
 import { createContext } from "react";
+import { INVALID_ASSAY_ID } from "@/lib/api/apiHelpers";
 
 interface AssayEditingContextType {
+    id: number;
+    setId: (id: number) => void;
     isEditing: boolean;
-    setIsEditing: (b: boolean) => void;
-    assayIdBeingEdited: number;
-    setAssayIdBeingEdited: (n: number) => void;
+    setIsEditing: (isEditing: boolean) => void;
 }
 
-export const AssayEditingContext = createContext<AssayEditingContextType>({
+const AssayEditingContext = createContext<AssayEditingContextType>({
+    id: INVALID_ASSAY_ID,
+    setId: (_id: number) => {},
     isEditing: false,
-    setIsEditing: (_b: boolean) => {},
-    assayIdBeingEdited: 0,
-    setAssayIdBeingEdited: (_n: number) => {},
+    setIsEditing: (_isEditing: boolean) => {},
 });
+
+export default AssayEditingContext;

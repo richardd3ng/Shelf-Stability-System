@@ -1,12 +1,10 @@
 import {
     DatePickerProps,
     DateValidationError,
-    LocalizationProvider,
     PickerChangeHandlerContext,
 } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs"
 import dayjs from "dayjs";
 import { LocalDate, nativeJs } from "@js-joda/core";
 import utc from "dayjs/plugin/utc";
@@ -24,32 +22,34 @@ export type MyDatePickerProps = {
 
 export const MyDatePicker: React.FC<MyDatePickerProps> = (props) => {
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-                timezone="UTC"
-                {...props}
-                value={
-                    props.value === null || props.value === undefined
-                        ? props.value
-                        : dayjs(props.value.toString())
-                }
-                defaultValue={
-                    props.defaultValue === null ||
+        <DatePicker
+            timezone="UTC"
+            {...props}
+            value={
+                props.value === null || props.value === undefined
+                    ? props.value
+                    : dayjs(props.value.toString())
+            }
+            defaultValue={
+                props.defaultValue === null ||
                     props.defaultValue === undefined
-                        ? props.defaultValue
-                        : dayjs(props.defaultValue.toString())
-                }
-                onChange={(newDate: Dayjs | null, context) => {
-                    if (props.onChange !== undefined) {
+                    ? props.defaultValue
+                    : dayjs(props.defaultValue.toString())
+            }
+            onChange={(newDate: Dayjs | null, context) => {
+                if (props.onChange !== undefined) {
+                    try {
                         props.onChange(
                             newDate !== null
                                 ? nativeJs(newDate).toLocalDate()
                                 : newDate,
                             context
                         );
+                    } catch (error) {
+                        props.onChange(null, context);
                     }
-                }}
-            ></DatePicker>
-        </LocalizationProvider>
+                }
+            }}
+        />
     );
 };

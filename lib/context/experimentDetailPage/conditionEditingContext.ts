@@ -1,16 +1,18 @@
 import { createContext } from "react";
+import { INVALID_CONDITION_ID } from "@/lib/api/apiHelpers";
 
 interface ConditionEditingContextType {
-    isEditing : boolean;
-    setIsEditing : (b : boolean) => void;
-    conditionIdBeingEdited : number;
-    setConditionIdBeingEdited : (n : number) => void;
-    
+    id: number;
+    setId: (id: number) => void;
+    isEditing: boolean;
+    setIsEditing: (isEditing: boolean) => void;
 }
 
-export const ConditionEditingContext = createContext<ConditionEditingContextType>({
-    isEditing : false,
-    setIsEditing : (b : boolean ) => {},
-    conditionIdBeingEdited : 0,
-    setConditionIdBeingEdited : (n : number) => {}
-})
+const ConditionEditingContext = createContext<ConditionEditingContextType>({
+    id: INVALID_CONDITION_ID,
+    setId: (_id: number) => {},
+    isEditing: false,
+    setIsEditing: (_isEditing: boolean) => {},
+});
+
+export default ConditionEditingContext;

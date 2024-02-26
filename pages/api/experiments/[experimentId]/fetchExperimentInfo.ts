@@ -10,7 +10,6 @@ import { Assay, AssayResult, Condition, Experiment } from "@prisma/client";
 import { getExperimentID, INVALID_EXPERIMENT_ID } from "@/lib/api/apiHelpers";
 import { JSONToExperiment } from "@/lib/controllers/jsonConversions";
 import { nativeJs } from "@js-joda/core";
-import { localDateToJsDate } from "@/lib/datesUtils";
 
 export default async function getExperimentInfoAPI(
     req: NextApiRequest,
@@ -63,12 +62,15 @@ export default async function getExperimentInfoAPI(
             return;
         }
         const experimentAssayResults: AssayResult[] = [];
-        assays.forEach(async (assay: Assay) => {
-            const assayResults: AssayResult[] = await db.assayResult.findMany({
-                where: { assayId: assay.id },
-            });
-            experimentAssayResults.push(...assayResults);
-        });
+        await Promise.all(
+            assays.map(async (assay: Assay) => {
+                const assayResults: AssayResult[] =
+                    await db.assayResult.findMany({
+                        where: { assayId: assay.id },
+                    });
+                experimentAssayResults.push(...assayResults);
+            })
+        );
         res.status(200).json({
             experiment: JSONToExperiment(
                 JSON.parse(JSON.stringify(experiment))

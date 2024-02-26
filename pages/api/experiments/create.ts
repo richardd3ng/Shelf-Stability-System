@@ -23,17 +23,22 @@ export default async function createExperimentAPI(
         conditionCreationArgsNoExperimentIdArray,
         ownerId,
     } = req.body;
+    if (ownerId === undefined) {
+        res.status(409).json(
+            getApiError(409, "Only registered users can create experiments")
+        );
+        return;
+    }
     if (
         !title ||
         !start_date ||
-        !ownerId ||
         !conditionCreationArgsNoExperimentIdArray ||
         conditionCreationArgsNoExperimentIdArray.length === 0
     ) {
         res.status(400).json(
             getApiError(
                 400,
-                "Title, start date, and at least one condition are required."
+                "Title, start date, and at least one condition are required"
             )
         );
         return;
@@ -45,7 +50,7 @@ export default async function createExperimentAPI(
                     title,
                     description,
                     start_date: localDateToJsDate(LocalDate.parse(start_date)),
-                    ownerId: ownerId,
+                    ownerId,
                 },
             })
             .then((experiment: Experiment) => ({
@@ -85,7 +90,18 @@ export default async function createExperimentAPI(
                 res.status(400).json(
                     getApiError(
                         400,
-                        `An experiment with the name "${title}" already exists.`
+                        `An experiment with the name "${title}" already exists`
+                    )
+                );
+                return;
+            } else if (
+                error.code === "P2003" &&
+                error.meta?.field_name === "Experiment_ownerId_fkey (index)"
+            ) {
+                res.status(409).json(
+                    getApiError(
+                        409,
+                        "Only registered users can create experiments"
                     )
                 );
                 return;

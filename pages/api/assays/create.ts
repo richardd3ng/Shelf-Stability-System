@@ -1,9 +1,9 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
-import { getApiError } from "@/lib/api/error";
+import { CONSTRAINT_ERROR_CODE, getApiError } from "@/lib/api/error";
 import { Assay } from "@prisma/client";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { Prisma } from "@prisma/client";
 
 export default async function createAssayAPI(
     req: NextApiRequest,
@@ -19,7 +19,7 @@ export default async function createAssayAPI(
         res.status(400).json(
             getApiError(
                 400,
-                "Assay type, week, experiment ID, and condition ID are required."
+                "Assay type, week, experiment ID, and condition ID are required"
             )
         );
         return;
@@ -30,7 +30,25 @@ export default async function createAssayAPI(
         });
         res.status(200).json(createdAssay);
     } catch (error) {
-        console.error(getErrorMessage(error));
+        console.error(error);
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            const prismError = error as Prisma.PrismaClientKnownRequestError;
+            if (
+                prismError.code === "P2002" &&
+                Array.isArray(prismError.meta?.target) &&
+                ["experimentId", "conditionId", "week", "type"].every((value) =>
+                    (prismError.meta?.target as string[]).includes(value)
+                )
+            ) {
+                res.status(CONSTRAINT_ERROR_CODE).json(
+                    getApiError(
+                        CONSTRAINT_ERROR_CODE,
+                        "Assay with the same type and week already exists for this condition"
+                    )
+                );
+                return;
+            }
+        }
         res.status(500).json(
             getApiError(500, "Failed to create assays on server")
         );

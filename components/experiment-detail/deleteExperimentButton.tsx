@@ -1,23 +1,34 @@
-// import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId"
-// import { ButtonWithConfirmationLoadingAndError } from "../shared/buttonWithConfirmationLoadingAndError"
-// import { Container, Typography } from "@mui/material"
-// import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
-// import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
-// import { Assay } from "@prisma/client";
+import { useState } from "react";
+import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
+import { Box, Button, Typography } from "@mui/material";
+import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
+import ExperimentDeletionDialog from "../shared/experimentDeletionDialog";
 
-// export const DeleteExperimentButton = () => {
-//     const experimentId = useExperimentId();
-//     const {data} = useExperimentInfo(experimentId);
-//     const {mutate : deleteExperiment, isPending, isError, error} = useMutationToDeleteExperiment();
+const DeleteExperimentButton = () => {
+    const experimentId = useExperimentId();
+    const { mutate: deleteExperiment } = useMutationToDeleteExperiment();
+    const [showDeletionDialog, setShowDeletionDialog] =
+        useState<boolean>(false);
 
-//     if (!checkIfAnAssayHasResults(data, (assay : Assay) => true)){
-//         return (
-//             <ButtonWithConfirmationLoadingAndError text="Delete Experiment" isLoading={isPending} isError={isError} error={error} onSubmit={() => {
-//                 deleteExperiment(experimentId);
-//             }}/>
-//         )
+    return (
+        <>
+            <Box alignSelf="center">
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => setShowDeletionDialog(true)}
+                    sx={{ textTransform: "none" }}
+                >
+                    <Typography align="center">Delete Experiment</Typography>
+                </Button>
+            </Box>
+            <ExperimentDeletionDialog
+                open={showDeletionDialog}
+                onClose={() => setShowDeletionDialog(false)}
+                onDelete={() => deleteExperiment(experimentId)}
+            />
+        </>
+    );
+};
 
-//     } else return (
-//         <Typography>Cannot delete this experiment, because it has assay results recorded</Typography>
-//     )
-// }
+export default DeleteExperimentButton;

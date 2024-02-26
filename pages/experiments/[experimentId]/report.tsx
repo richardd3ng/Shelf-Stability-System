@@ -1,31 +1,48 @@
-import { ExperimentInfo } from "@/lib/controllers/types";
-import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
-// import { AssaysGroupedByType } from "@/components/experiment-detail/assaysGroupedByType";
-import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
-import { useState } from "react";
-import { AssayEditorModal } from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
-import { ExperimentHeader } from "@/components/experiment-detail/summary/experimentHeader";
-import { Container, Typography } from "@mui/material";
+import { useEffect } from "react";
+import ReportHeader from "@/components/experiment-report/reportHeader";
+import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
+import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
+import { useExperimentOwner } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
+import { useLoading } from "@/lib/context/shared/loadingContext";
+import { useAlert } from "@/lib/context/shared/alertContext";
+import { getErrorMessage } from "@/lib/api/apiHelpers";
+import { Stack } from "@mui/material";
+import ReportAssaysGroupedByType from "@/components/experiment-report/reportAssaysGroupedByType";
 
-export default function ExperimentPage() {
+const ExperimentReport: React.FC = () => {
+    const experimentId = useExperimentId();
+    const {
+        data: experimentInfo,
+        isLoading,
+        isError,
+        error,
+    } = useExperimentInfo(experimentId);
+    const { data: owner } = useExperimentOwner(experimentId);
+    const { showLoading, hideLoading } = useLoading();
+    const { showAlert } = useAlert();
+
+    useEffect(() => {
+        if (isError) {
+            showAlert("error", getErrorMessage(error));
+        } else if (isLoading) {
+            showLoading("Generating experiment report...");
+        } else {
+            hideLoading();
+        }
+    }, [isLoading, showLoading, hideLoading, isError, showAlert, error]);
+
+    if (!experimentInfo || !owner) {
+        return null;
+    }
     return (
-        <Container>
-            <ExperimentHeader />
-            <Container
-                style={{
-                    border: "2px solid black",
-                    marginTop: 16,
-                    marginBottom: 16,
-                }}
-            >
-                <Typography
-                    variant="h4"
-                    align="center"
-                    style={{ marginBottom: 8, marginTop: 24 }}
-                >
-                    All Assays
-                </Typography>
-            </Container>
-        </Container>
+        <Stack gap={2}>
+            <ReportHeader
+                experimentInfo={experimentInfo}
+                owner={owner.username}
+            />
+            <ReportAssaysGroupedByType experimentInfo={experimentInfo} />
+        </Stack>
     );
-}
+};
+
+export default ExperimentReport;

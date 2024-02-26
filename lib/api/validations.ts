@@ -1,44 +1,46 @@
 import { Assay, AssayResult, Condition } from "@prisma/client";
 import { db } from "./db";
 
+// note: these functions must be called on the server side they rely on the db object
+export const assayHasResult = async (assayId: number): Promise<boolean> => {
+    const assayResult: AssayResult | null = await db.assayResult.findFirst({
+        where: {
+            assayId: assayId,
+        },
+    });
+    return assayResult !== null;
+};
+
 export const experimentHasAssaysWithResults = async (
     experimentId: number
 ): Promise<boolean> => {
-    const assayWithResult: Assay | null = await db.assay.findFirst({
+    const assaysForExperiment: Assay[] = await db.assay.findMany({
         where: {
-            AND: [
-                {
-                    experimentId: experimentId,
-                },
-                {
-                    NOT: {
-                        result: null,
-                    },
-                },
-            ],
+            experimentId: experimentId,
         },
     });
-    return assayWithResult !== null;
+    for (let assay of assaysForExperiment) {
+        if (await assayHasResult(assay.id)) {
+            return true;
+        }
+    }
+    return false;
 };
 
 export const conditionHasAssaysWithResults = async (
     conditionId: number
 ): Promise<boolean> => {
-    const assayWithResult: Assay | null = await db.assay.findFirst({
+    const assaysWithCondition: Assay[] = await db.assay.findMany({
         where: {
-            AND: [
-                {
-                    conditionId: conditionId,
-                },
-                {
-                    NOT: {
-                        result: null,
-                    },
-                },
-            ],
+            conditionId: conditionId,
         },
     });
-    return assayWithResult !== null;
+    for (let assay of assaysWithCondition) {
+        if (await assayHasResult(assay.id)) {
+            return true;
+        }
+    }
+    return false;
 };
 
 export const conditionIsControl = async (
@@ -51,13 +53,4 @@ export const conditionIsControl = async (
         },
     });
     return controlCondition !== null;
-};
-
-export const assayHasResult = async (assayId: number): Promise<boolean> => {
-    const assayResult: AssayResult | null = await db.assayResult.findFirst({
-        where: {
-            id: assayId,
-        },
-    });
-    return assayResult !== null;
 };

@@ -2,6 +2,7 @@ import { LocalDate } from "@js-joda/core";
 import { Experiment, Condition, Assay, AssayResult } from "@prisma/client";
 
 /* ----- Experiment ----- */
+
 export type ExperimentWithLocalDate = Omit<Experiment, "start_date"> & {
     start_date: LocalDate;
 };
@@ -14,8 +15,8 @@ export type ExperimentInfo = {
 };
 
 export type ExperimentOwner = {
-    username : string;
-}
+    username: string;
+};
 
 export type ExperimentTableInfo = {
     id: number;
@@ -42,17 +43,17 @@ export type ExperimentCreationResponse = Omit<
     "assays" | "assayResults"
 >;
 
+// experiment updates are done in a single atomic transaction
 export type ExperimentUpdateArgs = {
     id: number;
-    title?: string;
-    description?: string;
+    title: string;
+    description: string | null;
     startDate?: LocalDate;
-    ownerId?: number;
+    userId: number;
 };
 
-export type ExperimentUpdateResponse = ExperimentCreationResponse;
-
 /* ----- Assay ----- */
+
 export type AssayInfo = {
     id: number;
     targetDate: Date;
@@ -74,8 +75,22 @@ export type AssayTable = {
     rowCount: number;
 };
 
+export type UserInfo = {
+    id: number;
+    username: string;
+    is_admin: boolean;
+};
+
+export type UserTable = {
+    // Rows on this page
+    rows: UserInfo[];
+    // Rows in the whole table
+    rowCount: number;
+};
+
 export type AssayCreationArgs = Omit<Assay, "id">;
 
+// experiment updates can be done by individual fields
 export type AssayUpdateArgs = {
     id: number;
     conditionId?: number;
@@ -84,6 +99,7 @@ export type AssayUpdateArgs = {
 };
 
 /* ----- Condition ----- */
+
 export type ConditionCreationArgs = Omit<Condition, "id">;
 
 export type ConditionCreationArgsNoExperimentId = Omit<
@@ -97,11 +113,13 @@ export type ConditionUpdateArgs = {
 };
 
 /* ----- Assay Result ----- */
-export type AssayResultCreationArgs = Omit<AssayResult, "id" | "last_editor">;
 
+export type AssayResultCreationArgs = Omit<AssayResult, "id">;
+
+// assay result updates can be done by individual fields
 export type AssayResultUpdateArgs = {
     id: number;
-    result?: number;
-    comment?: string;
-    // get last edited user from the session token in the backend, see lib/middleware/checkIfLoggedIn.ts
+    result?: number | null;
+    comment?: string | null;
+    last_editor: string;
 };

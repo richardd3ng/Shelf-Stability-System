@@ -1,6 +1,6 @@
-import { AssayEditingContext } from "@/lib/context/shared/assayEditingContext";
+import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { useContext, useState, useEffect } from "react";
-import { CloseableModal } from "../shared/closeableModal";
+import CloseableModal from "../shared/closeableModal";
 import { AgendaContext } from "@/lib/context/agendaPage/agendaContext";
 import {
     useMutationToCreateAssayResultFromAgenda,
@@ -8,14 +8,13 @@ import {
     useMutationToDeleteAssayResultFromAgenda,
 } from "@/lib/hooks/agendaPage/updateAssayResult";
 import { Stack, TextField } from "@mui/material";
-import { ButtonWithLoadingAndError } from "../shared/buttonWithLoadingAndError";
 import { AssayInfo, AssayResultUpdateArgs } from "@/lib/controllers/types";
-import { useAlert } from "@/lib/context/alert-context";
+import { useAlert } from "@/lib/context/shared/alertContext";
 
 export const AssayResultEditorOnAgenda = () => {
     const { rows } = useContext(AgendaContext);
     const {
-        assayIdBeingEdited,
+        id: assayIdBeingEdited,
         isEditing: isEditingAssay,
         setIsEditing: setIsEditingAssay,
     } = useContext(AssayEditingContext);
@@ -64,6 +63,7 @@ export const AssayResultEditorOnAgenda = () => {
         if (assayResultId) {
             const updateAssayResultArgs: AssayResultUpdateArgs = {
                 id: assayResultId,
+                last_editor: "rld39",
             };
             if (result) {
                 updateAssayResultArgs.result = result;
@@ -77,6 +77,7 @@ export const AssayResultEditorOnAgenda = () => {
                 assayId: assayIdBeingEdited,
                 result: result,
                 comment: comment,
+                last_editor: "rld39",
             });
         }
     };
@@ -100,24 +101,6 @@ export const AssayResultEditorOnAgenda = () => {
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                 ></TextField>
-                <ButtonWithLoadingAndError
-                    text="Submit"
-                    isError={isErrorUpdating || isErrorCreating}
-                    isLoading={isLoadingUpdate || isLoadingCreate}
-                    error={errorUpdating || errorCreating}
-                    onSubmit={handleSubmit}
-                />
-                <ButtonWithLoadingAndError
-                    text="Delete Assay Result"
-                    isError={isErrorDeleting}
-                    isLoading={isDeleting}
-                    error={errorDeleting}
-                    onSubmit={() => {
-                        if (assayResultId) {
-                            deleteAssayResult(assayResultId);
-                        }
-                    }}
-                />
             </Stack>
         </CloseableModal>
     );

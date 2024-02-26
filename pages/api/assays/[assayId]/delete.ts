@@ -1,10 +1,6 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-    INVALID_ASSAY_ID,
-    getAssayID,
-    getErrorMessage,
-} from "@/lib/api/apiHelpers";
+import { INVALID_ASSAY_ID, getAssayID } from "@/lib/api/apiHelpers";
 import { assayHasResult } from "@/lib/api/validations";
 import { getApiError } from "@/lib/api/error";
 import { Assay } from "@prisma/client";
@@ -25,7 +21,7 @@ export default async function deleteAssayAPI(
             res.status(CONSTRAINT_ERROR_CODE).json(
                 getApiError(
                     CONSTRAINT_ERROR_CODE,
-                    "This assay has recorded results"
+                    "This assay has recorded results and/or comments and cannot be deleted"
                 )
             );
             return;
@@ -47,7 +43,7 @@ export default async function deleteAssayAPI(
         }
         res.status(200).json(deletedAssay);
     } catch (error) {
-        console.log(getErrorMessage(error));
+        console.error(error);
         res.status(500).json(
             getApiError(500, `Failed to delete assay on server`)
         );

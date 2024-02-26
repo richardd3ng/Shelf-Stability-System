@@ -1,68 +1,70 @@
 import React, { useState } from "react";
-import { Button, Container, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { AuthForm } from "@/components/shared/authForm";
-import { YourButtonWithLoadingAndError } from "@/components/shared/buttonWithLoadingAndError";
 import { checkIfAdminExists } from "@/lib/api/auth/authHelpers";
+import { useLoading } from "@/lib/context/shared/loadingContext";
+import { useAlert } from "@/lib/context/shared/alertContext";
 
 export default function LoginPage() {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [errorMessage, setErrorMessage] = useState<string>("");
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { showLoading, hideLoading } = useLoading();
     const router = useRouter();
+    const { showAlert } = useAlert();
 
     const handleSubmit = () => {
-        setIsLoading(true);
-        signIn("credentials", { username, password, redirect: false }).then((d) => {
-            if (!d || (d && d.status > 300)) {
-                console.log("bad usenrmae")
-                setErrorMessage("Wrong username/password");
-            } else {
-                console.log("trying to push to experiment list page")
-                router.push("/experiment-list");
-            }
-
-        }).catch((reason) => {
-
-        }).finally(() => {
-            setIsLoading(false);
-        });
-
+        showLoading("Logging in...");
+        signIn("credentials", { username, password, redirect: false })
+            .then((d) => {
+                if (!d || (d && d.status > 300)) {
+                    showAlert("error", "Wrong username/password");
+                } else {
+                    console.log("trying to push to experiment list page");
+                    router.push("/experiment-list");
+                }
+            })
+            .catch((_reason) => {})
+            .finally(() => {
+                hideLoading();
+            });
     };
     return (
-        <Container maxWidth="sm" style={{ marginTop: 20, paddingTop: 20 }}>
-            <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+        <Stack>
+            <Box alignSelf="center">
                 <AuthForm
                     fields={[
                         {
-                            value : username, 
-                            setValue : setUsername,
+                            value: username,
+                            setValue: setUsername,
                             label: "Username",
-                            shouldBlurText : false
+                            shouldBlurText: false,
                         },
                         {
                             value: password,
                             setValue: setPassword,
                             label: "Password",
-                            shouldBlurText : true
-                        }
+                            shouldBlurText: true,
+                        },
                     ]}
                     title="Login"
                 />
-                <YourButtonWithLoadingAndError isError={errorMessage.length > 0} error={new Error(errorMessage)} isLoading={isLoading}>
-                    <Button variant="contained" color="primary" type="submit">
-                        <Typography>
-                            Submit
-                        </Typography>
-                    </Button>
-                </YourButtonWithLoadingAndError>
-            </form>
-        </Container>
-    )
+            </Box>
+            <Box alignSelf="center" sx={{ marginTop: -1 }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    onClick={handleSubmit}
+                    sx={{ textTransform: "none" }}
+                >
+                    <Typography>Submit</Typography>
+                </Button>
+            </Box>
+        </Stack>
+    );
 }
-
 
 export async function getServerSideProps() {
     try {
@@ -70,20 +72,19 @@ export async function getServerSideProps() {
         if (!passwordHasBeenSet) {
             return {
                 redirect: {
-                    destination: '/auth/setPasswordOnSetup',
+                    destination: "/auth/setPasswordOnSetup",
                     permanent: false,
                 },
-            }
+            };
         } else {
             return { props: {} };
         }
     } catch {
         return {
             redirect: {
-                destination: '/auth/setPasswordOnSetup',
+                destination: "/auth/setPasswordOnSetup",
                 permanent: false,
             },
-        }
+        };
     }
-
 }

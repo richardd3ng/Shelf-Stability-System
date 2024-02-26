@@ -3,20 +3,48 @@ import { useEffect, useState } from "react";
 
 export type ServerPaginationProps = Partial<DataGridProps>
 export type ServerPaginationArgs = {
-    sortModel: GridSortModel;
+    sortModel?: GridSortModel;
     pagination: GridPaginationModel;
+}
+
+export function useServerPaginationNoSort(reload: (paging: ServerPaginationArgs) => Promise<{ rowCount: number }>, defaultPagination: GridPaginationModel)
+    : [ServerPaginationProps, () => void] {
+    const [pagination, setPagination] = useState<GridPaginationModel>(defaultPagination);
+
+    return usePaginationHelper(reload, { pagination }, [pagination, setPagination]);
 }
 
 export function useServerPagination(reload: (paging: ServerPaginationArgs) => Promise<{ rowCount: number }>, defaultSort: GridSortModel, defaultPagination: GridPaginationModel)
     : [ServerPaginationProps, () => void] {
     const [sortModel, setSortModel] = useState<GridSortModel>(defaultSort);
     const [pagination, setPagination] = useState<GridPaginationModel>(defaultPagination);
-    const [rowCount, setRowCount] = useState<number>(0);
 
     const paginationArgs = { sortModel, pagination };
 
+    const [ props, newReload ] = usePaginationHelper(reload, paginationArgs, [pagination, setPagination]);
+
+    useEffect(() => {
+        // When sorting changes, only reload if paging is happening
+        if (props.rowCount! > pagination.pageSize) {
+            newReload();
+        }
+    }, [sortModel]);
+
+    return [
+        {
+            ...props,
+            sortModel,
+            onSortModelChange: setSortModel
+        },
+        newReload
+    ];
+}
+
+function usePaginationHelper(reload: (paging: ServerPaginationArgs) => Promise<{ rowCount: number }>, reloadArgs: ServerPaginationArgs, [pagination, setPagination]: [GridPaginationModel, (model: GridPaginationModel) => void]): [ServerPaginationProps, () => void] {
+    const [rowCount, setRowCount] = useState<number>(0);
+
     const newReload = async () => {
-        reload(paginationArgs)
+        reload(reloadArgs)
             .then((result) => setRowCount(result.rowCount));
     };
 
@@ -24,18 +52,9 @@ export function useServerPagination(reload: (paging: ServerPaginationArgs) => Pr
         newReload();
     }, [pagination]);
 
-    useEffect(() => {
-        // When sorting changes, only reload if paging is happening
-        if (rowCount > pagination.pageSize) {
-            newReload();
-        }
-    }, [sortModel]);
-
     return [
         {
             rowCount,
-            sortModel,
-            onSortModelChange: setSortModel,
             pagination: true,
             paginationMode: 'server',
             paginationModel: pagination,
