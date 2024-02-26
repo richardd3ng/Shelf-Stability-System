@@ -22,6 +22,7 @@ export default async function getExperimentInfoAPI(
         );
         return;
     }
+
     try {
         const [experiment, conditions, assays]: [
             ExperimentWithLocalDate | null,
