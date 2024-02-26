@@ -1,4 +1,12 @@
-import { Box, Button, Container, Stack } from "@mui/material";
+import {
+    Box,
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    Stack,
+} from "@mui/material";
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import ExperimentCreationDialog from "@/components/experiment-list/experimentCreationDialog";
@@ -10,13 +18,19 @@ import {
     fetchExperimentList,
     hasRecordedAssayResults,
 } from "@/lib/controllers/experimentController";
+import { fetchOwners } from "@/lib/controllers/userController";
 import ExperimentDeletionDialog from "@/components/shared/experimentDeletionDialog";
 import { useAlert } from "@/lib/context/shared/alertContext";
+import { useLoading } from "@/lib/context/shared/loadingContext";
 import {
     ServerPaginationArgs,
     useServerPagination,
 } from "@/lib/hooks/useServerPagination";
-import { ExperimentTable, ExperimentTableInfo } from "@/lib/controllers/types";
+import {
+    ExperimentTable,
+    ExperimentTableInfo,
+    UserInfo,
+} from "@/lib/controllers/types";
 import { useRouter } from "next/router";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import GeneratePrintableReportButton from "@/components/shared/generateReportIconButton";
@@ -36,11 +50,22 @@ const ExperimentList: React.FC = () => {
     const [selectedExperimentIds, setSelectedExperimentIds] =
         useState<GridRowSelectionModel>([]);
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState<string>(
         router.asPath.split("search=")[1] ?? ""
     );
+    const [ownerFilter, setOwnerFilter] = useState<string>("");
+    const [ownerList, setOwnerList] = useState<UserInfo[] | null>(null);
     const userInfo = useUserInfo();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setOwnerList(await fetchOwners());
+        };
+        fetchData();
+        showLoading("Loading experiments...");
+    }, []);
 
     useEffect(() => {
         const { search } = router.query;
@@ -60,14 +85,20 @@ const ExperimentList: React.FC = () => {
             field: "id",
             headerName: "ID",
             type: "number",
-            flex: 2,
+            flex: 1.5,
             valueFormatter: (params: any) => String(params.value),
         },
         {
             field: "title",
             headerName: "Title",
             type: "string",
-            flex: 5,
+            flex: 4,
+        },
+        {
+            field: "owner",
+            headerName: "Owner",
+            type: "string",
+            flex: 2,
         },
         {
             field: "startDate",
@@ -92,7 +123,9 @@ const ExperimentList: React.FC = () => {
             renderCell: (params) => (
                 <Box sx={{ display: "flex" }}>
                     <ViewExperimentButton experimentId={params.row.id} />
-                    <GeneratePrintableReportButton experimentId={params.row.id}/>
+                    <GeneratePrintableReportButton
+                        experimentId={params.row.id}
+                    />
                     <IconButtonWithTooltip
                         text="Delete"
                         icon={Delete}
@@ -103,13 +136,15 @@ const ExperimentList: React.FC = () => {
         },
     ];
 
-    const getExperiments = (
+    const getExperiments = async (
         paging: ServerPaginationArgs
     ): Promise<ExperimentTable> => {
-        return fetchExperimentList(searchQuery, paging).catch((error) => {
+        try {
+            return await fetchExperimentList(searchQuery, paging);
+        } catch (error) {
             showAlert("error", getErrorMessage(error));
             return { rows: [], rowCount: 0 };
-        });
+        }
     };
 
     const reloadExperimentData = async (
@@ -117,6 +152,7 @@ const ExperimentList: React.FC = () => {
     ): Promise<ExperimentTable> => {
         const fetchedData = await getExperiments(paging);
         setExperimentData(fetchedData.rows);
+        hideLoading();
         return fetchedData;
     };
 
@@ -201,29 +237,50 @@ const ExperimentList: React.FC = () => {
                 <Box
                     sx={{
                         display: "flex",
-                        alignItems: "left",
-                        paddingRight: 3,
+                        alignItems: "center",
+                        paddingX: 3,
+                        justifyContent: "space-between",
                     }}
                 >
-                    <Container sx={{ flex: 2, marginRight: "25%" }}>
+                    <Box sx={{ flex: 2 }}>
                         <SearchBar
                             placeholder="Enter Keyword"
                             value={searchQuery}
                             onSearch={handleSearch}
                         />
-                    </Container>
+                    </Box>
+                    <Box sx={{ flex: 1, paddingX: 10 }}>
+                        <FormControl fullWidth size="small">
+                            <InputLabel id="Owner Filter Label">
+                                Owner Filter
+                            </InputLabel>
+                            <Select
+                                id="Owner Filter Selection"
+                                value={ownerFilter}
+                                label="Owner Filter"
+                                onChange={(e) => {
+                                    setOwnerFilter(e.target.value);
+                                }}
+                            >
+                                <MenuItem key={0} value={""}>
+                                    {"(None)"}
+                                </MenuItem>
+                                {(ownerList ?? []).map((owner: UserInfo) => (
+                                    <MenuItem
+                                        key={owner.id}
+                                        value={owner.username}
+                                    >
+                                        {owner.username}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
                     <Button
-                        sx={{
-                            backgroundColor: "white",
-                            opacity: 0.8,
-                            border: "1px solid",
-                            borderRadius: "8px",
-                            flex: 1,
-                            marginLeft: "auto",
-                            textTransform: "none",
-                            // visibility: "hidden", TODO: admin only
-                        }}
+                        variant="contained"
+                        color="primary"
                         onClick={() => setShowCreationDialog(true)}
+                        sx={{ flex: 1, textTransform: "none" }}
                     >
                         Add Experiment
                     </Button>

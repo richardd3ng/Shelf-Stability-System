@@ -64,10 +64,10 @@ export default async function searchExperimentsAPI(
             // TODO look at views instead?
             db.$queryRaw<
                 any[]
-            >`SELECT e.id, e.title, e.start_date, ROUND((CAST(CURRENT_DATE AS DATE) - e.start_date) / 7.0) as week
+            >`SELECT e.id, e.title, e.start_date, ROUND((CAST(CURRENT_DATE AS DATE) - e.start_date) / 7.0) as week, u.username as "owner"
                 
                 FROM public."Experiment" e
-
+                JOIN public."User" u ON e."ownerId" = u.id
                 WHERE e.title ILIKE ${`%${query}%`}
                 OR e.description ILIKE ${`%${query}%`}
                 ${
