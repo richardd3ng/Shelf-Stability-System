@@ -1,7 +1,7 @@
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import {
     GridColDef,
@@ -31,6 +31,7 @@ import Edit from "@mui/icons-material/Edit";
 import ConditionEditorModal from "../modifications/editorModals/conditionEditorModal";
 import ConditionEditingContext from "@/lib/context/experimentDetailPage/conditionEditingContext";
 import { INVALID_CONDITION_ID } from "@/lib/api/apiHelpers";
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
 export interface WeekRow {
     id: number;
@@ -99,6 +100,10 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
         useState<number>(INVALID_CONDITION_ID);
     const WEEK_COL_WIDTH = 50;
     const CONDITION_COL_WIDTH = 150;
+    const { user } = useContext(CurrentUserContext);
+    const isAdmin: boolean = user?.is_admin ?? false;
+    const isAdminOrOwner: boolean =
+        (user?.is_admin || user?.id === data?.experiment.ownerId) ?? false;
 
     useEffect(() => {
         if (!data) {
@@ -171,28 +176,32 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                 >
                     {condition.name}
                 </Typography>
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                        paddingRight: 3,
-                    }}
-                >
-                    <IconButton
-                        size="small"
-                        onClick={() => setConditionIdBeingEdited(condition.id)}
+                {isAdmin && (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "flex-end",
+                            paddingRight: 3,
+                        }}
                     >
-                        <Edit sx={{ fontSize: 20 }} />
-                    </IconButton>
-                    <IconButton
-                        size="small"
-                        sx={{ marginLeft: -1 }}
-                        onClick={() => deleteCondition(condition.id)}
-                    >
-                        <GridDeleteIcon sx={{ fontSize: 20 }} />
-                    </IconButton>
-                </Box>
+                        <IconButton
+                            size="small"
+                            onClick={() =>
+                                setConditionIdBeingEdited(condition.id)
+                            }
+                        >
+                            <Edit sx={{ fontSize: 20 }} />
+                        </IconButton>
+                        <IconButton
+                            size="small"
+                            sx={{ marginLeft: -1 }}
+                            onClick={() => deleteCondition(condition.id)}
+                        >
+                            <GridDeleteIcon sx={{ fontSize: 20 }} />
+                        </IconButton>
+                    </Box>
+                )}
             </Box>
         );
     };
@@ -215,27 +224,29 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                         justifyContent: "flex-end",
                     }}
                 >
-                    <IconButton
-                        sx={{ width: 24, height: 24 }}
-                        onClick={() => {
-                            const weekRow = weekRows.find(
-                                (row) => row.id === params.row.id
-                            );
-                            if (!weekRow) {
-                                showAlert(
-                                    "error",
-                                    "Week not found for this row"
+                    {isAdminOrOwner && (
+                        <IconButton
+                            sx={{ width: 24, height: 24 }}
+                            onClick={() => {
+                                const weekRow = weekRows.find(
+                                    (row) => row.id === params.row.id
                                 );
-                                return;
-                            }
-                            setAddAssayParams({
-                                week: weekRow.week,
-                                conditionId: condition.id,
-                            });
-                        }}
-                    >
-                        <AddIcon sx={{ fontSize: 16 }} />
-                    </IconButton>
+                                if (!weekRow) {
+                                    showAlert(
+                                        "error",
+                                        "Week not found for this row"
+                                    );
+                                    return;
+                                }
+                                setAddAssayParams({
+                                    week: weekRow.week,
+                                    conditionId: condition.id,
+                                });
+                            }}
+                        >
+                            <AddIcon sx={{ fontSize: 16 }} />
+                        </IconButton>
+                    )}
                 </Box>
 
                 {getAssaysForWeekAndCondition(
@@ -361,7 +372,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
             <Table
                 columns={createTableColumns()}
                 rows={weekRows}
-                footer={tableFooter}
+                footer={isAdmin ? tableFooter : undefined}
                 sortModel={[
                     {
                         field: "week",

@@ -18,14 +18,15 @@ import { Assay, AssayResult } from "@prisma/client";
 import EditableTextField from "@/components/shared/editableTextField";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
+import { INVALID_USERNAME } from "@/lib/hooks/useUserInfo";
 import {
     assayTypeIdToName,
     assayTypeNameToId,
     getAssayTypeUnits,
 } from "@/lib/controllers/assayTypeController";
 import { getDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
-import { useUserInfo, INVALID_USERNAME } from "@/lib/hooks/useUserInfo";
 
 interface EditingState {
     isEditingType: boolean;
@@ -59,7 +60,7 @@ const AssayEditorModal: React.FC = () => {
     const [editingState, setEditingState] = useState<EditingState>(
         INITIAL_EDITING_STATE
     );
-    const userInfo = useUserInfo();
+    const { user } = useContext(CurrentUserContext);
 
     const startEditing = (field: keyof EditingState) => {
         setEditingState({
@@ -119,14 +120,14 @@ const AssayEditorModal: React.FC = () => {
             updateAssayResult({
                 id: assayResultIdBeingEdited,
                 result: newResult ? parseFloat(newResult) : null,
-                last_editor: userInfo.username ?? INVALID_USERNAME,
+                last_editor: user?.username ?? INVALID_USERNAME,
             });
         } else if (newResult) {
             createAssayResult({
                 assayId: assayIdBeingEdited,
                 result: parseFloat(newResult),
                 comment: null,
-                last_editor: userInfo.username ?? INVALID_USERNAME,
+                last_editor: user?.username ?? INVALID_USERNAME,
             });
         }
         setResult(newResult);
@@ -138,14 +139,14 @@ const AssayEditorModal: React.FC = () => {
             updateAssayResult({
                 id: assayResultIdBeingEdited,
                 comment: newComment ? newComment : null,
-                last_editor: userInfo.username ?? INVALID_USERNAME,
+                last_editor: user?.username ?? INVALID_USERNAME,
             });
         } else if (newComment) {
             createAssayResult({
                 assayId: assayIdBeingEdited,
                 result: null,
                 comment: newComment,
-                last_editor: userInfo.username ?? INVALID_USERNAME,
+                last_editor: user?.username ?? INVALID_USERNAME,
             });
         }
         setComment(newComment);
@@ -161,7 +162,7 @@ const AssayEditorModal: React.FC = () => {
         setIsEditingAssay(false);
     };
 
-    if (!data || !type || !week) {
+    if (!data || !user || !type || !week) {
         return <></>;
     }
     return (
