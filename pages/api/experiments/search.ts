@@ -47,6 +47,7 @@ export default async function searchExperimentsAPI(
 ) {
     try {
         const query = req.query.query !== undefined ? req.query.query : "";
+        const owner = req.query.owner !== undefined ? req.query.owner : "";
         const queryNumber = Number(query);
 
         const orderBy = convertSort(req.query.sort_by, req.query.sort_order);
@@ -64,12 +65,17 @@ export default async function searchExperimentsAPI(
             // TODO look at views instead?
             db.$queryRaw<
                 any[]
-            >`SELECT e.id, e.title, e.start_date, ROUND((CAST(CURRENT_DATE AS DATE) - e.start_date) / 7.0) as week
+            >`SELECT e.id, e.title, e.start_date, ROUND((CAST(CURRENT_DATE AS DATE) - e.start_date) / 7.0) as week, u.username as "owner"
                 
                 FROM public."Experiment" e
-
-                WHERE e.title ILIKE ${`%${query}%`}
-                OR e.description ILIKE ${`%${query}%`}
+                JOIN public."User" u ON e."ownerId" = u.id
+                WHERE (e.title ILIKE ${`%${query}%`}
+                OR e.description ILIKE ${`%${query}%`})
+                ${
+                    owner !== ""
+                        ? Prisma.raw(`AND u.username = '${owner}'`)
+                        : Prisma.empty
+                }                
                 ${
                     !isNaN(queryNumber)
                         ? Prisma.sql`OR e.id = ${queryNumber}`

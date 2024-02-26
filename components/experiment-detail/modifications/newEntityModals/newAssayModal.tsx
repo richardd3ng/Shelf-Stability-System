@@ -66,7 +66,6 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
                             Assay Type
                         </InputLabel>
                         <Select
-                            labelId="Assay Type Select Label"
                             id="Assay Type Selection"
                             value={selectedAssayType}
                             label="Assay Type"
