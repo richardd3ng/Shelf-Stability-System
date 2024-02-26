@@ -33,6 +33,12 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
         props.onClose();
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            onSubmit();
+        }
+    };
+
     if (!data) {
         return <></>;
     }
@@ -50,6 +56,7 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
                         style={{ marginLeft: 4, marginRight: 4 }}
                         value={condition}
                         onChange={(e) => setCondition(e.target.value)}
+                        onKeyDown={handleKeyDown}
                     />
                 </FormControl>
                 <Button
