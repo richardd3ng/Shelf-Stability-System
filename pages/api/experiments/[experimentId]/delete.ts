@@ -8,11 +8,13 @@ import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { INVALID_EXPERIMENT_ID, getExperimentID } from "@/lib/api/apiHelpers";
 import { nativeJs } from "@js-joda/core";
 import { ExperimentWithLocalDate } from "@/lib/controllers/types";
+import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 
 export default async function deleteExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentWithLocalDate | ApiError>
 ) {
+    await denyReqIfUserIsNotLoggedInAdmin(req, res);
     const id = getExperimentID(req);
     if (id === INVALID_EXPERIMENT_ID) {
         res.status(400).json(

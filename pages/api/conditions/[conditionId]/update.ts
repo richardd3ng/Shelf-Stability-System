@@ -6,11 +6,13 @@ import { conditionHasAssaysWithResults } from "@/lib/api/validations";
 import { CONSTRAINT_ERROR_CODE, getApiError } from "@/lib/api/error";
 import { ApiError } from "next/dist/server/api-utils";
 import { Prisma } from "@prisma/client";
+import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 
 export default async function updateConditionAPI(
     req: NextApiRequest,
     res: NextApiResponse<Condition | ApiError>
 ) {
+    await denyReqIfUserIsNotLoggedInAdmin(req, res);
     const id = getConditionID(req);
     if (id === INVALID_CONDITION_ID) {
         res.status(400).json(getApiError(400, "Condition ID is required"));

@@ -3,11 +3,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { AssayResult } from "@prisma/client";
+import { denyReqIfUserIsNotLoggedInAdmin, getUserAndDenyReqIfUserIsNotLoggedIn } from "@/lib/api/auth/authHelpers";
+import { denyAPIReq } from "@/lib/api/auth/acessDeniers";
+import { denyReqIfUserIsNeitherAdminNorExperimentOwner, denyReqIfUserIsNotAdmin } from "@/lib/api/auth/checkIfAdminOrExperimentOwner";
 
 export default async function createAssayResultAPI(
     req: NextApiRequest,
     res: NextApiResponse<AssayResult | ApiError>
 ) {
+    await denyReqIfUserIsNotLoggedInAdmin(req, res);
     if (
         req.body.assayId === null ||
         (req.body.result === null && req.body.comment === null)
@@ -20,6 +24,7 @@ export default async function createAssayResultAPI(
         );
         return;
     }
+    
     try {
         const createdAssayResult: AssayResult = await db.assayResult.create({
             data: req.body,

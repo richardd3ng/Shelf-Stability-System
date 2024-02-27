@@ -1,48 +1,31 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { getToken } from 'next-auth/jwt';
 import { db } from '../db';
-import { NextApiResponse } from 'next';
-import { getApiError } from '../error';
+import { NextApiResponse, NextApiRequest } from 'next';
+import { UserWithoutPassword } from '@/lib/controllers/types';
+import { denyAPIReq } from './acessDeniers';
+
 // This function can be marked `async` if using `await` inside
-export async function redirectOrBlockIfUserIsNeitherAdminNorExperimentOwner(req: NextRequest, res : NextApiResponse, experimentId : number, mustBeAdmin : boolean) {
+export async function denyReqIfUserIsNeitherAdminNorExperimentOwner(req : NextApiRequest, res : NextApiResponse, user : UserWithoutPassword, experimentId : number) {
     try{
-        const token = await getToken({req : req});
-                
-        if (!token || !token.name){
-            redirectOrBlock(req, res);
+        const isAdmin = user.is_admin;
+        const isOwner = await checkIfUserIsExperimentOwner(user, experimentId);
+        if (isAdmin || isOwner){
+            return;
         } else {
-            const isAdmin = await checkIfUserIsAdmin(token.name);
-            const isOwner = await checkIfUserIsExperimentOwner(token.name, experimentId);
-            if (mustBeAdmin){
-                if (isAdmin){
-                    return;
-                } else {
-                    redirectOrBlock(req, res);
-                }
-            } else {
-                if (isAdmin || isOwner){
-                    return;
-                } else {
-                    redirectOrBlock(req, res);
-                }
-            }
+            denyAPIReq(req, res, "You are neither an admin nor an owner");
         }
-        
-        
+            
     } catch {
         return res.redirect('/experiment-list');
     }
-
 }
 
-async function redirectOrBlock(req : NextRequest, res : NextApiResponse){
-    if (req.nextUrl.pathname.startsWith("/api")){
-        return NextResponse.json(getApiError(400, "You are neither an admin nor the owner of this experiment", "Neither Admin Nor Owner"))
-    } else {
-        return NextResponse.redirect(new URL('/experiment-list'))
-    };
+export async function denyReqIfUserIsNotAdmin(req : NextApiRequest, res : NextApiResponse, user : UserWithoutPassword){
+    if (!user.is_admin){
+        denyAPIReq(req, res, "You are not an admin");
+    }
 }
+
+
 
 export const checkIfUserIsAdmin = async ( username : string ) : Promise<boolean> => {
     try{
@@ -63,24 +46,18 @@ export const checkIfUserIsAdmin = async ( username : string ) : Promise<boolean>
 
 
 
-const checkIfUserIsExperimentOwner = async (username : string, experimentId : number) : Promise<boolean> => {
+const checkIfUserIsExperimentOwner = async (user : UserWithoutPassword, experimentId : number) : Promise<boolean> => {
     try{
-        const user = await db.user.findUnique({
+        const experiment = await db.experiment.findUnique({
             where : {
-                username : username
+                id : experimentId
             }
         });
-        if (user){
-            const experiment = await db.experiment.findUnique({
-                where : {
-                    id : experimentId
-                }
-            });
-            if (experiment && experiment.ownerId === user.id){
-                return true;
-            }
+        if (experiment && experiment.ownerId === user.id){
+            return true;
+        } else {
+            return false;
         }
-        return false;
     } catch {
         return false;
     }

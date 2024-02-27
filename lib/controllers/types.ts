@@ -1,5 +1,5 @@
 import { LocalDate } from "@js-joda/core";
-import { Experiment, Condition, Assay, AssayResult } from "@prisma/client";
+import { Experiment, Condition, Assay, AssayResult, User } from "@prisma/client";
 
 /* ----- Experiment ----- */
 
@@ -126,3 +126,5 @@ export type UserTable = {
     // Rows in the whole table
     rowCount: number;
 };
+
+export type UserWithoutPassword = Omit<User, 'password'>;
