@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import {
     Box,
     Button,
-    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
@@ -31,6 +30,7 @@ import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { INVALID_USER_ID } from "@/lib/hooks/useUserInfo";
 import { fetchUserList } from "@/lib/controllers/userController";
+import { useLoading } from "@/lib/context/shared/loadingContext";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -54,8 +54,8 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         string[]
     >([]);
     const [newStorageCondition, setNewStorageCondition] = useState<string>("");
-    const [creationLoading, setCreationLoading] = useState<boolean>(false);
     const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
     const router = useRouter();
 
     useEffect(() => {
@@ -123,7 +123,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             showAlert("error", generateAlertMessage(missingDetails));
             return;
         }
-        setCreationLoading(true);
+        showLoading("Creating experiment...");
         try {
             const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
                 selectedStorageConditions.map(
@@ -151,9 +151,10 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             router.push(`/experiments/${experimentResJson.experiment.id}`);
         } catch (error) {
             showAlert("error", getErrorMessage(error));
+            hideLoading();
             return;
         }
-        setCreationLoading(false);
+        hideLoading();
         closeDialog();
     };
 
@@ -288,10 +289,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 <Button
                     sx={{ textTransform: "none" }}
                     onClick={handleCreateExperiment}
-                    disabled={creationLoading}
-                    startIcon={
-                        creationLoading && <CircularProgress size={20} />
-                    }
                 >
                     Create
                 </Button>
