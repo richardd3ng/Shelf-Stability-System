@@ -29,13 +29,30 @@ export default async function setConditionAsControlAPI(
         }
         let newControlCondition: Condition | null = null;
         await db.$transaction(async (tx) => {
-            const controlCondition: Condition | null =
+            newControlCondition = await tx.condition.findUnique({
+                where: {
+                    id: id,
+                },
+            });
+            if (!newControlCondition) {
+                res.status(404).json(
+                    getApiError(
+                        404,
+                        `Condition ${id} does not exist or was deleted`,
+                        "Condition Not Found"
+                    )
+                );
+                return;
+            }
+            const oldControlCondition: Condition | null =
                 await tx.condition.findFirst({
                     where: {
+                        experimentId: newControlCondition.experimentId,
                         control: true,
                     },
                 });
-            if (!controlCondition) {
+
+            if (!oldControlCondition) {
                 res.status(404).json(
                     getApiError(
                         404,
@@ -47,15 +64,10 @@ export default async function setConditionAsControlAPI(
             }
             await tx.condition.update({
                 where: {
-                    id: controlCondition.id,
+                    id: oldControlCondition.id,
                 },
                 data: {
                     control: false,
-                },
-            });
-            newControlCondition = await tx.condition.findUnique({
-                where: {
-                    id: id,
                 },
             });
             await tx.condition.update({
@@ -67,17 +79,7 @@ export default async function setConditionAsControlAPI(
                 },
             });
         });
-        if (!newControlCondition) {
-            res.status(404).json(
-                getApiError(
-                    404,
-                    `Condition ${id} does not exist or was deleted`,
-                    "Condition Not Found"
-                )
-            );
-            return;
-        }
-        res.status(200).json(newControlCondition);
+        res.status(200).json(newControlCondition!);
     } catch (error) {
         console.error(error);
         res.status(500).json(
