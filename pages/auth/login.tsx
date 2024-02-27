@@ -21,7 +21,6 @@ export default function LoginPage() {
                 if (!d || (d && d.status > 300)) {
                     showAlert("error", "Wrong username/password");
                 } else {
-                    console.log("trying to push to experiment list page");
                     router.push("/experiment-list");
                 }
             })

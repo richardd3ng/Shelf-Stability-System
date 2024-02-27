@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, MenuItem } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
     DataGrid,
@@ -84,7 +84,13 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 disableColumnMenu
                 autoHeight
                 getRowHeight={() => "auto"}
-                pageSizeOptions={[10, 25, 50, 100]}
+                pageSizeOptions={[
+                    10,
+                    25,
+                    50,
+                    100,
+                    { value: 100, label: "All" },
+                ]}
                 checkboxSelection={props.checkboxSelection ?? false}
                 disableRowSelectionOnClick
                 slots={{ footer: FooterComponent }}
