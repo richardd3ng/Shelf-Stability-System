@@ -3,6 +3,16 @@ import { ApiError } from "next/dist/server/api-utils";
 import { AssayResult } from "@prisma/client";
 import { AssayResultCreationArgs, AssayResultUpdateArgs } from "./types";
 
+export const getAssayResult = async (id: number): Promise<AssayResult> => {
+    const endpoint = `/api/assayResult/${id}`;
+    const response = await fetch(endpoint);
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    }
+    throw new ApiError(response.status, resJson.message);
+}
+
 export const createAssayResult = async (
     assayResultCreationArgs: AssayResultCreationArgs
 ) => {

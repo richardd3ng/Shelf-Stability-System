@@ -65,6 +65,7 @@ const ConditionEditorModal: React.FC = () => {
         >
             <Stack style={{ marginBottom: 8, marginRight: 4 }}>
                 <EditableTextField
+                    id="name"
                     value={name?.toString()}
                     label="Name:"
                     onSubmit={handleSubmitName}

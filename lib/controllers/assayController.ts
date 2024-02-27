@@ -44,6 +44,21 @@ export const fetchAgendaList = async (
     throw new ApiError(response.status, resJson.message);
 };
 
+export const fetchAssay = async (id: number): Promise<Assay> => {
+    const endpoint = `/api/assays/${id}`;
+    const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
 export const createAssay = async (assayCreationArgs: AssayCreationArgs) => {
     const endpoint = "/api/assays/create";
     const response = await fetch(endpoint, {

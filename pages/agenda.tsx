@@ -11,9 +11,12 @@ import {
 import { AgendaContext } from "@/lib/context/agendaPage/agendaContext";
 import { AssayOptionsBox } from "@/components/agenda/assayOptionsBox";
 import { AssayResultEditorOnAgenda } from "@/components/agenda/assayResultEditorOnAgenda";
-import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
+import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
+import { Assay, AssayResult } from "@prisma/client";
+import AssayEditorModal from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
+import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 
 const colDefs: GridColDef[] = [
     {
@@ -64,6 +67,7 @@ const colDefs: GridColDef[] = [
         renderCell: (params) => (
             <AssayOptionsBox
                 assayId={params.row.id}
+                assayResultId={params.row.resultId}
                 experimentId={params.row.experimentId}
             />
         ),
@@ -78,8 +82,10 @@ export default function AssayAgenda() {
     const [includeRecordedAssays, setIncludeRecordedAssays] =
         useState<boolean>(false);
     const [ownedAssaysOnly, setOwnedAssaysOnly] = useState<boolean>(true);
+
     const [isEditingAnAssay, setIsEditingAnAssay] = useState<boolean>(false);
-    const [assayIdBeingEdited, setAssayIdBeingEdited] = useState<number>(-1);
+    const [assayResultBeingEdited, setAssayResultBeingEdited] = useState<AssayResult | undefined>(undefined);
+    const [assayBeingEdited, setAssayBeingEdited] = useState<Assay | undefined>(undefined);
 
     const [rows, setRows] = useState<AssayInfo[]>([]);
 
@@ -118,89 +124,101 @@ export default function AssayAgenda() {
         <Layout>
             <AssayEditingContext.Provider
                 value={{
-                    id: assayIdBeingEdited,
-                    setId: setAssayIdBeingEdited,
+                    assay: assayBeingEdited,
+                    setAssay: setAssayBeingEdited, 
                     isEditing: isEditingAnAssay,
                     setIsEditing: setIsEditingAnAssay,
                 }}
             >
-                <AgendaContext.Provider
+                <AssayResultEditingContext.Provider
                     value={{
-                        reload,
-                        rows,
-                        setRows,
+                        assayResult: assayResultBeingEdited,
+                        setAssayResult: setAssayResultBeingEdited,
+                        isEditing: isEditingAnAssay,
+                        setIsEditing: setIsEditingAnAssay,
                     }}
                 >
-                    <Stack spacing={2}>
-                        <Box display="flex" flexDirection="row" sx={{ px: 2 }}>
-                            <Stack direction="row" spacing={2}>
-                                <MyDatePicker
-                                    value={fromDate}
-                                    onChange={(val, context) =>
-                                        context.validationError === null
-                                            ? setFromDate(val)
-                                            : null
-                                    }
-                                    label="From"
-                                />
-                                <MyDatePicker
-                                    value={toDate}
-                                    onChange={(val, context) =>
-                                        context.validationError === null
-                                            ? setToDate(val)
-                                            : null
-                                    }
-                                    label="To"
-                                />
-                            </Stack>
-                            <Box
-                                display="flex"
-                                flexDirection="row"
-                                justifyContent="flex-end "
-                                flexGrow="1"
-                            >
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={includeRecordedAssays}
-                                            onChange={(_, val) =>
-                                                setIncludeRecordedAssays(val)
-                                            }
-                                        />
-                                    }
-                                    label="Include Recorded Assays"
-                                />
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={ownedAssaysOnly}
-                                            onChange={(_, val) =>
-                                                setOwnedAssaysOnly(val)
-                                            }
-                                        />
-                                    }
-                                    label="Only My Assays"
-                                />
+                    <AgendaContext.Provider
+                        value={{
+                            reload,
+                            rows,
+                            setRows,
+                        }}
+                    >
+                        <Stack spacing={2}>
+                            <Box display="flex" flexDirection="row" sx={{ px: 2 }}>
+                                <Stack direction="row" spacing={2}>
+                                    <MyDatePicker
+                                        value={fromDate}
+                                        onChange={(val, context) =>
+                                            context.validationError === null
+                                                ? setFromDate(val)
+                                                : null
+                                        }
+                                        label="From"
+                                    />
+                                    <MyDatePicker
+                                        value={toDate}
+                                        onChange={(val, context) =>
+                                            context.validationError === null
+                                                ? setToDate(val)
+                                                : null
+                                        }
+                                        label="To"
+                                    />
+                                </Stack>
+                                <Box
+                                    display="flex"
+                                    flexDirection="row"
+                                    justifyContent="flex-end "
+                                    flexGrow="1"
+                                >
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={includeRecordedAssays}
+                                                onChange={(_, val) =>
+                                                    setIncludeRecordedAssays(val)
+                                                }
+                                            />
+                                        }
+                                        label="Include Recorded Assays"
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={ownedAssaysOnly}
+                                                onChange={(_, val) =>
+                                                    setOwnedAssaysOnly(val)
+                                                }
+                                            />
+                                        }
+                                        label="Only My Assays"
+                                    />
+                                </Box>
                             </Box>
-                        </Box>
-                        <DataGrid
-                            rows={rows}
-                            columns={colDefs}
-                            {...paginationProps}
-                            rowSelection={false}
-                            autoHeight
-                            rowHeight={43}
-                            pageSizeOptions={[15, 30, 60, 100]}
-                            getCellClassName={(params) =>
-                                params.row.resultId !== null
-                                    ? "assay-cell-recorded"
-                                    : "assay-cell-not-recorded"
-                            }
-                            disableColumnMenu
-                        />
-                        <AssayResultEditorOnAgenda />
-                    </Stack>
-                </AgendaContext.Provider>
+                            <DataGrid
+                                rows={rows}
+                                columns={colDefs}
+                                {...paginationProps}
+                                rowSelection={false}
+                                autoHeight
+                                rowHeight={43}
+                                pageSizeOptions={[15, 30, 60, 100]}
+                                getCellClassName={(params) =>
+                                    params.row.resultId !== null
+                                        ? "assay-cell-recorded"
+                                        : "assay-cell-not-recorded"
+                                }
+                                disableColumnMenu
+                            />
+                            <AssayEditorModal
+                                onlyEditResult
+                                onClose={reload}
+                            />
+                        </Stack>
+                    </AgendaContext.Provider>
+                </AssayResultEditingContext.Provider>
             </AssayEditingContext.Provider>
         </Layout>
     );
