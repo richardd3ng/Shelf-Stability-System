@@ -9,6 +9,7 @@ import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { Box, Stack } from "@mui/material";
 import ReportAssaysGroupedByType from "@/components/experiment-report/reportAssaysGroupedByType";
 import BackButton from "@/components/shared/backButton";
+import {BasicScatter} from "@/components/experiment-report/graphs/graphs";
 
 const ExperimentReport: React.FC = () => {
     const experimentId = useExperimentId();
@@ -45,6 +46,7 @@ const ExperimentReport: React.FC = () => {
                 owner={owner.username}
             />
             <ReportAssaysGroupedByType experimentInfo={experimentInfo} />
+            <BasicScatter/>
         </Stack>
     );
 };
