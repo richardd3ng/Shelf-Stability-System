@@ -9,9 +9,10 @@ import {
     ExperimentCreationResponse,
     ExperimentWithLocalDate,
 } from "@/lib/controllers/types";
-import { LocalDate, nativeJs } from "@js-joda/core";
+import { LocalDate } from "@js-joda/core";
 import { localDateToJsDate } from "@/lib/datesUtils";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+import { dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
 
 
 export default async function createExperimentAPI(
@@ -56,10 +57,7 @@ export default async function createExperimentAPI(
                     ownerId,
                 },
             })
-            .then((experiment: Experiment) => ({
-                ...experiment,
-                start_date: nativeJs(experiment.start_date).toLocalDate(),
-            }));
+            .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["start_date"]));
 
         let conditionCreationArgsArray: ConditionCreationArgs[] =
             conditionCreationArgsNoExperimentIdArray.map(

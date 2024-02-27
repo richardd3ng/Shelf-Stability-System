@@ -3,7 +3,7 @@ import { db } from "@/lib/api/db";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { ExperimentWithLocalDate } from "@/lib/controllers/types";
-import { LocalDate, nativeJs } from "@js-joda/core";
+import { dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
 
 export default async function searchExperimentsAPI(
     req: NextApiRequest,
@@ -24,10 +24,7 @@ export default async function searchExperimentsAPI(
             where: {
                 ownerId,
             }
-        }).then((experiments) => experiments.map((experiment) => ({
-            ...experiment,
-            start_date: LocalDate.from(nativeJs(experiment.start_date)),
-        })));
+        }).then((experiments) => experiments.map((experiment) => dateFieldsToLocalDate(experiment, ["start_date"])));
 
         res.status(200).json(experiments);
     } catch (error) {

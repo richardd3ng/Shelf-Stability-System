@@ -19,8 +19,8 @@ const colDefs: GridColDef[] = [
     {
         field: "targetDate",
         headerName: "Target Date",
-        type: "date",
-        valueFormatter: (params) => params.value?.toString() ?? "",
+        type: "string",
+        valueGetter: (params) => params.row.targetDate.toString(),
         flex: 2,
     },
     {
@@ -28,6 +28,12 @@ const colDefs: GridColDef[] = [
         headerName: "Title",
         type: "string",
         flex: 4,
+    },
+    {
+        field: "owner",
+        headerName: "Owner",
+        type: "string",
+        flex: 2,
     },
     {
         field: "condition",
@@ -69,8 +75,9 @@ export default function AssayAgenda() {
         LocalDate.now().minusWeeks(1)
     );
     const [toDate, setToDate] = useState<LocalDate | null>(null);
-    const [recordedAssaysOnly, setRecordedAssaysOnly] =
+    const [includeRecordedAssays, setIncludeRecordedAssays] =
         useState<boolean>(false);
+    const [ownedAssaysOnly, setOwnedAssaysOnly] = useState<boolean>(true);
     const [isEditingAnAssay, setIsEditingAnAssay] = useState<boolean>(false);
     const [assayIdBeingEdited, setAssayIdBeingEdited] = useState<number>(-1);
 
@@ -80,7 +87,8 @@ export default function AssayAgenda() {
         return fetchAgendaList(
             fromDate,
             toDate,
-            recordedAssaysOnly,
+            includeRecordedAssays,
+            ownedAssaysOnly,
             paging
         ).then((res: AssayTable) => {
             setRows(res.rows);
@@ -104,7 +112,7 @@ export default function AssayAgenda() {
 
     useEffect(() => {
         reload();
-    }, [fromDate, toDate, recordedAssaysOnly]);
+    }, [fromDate, toDate, includeRecordedAssays, ownedAssaysOnly]);
 
     return (
         <Layout>
@@ -154,13 +162,24 @@ export default function AssayAgenda() {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={recordedAssaysOnly}
+                                            checked={includeRecordedAssays}
                                             onChange={(_, val) =>
-                                                setRecordedAssaysOnly(val)
+                                                setIncludeRecordedAssays(val)
                                             }
                                         />
                                     }
                                     label="Include Recorded Assays"
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={ownedAssaysOnly}
+                                            onChange={(_, val) =>
+                                                setOwnedAssaysOnly(val)
+                                            }
+                                        />
+                                    }
+                                    label="Only My Assays"
                                 />
                             </Box>
                         </Box>
@@ -173,7 +192,7 @@ export default function AssayAgenda() {
                             rowHeight={43}
                             pageSizeOptions={[15, 30, 60, 100]}
                             getCellClassName={(params) =>
-                                params.row.result !== null
+                                params.row.resultId !== null
                                     ? "assay-cell-recorded"
                                     : "assay-cell-not-recorded"
                             }

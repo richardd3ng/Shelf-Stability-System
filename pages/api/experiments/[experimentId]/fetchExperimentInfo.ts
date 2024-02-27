@@ -8,8 +8,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { Assay, AssayResult, Condition, Experiment } from "@prisma/client";
 import { getExperimentID, INVALID_EXPERIMENT_ID } from "@/lib/api/apiHelpers";
-import { JSONToExperiment } from "@/lib/controllers/jsonConversions";
-import { nativeJs } from "@js-joda/core";
+import { JSONToExperiment, dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
 
 export default async function getExperimentInfoAPI(
     req: NextApiRequest,
@@ -37,12 +36,7 @@ export default async function getExperimentInfoAPI(
                     if (!experiment) {
                         return null;
                     }
-                    return {
-                        ...experiment,
-                        start_date: nativeJs(
-                            experiment.start_date
-                        ).toLocalDate(),
-                    };
+                    return dateFieldsToLocalDate(experiment, ["start_date"]);
                 }),
             db.condition.findMany({
                 where: { experimentId: id },

@@ -1,6 +1,6 @@
 import { Experiment } from "@prisma/client";
 import { ExperimentWithLocalDate } from "./types";
-import { LocalDate } from "@js-joda/core";
+import { LocalDate, ZoneId, nativeJs } from "@js-joda/core";
 
 export type ExperimentJSON = Omit<Experiment, "start_date"> & {
     start_date: string;
@@ -19,6 +19,23 @@ export function stringFieldsToLocalDate<T extends { [P in K]: string }, K extend
             replacements[key] = LocalDate.parse(obj[key] as string);
         } else {
             throw new Error(`Field ${String(key)} is not a string`);
+        }
+    }
+    return {
+        ...obj,
+        ...replacements
+    };
+}
+
+export function dateFieldsToLocalDate<T extends { [P in K]: Date }, K extends string | number | symbol>(obj: T, fields: K[]): Omit<T, K> & { [P in K]: LocalDate } {
+    const replacements: Partial<{ [key in K]: LocalDate }> = {};
+
+    // Convert all string fields listed in K to LocalDate
+    for (const key of fields) {
+        if (obj[key] instanceof Date) {
+            replacements[key] = LocalDate.from(nativeJs(obj[key], ZoneId.UTC));
+        } else {
+            throw new Error(`Field ${String(key)} is not a date`);
         }
     }
     return {
