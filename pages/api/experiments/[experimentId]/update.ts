@@ -7,9 +7,10 @@ import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { experimentHasAssaysWithResults } from "@/lib/api/validations";
 import { INVALID_EXPERIMENT_ID, getExperimentID } from "@/lib/api/apiHelpers";
 import { localDateToJsDate } from "@/lib/datesUtils";
-import { LocalDate, nativeJs } from "@js-joda/core";
+import { LocalDate } from "@js-joda/core";
 import { ExperimentWithLocalDate } from "@/lib/controllers/types";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+import { dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
 
 
 export default async function updateExperimentAPI(
@@ -76,10 +77,7 @@ export default async function updateExperimentAPI(
                     },
                     data: updateData,
                 })
-                .then((experiment: Experiment) => ({
-                    ...experiment,
-                    start_date: nativeJs(experiment.start_date).toLocalDate(),
-                }));
+                .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["start_date"]));
         if (!updatedExperiment) {
             res.status(404).json(
                 getApiError(

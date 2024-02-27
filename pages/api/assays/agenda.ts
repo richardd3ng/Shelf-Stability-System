@@ -4,8 +4,11 @@ import { AssayInfo, AssayTable } from "@/lib/controllers/types";
 import { Prisma } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
-import { LocalDate, ZoneId, convert, nativeJs } from "@js-joda/core";
+import { LocalDate } from "@js-joda/core";
+import { getToken } from "next-auth/jwt";
+import { dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
 import { localDateToJsDate } from "@/lib/datesUtils";
+import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 
 // Be very careful with this function, it's very easy to introduce SQL injection vulnerabilities
 function convertSort(
@@ -30,16 +33,21 @@ function convertSort(
                 order: newOrder,
             };
         case "targetDate":
-            field = "target_date";
+            return {
+                field: "\"targetDate\"",
+                order: newOrder,
+            };
         case "id":
         case "result":
             return {
                 field: "a." + field,
                 order: newOrder,
             };
+        // FIXME can't properly sort by type because it's a number in the db, not a string
         case "type":
         case "condition":
         case "week":
+        case "owner":
             return {
                 field: field,
                 order: newOrder,
@@ -61,6 +69,8 @@ export default async function getAssays(
         ? localDateToJsDate(LocalDate.parse(req.query.maxDate as string))
         : undefined;
     const includeRecorded = req.query.include_recorded === "true";
+    const token = await getToken({ req });
+    const ownedAssaysOnly = req.query.owned_assays_only === "true" && token?.name !== undefined;
 
     const orderBy = convertSort(req.query.sort_by, req.query.sort_order);
     var page;
@@ -73,51 +83,79 @@ export default async function getAssays(
         return;
     }
 
+    const sqlTargetDate = Prisma.sql`CAST(e.start_date + interval '7' day * a.week AS DATE)`;
+
+    const queryRows = db.$queryRaw<
+        (AssayInfo & { targetDate: Date, type: number })[]
+    >`SELECT a.id, "targetDate", e.title, a."experimentId" as "experimentId", owner, c.name as condition, a.type, a.week, result."resultId"
+    
+FROM public."Assay" a,
+LATERAL (SELECT title, start_date, ${sqlTargetDate} as "targetDate", u.username as owner FROM public."Experiment" e,
+    LATERAL (SELECT username FROM public."User" WHERE e."ownerId" = id) u
+    WHERE a."experimentId" = id) e,
+LATERAL (SELECT name FROM public."Condition" WHERE a."conditionId" = id) c,
+LATERAL (SELECT MIN(id) as "resultId" FROM public."AssayResult" WHERE "assayId" = a.id) result
+
+    WHERE TRUE
+    ${maxDate !== undefined
+            ? Prisma.sql`AND "targetDate" <= ${maxDate}`
+            : Prisma.empty
+        }
+    ${minDate !== undefined
+            ? Prisma.sql`AND "targetDate" >= ${minDate}`
+            : Prisma.empty
+        }
+    ${includeRecorded
+            ? Prisma.empty
+            : Prisma.sql`AND result."resultId" ISNULL`
+        }
+    ${ownedAssaysOnly
+            ? Prisma.sql`AND owner = ${token.name}`
+            : Prisma.empty
+        }
+    ${orderBy !== undefined
+            ? Prisma.raw(`ORDER BY ${orderBy.field} ${orderBy.order}`)
+            : Prisma.empty
+        }
+    LIMIT ${pageSize} OFFSET ${page * pageSize}`
+        .then<AssayInfo[]>((assays) =>
+            assays.map((assay) => dateFieldsToLocalDate(assay, ["targetDate"]))
+                .map((assay) => ({ ...assay, type: assayTypeIdToName(assay.type) })));
+
+    const queryRowCount = db.$queryRaw<{ count: number }[]>`SELECT CAST(COUNT(*) AS INT) as count
+        
+    FROM public."Assay" a,
+    LATERAL (SELECT start_date, ${sqlTargetDate} as "targetDate", u.username as owner FROM public."Experiment" e,
+        LATERAL (SELECT username FROM public."User" WHERE e."ownerId" = id) u
+        WHERE a."experimentId" = id) e,
+    LATERAL (SELECT MIN(id) as "resultId" FROM public."AssayResult" WHERE "assayId" = a.id) result
+        WHERE TRUE
+        ${maxDate !== undefined
+            ? Prisma.sql`AND "targetDate" <= ${maxDate}`
+            : Prisma.empty
+        }
+        ${minDate !== undefined
+            ? Prisma.sql`AND "targetDate" >= ${minDate}`
+            : Prisma.empty
+        }
+        ${includeRecorded
+            ? Prisma.empty
+            : Prisma.sql`AND result."resultId" ISNULL`
+        }
+        ${ownedAssaysOnly
+            ? Prisma.sql`AND owner = ${token.name}`
+            : Prisma.empty
+        }`.then((res) => res[0].count);
+
     const [assays, totalRows] = await Promise.all([
         // TODO look at views instead?
-        db.$queryRaw<
-            AssayInfo[]
-        >`SELECT a.id, a.target_date as "targetDate", e.title, a."experimentId" as "experimentId", c.name as condition, t.name as type, ROUND((a.target_date - e.start_date) / 7.0) as week, a.result
-            
-            FROM public."Assay" a,
-            LATERAL (SELECT title, start_date FROM public."Experiment" e WHERE a."experimentId" = id) e,
-            LATERAL (SELECT name FROM public."Condition" WHERE a."conditionId" = id) c,
-            LATERAL (SELECT name FROM public."AssayType" WHERE a."typeId" = id) t
-        
-            WHERE TRUE
-                ${
-                    maxDate !== undefined
-                        ? Prisma.sql`AND a.target_date <= ${maxDate}`
-                        : Prisma.empty
-                }
-                ${
-                    minDate !== undefined
-                        ? Prisma.sql`AND a.target_date >= ${minDate}`
-                        : Prisma.empty
-                }
-                ${
-                    includeRecorded
-                        ? Prisma.empty
-                        : Prisma.sql`AND a.result ISNULL`
-                }
-            ${
-                orderBy !== undefined
-                    ? Prisma.raw(`ORDER BY ${orderBy.field} ${orderBy.order}`)
-                    : Prisma.empty
-            }
-            LIMIT ${pageSize} OFFSET ${page * pageSize}`,
-        // .then<AssayInfo[]>(assays => assays.map(assay => ({...assay, target_date: undefined, targetDate: assay.target_date})))
-        db.assay.count({
-            where: {
-                // target_date: { gte: minDate, lte: maxDate }, // TODO: update this logic with new week field
-                result: includeRecorded ? undefined : null,
-            },
-        }),
+        queryRows,
+        queryRowCount
     ]);
 
     res.status(200).json({
         rows: assays,
-        rowCount: totalRows,
+        rowCount: Number(totalRows),
     });
 }
 

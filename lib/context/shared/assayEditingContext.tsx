@@ -1,16 +1,15 @@
 import { createContext } from "react";
-import { INVALID_ASSAY_ID } from "@/lib/api/apiHelpers";
+import { Assay } from "@prisma/client";
 
 interface AssayEditingContextType {
-    id: number;
-    setId: (id: number) => void;
+    assay?: Assay;
+    setAssay: (assay: Assay) => void;
     isEditing: boolean;
     setIsEditing: (isEditing: boolean) => void;
 }
 
 const AssayEditingContext = createContext<AssayEditingContextType>({
-    id: INVALID_ASSAY_ID,
-    setId: (_id: number) => {},
+    setAssay: (_assay: Assay) => {},
     isEditing: false,
     setIsEditing: (_isEditing: boolean) => {},
 });

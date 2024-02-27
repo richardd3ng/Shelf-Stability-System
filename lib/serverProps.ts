@@ -7,7 +7,7 @@ export async function requiresAdminProps(context: GetServerSidePropsContext, bad
 
     if (token === null || !token.name || !(await checkIfUserIsAdmin(token.name))) {
         context.res.statusCode = badStatus;
-        console.log(badResult)
+        
         return badResult ?? {
             redirect: {
                 destination: '/experiment-list',

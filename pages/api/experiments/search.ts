@@ -4,7 +4,7 @@ import { db } from "@/lib/api/db";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { ExperimentTable, ExperimentTableInfo } from "@/lib/controllers/types";
-import { LocalDate, nativeJs } from "@js-joda/core";
+import { dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
 
 // Be very careful with this function, it's very easy to introduce SQL injection vulnerabilities
 function convertSort(
@@ -64,39 +64,36 @@ export default async function searchExperimentsAPI(
         const [experiments, totalRows] = await Promise.all([
             // TODO look at views instead?
             db.$queryRaw<
-                any[]
+                (Omit<ExperimentTableInfo, 'startDate'> & { start_date: Date })[]
             >`SELECT e.id, e.title, e.start_date, ROUND((CAST(CURRENT_DATE AS DATE) - e.start_date) / 7.0) as week, u.username as "owner"
                 
                 FROM public."Experiment" e
                 JOIN public."User" u ON e."ownerId" = u.id
                 WHERE (e.title ILIKE ${`%${query}%`}
                 OR e.description ILIKE ${`%${query}%`})
-                ${
-                    owner !== ""
-                        ? Prisma.raw(`AND u.username = '${owner}'`)
-                        : Prisma.empty
+                ${owner !== ""
+                    ? Prisma.raw(`AND u.username = '${owner}'`)
+                    : Prisma.empty
                 }                
-                ${
-                    !isNaN(queryNumber)
-                        ? Prisma.sql`OR e.id = ${queryNumber}`
-                        : Prisma.empty
+                ${!isNaN(queryNumber)
+                    ? Prisma.sql`OR e.id = ${queryNumber}`
+                    : Prisma.empty
                 }
-                ${
-                    orderBy !== undefined
-                        ? Prisma.raw(
-                              `ORDER BY ${orderBy.field} ${orderBy.order}`
-                          )
-                        : Prisma.empty
+                ${orderBy !== undefined
+                    ? Prisma.raw(
+                        `ORDER BY ${orderBy.field} ${orderBy.order}`
+                    )
+                    : Prisma.empty
                 }
                 LIMIT ${pageSize} OFFSET ${page * pageSize}`.then<
-                ExperimentTableInfo[]
-            >((experiments) =>
-                experiments.map((experiment) => ({
-                    ...experiment,
-                    start_date: undefined,
-                    startDate: LocalDate.from(nativeJs(experiment.start_date)),
-                }))
-            ),
+                    ExperimentTableInfo[]
+                >((experiments) =>
+                    experiments.map((experiment) => dateFieldsToLocalDate({
+                        ...experiment,
+                        start_date: undefined,
+                        startDate: experiment.start_date,
+                    }, ['startDate']))
+                ),
             db.experiment.count({
                 where: {
                     OR: [

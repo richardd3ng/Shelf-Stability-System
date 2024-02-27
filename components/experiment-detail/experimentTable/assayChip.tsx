@@ -10,7 +10,6 @@ import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 import { useMutationToDeleteAssay } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import AssayEditorModal from "../modifications/editorModals/assayEditorModal";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
-import { INVALID_ASSAY_RESULT_ID } from "@/lib/api/apiHelpers";
 import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
@@ -155,16 +154,16 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
             </Box>
             <AssayEditingContext.Provider
                 value={{
-                    id: props.assay.id,
-                    setId: () => {},
+                    assay: props.assay,
+                    setAssay: (_assay: Assay) => {},
                     isEditing,
                     setIsEditing,
                 }}
             >
                 <AssayResultEditingContext.Provider
                     value={{
-                        id: props.assayResult?.id ?? INVALID_ASSAY_RESULT_ID,
-                        setId: () => {},
+                        assayResult: props.assayResult,
+                        setAssayResult: (_result: AssayResult | undefined) => {},
                         isEditing,
                         setIsEditing,
                     }}

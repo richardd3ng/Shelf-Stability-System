@@ -5,17 +5,17 @@ import CheckIcon from "@mui/icons-material/Check";
 import { NumberType } from "@/lib/validationUtils";
 import { getNumericalValidationError } from "@/lib/validationUtils";
 import { useAlert } from "@/lib/context/shared/alertContext";
+import { useEditGroup } from "@/lib/context/shared/editGroup";
 
 interface EditableTextFieldProps {
     value?: string;
     label?: string;
+    id: string;
     numberType?: NumberType;
     units?: string;
     defaultDisplayValue?: string;
     includeDelete?: boolean;
     multiline?: boolean;
-    isEditing?: boolean;
-    onEdit?: () => void;
     onSubmit: (value: string) => void;
 }
 
@@ -23,19 +23,17 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
     props: EditableTextFieldProps
 ) => {
     const [value, setValue] = useState<string>(props.value || "");
-    const [isEditing, setIsEditing] = useState<boolean>(
-        props.isEditing || false
-    );
+    const [isEditing, setIsEditing] = useState<boolean>(false);
     const { showAlert } = useAlert();
     const [resultText, setResultText] = useState<string>("");
+    const { startEditing, stopEditing } = useEditGroup(props.id, () => setIsEditing(false));
 
     useEffect(() => {
         if ((props.value || value) && props.units) {
             setResultText(
-                `${props.value || value}${
-                    props.units.startsWith("%")
-                        ? props.units
-                        : ` ${props.units}`
+                `${props.value || value}${props.units.startsWith("%")
+                    ? props.units
+                    : ` ${props.units}`
                 }`
             );
         } else {
@@ -46,18 +44,12 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
     }, [props.value, value, isEditing, props.units, props.defaultDisplayValue]);
 
     useEffect(() => {
-        setIsEditing(props.isEditing || false);
-    }, [props.isEditing]);
-
-    useEffect(() => {
         setValue(props.value || "");
     }, [props.value]);
 
     const handleEdit = () => {
         setIsEditing(true);
-        if (props.onEdit) {
-            props.onEdit();
-        }
+        startEditing();
     };
 
     const handleSubmit = async () => {
@@ -68,10 +60,12 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
                 return;
             }
         }
-        props.onSubmit(value); // Assuming onSubmit is an asynchronous operation
         setIsEditing(false);
+        stopEditing();
+        props.onSubmit(value);
     };
 
+    // FIXME this is not the right way to handle this
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
             handleSubmit();

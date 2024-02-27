@@ -62,16 +62,14 @@ export type ExperimentUpdateArgs = {
 
 export type AssayInfo = {
     id: number;
-    targetDate: Date;
+    targetDate: LocalDate;
     title: string;
     experimentId: number;
-    experimentOwnerId: number;
+    owner: string;
     condition: string;
     week: number;
     type: string;
-    assayResultId: number | null;
-    result: number | null;
-    comment: string | null;
+    resultId: number | null;
 };
 
 export type AssayTable = {
