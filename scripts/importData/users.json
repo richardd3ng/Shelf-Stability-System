@@ -1,0 +1,35 @@
+{
+    "users": [
+      {
+        "name": "user1",
+        "password": "ece458test1",
+        "administrator_permission": true
+      },
+      {
+        "name": "user2",
+        "password": "ece458test2",
+        "administrator_permission": false
+      },
+      {
+        "name": "user3",
+        "password": "ece458test3",
+        "administrator_permission": false
+      },
+      {
+        "name": "user4",
+        "password": "ece458test4",
+        "administrator_permission": true
+      },
+      {
+        "name": "user5",
+        "password": "ece458test5",
+        "administrator_permission": false
+      },
+      {
+        "name": "user6",
+        "password": "ece458test6",
+        "administrator_permission": false
+      }
+    ]
+}
+  

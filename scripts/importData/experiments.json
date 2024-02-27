@@ -1,0 +1,2054 @@
+{
+    "experiments": [
+      {
+        "title": "Fragrant Cheesecake with Zesty Raspberry - Exploring the shelf life of a new dessert",
+        "number": 100001,
+        "owner": "user4",
+        "description": "Conducting a comprehensive study on the freshness and quality of a delightful cheesecake infused with zesty raspberry flavor.",
+        "start_date": "2024-01-12",
+        "storage_conditions": ["0 F", "70F 38%", "80F 65%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory"] },
+          "70F 38%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"] },
+          "80F 65%": { "9": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": null, "comment": "Sample contaminated", "author": "admin" } },
+          { "condition": "70F 38%", "week": 6, "assay_type": "Sensory", "result": { "value": null, "comment": "Sample lost", "author": "user4" } },
+          { "condition": "70F 38%", "week": 6, "assay_type": "Moisture", "result": { "value": 2.5, "comment": null, "author": "user4" } },
+          { "condition": "70F 38%", "week": 6, "assay_type": "Hexanal", "result": { "value": 10.1, "comment": null, "author": "user4" } }
+        ]
+      },
+      {
+        "title": "Juicy Truffle Risotto - Analyzing the quality of a gourmet dish under different storage conditions",
+        "number": 100002,
+        "owner": "user4",
+        "description": "Investigating the sensory attributes and chemical composition of a luscious risotto with juicy truffle essence.",
+        "start_date": "2024-02-01",
+        "storage_conditions": ["0 F", "73F 50%", "100F 20%"],
+        "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory"] },
+          "73F 50%": { "6": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "12": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "100F 20%": { "9": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": null, "comment": "Sample contaminated", "author": "admin" } },
+          { "condition": "73F 50%", "week": 6, "assay_type": "Sensory", "result": { "value": 4.2, "comment": null, "author": "user4" } },
+          { "condition": "73F 50%", "week": 6, "assay_type": "Anisidine", "result": { "value": 5.0, "comment": null, "author": "user4" } },
+          { "condition": "73F 50%", "week": 6, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.0, "comment": null, "author": "user4" } }
+        ]
+      },
+      {
+        "title": "Savory Frittata with Hazelnut - Evaluating the shelf life of a gourmet breakfast option",
+        "number": 100003,
+        "owner": "user5",
+        "description": "Assessing the freshness and quality of a delightful frittata infused with savory hazelnut flavor.",
+        "start_date": "2024-03-01",
+        "storage_conditions": ["0 F", "70F 38%", "80F 65%", "120F 10%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "70F 38%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+          "80F 65%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "120F 10%": { "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 12.9, "comment": null, "author": "admin" } },
+          { "condition": "70F 38%", "week": 6, "assay_type": "Sensory", "result": { "value": null, "comment": "Sample lost", "author": "user5" } },
+          { "condition": "80F 65%", "week": 9, "assay_type": "Peroxide value (PV)", "result": { "value": 15.0, "comment": null, "author": "user5" } },
+          { "condition": "120F 10%", "week": 12, "assay_type": "Anisidine", "result": { "value": 8.0, "comment": null, "author": "user5" } }
+        ]
+      },
+      {
+        "title": "Crispy Croissant with Vanilla - Exploring the quality of a classic pastry",
+        "number": 100004,
+        "owner": "user6",
+        "description": "Investigating the sensory attributes and chemical composition of a crispy croissant enriched with vanilla essence.",
+        "start_date": "2024-02-15",
+        "storage_conditions": ["0 F", "73F 50%", "90F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Moisture"] },
+          "73F 50%": { "6": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "90F 60%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 4.2, "comment": null, "author": "user6" } },
+          { "condition": "73F 50%", "week": 6, "assay_type": "Moisture", "result": { "value": 3.0, "comment": null, "author": "user6" } },
+          { "condition": "90F 60%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.5, "comment": null, "author": "user6" } }
+        ]
+      },
+      {
+        "title": "Zesty Guacamole with Spicy Mango - Tasting the freshness of a unique dip",
+        "number": 100005,
+        "owner": "user4",
+        "description": "Examining the sensory attributes and chemical composition of a zesty guacamole enhanced with the vibrant flavor of spicy mango.",
+        "start_date": "2024-03-15",
+        "storage_conditions": ["0 F", "75F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Moisture"] },
+          "75F 40%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"] },
+          "85F 55%": { "9": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": null, "comment": "Sample contaminated", "author": "admin" } },
+          { "condition": "75F 40%", "week": 6, "assay_type": "Moisture", "result": { "value": 2.8, "comment": null, "author": "user4" } },
+          { "condition": "85F 55%", "week": 9, "assay_type": "Hexanal", "result": { "value": 12.0, "comment": null, "author": "user4" } }
+        ]
+      },
+      {
+        "title": "Creamy Macaroni with Tangy Tomato - Investigating the shelf life of a pasta delight",
+        "number": 100006,
+        "owner": "user1",
+        "description": "Exploring the sensory attributes and chemical composition of a creamy macaroni infused with tangy tomato flavor.",
+        "start_date": "2024-04-01",
+        "storage_conditions": ["0 F", "72F 45%", "85F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+          "72F 45%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+          "85F 60%": { "9": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 8.5, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Sensory", "result": { "value": 7.2, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Hexanal", "result": { "value": 9.8, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.7, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Sizzling Tofu with Sweet Chili - Testing the quality of a vegan appetizer",
+        "number": 100007,
+        "owner": "user2",
+        "description": "Assessing the sensory attributes and chemical composition of a sizzling tofu dish with a delightful sweet chili kick.",
+        "start_date": "2024-05-01",
+        "storage_conditions": ["0 F", "75F 40%", "90F 55%"],
+        "assay_types": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory", "Peroxide value (PV)"], "12": ["Sensory", "Peroxide value (PV)", "Anisidine"], "24": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] },
+          "75F 40%": { "6": ["Sensory", "Peroxide value (PV)", "Anisidine"], "12": ["Sensory", "Peroxide value (PV)", "Anisidine"], "16": ["Sensory", "Peroxide value (PV)", "Anisidine"] },
+          "90F 55%": { "9": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 6.9, "comment": null, "author": "user2" } },
+          { "condition": "75F 40%", "week": 6, "assay_type": "Peroxide value (PV)", "result": { "value": 10.5, "comment": null, "author": "user2" } },
+          { "condition": "90F 55%", "week": 9, "assay_type": "Anisidine", "result": { "value": 8.3, "comment": null, "author": "user2" } },
+          { "condition": "90F 55%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.3, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Velvety Pancakes with Caramel - Assessing the freshness of a breakfast classic",
+        "number": 100008,
+        "owner": "user3",
+        "description": "Investigating the sensory attributes and chemical composition of velvety pancakes with a touch of sweet caramel.",
+        "start_date": "2024-06-01",
+        "storage_conditions": ["0 F", "72F 45%", "85F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Moisture"] },
+          "72F 45%": { "6": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "85F 60%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 7.6, "comment": null, "author": "user3" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Moisture", "result": { "value": 3.5, "comment": null, "author": "user3" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.9, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Fiery Shrimp with Garlic - Exploring the quality of a spicy seafood dish",
+        "number": 100009,
+        "owner": "user1",
+        "description": "Assessing the sensory attributes and chemical composition of fiery shrimp seasoned with aromatic garlic.",
+        "start_date": "2024-07-01",
+        "storage_conditions": ["0 F", "75F 40%", "90F 55%"],
+        "assay_types": ["Sensory", "Peroxide value (PV)", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory", "Peroxide value (PV)"], "12": ["Sensory", "Peroxide value (PV)", "Hexanal"], "24": ["Sensory", "Peroxide value (PV)", "Hexanal", "Free fatty acid (FFA)"] },
+          "75F 40%": { "6": ["Sensory", "Peroxide value (PV)", "Hexanal"], "12": ["Sensory", "Peroxide value (PV)", "Hexanal"], "16": ["Sensory", "Peroxide value (PV)", "Hexanal"] },
+          "90F 55%": { "9": ["Sensory", "Peroxide value (PV)", "Hexanal", "Free fatty acid (FFA)"], "16": ["Sensory", "Peroxide value (PV)", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 8.2, "comment": null, "author": "user1" } },
+          { "condition": "75F 40%", "week": 6, "assay_type": "Peroxide value (PV)", "result": { "value": 11.0, "comment": null, "author": "user1" } },
+          { "condition": "90F 55%", "week": 9, "assay_type": "Hexanal", "result": { "value": 9.5, "comment": null, "author": "user1" } },
+          { "condition": "90F 55%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.1, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Silky Risotto with Truffle - Tasting the decadence of a gourmet rice dish",
+        "number": 100010,
+        "owner": "user2",
+        "description": "Examining the sensory attributes and chemical composition of silky risotto infused with the luxurious aroma of truffle.",
+        "start_date": "2024-08-01",
+        "storage_conditions": ["0 F", "72F 45%", "85F 60%"],
+        "assay_types": ["Sensory", "Anisidine", "Hexanal"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Anisidine"] },
+          "72F 45%": { "6": ["Sensory", "Anisidine", "Hexanal"], "12": ["Sensory", "Anisidine", "Hexanal"] },
+          "85F 60%": { "9": ["Sensory", "Anisidine", "Hexanal"], "16": ["Sensory", "Anisidine", "Hexanal"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": null, "comment": "Sample contaminated", "author": "user2" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Anisidine", "result": { "value": 5.7, "comment": null, "author": "user2" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Hexanal", "result": { "value": 8.9, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Savory Sushi with Wasabi - Evaluating the quality of a popular Japanese dish",
+        "number": 100011,
+        "owner": "user3",
+        "description": "Investigating the sensory attributes and chemical composition of savory sushi complemented by the pungent kick of wasabi.",
+        "start_date": "2024-09-01",
+        "storage_conditions": ["0 F", "75F 40%", "90F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Moisture"] },
+          "75F 40%": { "6": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "90F 55%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 7.9, "comment": null, "author": "user3" } },
+          { "condition": "75F 40%", "week": 6, "assay_type": "Moisture", "result": { "value": 3.2, "comment": null, "author": "user3" } },
+          { "condition": "90F 55%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.2, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Zesty Burrito with Guacamole - Assessing the quality of a flavorful Mexican dish",
+        "number": 100012,
+        "owner": "user1",
+        "description": "Examining the sensory attributes and chemical composition of a zesty burrito served with a side of creamy guacamole.",
+        "start_date": "2024-10-01",
+        "storage_conditions": ["0 F", "72F 45%", "85F 60%"],
+        "assay_types": ["Sensory", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Hexanal"] },
+          "72F 45%": { "6": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "12": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] },
+          "85F 60%": { "9": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "16": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 8.1, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Hexanal", "result": { "value": 10.2, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.8, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Hearty Oatmeal with Berries - Tasting the freshness of a nutritious breakfast",
+        "number": 100013,
+        "owner": "user2",
+        "description": "Evaluating the sensory attributes and chemical composition of hearty oatmeal topped with a medley of fresh berries.",
+        "start_date": "2024-11-01",
+        "storage_conditions": ["0 F", "75F 40%", "90F 55%"],
+        "assay_types": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory", "Peroxide value (PV)"], "12": ["Sensory", "Peroxide value (PV)", "Anisidine"], "24": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] },
+          "75F 40%": { "6": ["Sensory", "Peroxide value (PV)", "Anisidine"], "12": ["Sensory", "Peroxide value (PV)", "Anisidine"], "16": ["Sensory", "Peroxide value (PV)", "Anisidine"] },
+          "90F 55%": { "9": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 7.3, "comment": null, "author": "user2" } },
+          { "condition": "75F 40%", "week": 6, "assay_type": "Peroxide value (PV)", "result": { "value": 9.8, "comment": null, "author": "user2" } },
+          { "condition": "90F 55%", "week": 9, "assay_type": "Anisidine", "result": { "value": 8.1, "comment": null, "author": "user2" } },
+          { "condition": "90F 55%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.0, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Crispy Croissant with Chocolate - Testing the freshness of a classic pastry",
+        "number": 100014,
+        "owner": "user3",
+        "description": "Assessing the sensory attributes and chemical composition of a crispy croissant filled with rich chocolate.",
+        "start_date": "2024-12-01",
+        "storage_conditions": ["0 F", "72F 45%", "85F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+          "72F 45%": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+          "85F 60%": { "9": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 8.0, "comment": null, "author": "user3" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Sensory", "result": { "value": 7.5, "comment": null, "author": "user3" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Hexanal", "result": { "value": 9.2, "comment": null, "author": "user3" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.6, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Spicy Ramen with Pork - Evaluating the quality of a popular Asian noodle dish",
+        "number": 100015,
+        "owner": "user1",
+        "description": "Investigating the sensory attributes and chemical composition of spicy ramen featuring savory pork.",
+        "start_date": "2025-01-01",
+        "storage_conditions": ["0 F", "75F 40%", "90F 55%"],
+        "assay_types": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory", "Peroxide value (PV)"], "12": ["Sensory", "Peroxide value (PV)", "Anisidine"], "24": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] },
+          "75F 40%": { "6": ["Sensory", "Peroxide value (PV)", "Anisidine"], "12": ["Sensory", "Peroxide value (PV)", "Anisidine"], "16": ["Sensory", "Peroxide value (PV)", "Anisidine"] },
+          "90F 55%": { "9": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 8.3, "comment": null, "author": "user1" } },
+          { "condition": "75F 40%", "week": 6, "assay_type": "Peroxide value (PV)", "result": { "value": 10.2, "comment": null, "author": "user1" } },
+          { "condition": "90F 55%", "week": 9, "assay_type": "Anisidine", "result": { "value": 7.8, "comment": null, "author": "user1" } },
+          { "condition": "90F 55%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.5, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Fluffy Waffles with Maple Syrup - Tasting the perfection of a classic breakfast",
+        "number": 100016,
+        "owner": "user2",
+        "description": "Evaluating the sensory attributes and chemical composition of fluffy waffles drizzled with sweet maple syrup.",
+        "start_date": "2025-02-01",
+        "storage_conditions": ["0 F", "72F 45%", "85F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Moisture"] },
+          "72F 45%": { "6": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "85F 60%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 7.7, "comment": null, "author": "user2" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Moisture", "result": { "value": 3.8, "comment": null, "author": "user2" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.6, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Velvety Tiramisu with Citrus Twist - Investigating the freshness of an Italian classic",
+        "number": 100017,
+        "owner": "user1",
+        "description": "Conducting an in-depth analysis on the sensory attributes and chemical composition of a velvety tiramisu with a delightful citrus twist.",
+        "start_date": "2024-04-01",
+        "storage_conditions": ["0 F", "75F 45%", "85F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory", "Moisture"], "8": ["Sensory", "Moisture", "Hexanal"] },
+          "75F 45%": { "5": ["Sensory", "Moisture"], "9": ["Sensory", "Moisture", "Hexanal"] },
+          "85F 60%": { "6": ["Sensory", "Moisture", "Hexanal"], "11": ["Sensory", "Moisture", "Hexanal"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 8.2, "comment": null, "author": "user1" } },
+          { "condition": "75F 45%", "week": 5, "assay_type": "Moisture", "result": { "value": 3.5, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 6, "assay_type": "Sensory", "result": { "value": 1.8, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 6, "assay_type": "Moisture", "result": { "value": 101.8, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 6, "assay_type": "Hexanal", "result": { "value": 11.8, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Crispy Sushi with Tangy Wasabi - Analyzing the quality of a fusion dish",
+        "number": 100018,
+        "owner": "user2",
+        "description": "Investigating the sensory attributes and chemical composition of a crispy sushi creation with a tangy wasabi twist.",
+        "start_date": "2024-05-15",
+        "storage_conditions": ["0 F", "70F 40%", "90F 55%"],
+        "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory", "Anisidine"], "10": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "70F 40%": { "7": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "12": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "90F 55%": { "6": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "11": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 5, "assay_type": "Sensory", "result": { "value": 9.5, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 7, "assay_type": "Anisidine", "result": { "value": 4.7, "comment": null, "author": "user2" } },
+          { "condition": "90F 55%", "week": 11, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.3, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Luscious Pancakes with Maple Bliss - Evaluating the freshness of a breakfast delight",
+        "number": 100019,
+        "owner": "user3",
+        "description": "Assessing the sensory attributes and chemical composition of luscious pancakes infused with the blissful flavor of maple syrup.",
+        "start_date": "2024-06-10",
+        "storage_conditions": ["0 F", "80F 50%", "95F 65%"],
+        "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "6": ["Sensory", "Moisture", "Peroxide value (PV)"], "11": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "80F 50%": { "8": ["Sensory", "Moisture", "Peroxide value (PV)"], "13": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "95F 65%": { "7": ["Sensory", "Moisture", "Peroxide value (PV)"], "12": ["Sensory", "Moisture", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 6, "assay_type": "Sensory", "result": { "value": 7.8, "comment": null, "author": "user3" } },
+          { "condition": "80F 50%", "week": 8, "assay_type": "Moisture", "result": { "value": 2.2, "comment": null, "author": "user3" } },
+          { "condition": "95F 65%", "week": 12, "assay_type": "Peroxide value (PV)", "result": { "value": 18.1, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Sizzling BBQ Ribs with Smoky Mesquite - Exploring the quality of a savory dish",
+        "number": 100020,
+        "owner": "user1",
+        "description": "Investigating the sensory attributes and chemical composition of sizzling BBQ ribs with the smoky essence of mesquite.",
+        "start_date": "2024-07-05",
+        "storage_conditions": ["0 F", "75F 45%", "90F 60%"],
+        "assay_types": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "7": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "14": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] },
+          "75F 45%": { "9": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] },
+          "90F 60%": { "8": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "15": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 7, "assay_type": "Sensory", "result": { "value": 8.9, "comment": null, "author": "user1" } },
+          { "condition": "75F 45%", "week": 9, "assay_type": "Hexanal", "result": { "value": 13.2, "comment": null, "author": "user1" } },
+          { "condition": "90F 60%", "week": 15, "assay_type": "Anisidine", "result": { "value": 5.0, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Creamy Risotto with Truffle Delight - Testing the quality of a gourmet delight",
+        "number": 100021,
+        "owner": "user2",
+        "description": "Evaluating the sensory attributes and chemical composition of creamy risotto infused with the delightful essence of truffles.",
+        "start_date": "2024-08-20",
+        "storage_conditions": ["0 F", "70F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "8": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "15": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+          "70F 40%": { "10": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "17": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+          "85F 55%": { "9": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 8, "assay_type": "Sensory", "result": { "value": 7.5, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 10, "assay_type": "Moisture", "result": { "value": 2.0, "comment": null, "author": "user1" } },
+          { "condition": "85F 55%", "week": 16, "assay_type": "Anisidine", "result": { "value": 4.5, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Succulent Lobster with Garlic Infusion - Examining the quality of a seafood delicacy",
+        "number": 100022,
+        "owner": "user3",
+        "description": "Examining the sensory attributes and chemical composition of succulent lobster infused with the aromatic essence of garlic.",
+        "start_date": "2024-09-15",
+        "storage_conditions": ["0 F", "75F 50%", "90F 65%"],
+        "assay_types": ["Sensory", "Hexanal", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "9": ["Sensory", "Hexanal", "Peroxide value (PV)"], "18": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+          "75F 50%": { "11": ["Sensory", "Hexanal", "Peroxide value (PV)"], "20": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+          "90F 65%": { "10": ["Sensory", "Hexanal", "Peroxide value (PV)"], "19": ["Sensory", "Hexanal", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 9, "assay_type": "Sensory", "result": { "value": 9.8, "comment": null, "author": "user3" } },
+          { "condition": "75F 50%", "week": 11, "assay_type": "Hexanal", "result": { "value": 14.5, "comment": null, "author": "user3" } },
+          { "condition": "90F 65%", "week": 19, "assay_type": "Peroxide value (PV)", "result": { "value": 22.3, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Wholesome Oatmeal with Berry Burst - Assessing the quality of a nutritious breakfast",
+        "number": 100023,
+        "owner": "user1",
+        "description": "Assessing the sensory attributes and chemical composition of wholesome oatmeal with a burst of mixed berries.",
+        "start_date": "2024-10-01",
+        "storage_conditions": ["0 F", "80F 45%", "95F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "10": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "20": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "80F 45%": { "12": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "22": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "95F 60%": { "11": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "21": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 10, "assay_type": "Sensory", "result": { "value": 8.0, "comment": null, "author": "user1" } },
+          { "condition": "80F 45%", "week": 12, "assay_type": "Moisture", "result": { "value": 3.2, "comment": null, "author": "user1" } },
+          { "condition": "95F 60%", "week": 21, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.7, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Zesty Tacos with Avocado Delight - Investigating the quality of a Mexican delight",
+        "number": 100024,
+        "owner": "user2",
+        "description": "Investigating the sensory attributes and chemical composition of zesty tacos with the delightful essence of avocado.",
+        "start_date": "2024-11-15",
+        "storage_conditions": ["0 F", "70F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Anisidine", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "11": ["Sensory", "Anisidine", "Peroxide value (PV)"], "23": ["Sensory", "Anisidine", "Peroxide value (PV)"] },
+          "70F 40%": { "13": ["Sensory", "Anisidine", "Peroxide value (PV)"], "26": ["Sensory", "Anisidine", "Peroxide value (PV)"] },
+          "85F 55%": { "12": ["Sensory", "Anisidine", "Peroxide value (PV)"], "25": ["Sensory", "Anisidine", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 11, "assay_type": "Sensory", "result": { "value": 7.3, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 13, "assay_type": "Anisidine", "result": { "value": 4.0, "comment": null, "author": "user1" } },
+          { "condition": "85F 55%", "week": 25, "assay_type": "Peroxide value (PV)", "result": { "value": 19.5, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Silky Cheesecake with Raspberry Swirl - Testing the freshness of a decadent dessert",
+        "number": 100025,
+        "owner": "user3",
+        "description": "Conducting an in-depth analysis on the sensory attributes and chemical composition of a silky cheesecake with a delightful raspberry swirl.",
+        "start_date": "2024-12-01",
+        "storage_conditions": ["0 F", "75F 45%", "90F 60%"],
+        "assay_types": ["Sensory", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "12": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "24": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] },
+          "75F 45%": { "14": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "28": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] },
+          "90F 60%": { "13": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "26": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 12, "assay_type": "Sensory", "result": { "value": 8.7, "comment": null, "author": "user3" } },
+          { "condition": "75F 45%", "week": 14, "assay_type": "Hexanal", "result": { "value": 12.1, "comment": null, "author": "user3" } },
+          { "condition": "90F 60%", "week": 26, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.5, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Velvety Tiramisu with Caramel - Investigating the freshness of a classic Italian dessert",
+        "number": 100026,
+        "owner": "user1",
+        "description": "Exploring the sensory attributes and chemical composition of a velvety tiramisu enriched with the luscious flavor of caramel.",
+        "start_date": "2024-05-10",
+        "storage_conditions": ["0 F", "72F 45%", "95F 30%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory"], "10": ["Sensory", "Moisture", "Hexanal"], "14": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+          "72F 45%": { "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "18": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+          "95F 30%": { "8": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "16": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 8.3, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Moisture", "result": { "value": 2.1, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 8, "assay_type": "Hexanal", "result": { "value": 11.5, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 16, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.8, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Crisp Sushi with Wasabi - Assessing the quality of a Japanese delicacy",
+        "number": 100027,
+        "owner": "user2",
+        "description": "Investigating the sensory attributes and chemical composition of crisp sushi with the bold flavor of wasabi.",
+        "start_date": "2024-06-05",
+        "storage_conditions": ["0 F", "68F 50%", "85F 60%"],
+        "assay_types": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory"], "11": ["Sensory", "Hexanal"], "15": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+          "68F 50%": { "7": ["Sensory", "Hexanal", "Peroxide value (PV)"], "14": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+          "85F 60%": { "9": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"], "18": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 5, "assay_type": "Sensory", "result": { "value": 9.2, "comment": null, "author": "user2" } },
+          { "condition": "68F 50%", "week": 7, "assay_type": "Hexanal", "result": { "value": 13.8, "comment": null, "author": "user2" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Peroxide value (PV)", "result": { "value": 17.6, "comment": null, "author": "user2" } },
+          { "condition": "85F 60%", "week": 18, "assay_type": "Anisidine", "result": { "value": 6.4, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Creamy Pancakes with Blueberry - Examining the freshness of a breakfast favorite",
+        "number": 100028,
+        "owner": "user3",
+        "description": "Analyzing the sensory attributes and chemical composition of creamy pancakes enriched with the delightful flavor of blueberry.",
+        "start_date": "2024-07-20",
+        "storage_conditions": ["0 F", "75F 40%", "95F 30%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal"],
+        "assay_schedule": {
+          "0 F": { "6": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"] },
+          "75F 40%": { "8": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"] },
+          "95F 30%": { "10": ["Sensory", "Moisture", "Hexanal"], "20": ["Sensory", "Moisture", "Hexanal"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 6, "assay_type": "Sensory", "result": { "value": 7.5, "comment": null, "author": "user3" } },
+          { "condition": "75F 40%", "week": 8, "assay_type": "Moisture", "result": { "value": 2.4, "comment": null, "author": "user3" } },
+          { "condition": "95F 30%", "week": 10, "assay_type": "Hexanal", "result": { "value": 10.3, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Sizzling Steak with Pepper - Testing the quality of a classic meat dish",
+        "number": 100029,
+        "owner": "user1",
+        "description": "Evaluating the sensory attributes and chemical composition of a sizzling steak seasoned with the bold flavor of pepper.",
+        "start_date": "2024-08-12",
+        "storage_conditions": ["0 F", "68F 55%", "90F 40%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "7": ["Sensory", "Moisture", "Hexanal"], "14": ["Sensory", "Moisture", "Hexanal"] },
+          "68F 55%": { "9": ["Sensory", "Moisture", "Hexanal"], "18": ["Sensory", "Moisture", "Hexanal"] },
+          "90F 40%": { "11": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "22": ["Sensory", "Moisture", "Hexanal", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 7, "assay_type": "Sensory", "result": { "value": 8.9, "comment": null, "author": "user1" } },
+          { "condition": "68F 55%", "week": 9, "assay_type": "Moisture", "result": { "value": 2.7, "comment": null, "author": "user1" } },
+          { "condition": "90F 40%", "week": 11, "assay_type": "Hexanal", "result": { "value": 12.1, "comment": null, "author": "user1" } },
+          { "condition": "90F 40%", "week": 22, "assay_type": "Anisidine", "result": { "value": 7.2, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Zesty Pizza with Garlic - Exploring the quality of a classic Italian dish",
+        "number": 100030,
+        "owner": "user2",
+        "description": "Investigating the sensory attributes and chemical composition of zesty pizza topped with the savory flavor of garlic.",
+        "start_date": "2024-09-01",
+        "storage_conditions": ["0 F", "70F 38%", "85F 50%"],
+        "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "8": ["Sensory", "Moisture"], "16": ["Sensory", "Moisture"] },
+          "70F 38%": { "10": ["Sensory", "Moisture", "Peroxide value (PV)"], "20": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "85F 50%": { "12": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine"], "24": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 8, "assay_type": "Sensory", "result": { "value": 7.8, "comment": null, "author": "user2" } },
+          { "condition": "70F 38%", "week": 10, "assay_type": "Moisture", "result": { "value": 2.3, "comment": null, "author": "user2" } },
+          { "condition": "85F 50%", "week": 12, "assay_type": "Peroxide value (PV)", "result": { "value": 14.5, "comment": null, "author": "user2" } },
+          { "condition": "85F 50%", "week": 24, "assay_type": "Anisidine", "result": { "value": 6.8, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Citrusy Salad with Balsamic - Tasting the freshness of a vibrant salad",
+        "number": 100031,
+        "owner": "user3",
+        "description": "Examining the sensory attributes and chemical composition of a citrusy salad dressed with the rich flavor of balsamic vinegar.",
+        "start_date": "2024-10-15",
+        "storage_conditions": ["0 F", "75F 45%", "90F 35%"],
+        "assay_types": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "9": ["Sensory", "Hexanal", "Peroxide value (PV)"], "18": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+          "75F 45%": { "11": ["Sensory", "Hexanal", "Peroxide value (PV)"], "22": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+          "90F 35%": { "13": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"], "26": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 9, "assay_type": "Sensory", "result": { "value": 8.1, "comment": null, "author": "user3" } },
+          { "condition": "75F 45%", "week": 11, "assay_type": "Hexanal", "result": { "value": 12.3, "comment": null, "author": "user3" } },
+          { "condition": "90F 35%", "week": 13, "assay_type": "Peroxide value (PV)", "result": { "value": 16.7, "comment": null, "author": "user3" } },
+          { "condition": "90F 35%", "week": 26, "assay_type": "Anisidine", "result": { "value": 7.6, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Savory Burger with Smoky BBQ - Assessing the quality of a classic fast-food item",
+        "number": 100032,
+        "owner": "user1",
+        "description": "Analyzing the sensory attributes and chemical composition of a savory burger topped with the smoky flavor of BBQ sauce.",
+        "start_date": "2024-11-01",
+        "storage_conditions": ["0 F", "70F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "10": ["Sensory", "Moisture"], "20": ["Sensory", "Moisture"] },
+          "70F 40%": { "12": ["Sensory", "Moisture", "Peroxide value (PV)"], "24": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "85F 55%": { "14": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine"], "28": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 10, "assay_type": "Sensory", "result": { "value": 8.7, "comment": null, "author": "user1" } },
+          { "condition": "70F 40%", "week": 12, "assay_type": "Moisture", "result": { "value": 2.2, "comment": null, "author": "user1" } },
+          { "condition": "85F 55%", "week": 14, "assay_type": "Peroxide value (PV)", "result": { "value": 15.2, "comment": null, "author": "user1" } },
+          { "condition": "85F 55%", "week": 28, "assay_type": "Anisidine", "result": { "value": 7.9, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Velvet Cake with Raspberry - Investigating the freshness of a classic dessert",
+        "number": 100033,
+        "owner": "user2",
+        "description": "Exploring the sensory attributes and chemical composition of a velvety cake infused with the delightful flavor of raspberry.",
+        "start_date": "2024-12-10",
+        "storage_conditions": ["0 F", "72F 45%", "95F 30%"],
+        "assay_types": ["Sensory", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "11": ["Sensory", "Hexanal", "Peroxide value (PV)"], "22": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+          "72F 45%": { "13": ["Sensory", "Hexanal", "Peroxide value (PV)"], "26": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+          "95F 30%": { "15": ["Sensory", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "30": ["Sensory", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 11, "assay_type": "Sensory", "result": { "value": 9.5, "comment": null, "author": "user2" } },
+          { "condition": "72F 45%", "week": 13, "assay_type": "Hexanal", "result": { "value": 14.2, "comment": null, "author": "user2" } },
+          { "condition": "95F 30%", "week": 15, "assay_type": "Peroxide value (PV)", "result": { "value": 18.3, "comment": null, "author": "user2" } },
+          { "condition": "95F 30%", "week": 30, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.3, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Spicy Noodles with Sesame - Testing the quality of an Asian favorite",
+        "number": 100034,
+        "owner": "user3",
+        "description": "Evaluating the sensory attributes and chemical composition of spicy noodles topped with the nutty flavor of sesame.",
+        "start_date": "2025-01-20",
+        "storage_conditions": ["0 F", "70F 38%", "85F 50%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "12": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal"] },
+          "70F 38%": { "14": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "28": ["Sensory", "Moisture", "Hexanal", "Anisidine"] },
+          "85F 50%": { "16": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "32": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 12, "assay_type": "Sensory", "result": { "value": 8.4, "comment": null, "author": "user3" } },
+          { "condition": "70F 38%", "week": 14, "assay_type": "Moisture", "result": { "value": 2.6, "comment": null, "author": "user3" } },
+          { "condition": "85F 50%", "week": 16, "assay_type": "Hexanal", "result": { "value": 11.8, "comment": null, "author": "user3" } },
+          { "condition": "85F 50%", "week": 32, "assay_type": "Anisidine", "result": { "value": 6.1, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Crunchy Granola with Almond - Examining the freshness of a healthy snack",
+        "number": 100035,
+        "owner": "user1",
+        "description": "Analyzing the sensory attributes and chemical composition of crunchy granola infused with the nutty flavor of almond.",
+        "start_date": "2025-02-05",
+        "storage_conditions": ["0 F", "75F 40%", "90F 35%"],
+        "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "13": ["Sensory", "Moisture", "Peroxide value (PV)"], "26": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "75F 40%": { "15": ["Sensory", "Moisture", "Peroxide value (PV)"], "30": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "90F 35%": { "17": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine"], "34": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 13, "assay_type": "Sensory", "result": { "value": 7.9, "comment": null, "author": "user1" } },
+          { "condition": "75F 40%", "week": 15, "assay_type": "Peroxide value (PV)", "result": { "value": 14.8, "comment": null, "author": "user1" } },
+          { "condition": "90F 35%", "week": 17, "assay_type": "Anisidine", "result": { "value": 8.2, "comment": null, "author": "user1" } },
+          { "condition": "90F 35%", "week": 34, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.9, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Mango Sorbet with Chili - Tasting the quality of a refreshing dessert",
+        "number": 100036,
+        "owner": "user2",
+        "description": "Investigating the sensory attributes and chemical composition of mango sorbet with a hint of spicy chili.",
+        "start_date": "2025-03-20",
+        "storage_conditions": ["0 F", "68F 55%", "90F 40%"],
+        "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "14": ["Sensory", "Moisture", "Peroxide value (PV)"], "28": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "68F 55%": { "16": ["Sensory", "Moisture", "Peroxide value (PV)"], "32": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "90F 40%": { "18": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine"], "36": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 14, "assay_type": "Sensory", "result": { "value": 8.6, "comment": null, "author": "user2" } },
+          { "condition": "68F 55%", "week": 16, "assay_type": "Peroxide value (PV)", "result": { "value": 15.6, "comment": null, "author": "user2" } },
+          { "condition": "90F 40%", "week": 18, "assay_type": "Anisidine", "result": { "value": 7.5, "comment": null, "author": "user2" } },
+          { "condition": "90F 40%", "week": 36, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.2, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Cheesy Lasagna with Basil - Testing the quality of a classic Italian dish",
+        "number": 100037,
+        "owner": "user3",
+        "description": "Evaluating the sensory attributes and chemical composition of cheesy lasagna with the aromatic flavor of basil.",
+        "start_date": "2025-04-10",
+        "storage_conditions": ["0 F", "70F 38%", "85F 50%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "15": ["Sensory", "Moisture", "Hexanal"], "30": ["Sensory", "Moisture", "Hexanal"] },
+          "70F 38%": { "17": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "34": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "85F 50%": { "19": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine"], "38": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 15, "assay_type": "Sensory", "result": { "value": 7.7, "comment": null, "author": "user3" } },
+          { "condition": "70F 38%", "week": 17, "assay_type": "Moisture", "result": { "value": 2.8, "comment": null, "author": "user3" } },
+          { "condition": "85F 50%", "week": 19, "assay_type": "Hexanal", "result": { "value": 11.2, "comment": null, "author": "user3" } },
+          { "condition": "85F 50%", "week": 38, "assay_type": "Anisidine", "result": { "value": 6.9, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Refreshing Lemonade with Mint - Tasting the quality of a summer beverage",
+        "number": 100038,
+        "owner": "user1",
+        "description": "Investigating the sensory attributes and chemical composition of refreshing lemonade with the cool flavor of mint.",
+        "start_date": "2025-05-20",
+        "storage_conditions": ["0 F", "72F 45%", "95F 30%"],
+        "assay_types": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "16": ["Sensory", "Hexanal", "Peroxide value (PV)"], "32": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+          "72F 45%": { "18": ["Sensory", "Hexanal", "Peroxide value (PV)"], "36": ["Sensory", "Hexanal", "Peroxide value (PV)"] },
+          "95F 30%": { "20": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"], "40": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 16, "assay_type": "Sensory", "result": { "value": 9.1, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 18, "assay_type": "Hexanal", "result": { "value": 13.4, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 20, "assay_type": "Peroxide value (PV)", "result": { "value": 17.9, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 40, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.1, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Chocolate Chip Cookies with Hazelnut - Examining the freshness of a classic treat",
+        "number": 100039,
+        "owner": "user2",
+        "description": "Analyzing the sensory attributes and chemical composition of chocolate chip cookies filled with the rich flavor of hazelnut.",
+        "start_date": "2025-06-10",
+        "storage_conditions": ["0 F", "68F 50%", "85F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "17": ["Sensory", "Moisture", "Hexanal"], "34": ["Sensory", "Moisture", "Hexanal"] },
+          "68F 50%": { "19": ["Sensory", "Moisture", "Hexanal"], "38": ["Sensory", "Moisture", "Hexanal"] },
+          "85F 60%": { "21": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "42": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 17, "assay_type": "Sensory", "result": { "value": 7.3, "comment": null, "author": "user2" } },
+          { "condition": "68F 50%", "week": 19, "assay_type": "Moisture", "result": { "value": 2.5, "comment": null, "author": "user2" } },
+          { "condition": "85F 60%", "week": 21, "assay_type": "Hexanal", "result": { "value": 10.8, "comment": null, "author": "user2" } },
+          { "condition": "85F 60%", "week": 42, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.7, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Crispy Chicken Wings with Teriyaki - Testing the quality of a popular appetizer",
+        "number": 100040,
+        "owner": "user3",
+        "description": "Investigating the sensory attributes and chemical composition of crispy chicken wings glazed with the flavorful teriyaki sauce.",
+        "start_date": "2025-07-20",
+        "storage_conditions": ["0 F", "70F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "18": ["Sensory", "Hexanal"], "36": ["Sensory", "Hexanal"] },
+          "70F 40%": { "20": ["Sensory", "Hexanal", "Anisidine"], "40": ["Sensory", "Hexanal", "Anisidine"] },
+          "85F 55%": { "22": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "44": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 18, "assay_type": "Sensory", "result": { "value": 8.0, "comment": null, "author": "user3" } },
+          { "condition": "70F 40%", "week": 20, "assay_type": "Hexanal", "result": { "value": 11.5, "comment": null, "author": "user3" } },
+          { "condition": "85F 55%", "week": 22, "assay_type": "Anisidine", "result": { "value": 6.4, "comment": null, "author": "user3" } },
+          { "condition": "85F 55%", "week": 44, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.0, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Tropical Smoothie with Coconut - Tasting the quality of a fruity beverage",
+        "number": 100041,
+        "owner": "user1",
+        "description": "Evaluating the sensory attributes and chemical composition of a tropical smoothie with the sweet flavor of coconut.",
+        "start_date": "2025-08-10",
+        "storage_conditions": ["0 F", "72F 45%", "95F 30%"],
+        "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "19": ["Sensory", "Moisture", "Peroxide value (PV)"], "38": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "72F 45%": { "21": ["Sensory", "Moisture", "Peroxide value (PV)"], "42": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "95F 30%": { "23": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine"], "46": ["Sensory", "Moisture", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 19, "assay_type": "Sensory", "result": { "value": 9.2, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 21, "assay_type": "Peroxide value (PV)", "result": { "value": 16.2, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 23, "assay_type": "Anisidine", "result": { "value": 7.8, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 46, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.4, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Honey Glazed Salmon with Dill - Testing the quality of a nutritious seafood dish",
+        "number": 100042,
+        "owner": "user2",
+        "description": "Investigating the sensory attributes and chemical composition of honey-glazed salmon with the herby flavor of dill.",
+        "start_date": "2025-09-20",
+        "storage_conditions": ["0 F", "68F 55%", "90F 40%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "20": ["Sensory", "Moisture"], "40": ["Sensory", "Moisture"] },
+          "68F 55%": { "22": ["Sensory", "Moisture", "Anisidine"], "44": ["Sensory", "Moisture", "Anisidine"] },
+          "90F 40%": { "24": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "48": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 20, "assay_type": "Sensory", "result": { "value": 8.3, "comment": null, "author": "user2" } },
+          { "condition": "68F 55%", "week": 22, "assay_type": "Moisture", "result": { "value": 2.4, "comment": null, "author": "user2" } },
+          { "condition": "90F 40%", "week": 24, "assay_type": "Anisidine", "result": { "value": 6.7, "comment": null, "author": "user2" } },
+          { "condition": "90F 40%", "week": 48, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.8, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Delicate Pancake with Caramelized Banana - Assessing the freshness of a breakfast delight",
+        "number": 100043,
+        "owner": "user1",
+        "description": "Investigating the sensory attributes and chemical composition of a delicate pancake infused with the sweetness of caramelized banana.",
+        "start_date": "2024-04-02",
+        "storage_conditions": ["0 F", "75F 40%", "90F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory", "Moisture", "Hexanal"], "8": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "12": ["Sensory", "Moisture"] },
+          "75F 40%": { "6": ["Sensory", "Moisture", "Hexanal"], "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "14": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine"] },
+          "90F 55%": { "11": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 8.2, "comment": null, "author": "user1" } },
+          { "condition": "75F 40%", "week": 9, "assay_type": "Hexanal", "result": { "value": 10.5, "comment": null, "author": "user1" } },
+          { "condition": "90F 55%", "week": 16, "assay_type": "Peroxide value (PV)", "result": { "value": 12.0, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Velvety Tiramisu with Espresso - Investigating the quality of an Italian dessert",
+        "number": 100044,
+        "owner": "user2",
+        "description": "Evaluating the sensory attributes and chemical composition of a velvety tiramisu enriched with the bold flavor of espresso.",
+        "start_date": "2024-05-15",
+        "storage_conditions": ["0 F", "80F 45%", "95F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "10": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "14": ["Sensory", "Moisture"] },
+          "80F 45%": { "7": ["Sensory", "Moisture"], "11": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "15": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "95F 60%": { "6": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "18": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 5, "assay_type": "Sensory", "result": { "value": 9.5, "comment": null, "author": "user2" } },
+          { "condition": "80F 45%", "week": 11, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.8, "comment": null, "author": "user2" } },
+          { "condition": "95F 60%", "week": 18, "assay_type": "Sensory", "result": { "value": 7.2, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Crunchy Granola Bar with Almond - Testing the quality of a nutritious snack",
+        "number": 100045,
+        "owner": "user3",
+        "description": "Analyzing the sensory attributes and chemical composition of a crunchy granola bar packed with the goodness of almonds.",
+        "start_date": "2024-04-28",
+        "storage_conditions": ["0 F", "78F 50%", "85F 35%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "6": ["Sensory", "Moisture", "Anisidine"], "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "18": ["Sensory", "Moisture", "Anisidine"] },
+          "78F 50%": { "8": ["Sensory", "Moisture", "Anisidine"], "14": ["Sensory", "Moisture", "Anisidine"], "20": ["Sensory", "Moisture", "Anisidine"] },
+          "85F 35%": { "10": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "22": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 6, "assay_type": "Moisture", "result": { "value": 2.2, "comment": null, "author": "user3" } },
+          { "condition": "78F 50%", "week": 14, "assay_type": "Anisidine", "result": { "value": 3.5, "comment": null, "author": "user3" } },
+          { "condition": "85F 35%", "week": 22, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.2, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Savory Quinoa Salad with Lemon - Exploring the freshness of a wholesome dish",
+        "number": 100046,
+        "owner": "user1",
+        "description": "Investigating the sensory attributes and chemical composition of a savory quinoa salad enhanced with the citrusy flavor of lemon.",
+        "start_date": "2024-06-10",
+        "storage_conditions": ["0 F", "72F 40%", "88F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "7": ["Sensory", "Moisture"], "14": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "21": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "72F 40%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "23": ["Sensory", "Moisture"] },
+          "88F 55%": { "11": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "18": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "25": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 7, "assay_type": "Sensory", "result": { "value": 8.7, "comment": null, "author": "user1" } },
+          { "condition": "72F 40%", "week": 16, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.6, "comment": null, "author": "user1" } },
+          { "condition": "88F 55%", "week": 25, "assay_type": "Sensory", "result": { "value": 7.9, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Spicy Risotto with Tomato - Testing the flavor of an exotic rice dish",
+        "number": 100047,
+        "owner": "user2",
+        "description": "Analyzing the sensory attributes and chemical composition of a spicy risotto infused with the vibrant flavor of tomatoes.",
+        "start_date": "2024-07-22",
+        "storage_conditions": ["0 F", "74F 45%", "92F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "8": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "24": ["Sensory", "Moisture"] },
+          "74F 45%": { "10": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "18": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "26": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+          "92F 60%": { "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "20": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "28": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 16, "assay_type": "Anisidine", "result": { "value": 5.2, "comment": null, "author": "user2" } },
+          { "condition": "74F 45%", "week": 26, "assay_type": "Sensory", "result": { "value": 9.0, "comment": null, "author": "user2" } },
+          { "condition": "92F 60%", "week": 28, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.3, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Creamy Cheesecake with Raspberry - Exploring the texture of a classic dessert",
+        "number": 100048,
+        "owner": "user3",
+        "description": "Investigating the sensory attributes and chemical composition of a creamy cheesecake topped with the fruity goodness of raspberries.",
+        "start_date": "2024-08-12",
+        "storage_conditions": ["0 F", "68F 35%", "82F 50%"],
+        "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "9": ["Sensory", "Moisture", "Peroxide value (PV)"], "18": ["Sensory", "Moisture", "Peroxide value (PV)"], "27": ["Sensory", "Moisture"] },
+          "68F 35%": { "11": ["Sensory", "Moisture", "Peroxide value (PV)"], "20": ["Sensory", "Moisture", "Peroxide value (PV)"], "30": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "82F 50%": { "13": ["Sensory", "Moisture", "Peroxide value (PV)"], "22": ["Sensory", "Moisture", "Peroxide value (PV)"], "33": ["Sensory", "Moisture", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 18, "assay_type": "Sensory", "result": { "value": 8.5, "comment": null, "author": "user3" } },
+          { "condition": "68F 35%", "week": 20, "assay_type": "Peroxide value (PV)", "result": { "value": 14.2, "comment": null, "author": "user3" } },
+          { "condition": "82F 50%", "week": 33, "assay_type": "Moisture", "result": { "value": 3.1, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Zesty Sushi Roll with Wasabi - Examining the taste of a Japanese delicacy",
+        "number": 100049,
+        "owner": "user1",
+        "description": "Evaluating the sensory attributes and chemical composition of a zesty sushi roll accompanied by the fiery kick of wasabi.",
+        "start_date": "2024-09-25",
+        "storage_conditions": ["0 F", "70F 40%", "88F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory", "Moisture", "Anisidine"], "10": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "15": ["Sensory", "Moisture", "Anisidine"] },
+          "70F 40%": { "7": ["Sensory", "Moisture", "Anisidine"], "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "17": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+          "88F 55%": { "9": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "14": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "19": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 10, "assay_type": "Anisidine", "result": { "value": 4.8, "comment": null, "author": "user1" } },
+          { "condition": "70F 40%", "week": 17, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.0, "comment": null, "author": "user1" } },
+          { "condition": "88F 55%", "week": 19, "assay_type": "Sensory", "result": { "value": 7.0, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Crispy Chicken Wings with Buffalo Sauce - Testing the quality of a popular appetizer",
+        "number": 100050,
+        "owner": "user2",
+        "description": "Analyzing the sensory attributes and chemical composition of crispy chicken wings drenched in the tangy heat of buffalo sauce.",
+        "start_date": "2024-10-18",
+        "storage_conditions": ["0 F", "76F 50%", "94F 65%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "8": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "24": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "76F 50%": { "10": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "18": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "26": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+          "94F 65%": { "12": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "20": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "28": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 16, "assay_type": "Sensory", "result": { "value": 9.2, "comment": null, "author": "user2" } },
+          { "condition": "76F 50%", "week": 26, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.5, "comment": null, "author": "user2" } },
+          { "condition": "94F 65%", "week": 28, "assay_type": "Moisture", "result": { "value": 16.0, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Luscious Chocolate Truffles with Hazelnut - Examining the indulgence of a sweet treat",
+        "number": 100051,
+        "owner": "user3",
+        "description": "Evaluating the sensory attributes and chemical composition of luscious chocolate truffles adorned with the rich flavor of hazelnuts.",
+        "start_date": "2024-11-10",
+        "storage_conditions": ["0 F", "72F 40%", "88F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "7": ["Sensory", "Moisture", "Hexanal"], "14": ["Sensory", "Moisture", "Hexanal"], "21": ["Sensory", "Moisture", "Hexanal", "Anisidine"] },
+          "72F 40%": { "9": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "16": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "23": ["Sensory", "Moisture", "Hexanal"] },
+          "88F 55%": { "11": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "18": ["Sensory", "Moisture", "Hexanal"], "25": ["Sensory", "Moisture", "Hexanal", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 14, "assay_type": "Hexanal", "result": { "value": 7.8, "comment": null, "author": "user3" } },
+          { "condition": "72F 40%", "week": 16, "assay_type": "Anisidine", "result": { "value": 4.5, "comment": null, "author": "user3" } },
+          { "condition": "88F 55%", "week": 25, "assay_type": "Moisture", "result": { "value": 2.9, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Refreshing Mango Sorbet - Assessing the quality of a tropical dessert",
+        "number": 100052,
+        "owner": "user1",
+        "description": "Investigating the sensory attributes and chemical composition of a refreshing mango sorbet capturing the essence of tropical delight.",
+        "start_date": "2024-12-03",
+        "storage_conditions": ["0 F", "75F 45%", "90F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "6": ["Sensory", "Moisture", "Anisidine"], "12": ["Sensory", "Moisture", "Anisidine"], "18": ["Sensory", "Moisture", "Anisidine"] },
+          "75F 45%": { "8": ["Sensory", "Moisture", "Anisidine"], "14": ["Sensory", "Moisture", "Anisidine"], "20": ["Sensory", "Moisture", "Anisidine"] },
+          "90F 60%": { "10": ["Sensory", "Moisture", "Anisidine"], "16": ["Sensory", "Moisture", "Anisidine"], "22": ["Sensory", "Moisture", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 6, "assay_type": "Anisidine", "result": { "value": 3.2, "comment": null, "author": "user1" } },
+          { "condition": "75F 45%", "week": 14, "assay_type": "Sensory", "result": { "value": 8.0, "comment": null, "author": "user1" } },
+          { "condition": "90F 60%", "week": 22, "assay_type": "Moisture", "result": { "value": 5.1, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Crisp Apple Pie with Cinnamon - Exploring the taste of a classic American dessert",
+        "number": 100053,
+        "owner": "user2",
+        "description": "Analyzing the sensory attributes and chemical composition of a crisp apple pie with a hint of cinnamon, a quintessential American dessert.",
+        "start_date": "2025-01-20",
+        "storage_conditions": ["0 F", "70F 35%", "85F 50%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "7": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "14": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "21": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "70F 35%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "23": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "85F 50%": { "11": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "18": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "25": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 7, "assay_type": "Sensory", "result": { "value": 9.1, "comment": null, "author": "user2" } },
+          { "condition": "70F 35%", "week": 16, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.7, "comment": null, "author": "user2" } },
+          { "condition": "85F 50%", "week": 25, "assay_type": "Moisture", "result": { "value": 4.8, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Hearty Minestrone Soup - Testing the quality of a comforting soup",
+        "number": 100054,
+        "owner": "user3",
+        "description": "Investigating the sensory attributes and chemical composition of a hearty minestrone soup, a warm and comforting dish.",
+        "start_date": "2025-02-15",
+        "storage_conditions": ["0 F", "75F 40%", "92F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "8": ["Sensory", "Moisture", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Peroxide value (PV)"], "24": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "75F 40%": { "10": ["Sensory", "Moisture", "Peroxide value (PV)"], "18": ["Sensory", "Moisture", "Peroxide value (PV)"], "26": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "92F 55%": { "12": ["Sensory", "Moisture", "Peroxide value (PV)"], "20": ["Sensory", "Moisture", "Peroxide value (PV)"], "28": ["Sensory", "Moisture", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 16, "assay_type": "Sensory", "result": { "value": 8.3, "comment": null, "author": "user3" } },
+          { "condition": "75F 40%", "week": 26, "assay_type": "Peroxide value (PV)", "result": { "value": 11.6, "comment": null, "author": "user3" } },
+          { "condition": "92F 55%", "week": 28, "assay_type": "Moisture", "result": { "value": 5.5, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Succulent Grilled Salmon with Dill - Examining the quality of a seafood delight",
+        "number": 100055,
+        "owner": "user1",
+        "description": "Analyzing the sensory attributes and chemical composition of succulent grilled salmon seasoned with the aromatic herb, dill.",
+        "start_date": "2025-03-10",
+        "storage_conditions": ["0 F", "70F 35%", "85F 50%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "7": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "14": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "21": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+          "70F 35%": { "9": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "23": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+          "85F 50%": { "11": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "18": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "25": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 14, "assay_type": "Hexanal", "result": { "value": 6.5, "comment": null, "author": "user1" } },
+          { "condition": "70F 35%", "week": 23, "assay_type": "Sensory", "result": { "value": 9.3, "comment": null, "author": "user1" } },
+          { "condition": "85F 50%", "week": 25, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.1, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Caramelized Onion and Goat Cheese Tart - Testing the flavor of a savory pastry",
+        "number": 100056,
+        "owner": "user2",
+        "description": "Investigating the sensory attributes and chemical composition of a caramelized onion and goat cheese tart, a delectable savory pastry.",
+        "start_date": "2025-04-22",
+        "storage_conditions": ["0 F", "75F 40%", "90F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "8": ["Sensory", "Moisture", "Anisidine", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Anisidine", "Peroxide value (PV)"], "24": ["Sensory", "Moisture", "Anisidine", "Peroxide value (PV)"] },
+          "75F 40%": { "10": ["Sensory", "Moisture", "Anisidine", "Peroxide value (PV)"], "18": ["Sensory", "Moisture", "Anisidine", "Peroxide value (PV)"], "26": ["Sensory", "Moisture", "Anisidine", "Peroxide value (PV)"] },
+          "90F 55%": { "12": ["Sensory", "Moisture", "Anisidine", "Peroxide value (PV)"], "20": ["Sensory", "Moisture", "Anisidine", "Peroxide value (PV)"], "28": ["Sensory", "Moisture", "Anisidine", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 16, "assay_type": "Anisidine", "result": { "value": 5.7, "comment": null, "author": "user2" } },
+          { "condition": "75F 40%", "week": 26, "assay_type": "Peroxide value (PV)", "result": { "value": 13.2, "comment": null, "author": "user2" } },
+          { "condition": "90F 55%", "week": 28, "assay_type": "Moisture", "result": { "value": 4.3, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Gourmet Mushroom Risotto - Exploring the taste of a sophisticated rice dish",
+        "number": 100057,
+        "owner": "user3",
+        "description": "Evaluating the sensory attributes and chemical composition of gourmet mushroom risotto, a refined and sophisticated rice dish.",
+        "start_date": "2025-05-15",
+        "storage_conditions": ["0 F", "74F 45%", "92F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"],
+        "assay_schedule": {
+          "0 F": { "7": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "14": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "21": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+          "74F 45%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "23": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] },
+          "92F 60%": { "11": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "18": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"], "25": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 14, "assay_type": "Hexanal", "result": { "value": 6.9, "comment": null, "author": "user3" } },
+          { "condition": "74F 45%", "week": 23, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.9, "comment": null, "author": "user3" } },
+          { "condition": "92F 60%", "week": 25, "assay_type": "Sensory", "result": { "value": 8.1, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Tangy Lemon Bars with Shortbread Crust - Assessing the quality of a citrusy dessert",
+        "number": 100058,
+        "owner": "user1",
+        "description": "Investigating the sensory attributes and chemical composition of tangy lemon bars with a buttery shortbread crust, a delightful citrusy dessert.",
+        "start_date": "2025-06-10",
+        "storage_conditions": ["0 F", "68F 35%", "82F 50%"],
+        "assay_types": ["Sensory", "Moisture", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "9": ["Sensory", "Moisture", "Peroxide value (PV)"], "18": ["Sensory", "Moisture", "Peroxide value (PV)"], "27": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "68F 35%": { "11": ["Sensory", "Moisture", "Peroxide value (PV)"], "20": ["Sensory", "Moisture", "Peroxide value (PV)"], "30": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "82F 50%": { "13": ["Sensory", "Moisture", "Peroxide value (PV)"], "22": ["Sensory", "Moisture", "Peroxide value (PV)"], "33": ["Sensory", "Moisture", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 18, "assay_type": "Peroxide value (PV)", "result": { "value": 12.8, "comment": null, "author": "user1" } },
+          { "condition": "68F 35%", "week": 20, "assay_type": "Sensory", "result": { "value": 7.4, "comment": null, "author": "user1" } },
+          { "condition": "82F 50%", "week": 33, "assay_type": "Moisture", "result": { "value": 4.0, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Savory Pumpkin Ravioli with Sage Butter Sauce - Testing the flavor of a fall-inspired dish",
+        "number": 100059,
+        "owner": "user2",
+        "description": "Analyzing the sensory attributes and chemical composition of savory pumpkin ravioli drizzled with a savory sage butter sauce, a delightful fall-inspired dish.",
+        "start_date": "2025-07-22",
+        "storage_conditions": ["0 F", "72F 40%", "88F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "8": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "24": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+          "72F 40%": { "10": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "18": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "26": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+          "88F 55%": { "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "20": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "28": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 16, "assay_type": "Anisidine", "result": { "value": 5.0, "comment": null, "author": "user2" } },
+          { "condition": "72F 40%", "week": 26, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.8, "comment": null, "author": "user2" } },
+          { "condition": "88F 55%", "week": 28, "assay_type": "Sensory", "result": { "value": 7.6, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Decadent Red Velvet Cupcakes with Cream Cheese Frosting - Examining the quality of a classic dessert",
+        "number": 100060,
+        "owner": "user3",
+        "description": "Evaluating the sensory attributes and chemical composition of decadent red velvet cupcakes topped with luscious cream cheese frosting, a classic and indulgent dessert.",
+        "start_date": "2025-08-15",
+        "storage_conditions": ["0 F", "70F 35%", "85F 50%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "7": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "14": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "21": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "70F 35%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "23": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "85F 50%": { "11": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "18": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "25": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 14, "assay_type": "Hexanal", "result": { "value": 7.2, "comment": null, "author": "user3" } },
+          { "condition": "70F 35%", "week": 23, "assay_type": "Peroxide value (PV)", "result": { "value": 10.5, "comment": null, "author": "user3" } },
+          { "condition": "85F 50%", "week": 25, "assay_type": "Sensory", "result": { "value": 8.7, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Velvety Macaron with Tangy Lemon - Investigating the shelf life of a delightful pastry",
+        "number": 100061,
+        "owner": "user1",
+        "description": "Conducting a thorough examination of the freshness and quality of a velvety macaron enriched with tangy lemon flavor.",
+        "start_date": "2024-05-20",
+        "storage_conditions": ["0 F", "72F 40%", "85F 60%", "110F 15%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "2": ["Sensory", "Moisture"], "5": ["Sensory", "Moisture", "Hexanal"], "8": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "72F 40%": { "4": ["Sensory", "Hexanal"], "7": ["Sensory", "Moisture", "Hexanal"], "10": ["Sensory", "Moisture", "Hexanal"] },
+          "85F 60%": { "3": ["Sensory", "Moisture", "Hexanal"], "6": ["Sensory", "Moisture", "Hexanal"], "9": ["Sensory", "Moisture", "Hexanal"] },
+          "110F 15%": { "5": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "8": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 2, "assay_type": "Sensory", "result": { "value": 9.5, "comment": null, "author": "user1" } },
+          { "condition": "72F 40%", "week": 4, "assay_type": "Sensory", "result": { "value": 6.8, "comment": null, "author": "user1" } },
+          { "condition": "72F 40%", "week": 4, "assay_type": "Hexanal", "result": { "value": 11.2, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 6, "assay_type": "Hexanal", "result": { "value": 14.0, "comment": null, "author": "user1" } },
+          { "condition": "110F 15%", "week": 8, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.3, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Crispy Croissant with Caramel - Assessing the quality of a classic pastry",
+        "number": 100062,
+        "owner": "user2",
+        "description": "Evaluating the sensory attributes and chemical composition of a crispy croissant enriched with the sweet essence of caramel.",
+        "start_date": "2024-06-10",
+        "storage_conditions": ["0 F", "75F 45%", "88F 55%", "105F 18%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory", "Moisture"], "6": ["Sensory", "Moisture", "Hexanal"], "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "75F 45%": { "5": ["Sensory", "Hexanal"], "8": ["Sensory", "Moisture", "Hexanal"], "11": ["Sensory", "Moisture", "Hexanal"] },
+          "88F 55%": { "4": ["Sensory", "Moisture", "Hexanal"], "7": ["Sensory", "Moisture", "Hexanal"], "10": ["Sensory", "Moisture", "Hexanal"] },
+          "105F 18%": { "6": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"], "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 8.3, "comment": null, "author": "user2" } },
+          { "condition": "75F 45%", "week": 5, "assay_type": "Sensory", "result": { "value": 5.6, "comment": null, "author": "user2" } },
+          { "condition": "75F 45%", "week": 5, "assay_type": "Hexanal", "result": { "value": 9.8, "comment": null, "author": "user2" } },
+          { "condition": "88F 55%", "week": 7, "assay_type": "Moisture", "result": { "value": 13.5, "comment": null, "author": "user2" } },
+          { "condition": "105F 18%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.8, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Delicious Pancakes with Buttery Banana - Investigating the pancake freshness",
+        "number": 100063,
+        "owner": "user1",
+        "description": "Exploring the sensory attributes and chemical composition of delightful pancakes with a touch of buttery banana flavor.",
+        "start_date": "2024-05-20",
+        "storage_conditions": ["0 F", "72F 45%", "85F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory"], "8": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "20": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine"] },
+          "72F 45%": { "6": ["Sensory", "Moisture", "Hexanal"], "14": ["Sensory", "Moisture", "Hexanal"], "18": ["Sensory", "Moisture", "Hexanal"] },
+          "85F 60%": { "10": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine"], "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 8.5, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Sensory", "result": { "value": 7.2, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Moisture", "result": { "value": 4.0, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Hexanal", "result": { "value": 9.8, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 10, "assay_type": "Sensory", "result": { "value": 6.9, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 10, "assay_type": "Moisture", "result": { "value": 5.2, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 10, "assay_type": "Hexanal", "result": { "value": 11.3, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 10, "assay_type": "Peroxide value (PV)", "result": { "value": 13.5, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 16, "assay_type": "Anisidine", "result": { "value": 7.5, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Sizzling Shrimp Tacos with Smoky Chipotle - Assessing the taco quality",
+        "number": 100064,
+        "owner": "user2",
+        "description": "Evaluating the sensory attributes and chemical composition of sizzling shrimp tacos with a smoky chipotle twist.",
+        "start_date": "2024-06-10",
+        "storage_conditions": ["0 F", "75F 50%", "90F 65%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory"], "10": ["Sensory", "Moisture"], "15": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "22": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] },
+          "75F 50%": { "8": ["Sensory", "Moisture", "Hexanal"], "14": ["Sensory", "Moisture", "Hexanal"], "20": ["Sensory", "Moisture", "Hexanal"] },
+          "90F 65%": { "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "18": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "24": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 5, "assay_type": "Sensory", "result": { "value": 9.2, "comment": null, "author": "user2" } },
+          { "condition": "75F 50%", "week": 8, "assay_type": "Sensory", "result": { "value": 8.0, "comment": null, "author": "user2" } },
+          { "condition": "75F 50%", "week": 8, "assay_type": "Moisture", "result": { "value": 3.5, "comment": null, "author": "user2" } },
+          { "condition": "75F 50%", "week": 8, "assay_type": "Hexanal", "result": { "value": 10.5, "comment": null, "author": "user2" } },
+          { "condition": "75F 50%", "week": 14, "assay_type": "Sensory", "result": { "value": 7.8, "comment": null, "author": "user2" } },
+          { "condition": "75F 50%", "week": 14, "assay_type": "Moisture", "result": { "value": 4.2, "comment": null, "author": "user2" } },
+          { "condition": "75F 50%", "week": 14, "assay_type": "Hexanal", "result": { "value": 11.0, "comment": null, "author": "user2" } },
+          { "condition": "75F 50%", "week": 20, "assay_type": "Sensory", "result": { "value": 12.8, "comment": null, "author": "user2" } },
+          { "condition": "90F 65%", "week": 18, "assay_type": "Sensory", "result": { "value": 6.5, "comment": null, "author": "user2" } },
+          { "condition": "90F 65%", "week": 18, "assay_type": "Moisture", "result": { "value": 4.8, "comment": null, "author": "user2" } },
+          { "condition": "90F 65%", "week": 18, "assay_type": "Hexanal", "result": { "value": 11.8, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Velvety Cheesecake with Raspberry Swirl - Testing the cheesecake excellence",
+        "number": 100065,
+        "owner": "user3",
+        "description": "Investigating the sensory attributes and chemical composition of a velvety cheesecake with a delightful raspberry swirl.",
+        "start_date": "2024-07-05",
+        "storage_conditions": ["0 F", "68F 40%", "80F 55%"],
+        "assay_types": ["Sensory", "Anisidine", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "6": ["Sensory"], "12": ["Sensory", "Anisidine"], "18": ["Sensory", "Anisidine", "Peroxide value (PV)"] },
+          "68F 40%": { "9": ["Sensory", "Anisidine", "Peroxide value (PV)"], "15": ["Sensory", "Anisidine", "Peroxide value (PV)"] },
+          "80F 55%": { "12": ["Sensory", "Anisidine", "Peroxide value (PV)"], "20": ["Sensory", "Anisidine", "Peroxide value (PV)"], "24": ["Sensory", "Anisidine", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 6, "assay_type": "Sensory", "result": { "value": 8.9, "comment": null, "author": "user3" } },
+          { "condition": "68F 40%", "week": 9, "assay_type": "Sensory", "result": { "value": 7.5, "comment": null, "author": "user3" } },
+          { "condition": "68F 40%", "week": 9, "assay_type": "Anisidine", "result": { "value": 6.2, "comment": null, "author": "user3" } },
+          { "condition": "68F 40%", "week": 9, "assay_type": "Peroxide value (PV)", "result": { "value": 11.4, "comment": null, "author": "user3" } },
+          { "condition": "80F 55%", "week": 12, "assay_type": "Sensory", "result": { "value": 6.8, "comment": null, "author": "user3" } },
+          { "condition": "80F 55%", "week": 12, "assay_type": "Anisidine", "result": { "value": 5.7, "comment": null, "author": "user3" } },
+          { "condition": "80F 55%", "week": 12, "assay_type": "Peroxide value (PV)", "result": { "value": 10.2, "comment": null, "author": "user3" } },
+          { "condition": "80F 55%", "week": 20, "assay_type": "Sensory", "result": { "value": 7.2, "comment": null, "author": "user3" } },
+          { "condition": "80F 55%", "week": 20, "assay_type": "Anisidine", "result": { "value": 4.9, "comment": null, "author": "user3" } },
+          { "condition": "80F 55%", "week": 20, "assay_type": "Peroxide value (PV)", "result": { "value": 9.8, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Crispy Nachos with Zesty Salsa - Examining the nacho quality",
+        "number": 100066,
+        "owner": "user1",
+        "description": "Examining the sensory attributes and chemical composition of crispy nachos paired with a zesty salsa.",
+        "start_date": "2024-08-15",
+        "storage_conditions": ["0 F", "78F 55%", "95F 70%"],
+        "assay_types": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "8": ["Sensory", "Hexanal"], "14": ["Sensory", "Hexanal", "Anisidine"], "20": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] },
+          "78F 55%": { "10": ["Sensory", "Hexanal", "Anisidine"], "16": ["Sensory", "Hexanal", "Anisidine"], "22": ["Sensory", "Hexanal", "Anisidine"] },
+          "95F 70%": { "12": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "18": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "24": ["Sensory", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 8, "assay_type": "Sensory", "result": { "value": 7.8, "comment": null, "author": "user1" } },
+          { "condition": "78F 55%", "week": 10, "assay_type": "Sensory", "result": { "value": 8.5, "comment": null, "author": "user1" } },
+          { "condition": "78F 55%", "week": 10, "assay_type": "Hexanal", "result": { "value": 11.2, "comment": null, "author": "user1" } },
+          { "condition": "78F 55%", "week": 10, "assay_type": "Anisidine", "result": { "value": 6.9, "comment": null, "author": "user1" } },
+          { "condition": "78F 55%", "week": 16, "assay_type": "Sensory", "result": { "value": 7.2, "comment": null, "author": "user1" } },
+          { "condition": "78F 55%", "week": 16, "assay_type": "Hexanal", "result": { "value": 10.8, "comment": null, "author": "user1" } },
+          { "condition": "78F 55%", "week": 16, "assay_type": "Anisidine", "result": { "value": 5.5, "comment": null, "author": "user1" } },
+          { "condition": "78F 55%", "week": 22, "assay_type": "Sensory", "result": { "value": 6.7, "comment": null, "author": "user1" } },
+          { "condition": "78F 55%", "week": 22, "assay_type": "Hexanal", "result": { "value": 9.4, "comment": null, "author": "user1" } },
+          { "condition": "78F 55%", "week": 22, "assay_type": "Anisidine", "result": { "value": 7.8, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Savory Risotto with Truffle Essence - Evaluating the risotto quality",
+        "number": 100067,
+        "owner": "user2",
+        "description": "Assessing the sensory attributes and chemical composition of savory risotto infused with the essence of truffle.",
+        "start_date": "2024-09-01",
+        "storage_conditions": ["0 F", "70F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "6": ["Sensory"], "12": ["Sensory", "Moisture"], "18": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+          "70F 40%": { "9": ["Sensory", "Moisture", "Anisidine"], "15": ["Sensory", "Moisture", "Anisidine"], "20": ["Sensory", "Moisture", "Anisidine"] },
+          "85F 55%": { "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "18": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "24": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 6, "assay_type": "Sensory", "result": { "value": 8.0, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 9, "assay_type": "Sensory", "result": { "value": 7.5, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 9, "assay_type": "Moisture", "result": { "value": 3.8, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 9, "assay_type": "Anisidine", "result": { "value": 6.2, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 15, "assay_type": "Sensory", "result": { "value": 7.2, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 15, "assay_type": "Moisture", "result": { "value": 4.0, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 15, "assay_type": "Anisidine", "result": { "value": 5.9, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 20, "assay_type": "Sensory", "result": { "value": 1.5, "comment": null, "author": "user2" } },
+          { "condition": "85F 55%", "week": 12, "assay_type": "Sensory", "result": { "value": 6.5, "comment": null, "author": "user2" } },
+          { "condition": "85F 55%", "week": 12, "assay_type": "Moisture", "result": { "value": 4.5, "comment": null, "author": "user2" } },
+          { "condition": "85F 55%", "week": 12, "assay_type": "Anisidine", "result": { "value": 5.8, "comment": null, "author": "user2" } },
+          { "condition": "85F 55%", "week": 12, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.9, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Sizzling Pancakes with Caramel - Investigating the texture of a breakfast delight",
+        "number": 100068,
+        "owner": "user1",
+        "description": "Exploring the sensory attributes and moisture content of sizzling pancakes enriched with the sweet essence of caramel.",
+        "start_date": "2024-04-01",
+        "storage_conditions": ["0 F", "65F 30%", "95F 70%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory", "Moisture"], "10": ["Sensory", "Moisture", "Hexanal"], "15": ["Sensory", "Moisture", "Hexanal"] },
+          "65F 30%": { "7": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture"], "18": ["Sensory", "Moisture", "Hexanal"] },
+          "95F 70%": { "10": ["Sensory", "Moisture", "Hexanal"], "16": ["Sensory", "Moisture", "Hexanal"], "22": ["Sensory", "Moisture", "Hexanal"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 8.5, "comment": null, "author": "user1" } },
+          { "condition": "65F 30%", "week": 7, "assay_type": "Moisture", "result": { "value": 2.2, "comment": null, "author": "user1" } },
+          { "condition": "65F 30%", "week": 7, "assay_type": "Sensory", "result": { "value": 9.8, "comment": null, "author": "user1" } },
+          { "condition": "95F 70%", "week": 22, "assay_type": "Hexanal", "result": { "value": 14.3, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Mystical Tiramisu with Pistachio - Assessing the quality of a classic dessert",
+        "number": 100069,
+        "owner": "user2",
+        "description": "Conducting a detailed analysis on the sensory characteristics and moisture levels of a mystical tiramisu with pistachio accents.",
+        "start_date": "2024-04-15",
+        "storage_conditions": ["0 F", "70F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "11": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "70F 40%": { "8": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "13": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "85F 55%": { "12": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "18": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "24": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 16, "assay_type": "Sensory", "result": { "value": 7.2, "comment": null, "author": "user2" } },
+          { "condition": "70F 40%", "week": 8, "assay_type": "Anisidine", "result": { "value": 4.5, "comment": null, "author": "user2" } },
+          { "condition": "85F 55%", "week": 24, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.8, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Crispy Waffles with Maple - Exploring the freshness of a beloved breakfast item",
+        "number": 100070,
+        "owner": "user3",
+        "description": "Investigating the sensory attributes and hexanal levels in crispy waffles infused with the delightful taste of maple.",
+        "start_date": "2024-05-01",
+        "storage_conditions": ["0 F", "60F 35%", "90F 75%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "6": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal"], "18": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "60F 35%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "15": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "90F 75%": { "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "18": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "24": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 6, "assay_type": "Sensory", "result": { "value": 9.0, "comment": null, "author": "user3" } },
+          { "condition": "60F 35%", "week": 9, "assay_type": "Moisture", "result": { "value": 2.0, "comment": null, "author": "user3" } },
+          { "condition": "90F 75%", "week": 24, "assay_type": "Peroxide value (PV)", "result": { "value": 18.2, "comment": null, "author": "user3" } },
+          { "condition": "90F 75%", "week": 24, "assay_type": "Hexanal", "result": { "value": 6.7, "comment": null, "author": "user3" } },
+          { "condition": "90F 75%", "week": 24, "assay_type": "Sensory", "result": { "value": 1.3, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Velvety Cheesecake with Raspberry - Evaluating the sensory appeal of a luxurious dessert",
+        "number": 100071,
+        "owner": "user1",
+        "description": "Conducting a comprehensive analysis on the sensory attributes and moisture content of velvety cheesecake with the delightful flavor of raspberry.",
+        "start_date": "2024-05-15",
+        "storage_conditions": ["0 F", "75F 45%", "80F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "7": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "14": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "21": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "75F 45%": { "10": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "80F 60%": { "12": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "18": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "24": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 14, "assay_type": "Sensory", "result": { "value": 8.3, "comment": null, "author": "user1" } },
+          { "condition": "75F 45%", "week": 16, "assay_type": "Moisture", "result": { "value": 3.5, "comment": null, "author": "user1" } },
+          { "condition": "80F 60%", "week": 24, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.2, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Savory Empanadas with Chipotle - Testing the quality of a flavorful snack",
+        "number": 100072,
+        "owner": "user2",
+        "description": "Evaluating the sensory attributes and hexanal levels in savory empanadas seasoned with the bold taste of chipotle.",
+        "start_date": "2024-06-01",
+        "storage_conditions": ["0 F", "80F 55%", "100F 70%"],
+        "assay_types": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "8": ["Sensory", "Hexanal"], "15": ["Sensory", "Hexanal", "Peroxide value (PV)"], "21": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"] },
+          "80F 55%": { "12": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"], "18": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine"] },
+          "100F 70%": { "14": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"], "20": ["Sensory", "Hexanal", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 15, "assay_type": "Sensory", "result": { "value": 6.7, "comment": null, "author": "user2" } },
+          { "condition": "80F 55%", "week": 18, "assay_type": "Hexanal", "result": { "value": 11.2, "comment": null, "author": "user2" } },
+          { "condition": "100F 70%", "week": 20, "assay_type": "Anisidine", "result": { "value": 5.8, "comment": null, "author": "user2" } },
+          { "condition": "100F 70%", "week": 20, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.0, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Crispy Popcorn with Truffle - Analyzing the quality of a gourmet snack",
+        "number": 100073,
+        "owner": "user3",
+        "description": "Investigating the sensory attributes and moisture levels of crispy popcorn infused with the luxurious flavor of truffle oil.",
+        "start_date": "2024-06-15",
+        "storage_conditions": ["0 F", "75F 50%", "95F 65%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "9": ["Sensory", "Moisture", "Hexanal"], "15": ["Sensory", "Moisture", "Hexanal"], "21": ["Sensory", "Moisture", "Hexanal"] },
+          "75F 50%": { "12": ["Sensory", "Moisture", "Hexanal"], "18": ["Sensory", "Moisture", "Hexanal"], "24": ["Sensory", "Moisture", "Hexanal"] },
+          "95F 65%": { "15": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "21": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 15, "assay_type": "Sensory", "result": { "value": 8.9, "comment": null, "author": "user3" } },
+          { "condition": "75F 50%", "week": 18, "assay_type": "Moisture", "result": { "value": 2.5, "comment": null, "author": "user3" } },
+          { "condition": "95F 65%", "week": 21, "assay_type": "Anisidine", "result": { "value": 7.2, "comment": null, "author": "user3" } },
+          { "condition": "95F 65%", "week": 21, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.7, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Zesty Burritos with Mango - Testing the freshness of a vibrant Mexican dish",
+        "number": 100074,
+        "owner": "user1",
+        "description": "Evaluating the sensory attributes and hexanal levels in zesty burritos enriched with the tropical goodness of mango.",
+        "start_date": "2024-07-01",
+        "storage_conditions": ["0 F", "85F 55%", "105F 80%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "10": ["Sensory", "Moisture"], "16": ["Sensory", "Moisture", "Hexanal"], "22": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "85F 55%": { "13": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "19": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "105F 80%": { "16": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine"], "22": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 16, "assay_type": "Sensory", "result": { "value": 7.5, "comment": null, "author": "user1" } },
+          { "condition": "85F 55%", "week": 19, "assay_type": "Hexanal", "result": { "value": 12.6, "comment": null, "author": "user1" } },
+          { "condition": "105F 80%", "week": 22, "assay_type": "Anisidine", "result": { "value": 4.8, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Creamy Cannoli with Orange - Examining the quality of a classic Italian dessert",
+        "number": 100075,
+        "owner": "user2",
+        "description": "Conducting a detailed analysis on the sensory characteristics and free fatty acid (FFA) levels of creamy cannoli infused with the citrusy essence of orange.",
+        "start_date": "2024-07-15",
+        "storage_conditions": ["0 F", "75F 45%", "85F 60%"],
+        "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "12": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "18": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "24": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "75F 45%": { "15": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "21": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "85F 60%": { "18": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "24": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 18, "assay_type": "Anisidine", "result": { "value": 6.2, "comment": null, "author": "user2" } },
+          { "condition": "85F 60%", "week": 24, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.9, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Delicate Pistachio Soufflé with Tangy Lemon - Investigating the sensory characteristics of a light dessert",
+        "number": 100076,
+        "owner": "user1",
+        "description": "Exploring the delicate and tangy combination of pistachio and lemon in a delightful soufflé.",
+        "start_date": "2024-04-10",
+        "storage_conditions": ["0 F", "72F 45%", "85F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "2": ["Sensory"], "6": ["Sensory", "Moisture", "Hexanal"], "10": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "72F 45%": { "4": ["Sensory", "Hexanal"], "8": ["Sensory", "Moisture"], "12": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "85F 55%": { "7": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "11": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 2, "assay_type": "Sensory", "result": { "value": 8.3, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 4, "assay_type": "Hexanal", "result": { "value": 9.5, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 4, "assay_type": "Sensory", "result": { "value": 2.0, "comment": null, "author": "user1" } },
+          { "condition": "85F 55%", "week": 11, "assay_type": "Sensory", "result": { "value": null, "comment": "Sample lost", "author": "user1" } },
+          { "condition": "85F 55%", "week": 11, "assay_type": "Peroxide value (PV)", "result": { "value": 18.2, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Velvety Mango Sorbet with Spicy Ginger - Assessing the quality of a refreshing frozen treat",
+        "number": 100077,
+        "owner": "user2",
+        "description": "Examining the velvety texture and spicy kick in a delightful mango sorbet infused with ginger.",
+        "start_date": "2024-05-05",
+        "storage_conditions": ["0 F", "75F 40%", "95F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory", "Moisture"], "7": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "11": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+          "75F 40%": { "5": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "9": ["Sensory", "Moisture", "Anisidine"] },
+          "95F 60%": { "8": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 9.0, "comment": null, "author": "user2" } },
+          { "condition": "75F 40%", "week": 5, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.3, "comment": null, "author": "user2" } },
+          { "condition": "75F 40%", "week": 9, "assay_type": "Anisidine", "result": { "value": 4.8, "comment": null, "author": "user2" } },
+          { "condition": "95F 60%", "week": 8, "assay_type": "Sensory", "result": { "value": 2.5, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Crisp Popcorn with Creamy Caramel - Tasting the freshness of a classic snack",
+        "number": 100078,
+        "owner": "user3",
+        "description": "Analyzing the crispy and creamy combination of popcorn and caramel in a timeless snack.",
+        "start_date": "2024-06-20",
+        "storage_conditions": ["0 F", "70F 35%", "90F 50%"],
+        "assay_types": ["Sensory", "Anisidine", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "8": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "70F 35%": { "6": ["Sensory", "Hexanal", "Free fatty acid (FFA)"], "10": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "90F 50%": { "7": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "12": ["Sensory", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 8.5, "comment": null, "author": "user3" } },
+          { "condition": "70F 35%", "week": 10, "assay_type": "Anisidine", "result": { "value": 11.2, "comment": null, "author": "user3" } },
+          { "condition": "90F 50%", "week": 7, "assay_type": "Anisidine", "result": { "value": 5.5, "comment": null, "author": "user3" } },
+          { "condition": "90F 50%", "week": 12, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.9, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Sizzling Bacon with Sweet Maple Glaze - Examining the quality of a savory delight",
+        "number": 100079,
+        "owner": "user1",
+        "description": "Investigating the sizzling and sweet combination of bacon with a luscious maple glaze.",
+        "start_date": "2024-07-15",
+        "storage_conditions": ["0 F", "75F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "9": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "75F 40%": { "7": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "11": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+          "85F 55%": { "6": ["Sensory", "Anisidine", "Peroxide value (PV)"], "10": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 5, "assay_type": "Sensory", "result": { "value": 9.2, "comment": null, "author": "user1" } },
+          { "condition": "75F 40%", "week": 11, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.1, "comment": null, "author": "user1" } },
+          { "condition": "85F 55%", "week": 6, "assay_type": "Peroxide value (PV)", "result": { "value": 16.8, "comment": null, "author": "user1" } },
+          { "condition": "85F 55%", "week": 10, "assay_type": "Anisidine", "result": { "value": 4.5, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Savory Truffle Risotto with Earthy Mushroom - Exploring the aroma and taste of a sophisticated dish",
+        "number": 100080,
+        "owner": "user2",
+        "description": "Assessing the savory truffle-infused risotto complemented by the earthy flavors of mushrooms.",
+        "start_date": "2024-08-10",
+        "storage_conditions": ["0 F", "72F 45%", "95F 60%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory", "Hexanal", "Peroxide value (PV)"], "8": ["Sensory", "Moisture", "Hexanal"] },
+          "72F 45%": { "6": ["Sensory", "Moisture", "Peroxide value (PV)"], "10": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "95F 60%": { "7": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "11": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 8.0, "comment": null, "author": "user2" } },
+          { "condition": "72F 45%", "week": 10, "assay_type": "Hexanal", "result": { "value": 10.5, "comment": null, "author": "user2" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Moisture", "result": { "value": 2.2, "comment": null, "author": "user2" } },
+          { "condition": "95F 60%", "week": 11, "assay_type": "Peroxide value (PV)", "result": { "value": 15.3, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Succulent Tandoori Chicken with Fiery Chili - Tasting the flavors of a spicy delight",
+        "number": 100081,
+        "owner": "user3",
+        "description": "Evaluating the succulence of tandoori chicken enhanced with the fiery kick of chili spices.",
+        "start_date": "2024-09-05",
+        "storage_conditions": ["0 F", "75F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "6": ["Sensory", "Anisidine"], "9": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "75F 40%": { "7": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "10": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "85F 55%": { "8": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "11": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 6, "assay_type": "Sensory", "result": { "value": 8.8, "comment": null, "author": "user3" } },
+          { "condition": "75F 40%", "week": 10, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.4, "comment": null, "author": "user3" } },
+          { "condition": "85F 55%", "week": 11, "assay_type": "Anisidine", "result": { "value": 5.2, "comment": null, "author": "user3" } },
+          { "condition": "85F 55%", "week": 8, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.7, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Zesty Lemon Cheesecake with Tart Raspberry - Investigating the sensory experience of a citrusy dessert",
+        "number": 100082,
+        "owner": "user1",
+        "description": "Examining the zesty lemon-infused cheesecake with a delightful twist of tart raspberry.",
+        "start_date": "2024-10-20",
+        "storage_conditions": ["0 F", "72F 45%", "90F 50%"],
+        "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "9": ["Sensory", "Anisidine", "Free fatty acid (FFA)", "Peroxide value (PV)"] },
+          "72F 45%": { "6": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "10": ["Sensory", "Anisidine", "Peroxide value (PV)"] },
+          "90F 50%": { "8": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "11": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 5, "assay_type": "Sensory", "result": { "value": 9.5, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Anisidine", "result": { "value": 4.0, "comment": null, "author": "user1" } },
+          { "condition": "90F 50%", "week": 8, "assay_type": "Anisidine", "result": { "value": 17.1, "comment": null, "author": "user1" } },
+          { "condition": "90F 50%", "week": 11, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.2, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Crispy Waffle with Rich Chocolate Drizzle - Testing the quality of a classic breakfast treat",
+        "number": 100083,
+        "owner": "user2",
+        "description": "Analyzing the crispiness of a waffle topped with a rich chocolate drizzle for a delightful breakfast experience.",
+        "start_date": "2024-11-15",
+        "storage_conditions": ["0 F", "75F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "8": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+          "75F 40%": { "6": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "10": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] },
+          "85F 55%": { "7": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "11": ["Sensory", "Moisture", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 8.7, "comment": null, "author": "user2" } },
+          { "condition": "75F 40%", "week": 6, "assay_type": "Sensory", "result": { "value": 10.0, "comment": null, "author": "user2" } },
+          { "condition": "75F 40%", "week": 10, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.8, "comment": null, "author": "user2" } },
+          { "condition": "85F 55%", "week": 11, "assay_type": "Moisture", "result": { "value": 2.3, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Tangy Pineapple Salsa with Spicy Jalapeño - Exploring the flavors of a vibrant appetizer",
+        "number": 100084,
+        "owner": "user3",
+        "description": "Assessing the tanginess of pineapple paired with the spicy kick of jalapeño in a vibrant salsa.",
+        "start_date": "2024-12-10",
+        "storage_conditions": ["0 F", "72F 45%", "90F 50%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "9": ["Sensory", "Moisture", "Hexanal", "Anisidine"] },
+          "72F 45%": { "6": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "10": ["Sensory", "Moisture", "Hexanal", "Anisidine"] },
+          "90F 50%": { "7": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "11": ["Sensory", "Moisture", "Hexanal", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 5, "assay_type": "Sensory", "result": { "value": 8.9, "comment": null, "author": "user3" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Moisture", "result": { "value": 2.1, "comment": null, "author": "user3" } },
+          { "condition": "90F 50%", "week": 7, "assay_type": "Hexanal", "result": { "value": 9.8, "comment": null, "author": "user3" } },
+          { "condition": "90F 50%", "week": 11, "assay_type": "Anisidine", "result": { "value": 4.2, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Crunchy Almond Granola with Sweet Honey Drizzle - Testing the freshness of a wholesome breakfast option",
+        "number": 100085,
+        "owner": "user1",
+        "description": "Investigating the crunchiness of almond granola topped with a sweet honey drizzle for a delightful breakfast experience.",
+        "start_date": "2025-01-15",
+        "storage_conditions": ["0 F", "75F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory", "Moisture"], "8": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "75F 40%": { "5": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "9": ["Sensory", "Moisture", "Peroxide value (PV)"] },
+          "85F 55%": { "7": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"], "10": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Peroxide value (PV)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 8.2, "comment": null, "author": "user1" } },
+          { "condition": "75F 40%", "week": 5, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.9, "comment": null, "author": "user1" } },
+          { "condition": "75F 40%", "week": 9, "assay_type": "Peroxide value (PV)", "result": { "value": 16.5, "comment": null, "author": "user1" } },
+          { "condition": "85F 55%", "week": 10, "assay_type": "Moisture", "result": { "value": 2.4, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Spicy Chipotle Hummus with Crispy Pita - Tasting the boldness of a zesty appetizer",
+        "number": 100086,
+        "owner": "user2",
+        "description": "Evaluating the spiciness of chipotle hummus paired with the crispiness of pita for a bold and zesty appetizer.",
+        "start_date": "2025-02-10",
+        "storage_conditions": ["0 F", "72F 45%", "90F 50%"],
+        "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "8": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "72F 45%": { "6": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "9": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "90F 50%": { "7": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "10": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 9.1, "comment": null, "author": "user2" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Anisidine", "result": { "value": 4.3, "comment": null, "author": "user2" } },
+          { "condition": "90F 50%", "week": 7, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.0, "comment": null, "author": "user2" } },
+          { "condition": "90F 50%", "week": 10, "assay_type": "Anisidine", "result": { "value": 5.0, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Creamy Avocado Dip with Zesty Lime - Investigating the texture and acidity of a delightful dip",
+        "number": 100087,
+        "owner": "user3",
+        "description": "Exploring the creaminess of avocado dip with the zesty kick of lime for a refreshing and flavorful experience.",
+        "start_date": "2025-03-15",
+        "storage_conditions": ["0 F", "75F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "8": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+          "75F 40%": { "6": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "9": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] },
+          "85F 55%": { "7": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"], "10": ["Sensory", "Moisture", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 5, "assay_type": "Sensory", "result": { "value": 8.6, "comment": null, "author": "user3" } },
+          { "condition": "75F 40%", "week": 6, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.2, "comment": null, "author": "user3" } },
+          { "condition": "85F 55%", "week": 7, "assay_type": "Anisidine", "result": { "value": 4.7, "comment": null, "author": "user3" } },
+          { "condition": "85F 55%", "week": 10, "assay_type": "Moisture", "result": { "value": 2.3, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Smoky Barbecue Ribs with Sweet Honey Glaze - Assessing the tenderness and sweetness of a classic dish",
+        "number": 100088,
+        "owner": "user1",
+        "description": "Investigating the smokiness of barbecue ribs paired with a sweet honey glaze for a classic and flavorful dining experience.",
+        "start_date": "2025-04-10",
+        "storage_conditions": ["0 F", "72F 45%", "95F 60%"],
+        "assay_types": ["Sensory", "Anisidine", "Hexanal", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "6": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "9": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "72F 45%": { "7": ["Sensory", "Anisidine", "Hexanal", "Free fatty acid (FFA)"], "10": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "95F 60%": { "8": ["Sensory", "Anisidine", "Hexanal", "Free fatty acid (FFA)"], "11": ["Sensory", "Anisidine", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 6, "assay_type": "Sensory", "result": { "value": 8.4, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 7, "assay_type": "Hexanal", "result": { "value": 10.8, "comment": null, "author": "user1" } },
+          { "condition": "95F 60%", "week": 8, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.8, "comment": null, "author": "user1" } },
+          { "condition": "95F 60%", "week": 11, "assay_type": "Anisidine", "result": { "value": 5.3, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Refreshing Watermelon Gazpacho with Cool Mint - Testing the freshness and coolness of a summer soup",
+        "number": 100089,
+        "owner": "user2",
+        "description": "Assessing the refreshing watermelon gazpacho infused with the coolness of mint for a delightful summer soup experience.",
+        "start_date": "2025-05-05",
+        "storage_conditions": ["0 F", "75F 40%", "85F 55%"],
+        "assay_types": ["Sensory", "Moisture", "Anisidine", "Hexanal"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory", "Moisture"], "7": ["Sensory", "Moisture", "Anisidine"], "11": ["Sensory", "Moisture", "Anisidine", "Hexanal"] },
+          "75F 40%": { "5": ["Sensory", "Moisture", "Anisidine"], "8": ["Sensory", "Moisture", "Hexanal"] },
+          "85F 55%": { "6": ["Sensory", "Moisture", "Hexanal"], "10": ["Sensory", "Moisture", "Anisidine", "Hexanal"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 9.3, "comment": null, "author": "user2" } },
+          { "condition": "75F 40%", "week": 5, "assay_type": "Moisture", "result": { "value": 2.0, "comment": null, "author": "user2" } },
+          { "condition": "75F 40%", "week": 5, "assay_type": "Anisidine", "result": { "value": 4.5, "comment": null, "author": "user2" } },
+          { "condition": "85F 55%", "week": 10, "assay_type": "Hexanal", "result": { "value": 8.9, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Crunchy Kale Chips with Smoky Paprika - Tasting the crispiness and smokiness of a healthy snack",
+        "number": 100090,
+        "owner": "user3",
+        "description": "Examining the crunchiness of kale chips seasoned with smoky paprika for a healthy and flavorful snack option.",
+        "start_date": "2025-06-20",
+        "storage_conditions": ["0 F", "72F 45%", "90F 50%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "8": ["Sensory", "Moisture", "Anisidine"] },
+          "72F 45%": { "6": ["Sensory", "Moisture", "Anisidine"], "10": ["Sensory", "Moisture", "Hexanal", "Anisidine"] },
+          "90F 50%": { "7": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "11": ["Sensory", "Moisture", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 8.8, "comment": null, "author": "user3" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Anisidine", "result": { "value": 4.0, "comment": null, "author": "user3" } },
+          { "condition": "90F 50%", "week": 7, "assay_type": "Hexanal", "result": { "value": 10.2, "comment": null, "author": "user3" } },
+          { "condition": "90F 50%", "week": 11, "assay_type": "Moisture", "result": { "value": 2.3, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Sizzling Bacon Pancakes with Smoky Maple - Analyzing the quality of a breakfast favorite",
+        "number": 100091,
+        "owner": "user1",
+        "description": "Investigating the sensory attributes and chemical composition of sizzling bacon pancakes enriched with the smoky essence of maple syrup.",
+        "start_date": "2024-04-01",
+        "storage_conditions": ["0 F", "72F 45%", "85F 60%", "52F 45%"],
+        "assay_types": ["Sensory", "Moisture", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "9": ["Sensory"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "72F 45%": { "6": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "12": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "85F 60%": { "9": ["Sensory", "Moisture", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Free fatty acid (FFA)"] },
+          "52F 45%": { "21": ["Sensory", "Moisture", "Free fatty acid (FFA)", "Hexanal", "Peroxide value (PV)", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 5.8, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Moisture", "result": { "value": 2.2, "comment": null, "author": "user1" } },
+          { "condition": "72F 45%", "week": 6, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.7, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Sensory", "result": { "value": null, "comment": "Sample lost", "author": "user1" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Moisture", "result": { "value": 3.5, "comment": null, "author": "user1" } },
+          { "condition": "85F 60%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.0, "comment": null, "author": "user1" } },
+          { "condition": "52F 45%", "week": 21, "assay_type": "Hexanal", "result": { "value": 9.8, "comment": null, "author": "user1" } },
+          { "condition": "52F 45%", "week": 21, "assay_type": "Peroxide value (PV)", "result": { "value": 14.2, "comment": null, "author": "user1" } },
+          { "condition": "52F 45%", "week": 21, "assay_type": "Anisidine", "result": { "value": 7.5, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Spicy Pineapple Pancake - Investigating the freshness of a tropical breakfast delight",
+        "number": 100092,
+        "owner": "user1",
+        "description": "Exploring the sensory attributes and chemical composition of a spicy pineapple pancake.",
+        "start_date": "2024-04-01",
+        "storage_conditions": ["0 F", "65F 45%", "95F 30%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"],
+        "assay_schedule": {
+          "0 F": { "2": ["Sensory"], "5": ["Sensory", "Moisture"], "8": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "65F 45%": { "4": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "7": ["Sensory", "Moisture", "Hexanal"] },
+          "95F 30%": { "6": ["Sensory", "Moisture", "Hexanal"], "9": ["Sensory", "Moisture"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 2, "assay_type": "Sensory", "result": { "value": 8.3, "comment": null, "author": "user1" } },
+          { "condition": "65F 45%", "week": 4, "assay_type": "Sensory", "result": { "value": 6.7, "comment": null, "author": "user1" } },
+          { "condition": "65F 45%", "week": 4, "assay_type": "Moisture", "result": { "value": 3.2, "comment": null, "author": "user1" } },
+          { "condition": "65F 45%", "week": 4, "assay_type": "Hexanal", "result": { "value": 9.8, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 6, "assay_type": "Sensory", "result": { "value": 5.1, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 6, "assay_type": "Moisture", "result": { "value": 4.0, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 6, "assay_type": "Hexanal", "result": { "value": 11.2, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Velvety Cappuccino Cupcake - Assessing the quality of a coffee-infused dessert",
+        "number": 100093,
+        "owner": "user2",
+        "description": "Evaluating the sensory attributes and chemical composition of a velvety cappuccino cupcake.",
+        "start_date": "2024-05-15",
+        "storage_conditions": ["0 F", "80F 55%", "110F 25%"],
+        "assay_types": ["Sensory", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "3": ["Sensory"], "7": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] },
+          "80F 55%": { "5": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "9": ["Sensory"] },
+          "110F 25%": { "8": ["Sensory", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 3, "assay_type": "Sensory", "result": { "value": 7.2, "comment": null, "author": "user2" } },
+          { "condition": "80F 55%", "week": 5, "assay_type": "Sensory", "result": { "value": 5.9, "comment": null, "author": "user2" } },
+          { "condition": "80F 55%", "week": 5, "assay_type": "Anisidine", "result": { "value": 3.5, "comment": null, "author": "user2" } },
+          { "condition": "110F 25%", "week": 8, "assay_type": "Sensory", "result": { "value": 4.8, "comment": null, "author": "user2" } },
+          { "condition": "110F 25%", "week": 8, "assay_type": "Anisidine", "result": { "value": 6.2, "comment": null, "author": "user2" } },
+          { "condition": "110F 25%", "week": 8, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.7, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Crispy Macadamia Cookie - Tasting the freshness of a nutty treat",
+        "number": 100094,
+        "owner": "user3",
+        "description": "Examining the sensory attributes and chemical composition of a crispy macadamia cookie.",
+        "start_date": "2024-06-20",
+        "storage_conditions": ["0 F", "75F 50%", "105F 35%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory", "Moisture"], "7": ["Sensory", "Moisture", "Hexanal"] },
+          "75F 50%": { "6": ["Sensory", "Moisture", "Hexanal"], "10": ["Sensory", "Moisture", "Hexanal"] },
+          "105F 35%": { "8": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 6.4, "comment": null, "author": "user3" } },
+          { "condition": "0 F", "week": 7, "assay_type": "Moisture", "result": { "value": 2.9, "comment": null, "author": "user3" } },
+          { "condition": "75F 50%", "week": 6, "assay_type": "Sensory", "result": { "value": 7.8, "comment": null, "author": "user3" } },
+          { "condition": "75F 50%", "week": 6, "assay_type": "Moisture", "result": { "value": 3.5, "comment": null, "author": "user3" } },
+          { "condition": "105F 35%", "week": 8, "assay_type": "Sensory", "result": { "value": 5.3, "comment": null, "author": "user1" } },
+          { "condition": "105F 35%", "week": 8, "assay_type": "Moisture", "result": { "value": 4.2, "comment": null, "author": "user1" } },
+          { "condition": "105F 35%", "week": 8, "assay_type": "Hexanal", "result": { "value": 10.6, "comment": null, "author": "user1" } },
+          { "condition": "105F 35%", "week": 8, "assay_type": "Anisidine", "result": { "value": 4.0, "comment": null, "author": "user1" } },
+          { "condition": "105F 35%", "week": 8, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.8, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Sizzling Basil Pesto Pizza - Exploring the quality of an herby delight",
+        "number": 100095,
+        "owner": "user1",
+        "description": "Investigating the sensory attributes and chemical composition of a sizzling basil pesto pizza.",
+        "start_date": "2024-07-05",
+        "storage_conditions": ["0 F", "70F 40%", "100F 20%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine"],
+        "assay_schedule": {
+          "0 F": { "5": ["Sensory", "Moisture", "Hexanal", "Anisidine"], "9": ["Sensory", "Moisture", "Hexanal"] },
+          "70F 40%": { "7": ["Sensory", "Moisture", "Hexanal"], "10": ["Sensory", "Moisture", "Hexanal", "Anisidine"] },
+          "100F 20%": { "8": ["Sensory", "Moisture", "Hexanal", "Anisidine"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 5, "assay_type": "Sensory", "result": { "value": 8.0, "comment": null, "author": "user1" } },
+          { "condition": "0 F", "week": 5, "assay_type": "Moisture", "result": { "value": 3.3, "comment": null, "author": "user1" } },
+          { "condition": "70F 40%", "week": 7, "assay_type": "Sensory", "result": { "value": 6.2, "comment": null, "author": "user1" } },
+          { "condition": "70F 40%", "week": 7, "assay_type": "Moisture", "result": { "value": 3.8, "comment": null, "author": "user1" } },
+          { "condition": "70F 40%", "week": 7, "assay_type": "Hexanal", "result": { "value": 11.8, "comment": null, "author": "user1" } },
+          { "condition": "100F 20%", "week": 8, "assay_type": "Sensory", "result": { "value": 5.6, "comment": null, "author": "user1" } },
+          { "condition": "100F 20%", "week": 8, "assay_type": "Moisture", "result": { "value": 4.5, "comment": null, "author": "user1" } },
+          { "condition": "100F 20%", "week": 8, "assay_type": "Hexanal", "result": { "value": 9.2, "comment": null, "author": "user1" } },
+          { "condition": "100F 20%", "week": 8, "assay_type": "Anisidine", "result": { "value": 3.6, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Creamy Hazelnut Ice Cream - Tasting the richness of a classic frozen treat",
+        "number": 100096,
+        "owner": "user2",
+        "description": "Examining the sensory attributes and chemical composition of a creamy hazelnut ice cream.",
+        "start_date": "2024-08-10",
+        "storage_conditions": ["0 F", "75F 45%", "105F 30%"],
+        "assay_types": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "4": ["Sensory", "Peroxide value (PV)", "Anisidine"], "8": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] },
+          "75F 45%": { "6": ["Sensory", "Anisidine", "Free fatty acid (FFA)"], "10": ["Sensory", "Peroxide value (PV)", "Anisidine"] },
+          "105F 30%": { "8": ["Sensory", "Peroxide value (PV)", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 4, "assay_type": "Sensory", "result": { "value": 9.2, "comment": null, "author": "user2" } },
+          { "condition": "0 F", "week": 4, "assay_type": "Peroxide value (PV)", "result": { "value": 14.5, "comment": null, "author": "user2" } },
+          { "condition": "75F 45%", "week": 6, "assay_type": "Sensory", "result": { "value": 7.5, "comment": null, "author": "user2" } },
+          { "condition": "75F 45%", "week": 6, "assay_type": "Free fatty acid (FFA)", "result": { "value": 16.3, "comment": null, "author": "user2" } },
+          { "condition": "75F 45%", "week": 6, "assay_type": "Anisidine", "result": { "value": 4.1, "comment": null, "author": "user2" } },
+          { "condition": "105F 30%", "week": 8, "assay_type": "Sensory", "result": { "value": 8.7, "comment": null, "author": "user2" } },
+          { "condition": "105F 30%", "week": 8, "assay_type": "Peroxide value (PV)", "result": { "value": 12.8, "comment": null, "author": "user2" } },
+          { "condition": "105F 30%", "week": 8, "assay_type": "Anisidine", "result": { "value": 5.9, "comment": null, "author": "user2" } },
+          { "condition": "105F 30%", "week": 8, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.4, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Zesty Lemon Popcorn - Investigating the flavor and texture of a citrusy snack",
+        "number": 100097,
+        "owner": "user3",
+        "description": "Exploring the sensory attributes and chemical composition of zesty lemon popcorn.",
+        "start_date": "2024-09-25",
+        "storage_conditions": ["0 F", "70F 38%", "100F 20%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "6": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "10": ["Sensory", "Moisture", "Hexanal"] },
+          "70F 38%": { "8": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"] },
+          "100F 20%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 6, "assay_type": "Sensory", "result": { "value": 6.8, "comment": null, "author": "user3" } },
+          { "condition": "0 F", "week": 6, "assay_type": "Moisture", "result": { "value": 3.2, "comment": null, "author": "user3" } },
+          { "condition": "0 F", "week": 6, "assay_type": "Hexanal", "result": { "value": 10.1, "comment": null, "author": "user3" } },
+          { "condition": "70F 38%", "week": 8, "assay_type": "Sensory", "result": { "value": 5.4, "comment": null, "author": "user1" } },
+          { "condition": "70F 38%", "week": 8, "assay_type": "Moisture", "result": { "value": 3.9, "comment": null, "author": "user3" } },
+          { "condition": "100F 20%", "week": 9, "assay_type": "Sensory", "result": { "value": 7.1, "comment": null, "author": "user3" } },
+          { "condition": "100F 20%", "week": 9, "assay_type": "Moisture", "result": { "value": 4.6, "comment": null, "author": "user3" } },
+          { "condition": "100F 20%", "week": 9, "assay_type": "Hexanal", "result": { "value": 11.5, "comment": null, "author": "user3" } },
+          { "condition": "100F 20%", "week": 9, "assay_type": "Peroxide value (PV)", "result": { "value": 17.2, "comment": null, "author": "user3" } },
+          { "condition": "100F 20%", "week": 9, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.1, "comment": null, "author": "user3" } }
+        ]
+      },
+      {
+        "title": "Savory Garlic Baguette - Testing the quality of a classic French bread",
+        "number": 100098,
+        "owner": "user1",
+        "description": "Assessing the sensory attributes and chemical composition of a savory garlic baguette.",
+        "start_date": "2024-10-10",
+        "storage_conditions": ["0 F", "73F 50%", "95F 30%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "7": ["Sensory", "Moisture", "Hexanal"], "12": ["Sensory", "Moisture", "Hexanal"] },
+          "73F 50%": { "9": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "13": ["Sensory", "Moisture", "Hexanal"] },
+          "95F 30%": { "10": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 7, "assay_type": "Sensory", "result": { "value": 7.9, "comment": null, "author": "user1" } },
+          { "condition": "0 F", "week": 7, "assay_type": "Moisture", "result": { "value": 3.7, "comment": null, "author": "user1" } },
+          { "condition": "0 F", "week": 7, "assay_type": "Hexanal", "result": { "value": 10.9, "comment": null, "author": "user1" } },
+          { "condition": "73F 50%", "week": 9, "assay_type": "Sensory", "result": { "value": 6.1, "comment": null, "author": "user1" } },
+          { "condition": "73F 50%", "week": 9, "assay_type": "Moisture", "result": { "value": 4.2, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 10, "assay_type": "Sensory", "result": { "value": 5.5, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 10, "assay_type": "Moisture", "result": { "value": 4.8, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 10, "assay_type": "Hexanal", "result": { "value": 11.2, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 10, "assay_type": "Peroxide value (PV)", "result": { "value": 16.7, "comment": null, "author": "user1" } },
+          { "condition": "95F 30%", "week": 10, "assay_type": "Free fatty acid (FFA)", "result": { "value": 1.9, "comment": null, "author": "user1" } }
+        ]
+      },
+      {
+        "title": "Tangy Mango Salsa - Examining the freshness of a fruity condiment",
+        "number": 100099,
+        "owner": "user2",
+        "description": "Investigating the sensory attributes and chemical composition of tangy mango salsa.",
+        "start_date": "2024-11-25",
+        "storage_conditions": ["0 F", "68F 40%", "98F 25%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "8": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "14": ["Sensory", "Moisture", "Hexanal"] },
+          "68F 40%": { "10": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"], "15": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"] },
+          "98F 25%": { "11": ["Sensory", "Moisture", "Hexanal", "Peroxide value (PV)"], "16": ["Sensory", "Moisture", "Hexanal", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 8, "assay_type": "Sensory", "result": { "value": 8.4, "comment": null, "author": "user2" } },
+          { "condition": "0 F", "week": 8, "assay_type": "Moisture", "result": { "value": 3.5, "comment": null, "author": "user1" } },
+          { "condition": "0 F", "week": 8, "assay_type": "Hexanal", "result": { "value": 10.3, "comment": null, "author": "user2" } },
+          { "condition": "68F 40%", "week": 10, "assay_type": "Sensory", "result": { "value": 6.9, "comment": null, "author": "user2" } },
+          { "condition": "68F 40%", "week": 10, "assay_type": "Moisture", "result": { "value": 4.0, "comment": null, "author": "user2" } },
+          { "condition": "98F 25%", "week": 11, "assay_type": "Sensory", "result": { "value": 5.8, "comment": null, "author": "user2" } },
+          { "condition": "98F 25%", "week": 11, "assay_type": "Moisture", "result": { "value": 4.4, "comment": null, "author": "user2" } },
+          { "condition": "98F 25%", "week": 11, "assay_type": "Hexanal", "result": { "value": 11.6, "comment": null, "author": "user2" } },
+          { "condition": "98F 25%", "week": 11, "assay_type": "Peroxide value (PV)", "result": { "value": 15.9, "comment": null, "author": "user2" } }
+        ]
+      },
+      {
+        "title": "Sweet Raspberry Cheesecake - Evaluating the quality of a fruity dessert",
+        "number": 100100,
+        "owner": "user3",
+        "description": "Assessing the sensory attributes and chemical composition of a sweet raspberry cheesecake.",
+        "start_date": "2024-12-10",
+        "storage_conditions": ["0 F", "72F 48%", "92F 28%"],
+        "assay_types": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"],
+        "assay_schedule": {
+          "0 F": { "9": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "15": ["Sensory", "Moisture", "Hexanal"] },
+          "72F 48%": { "11": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"], "16": ["Sensory", "Moisture", "Hexanal"] },
+          "92F 28%": { "12": ["Sensory", "Moisture", "Hexanal", "Anisidine", "Free fatty acid (FFA)"] }
+        },
+        "assay_results": [
+          { "condition": "0 F", "week": 9, "assay_type": "Sensory", "result": { "value": 7.5, "comment": null, "author": "user3" } },
+          { "condition": "0 F", "week": 9, "assay_type": "Moisture", "result": { "value": 4.1, "comment": null, "author": "user3" } },
+          { "condition": "0 F", "week": 9, "assay_type": "Hexanal", "result": { "value": 11.0, "comment": null, "author": "user3" } },
+          { "condition": "72F 48%", "week": 11, "assay_type": "Sensory", "result": { "value": 6.3, "comment": null, "author": "user3" } },
+          { "condition": "72F 48%", "week": 11, "assay_type": "Moisture", "result": { "value": 4.5, "comment": null, "author": "user3" } },
+          { "condition": "92F 28%", "week": 12, "assay_type": "Sensory", "result": { "value": 5.9, "comment": null, "author": "user3" } },
+          { "condition": "92F 28%", "week": 12, "assay_type": "Moisture", "result": { "value": 4.8, "comment": null, "author": "user3" } },
+          { "condition": "92F 28%", "week": 12, "assay_type": "Hexanal", "result": { "value": 10.4, "comment": null, "author": "user3" } },
+          { "condition": "92F 28%", "week": 12, "assay_type": "Anisidine", "result": { "value": 4.2, "comment": null, "author": "user3" } },
+          { "condition": "92F 28%", "week": 12, "assay_type": "Free fatty acid (FFA)", "result": { "value": 2.0, "comment": null, "author": "user3" } }
+        ]
+      }
+    ]
+  }
