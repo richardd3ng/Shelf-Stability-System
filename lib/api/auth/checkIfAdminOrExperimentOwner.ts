@@ -21,7 +21,7 @@ export async function denyReqIfUserIsNeitherAdminNorExperimentOwner(req : NextAp
 
 export async function denyReqIfUserIsNotAdmin(req : NextApiRequest, res : NextApiResponse, user : UserWithoutPassword){
     if (!user.is_admin){
-        denyAPIReq(req, res, "You are not an admin");
+        await denyAPIReq(req, res, "You are not an admin");
     }
 }
 

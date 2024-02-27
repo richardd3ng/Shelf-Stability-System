@@ -7,11 +7,13 @@ import { assayHasResult } from "@/lib/api/validations";
 import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { getAssayID, INVALID_ASSAY_ID } from "@/lib/api/apiHelpers";
 import { Prisma } from "@prisma/client";
+import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 
 export default async function updateAssayAPI(
     req: NextApiRequest,
     res: NextApiResponse<Assay | ApiError>
 ) {
+    await denyReqIfUserIsNotLoggedInAdmin(req, res);
     const id = getAssayID(req);
     if (id === INVALID_ASSAY_ID) {
         res.status(400).json(getApiError(400, "Assay ID is required"));

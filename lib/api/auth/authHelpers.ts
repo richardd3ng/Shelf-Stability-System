@@ -43,7 +43,7 @@ export async function getUserAndDenyReqIfUserIsNotLoggedIn(req: NextApiRequest, 
         const token = await getToken({req : req});
                 
         if (!token || !token.name){
-            denyAPIReq(req, res, "You must be logged in");
+            await denyAPIReq(req, res, "You must be logged in");
         } else {
             const user = await db.user.findUnique({
                 where : {
@@ -61,12 +61,12 @@ export async function getUserAndDenyReqIfUserIsNotLoggedIn(req: NextApiRequest, 
             if (user) {
                 return user;
             } else {
-                denyAPIReq(req, res, "You are not a valid user");
+                await denyAPIReq(req, res, "You are not a valid user");
             }
         }
 
     } catch {
-        denyAPIReq(req, res, "You must be logged in");
+        await denyAPIReq(req, res, "You must be logged in");
     }
     return null;
 }

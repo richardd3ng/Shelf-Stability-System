@@ -1,44 +1,15 @@
 // __tests__/api/users.test.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import fetchUserList from '../pages/api/users/list';
-import { UserInfo, UserTable } from '../lib/controllers/types';
-import { User } from '@prisma/client';
+import fetchUserList from '../../pages/api/users/list';
 import { db } from '@/lib/api/db';
 import "next-auth/jwt"
 import "next-auth/client"
-import { mockToken } from './__mocks__/next-auth-jwt';
+import { mockAdminUser, mockUsers } from '../__mocks__/data/mockUsers';
 
 
 
-const mockUsers : UserInfo[] = [
-    {
-        id : 1,
-        username : "keith",
-        is_admin : false
-    },
-    {
-        id : 2,
-        username : "Ricky",
-        is_admin : true
-    },
-    {
-        id : 3,
-        username : "Richard",
-        is_admin : true
-    }
-];
-
-const mockAdminUser : User = {
-    id : mockToken.id,
-    username : mockToken.name,
-    is_admin : true,
-    is_super_admin : false,
-    password : ""
-
-}
-
-jest.mock('../lib/api/db', () => ({
+jest.mock('@/lib/api/db', () => ({
     db: {
         user: {
             findMany: jest.fn(),
@@ -79,8 +50,6 @@ describe('/api/users', () => {
         (db.user.findUnique as jest.Mock).mockResolvedValueOnce(mockAdminUser);
 
         await fetchUserList(req as NextApiRequest, res as NextApiResponse);
-        console.log(res.status);
-        console.log("in the retun users test");
         expect(res.status).toHaveBeenCalledWith(200);
         
     });
