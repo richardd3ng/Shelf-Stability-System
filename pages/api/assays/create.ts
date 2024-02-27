@@ -4,11 +4,13 @@ import { ApiError } from "next/dist/server/api-utils";
 import { CONSTRAINT_ERROR_CODE, getApiError } from "@/lib/api/error";
 import { Assay } from "@prisma/client";
 import { Prisma } from "@prisma/client";
+import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 
 export default async function createAssayAPI(
     req: NextApiRequest,
     res: NextApiResponse<Assay | ApiError>
 ) {
+    await denyReqIfUserIsNotLoggedInAdmin(req, res);
     const { experimentId, conditionId, type, week } = req.body;
     if (
         type === undefined ||

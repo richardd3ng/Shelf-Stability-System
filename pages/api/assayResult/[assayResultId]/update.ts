@@ -7,6 +7,9 @@ import {
     INVALID_ASSAY_RESULT_ID,
     getAssayResultID,
 } from "@/lib/api/apiHelpers";
+import { getUserAndDenyReqIfUserIsNotLoggedIn } from "@/lib/api/auth/authHelpers";
+import { denyReqIfUserIsNeitherAdminNorExperimentOwner, denyReqIfUserIsNotAdmin } from "@/lib/api/auth/checkIfAdminOrExperimentOwner";
+import { denyAPIReq } from "@/lib/api/auth/acessDeniers";
 
 export default async function updateAssayResultAPI(
     req: NextApiRequest,
@@ -16,6 +19,20 @@ export default async function updateAssayResultAPI(
     if (id === INVALID_ASSAY_RESULT_ID) {
         res.status(400).json(getApiError(400, "Assay result ID is required"));
         return;
+    }
+    const user = await getUserAndDenyReqIfUserIsNotLoggedIn(req, res);
+    const assayResult = await db.assayResult.findUnique({
+        where : {
+            id : id
+        },
+        include : {
+            assay : true
+        }
+    });
+    if (assayResult && user){
+        await denyReqIfUserIsNeitherAdminNorExperimentOwner(req, res, user, assayResult.assay.experimentId);
+    } else {
+        await denyAPIReq(req, res, "An error occurred");
     }
     if (!req.body.last_editor) {
         res.status(400).json(

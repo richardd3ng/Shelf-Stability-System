@@ -1,3 +1,6 @@
+import { User } from "@prisma/client";
+import { mockToken } from "./next-auth-jwt";
+
 export const PrismaClient = jest.fn(() => ({
     user: {
         findMany: jest.fn(),

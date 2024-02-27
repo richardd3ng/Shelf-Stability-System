@@ -6,11 +6,14 @@ import { getApiError } from "@/lib/api/error";
 import { Assay } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
+import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 
 export default async function deleteAssayAPI(
     req: NextApiRequest,
     res: NextApiResponse<Assay | ApiError>
 ): Promise<void> {
+    await denyReqIfUserIsNotLoggedInAdmin(req, res);
+    
     const id = getAssayID(req);
     if (id === INVALID_ASSAY_ID) {
         res.status(400).json(getApiError(400, "Assay ID is required"));

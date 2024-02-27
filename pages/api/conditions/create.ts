@@ -6,11 +6,13 @@ import { getApiError } from "@/lib/api/error";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { Prisma } from "@prisma/client";
+import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 
 export default async function createConditionAPI(
     req: NextApiRequest,
     res: NextApiResponse<Condition | ApiError>
 ) {
+    await denyReqIfUserIsNotLoggedInAdmin(req, res);
     const { experimentId, name } = req.body;
     if (experimentId === null || name === null) {
         res.status(400).json(

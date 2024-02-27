@@ -9,11 +9,14 @@ import { INVALID_EXPERIMENT_ID, getExperimentID } from "@/lib/api/apiHelpers";
 import { localDateToJsDate } from "@/lib/datesUtils";
 import { LocalDate, nativeJs } from "@js-joda/core";
 import { ExperimentWithLocalDate } from "@/lib/controllers/types";
+import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+
 
 export default async function updateExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentWithLocalDate | ApiError>
 ) {
+    await denyReqIfUserIsNotLoggedInAdmin(req, res);
     const id = getExperimentID(req);
     if (id === INVALID_EXPERIMENT_ID) {
         res.status(400).json(

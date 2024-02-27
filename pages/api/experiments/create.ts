@@ -11,11 +11,14 @@ import {
 } from "@/lib/controllers/types";
 import { LocalDate, nativeJs } from "@js-joda/core";
 import { localDateToJsDate } from "@/lib/datesUtils";
+import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+
 
 export default async function createExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentCreationResponse | ApiError>
 ) {
+    await denyReqIfUserIsNotLoggedInAdmin(req, res);
     const {
         title,
         description,
