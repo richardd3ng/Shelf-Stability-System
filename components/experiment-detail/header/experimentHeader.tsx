@@ -21,7 +21,6 @@ export const ExperimentHeader = () => {
         data: experimentInfo,
         isLoading,
         isError,
-        error,
     } = useExperimentInfo(experimentId);
     const { data: owner } = useExperimentOwner(experimentId);
     const { showLoading, hideLoading } = useLoading();
@@ -38,7 +37,7 @@ export const ExperimentHeader = () => {
     }, [isLoading, showLoading, hideLoading]);
 
     if (isError || !experimentInfo) {
-        return <ErrorMessage message={getErrorMessage(error)} />;
+        return <></>;
     }
     return (
         <>
