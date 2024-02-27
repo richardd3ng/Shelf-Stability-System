@@ -17,6 +17,9 @@ const ReportChip: React.FC<ReportChipProps> = (props: ReportChipProps) => {
                   units.startsWith("%") ? units : ` ${units}`
               }`
             : "N/A";
+    const commentText: string = props.assayResult?.comment || "N/A";
+    const missingResult = resultText === "N/A";
+    const missingComment = commentText === "N/A";
 
     return (
         <Box
@@ -32,12 +35,29 @@ const ReportChip: React.FC<ReportChipProps> = (props: ReportChipProps) => {
                 <Typography sx={{ fontSize: 12 }}>
                     {assayTypeIdToName(props.assay.type)}
                 </Typography>
-                <Typography sx={{ fontSize: 10 }}>{resultText}</Typography>
-                <Typography sx={{ fontSize: 8 }}>
+                <Typography
+                    sx={{
+                        fontSize: 10,
+                        fontWeight: "bold",
+                        color: missingResult ? "red" : "inherit",
+                    }}
+                >
+                    {resultText}
+                </Typography>
+                <Typography
+                    sx={{
+                        fontSize: 8,
+                    }}
+                >
                     Author: {props.assayResult?.last_editor || "N/A"}
                 </Typography>
-                <Typography sx={{ fontSize: 8 }}>
-                    Comment: {props.assayResult?.comment || "N/A"}
+                <Typography
+                    sx={{
+                        fontSize: 8,
+                        color: missingComment ? "red" : "inherit",
+                    }}
+                >
+                    Comment: {commentText}
                 </Typography>
             </Stack>
         </Box>
