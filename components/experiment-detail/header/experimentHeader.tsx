@@ -4,7 +4,7 @@ import {
     useExperimentOwner,
 } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import ExperimentEditorModal from "../modifications/editorModals/experimentEditorModal";
 import { ErrorMessage } from "@/components/shared/errorMessage";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
@@ -13,7 +13,9 @@ import { useLoading } from "@/lib/context/shared/loadingContext";
 import DownloadExcelIconButton from "./downloadExcelIconButton";
 import GenerateReportIconButton from "@/components/shared/generateReportIconButton";
 import EditExperimentButton from "./editExperimentButton";
+import BackButton from "@/components/shared/backButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import { useRouter } from "next/router";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -41,7 +43,10 @@ export const ExperimentHeader = () => {
         return <ErrorMessage message={getErrorMessage(error)} />;
     }
     return (
-        <>
+        <Stack>
+            <Box sx={{ marginLeft: 2, marginBottom: 0.5 }}>
+                <BackButton text="Back to Experiment List" />
+            </Box>
             <Box
                 sx={{
                     marginX: 3,
@@ -102,6 +107,6 @@ export const ExperimentHeader = () => {
             >
                 <ExperimentEditorModal />
             </ExperimentEditingContext.Provider>
-        </>
+        </Stack>
     );
 };
