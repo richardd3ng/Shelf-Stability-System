@@ -33,12 +33,17 @@ export type ExperimentTable = {
     rowCount: number;
 };
 
-export type ExperimentCreationArgs =
-    | Omit<ExperimentWithLocalDate, "id">
-    | {
+export type ExperimentCreationRequiringConditionArgs =
+    Omit<ExperimentWithLocalDate, "id">
+    & {
           conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
       };
 
+export type ExperimentCreationArgs =
+| Omit<ExperimentWithLocalDate, "id">
+| {
+    conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+};
 export type ExperimentCreationResponse = Omit<
     ExperimentInfo,
     "assays" | "assayResults"

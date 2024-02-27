@@ -1,8 +1,8 @@
 import { hash } from "bcryptjs";
-import { db } from "@/lib/api/db";
+import { db } from "../db";
 import { NextApiResponse, NextApiRequest } from "next";
 import { getToken } from "next-auth/jwt";
-import { UserWithoutPassword } from "@/lib/controllers/types";
+import { UserWithoutPassword } from "../../controllers/types";
 import { denyAPIReq } from "./acessDeniers";
 import { denyReqIfUserIsNotAdmin } from "./checkIfAdminOrExperimentOwner";
 
