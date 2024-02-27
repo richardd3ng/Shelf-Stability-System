@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, IconButton, Typography, MenuItem } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
     DataGrid,
@@ -14,6 +14,7 @@ interface TableProps {
     checkboxSelection?: boolean;
     footer?: React.JSXElementConstructor<any>;
     hideFooterContainer?: boolean;
+    rowClassName?: string;
     onDeleteRows?: (rows: GridRowSelectionModel) => void;
     handleCellClick?: (params: any) => void;
 }
@@ -104,6 +105,12 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 sx={{
                     "@media print": { breakInside: "avoid" },
                 }}
+                getRowClassName={
+                    props.rowClassName
+                        ? (_) => props.rowClassName ?? ""
+                        : undefined
+                }
+                // getRowClassName={(_) => "user-row-clickable"}
             />
         </Box>
     );

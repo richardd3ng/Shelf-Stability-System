@@ -326,6 +326,7 @@ const ExperimentList: React.FC = () => {
                         }
                     }}
                     {...paginationProps}
+                    rowClassName="experiment-row-clickable"
                 />
 
                 <ExperimentCreationDialog
