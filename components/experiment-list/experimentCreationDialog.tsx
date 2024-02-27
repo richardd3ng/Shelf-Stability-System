@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import {
     Box,
     Button,
-    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
@@ -24,7 +23,6 @@ import {
 } from "@/lib/controllers/types";
 import { ExperimentCreationArgs } from "@/lib/controllers/types";
 import { useAlert } from "@/lib/context/shared/alertContext";
-import { useLoading } from "@/lib/context/shared/loadingContext";
 import { useRouter } from "next/router";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "../shared/myDatePicker";
@@ -32,6 +30,7 @@ import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { INVALID_USER_ID } from "@/lib/hooks/useUserInfo";
 import { fetchUserList } from "@/lib/controllers/userController";
+import { useLoading } from "@/lib/context/shared/loadingContext";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -156,6 +155,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             router.push(`/experiments/${experimentResJson.experiment.id}`);
         } catch (error) {
             showAlert("error", getErrorMessage(error));
+            hideLoading();
             return;
         }
         hideLoading();
