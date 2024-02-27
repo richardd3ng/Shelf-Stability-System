@@ -6,8 +6,9 @@ import { useExperimentOwner } from "@/lib/hooks/experimentDetailPage/experimentD
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import ReportAssaysGroupedByType from "@/components/experiment-report/reportAssaysGroupedByType";
+import BackButton from "@/components/shared/backButton";
 
 const ExperimentReport: React.FC = () => {
     const experimentId = useExperimentId();
@@ -36,6 +37,9 @@ const ExperimentReport: React.FC = () => {
     }
     return (
         <Stack gap={2}>
+            <Box sx={{ "@media print": { display: "none" }, marginTop: 1 }}>
+                <BackButton text="Back" />
+            </Box>
             <ReportHeader
                 experimentInfo={experimentInfo}
                 owner={owner.username}

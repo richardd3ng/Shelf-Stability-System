@@ -4,7 +4,7 @@ import {
     useExperimentOwner,
 } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import ExperimentEditorModal from "../modifications/editorModals/experimentEditorModal";
 import { ErrorMessage } from "@/components/shared/errorMessage";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
@@ -13,7 +13,13 @@ import { useLoading } from "@/lib/context/shared/loadingContext";
 import DownloadExcelIconButton from "./downloadExcelIconButton";
 import GenerateReportIconButton from "@/components/shared/generateReportIconButton";
 import EditExperimentButton from "./editExperimentButton";
+import BackButton from "@/components/shared/backButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import { useRouter } from "next/router";
+import {
+    PreviousRouteProvider,
+    PreviousRouteContext,
+} from "@/lib/context/shared/previousRouteContext";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -27,7 +33,9 @@ export const ExperimentHeader = () => {
     const { showLoading, hideLoading } = useLoading();
     const [isEditing, setIsEditing] = useState(false);
     const { user } = useContext(CurrentUserContext);
+    const router = useRouter();
     const isAdmin: boolean = user?.is_admin ?? false;
+    const previousPath = useContext(PreviousRouteContext);
 
     useEffect(() => {
         if (isLoading) {
@@ -41,7 +49,25 @@ export const ExperimentHeader = () => {
         return <ErrorMessage message={getErrorMessage(error)} />;
     }
     return (
-        <>
+        <Stack>
+            <Box sx={{ marginLeft: 2, marginBottom: 0.5 }}>
+                <PreviousRouteProvider>
+                    <BackButton
+                        text="Back to Experiment List"
+                        onClick={() => {
+                            console.log("previousPath: ", previousPath);
+                            if (
+                                previousPath &&
+                                previousPath.includes("/experiment-list")
+                            ) {
+                                router.back();
+                            } else {
+                                router.push("/experiment-list");
+                            }
+                        }}
+                    />
+                </PreviousRouteProvider>
+            </Box>
             <Box
                 sx={{
                     marginX: 3,
@@ -102,6 +128,6 @@ export const ExperimentHeader = () => {
             >
                 <ExperimentEditorModal />
             </ExperimentEditingContext.Provider>
-        </>
+        </Stack>
     );
 };

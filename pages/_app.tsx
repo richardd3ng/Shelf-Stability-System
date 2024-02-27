@@ -10,7 +10,11 @@ import { LoadingProvider } from "@/lib/context/shared/loadingContext";
 import { SessionProvider } from "next-auth/react";
 
 const queryClient = new QueryClient();
-export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+
+export default function App({
+    Component,
+    pageProps: { session, ...pageProps },
+}: AppProps) {
     return (
         <>
             <Head>
@@ -22,7 +26,9 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
                     <LoadingProvider>
                         <CurrentUserProvider>
                             <AlertProvider>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDayjs}
+                                >
                                     <Component {...pageProps} />
                                 </LocalizationProvider>
                             </AlertProvider>
