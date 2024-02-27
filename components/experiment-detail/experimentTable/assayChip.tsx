@@ -147,6 +147,7 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
             <AssayEditingContext.Provider
                 value={{
                     assay: props.assay,
+                    setAssay: (_assay: Assay) => {},
                     isEditing,
                     setIsEditing,
                 }}
@@ -154,7 +155,7 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                 <AssayResultEditingContext.Provider
                     value={{
                         assayResult: props.assayResult,
-                        setAssayResult: (_result: AssayResult) => {},
+                        setAssayResult: (_result: AssayResult | undefined) => {},
                         isEditing,
                         setIsEditing,
                     }}

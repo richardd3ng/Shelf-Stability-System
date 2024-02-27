@@ -10,7 +10,6 @@ import {
 } from "@/lib/hooks/useServerPagination";
 import { AgendaContext } from "@/lib/context/agendaPage/agendaContext";
 import { AssayOptionsBox } from "@/components/agenda/assayOptionsBox";
-import { AssayResultEditorOnAgenda } from "@/components/agenda/assayResultEditorOnAgenda";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
 import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
