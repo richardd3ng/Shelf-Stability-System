@@ -17,14 +17,14 @@ export const usePreviousRoute = () => {
 export const PreviousRouteProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
-    const { asPath } = useRouter();
+    const router = useRouter();
     const [previousPath, setPreviousPath] = useState<string | null>(null);
     const currentPathRef = useRef<string | null>(null);
 
     useEffect(() => {
         setPreviousPath(currentPathRef.current);
-        currentPathRef.current = asPath;
-    }, [asPath]);
+        currentPathRef.current = router.asPath;
+    }, [router.asPath]);
 
     return (
         <PreviousRouteContext.Provider value={previousPath}>

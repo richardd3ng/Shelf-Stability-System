@@ -16,10 +16,6 @@ import EditExperimentButton from "./editExperimentButton";
 import BackButton from "@/components/shared/backButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { useRouter } from "next/router";
-import {
-    PreviousRouteProvider,
-    PreviousRouteContext,
-} from "@/lib/context/shared/previousRouteContext";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -33,9 +29,7 @@ export const ExperimentHeader = () => {
     const { showLoading, hideLoading } = useLoading();
     const [isEditing, setIsEditing] = useState(false);
     const { user } = useContext(CurrentUserContext);
-    const router = useRouter();
     const isAdmin: boolean = user?.is_admin ?? false;
-    const previousPath = useContext(PreviousRouteContext);
 
     useEffect(() => {
         if (isLoading) {
@@ -51,22 +45,7 @@ export const ExperimentHeader = () => {
     return (
         <Stack>
             <Box sx={{ marginLeft: 2, marginBottom: 0.5 }}>
-                <PreviousRouteProvider>
-                    <BackButton
-                        text="Back to Experiment List"
-                        onClick={() => {
-                            console.log("previousPath: ", previousPath);
-                            if (
-                                previousPath &&
-                                previousPath.includes("/experiment-list")
-                            ) {
-                                router.back();
-                            } else {
-                                router.push("/experiment-list");
-                            }
-                        }}
-                    />
-                </PreviousRouteProvider>
+                <BackButton text="Back to Experiment List" />
             </Box>
             <Box
                 sx={{
