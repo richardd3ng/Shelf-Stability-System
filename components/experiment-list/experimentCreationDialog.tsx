@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     Box,
     Button,
@@ -8,10 +8,15 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
     Stack,
     TextField,
 } from "@mui/material";
 import MultiSelectDropdown from "../shared/multiSelectDropdown";
+import { UserInfo, UserTable } from "@/lib/controllers/types";
 import { createExperiment } from "@/lib/controllers/experimentController";
 import {
     ConditionCreationArgsNoExperimentId,
@@ -23,7 +28,9 @@ import { useRouter } from "next/router";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "../shared/myDatePicker";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
-import { useUserInfo } from "@/lib/hooks/useUserInfo";
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import { INVALID_USER_ID } from "@/lib/hooks/useUserInfo";
+import { fetchUserList } from "@/lib/controllers/userController";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -36,9 +43,12 @@ const MAX_DESCRIPTION_LENGTH = 200;
 const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     props: ExperimentCreationDialogProps
 ) => {
+    const { user } = useContext(CurrentUserContext);
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [date, setDate] = useState<LocalDate | null>(LocalDate.now());
+    const [users, setUsers] = useState<UserInfo[]>([]);
+    const [ownerId, setOwnerId] = useState<number>(INVALID_USER_ID);
     const [storageConditions, setStorageConditions] = useState<string[]>([]);
     const [selectedStorageConditions, setSelectedStorageConditions] = useState<
         string[]
@@ -46,8 +56,21 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [newStorageCondition, setNewStorageCondition] = useState<string>("");
     const [creationLoading, setCreationLoading] = useState<boolean>(false);
     const { showAlert } = useAlert();
-    const userInfo = useUserInfo();
     const router = useRouter();
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const userTable: UserTable = await fetchUserList("");
+            setUsers(userTable.rows);
+        };
+        fetchUsers();
+    }, []);
+
+    useEffect(() => {
+        if (user) {
+            setOwnerId(user.id);
+        }
+    }, [user]);
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
@@ -69,6 +92,9 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
         const missingDetails: string[] = [];
         if (!title.trim()) {
             missingDetails.push("title");
+        }
+        if (ownerId === INVALID_USER_ID) {
+            missingDetails.push("owner");
         }
         if (!date) {
             missingDetails.push("start date");
@@ -114,7 +140,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 start_date: date!,
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
-                ownerId: userInfo.userId,
+                ownerId: ownerId,
             };
             const experimentResJson: ExperimentCreationResponse =
                 await createExperiment(experimentData);
@@ -150,6 +176,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const resetFields = () => {
         setTitle("");
         setDescription("");
+        setOwnerId(INVALID_USER_ID);
         setDate(LocalDate.now());
         setStorageConditions([]);
         setSelectedStorageConditions([]);
@@ -190,6 +217,23 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         }}
                         helperText={`${description.length}/${MAX_DESCRIPTION_LENGTH} characters`}
                     />
+                    <FormControl fullWidth>
+                        <InputLabel id="Owner" required>
+                            Owner
+                        </InputLabel>
+                        <Select
+                            id="Owner"
+                            value={ownerId}
+                            label="Owner"
+                            onChange={(e) => setOwnerId(Number(e.target.value))}
+                        >
+                            {users.map((user: UserInfo) => (
+                                <MenuItem key={user.id} value={user.id}>
+                                    {user.username}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     <MyDatePicker
                         label="Start Date"
                         defaultValue={LocalDate.now()}

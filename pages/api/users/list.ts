@@ -5,7 +5,7 @@ import { UserTable } from "@/lib/controllers/types";
 import { getApiError } from "@/lib/api/error";
 import { getToken } from "next-auth/jwt";
 
-export default async function fetchUserList(
+export default async function fetchUserListAPI(
     req: NextApiRequest,
     res: NextApiResponse<UserTable | ApiError>
 ) {
@@ -18,11 +18,13 @@ export default async function fetchUserList(
         return;
     }
 
-    var page;
-    var pageSize;
+    let page;
+    let pageSize;
     try {
-        page = parseInt(req.query.page as string);
-        pageSize = parseInt(req.query.page_size as string);
+        page = req.query.page ? parseInt(req.query.page as string) : undefined;
+        pageSize = req.query.page_size
+            ? parseInt(req.query.page_size as string)
+            : undefined;
     } catch (error) {
         res.status(400).json(getApiError(400, "Invalid page or page_size"));
         return;
@@ -31,11 +33,12 @@ export default async function fetchUserList(
     const query = (req.query.query || "") as string;
 
     try {
+        const userCount = await db.user.count();
         const userTable: UserTable = {
             rows: await db.user
                 .findMany({
-                    skip: page * pageSize,
-                    take: pageSize,
+                    skip: page && pageSize ? page * pageSize : 0,
+                    take: pageSize ?? userCount,
                     select: {
                         id: true,
                         is_admin: true,
@@ -54,7 +57,7 @@ export default async function fetchUserList(
                         is_admin: user.is_admin === true,
                     }))
                 ), // Account for null is_admin
-            rowCount: await db.user.count(),
+            rowCount: userCount,
         };
         res.status(200).json(userTable);
     } catch (error) {

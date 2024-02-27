@@ -21,7 +21,7 @@ export const fetchOwners = async (): Promise<UserInfo[]> => {
 
 export const fetchUserList = async (
     query: string,
-    paging: ServerPaginationArgs
+    paging?: ServerPaginationArgs
 ): Promise<UserTable> => {
     const url = encodePaging(relativeURL("/api/users/list"), paging);
 
