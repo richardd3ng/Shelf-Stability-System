@@ -8,7 +8,7 @@ export function relativeURL(url: string): URL {
 }
 
 export function encodePaging(url: URL, paging?: ServerPaginationArgs): URL {
-    if (!paging) {
+    if (!paging || !paging.pagination) {
         return url;
     }
     // Assume only one field is sorted by at a time
