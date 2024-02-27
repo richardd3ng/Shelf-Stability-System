@@ -178,7 +178,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
 
     return (
         <Dialog open={props.open} sx={{ width: "100%" }}>
-            <DialogTitle sx={{ width: "100%" }}>Add New Experiment</DialogTitle>
+            <DialogTitle sx={{ width: "100%" }}>Create Experiment</DialogTitle>
             <DialogContent sx={{ width: "100%" }}>
                 <Stack spacing={1.5}>
                     <DialogContentText>
