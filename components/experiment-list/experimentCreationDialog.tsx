@@ -151,6 +151,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             router.push(`/experiments/${experimentResJson.experiment.id}`);
         } catch (error) {
             showAlert("error", getErrorMessage(error));
+            return;
         }
         setCreationLoading(false);
         closeDialog();
