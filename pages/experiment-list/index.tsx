@@ -310,7 +310,7 @@ const ExperimentList: React.FC = () => {
                         onClick={() => setShowCreationDialog(true)}
                         sx={{ flex: 1, textTransform: "none" }}
                     >
-                        Add Experiment
+                        Create Experiment
                     </Button>
                 </Box>
 
