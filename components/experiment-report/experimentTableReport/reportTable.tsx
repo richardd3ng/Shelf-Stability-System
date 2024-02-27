@@ -139,6 +139,7 @@ const ReportTable: React.FC<ReportTableProps> = (props: ReportTableProps) => {
         <Table
             columns={createTableColumns()}
             rows={weekRows}
+            hideFooterContainer
             sortModel={[
                 {
                     field: "week",
