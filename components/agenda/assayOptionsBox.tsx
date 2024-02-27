@@ -7,11 +7,13 @@ import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingCo
 import { getAssayResult } from "@/lib/controllers/assayResultController";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { fetchAssay } from "@/lib/controllers/assayController";
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
 interface AssayOptionsBoxProps {
     experimentId: number;
     assayId: number;
     assayResultId: number | null;
+    owner: string;
 }
 
 export const AssayOptionsBox: React.FC<AssayOptionsBoxProps> = (
@@ -19,6 +21,9 @@ export const AssayOptionsBox: React.FC<AssayOptionsBoxProps> = (
 ) => {
     const { setAssayResult, setIsEditing } = useContext(AssayResultEditingContext);
     const { setAssay } = useContext(AssayEditingContext);
+
+    const { user } = useContext(CurrentUserContext);
+
     return (
         <Box sx={{ display: "flex" }}>
             <IconButton
@@ -27,7 +32,7 @@ export const AssayOptionsBox: React.FC<AssayOptionsBoxProps> = (
             >
                 <ViewIcon />
             </IconButton>
-            <IconButton
+            {(user?.is_admin || user?.username == props.owner) && <IconButton
                 onClick={() => {
                     const assayPromise = fetchAssay(props.assayId).then((assay) => {
                         setAssay(assay);
@@ -48,7 +53,7 @@ export const AssayOptionsBox: React.FC<AssayOptionsBoxProps> = (
                 }}
             >
                 <Edit />
-            </IconButton>
+            </IconButton>}
         </Box>
     );
 };

@@ -115,6 +115,9 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     };
 
     const handleAddStorageCondition = () => {
+        if (conditionName.trim() === '') {
+            return;
+        }
         if (storageConditions.includes(conditionName)) {
             showAlert("error", "Condition already exists.");
             return;

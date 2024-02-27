@@ -11,6 +11,9 @@ export const useMutationToUpdatePassword = () => {
         onSuccess: () => {
             showAlert("success", "Successfully updated the password!");
         },
+        onError: (error) => {
+            showAlert("error", error.message);
+        },
         onMutate: () => {
             showLoading("Updating password...");
         },

@@ -82,3 +82,7 @@ a {
 .experiment-row-clickable {
     cursor: pointer;
 }
+
+.agenda-row-clickable {
+    cursor: pointer;
+}

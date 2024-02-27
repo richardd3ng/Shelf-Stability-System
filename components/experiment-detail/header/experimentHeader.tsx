@@ -78,7 +78,7 @@ export const ExperimentHeader = () => {
                         <DownloadExcelIconButton />
                     </Box>
                 </Box>
-                <Typography align="center" variant="h6">
+                <Typography align="center" variant="h6" whiteSpace={"pre-line"}>
                     {experimentInfo
                         ? experimentInfo.experiment.description
                         : null}

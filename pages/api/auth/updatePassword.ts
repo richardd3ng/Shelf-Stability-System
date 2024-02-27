@@ -36,7 +36,8 @@ export default async function updatePasswordAPI(
                 userInDB.password
             );
             if (!oldPasswordIsCorrect) {
-                throw new Error("Wrong previous password!");
+                res.status(400).json(getApiError(400, "Wrong previous password!"));
+                return;
             } else {
                 const result = await db.user.update({
                     where: {

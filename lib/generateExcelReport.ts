@@ -39,7 +39,7 @@ function getSheet2Data(experimentInfo: ExperimentInfo): OneRowOfSheet2Data[] {
             "Condition": experimentInfo.conditions.findLast((condition: Condition) => condition.id === assay.conditionId)?.name,
             "Assay Type": assayTypeIdToName(assay.type),
             "Result": assayResult?.result,
-            "Units": getAssayTypeUnits(assay.type),
+            "Units": assayResult?.result ? getAssayTypeUnits(assay.type) : null,
             "Last Edited User": assayResult?.last_editor,
             "Comment": assayResult?.comment
         })
