@@ -1,6 +1,6 @@
 import { CreatedExperimentIdAndConditions, createExperimentWithConditions } from "../../lib/api/dbOperations/experimentOperations";
 import { ExperimentImportJSON, readExperimentsFileToJSON } from "./jsonParser";
-import { AssayCreationArgs, AssayResultCreationArgs, ExperimentCreationArgs, ConditionCreationArgsNoExperimentId } from "../../lib/controllers/types";
+import { AssayCreationArgs, AssayResultCreationArgs, ExperimentCreationArgs, ConditionCreationArgsNoExperimentId, ExperimentCreationRequiringConditionArgs } from "../../lib/controllers/types";
 import { LocalDate, DateTimeFormatter } from "@js-joda/core";
 import { getAllUsers } from "../../lib/api/dbOperations/userOperations";
 import { User, Condition, Assay } from "@prisma/client";
@@ -117,7 +117,7 @@ async function parseAndCreateExperimentWithConditionsInDB(experiment: Experiment
             };
         }
     );
-    const experimentData: ExperimentCreationArgs = {
+    const experimentData: ExperimentCreationRequiringConditionArgs = {
         title: experiment.title,
         description: experiment.description,
         start_date: LocalDate.parse(experiment.start_date, DateTimeFormatter.ISO_LOCAL_DATE),

@@ -1,4 +1,4 @@
-import { ExperimentCreationArgs } from "../../controllers/types";
+import { ExperimentCreationRequiringConditionArgs } from "../../controllers/types";
 import {db} from "../db";
 import { localDateToJsDate } from "../../datesUtils";
 import { Condition } from "@prisma/client";
@@ -7,7 +7,7 @@ export interface CreatedExperimentIdAndConditions {
     id : number;
     conditions : Condition[]
 }
-export const createExperimentWithConditions = async (experiment : ExperimentCreationArgs) : Promise<CreatedExperimentIdAndConditions> =>  {
+export const createExperimentWithConditions = async (experiment : ExperimentCreationRequiringConditionArgs) : Promise<CreatedExperimentIdAndConditions> =>  {
     const createdExperiment = await db.experiment.create({
         select : {
             id : true,
