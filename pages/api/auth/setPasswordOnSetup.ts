@@ -24,6 +24,8 @@ export default async function setPasswordOnSetupAPI(
             data: {
                 password: newPassword,
                 username: ADMIN_USERNAME,
+                is_admin: true,
+                is_super_admin: true,
             },
         });
         res.status(200).json(jsonData);
