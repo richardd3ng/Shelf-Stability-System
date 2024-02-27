@@ -6,9 +6,9 @@ import { getApiError } from "@/lib/api/error";
 import { experimentHasAssaysWithResults } from "@/lib/api/validations";
 import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { INVALID_EXPERIMENT_ID, getExperimentID } from "@/lib/api/apiHelpers";
-import { nativeJs } from "@js-joda/core";
 import { ExperimentWithLocalDate } from "@/lib/controllers/types";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+import { dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
 
 export default async function deleteExperimentAPI(
     req: NextApiRequest,
@@ -37,10 +37,7 @@ export default async function deleteExperimentAPI(
                 .delete({
                     where: { id: id },
                 })
-                .then((experiment: Experiment) => ({
-                    ...experiment,
-                    start_date: nativeJs(experiment.start_date).toLocalDate(),
-                }));
+                .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["start_date"]));
         if (!deletedExperiment) {
             res.status(404).json(
                 getApiError(

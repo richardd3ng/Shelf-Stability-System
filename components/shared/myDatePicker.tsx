@@ -6,7 +6,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Dayjs } from "dayjs"
 import dayjs from "dayjs";
-import { LocalDate, nativeJs } from "@js-joda/core";
+import { LocalDate, ZoneId, nativeJs } from "@js-joda/core";
 import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 
@@ -24,6 +24,7 @@ export const MyDatePicker: React.FC<MyDatePickerProps> = (props) => {
     return (
         <DatePicker
             timezone="UTC"
+            format="YYYY-MM-DD"
             {...props}
             value={
                 props.value === null || props.value === undefined
@@ -41,7 +42,7 @@ export const MyDatePicker: React.FC<MyDatePickerProps> = (props) => {
                     try {
                         props.onChange(
                             newDate !== null
-                                ? nativeJs(newDate).toLocalDate()
+                                ? nativeJs(newDate, ZoneId.UTC).toLocalDate()
                                 : newDate,
                             context
                         );

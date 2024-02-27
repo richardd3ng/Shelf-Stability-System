@@ -131,8 +131,8 @@ const ExperimentList: React.FC = () => {
         {
             field: "startDate",
             headerName: "Start Date",
-            type: "date",
-            valueFormatter: (params) => params.value?.toString() ?? "",
+            type: "string",
+            valueGetter: (params) => params.row.startDate.toString(),
             flex: 2,
         },
         {

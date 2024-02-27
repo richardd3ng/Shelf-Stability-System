@@ -4,17 +4,20 @@ import { encodePaging, relativeURL } from "./url";
 import { deleteEntity } from "./deletions";
 import { LocalDate } from "@js-joda/core";
 import { Assay } from "@prisma/client";
-import { AssayCreationArgs, AssayTable, AssayUpdateArgs } from "./types";
+import { AssayCreationArgs, AssayInfo, AssayTable, AssayUpdateArgs } from "./types";
+import { stringFieldsToLocalDate } from "./jsonConversions";
 
 export const fetchAgendaList = async (
     minDate: LocalDate | null,
     maxDate: LocalDate | null,
     includeRecorded: boolean,
+    ownedAssaysOnly: boolean,
     paging: ServerPaginationArgs
 ): Promise<AssayTable> => {
     const url = encodePaging(relativeURL("/api/assays/agenda"), paging);
 
     url.searchParams.set("include_recorded", includeRecorded.toString());
+    url.searchParams.set("owned_assays_only", ownedAssaysOnly.toString());
     if (minDate !== null) {
         url.searchParams.set("minDate", minDate.toString());
     }
@@ -31,15 +34,27 @@ export const fetchAgendaList = async (
 
     const resJson = await response.json();
     if (response.ok) {
-        const table: AssayTable = resJson;
+        const table: { rows: (Omit<AssayInfo, 'targetDate'> & { targetDate: string })[]; rowCount: number } = resJson;
         return {
             ...table,
-            // Convert the targetDate from string to Date
-            rows: table.rows.map((assay) => ({
-                ...assay,
-                targetDate: new Date(assay.targetDate),
-            })),
+            // Convert the startDate from string to Date
+            rows: table.rows.map((assay) => stringFieldsToLocalDate(assay, ["targetDate"])),
         };
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
+export const fetchAssay = async (id: number): Promise<Assay> => {
+    const endpoint = `/api/assays/${id}`;
+    const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
     }
     throw new ApiError(response.status, resJson.message);
 };
