@@ -8,7 +8,7 @@ import {
     Stack,
 } from "@mui/material";
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ExperimentCreationDialog from "@/components/experiment-list/experimentCreationDialog";
 import Layout from "../../components/shared/layout";
 import SearchBar from "../../components/shared/searchBar";
@@ -38,6 +38,7 @@ import ViewExperimentButton from "@/components/experiment-list/viewExperimentBut
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 import Delete from "@mui/icons-material/Delete";
 import { useUserInfo } from "@/lib/hooks/useUserInfo";
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
 interface QueryParams {
     search: string;
@@ -73,6 +74,8 @@ const ExperimentList: React.FC = () => {
     // TODO: this is still fetching the data twice, so it's not a perfect solution
 
     const [ownerList, setOwnerList] = useState<UserInfo[] | null>(null);
+    const { user } = useContext(CurrentUserContext);
+    const isAdmin: boolean = user?.is_admin ?? false;
 
     const reloadExperimentData = async (
         paging: ServerPaginationArgs
@@ -154,11 +157,11 @@ const ExperimentList: React.FC = () => {
                     <GeneratePrintableReportButton
                         experimentId={params.row.id}
                     />
-                    <IconButtonWithTooltip
+                    {isAdmin && <IconButtonWithTooltip
                         text="Delete"
                         icon={Delete}
                         onClick={() => prepareForDeletion([params.row.id])}
-                    ></IconButtonWithTooltip>
+                    ></IconButtonWithTooltip>}
                 </Box>
             ),
         },
@@ -304,21 +307,20 @@ const ExperimentList: React.FC = () => {
                             </Select>
                         </FormControl>
                     </Box>
-                    <Button
+                    {isAdmin && (<Button
                         variant="contained"
                         color="primary"
                         onClick={() => setShowCreationDialog(true)}
                         sx={{ flex: 1, textTransform: "none" }}
                     >
                         Create Experiment
-                    </Button>
+                    </Button>)}
                 </Box>
 
                 <Table
                     columns={colDefs}
                     rows={experimentData}
                     pagination
-                    checkboxSelection
                     onDeleteRows={prepareForDeletion}
                     onCellClick={(cell) => {
                         if (cell.field !== "actions") {

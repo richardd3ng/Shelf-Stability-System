@@ -89,6 +89,9 @@ const ExperimentEditorModal: React.FC = () => {
                 <TextField
                     label="Description"
                     value={description}
+                    fullWidth
+                    multiline
+                    rows={4}
                     onChange={(e) => setDescription(e.target.value)}
                 />
                 {allowEditStartDate && (

@@ -90,7 +90,7 @@ const Table: React.FC<TableProps & DataGridProps> = (
                     25,
                     50,
                     100,
-                    { value: 100, label: "All" },
+                    // { value: 100, label: "All" }, // Note, seems to conflict with 100 setting in a weird way
                 ]}
                 checkboxSelection={props.checkboxSelection ?? false}
                 disableRowSelectionOnClick

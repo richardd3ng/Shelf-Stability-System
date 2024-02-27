@@ -16,6 +16,7 @@ import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingCo
 import { Assay, AssayResult } from "@prisma/client";
 import AssayEditorModal from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
+import { useRouter } from "next/router";
 
 const colDefs: GridColDef[] = [
     {
@@ -65,6 +66,7 @@ const colDefs: GridColDef[] = [
         sortable: false,
         renderCell: (params) => (
             <AssayOptionsBox
+                owner={params.row.owner}
                 assayId={params.row.id}
                 assayResultId={params.row.resultId}
                 experimentId={params.row.experimentId}
@@ -118,6 +120,13 @@ export default function AssayAgenda() {
     useEffect(() => {
         reload();
     }, [fromDate, toDate, includeRecordedAssays, ownedAssaysOnly]);
+
+    const router = useRouter();
+
+    function onCellClick(params: any) {
+        if (params.field === 'actions') return;
+        router.push(`/experiments/${params.row.experimentId}`);
+    }
 
     return (
         <Layout>
@@ -210,6 +219,8 @@ export default function AssayAgenda() {
                                         : "assay-cell-not-recorded"
                                 }
                                 disableColumnMenu
+                                onCellClick={onCellClick}
+                                getRowClassName={(_) => "agenda-row-clickable"}
                             />
                             <AssayEditorModal
                                 onlyEditResult

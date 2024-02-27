@@ -18,15 +18,17 @@ export default async function setConditionAsControlAPI(
         return;
     }
     try {
-        if (await conditionHasAssaysWithResults(id)) {
-            res.status(CONSTRAINT_ERROR_CODE).json(
-                getApiError(
-                    CONSTRAINT_ERROR_CODE,
-                    "Cannot edit condition affecting recorded results"
-                )
-            );
-            return;
-        }
+        // Note: we should discuss if we want this
+        // With the below code, the control condition can be changed away from a condition with results, but not back, which is inconsistent
+        // if (await conditionHasAssaysWithResults(id)) {
+        //     res.status(CONSTRAINT_ERROR_CODE).json(
+        //         getApiError(
+        //             CONSTRAINT_ERROR_CODE,
+        //             "Cannot edit condition affecting recorded results"
+        //         )
+        //     );
+        //     return;
+        // }
         let newControlCondition: Condition | null = null;
         await db.$transaction(async (tx) => {
             newControlCondition = await tx.condition.findUnique({

@@ -36,6 +36,11 @@ function convertSort(
                 field: field,
                 order: newOrder,
             };
+        case "owner":
+            return {
+                field: "u.username",
+                order: newOrder,
+            };
     }
 
     return undefined;
@@ -70,13 +75,13 @@ export default async function searchExperimentsAPI(
                 FROM public."Experiment" e
                 JOIN public."User" u ON e."ownerId" = u.id
                 WHERE (e.title ILIKE ${`%${query}%`}
-                OR e.description ILIKE ${`%${query}%`})
-                ${owner !== ""
-                    ? Prisma.raw(`AND u.username = '${owner}'`)
-                    : Prisma.empty
-                }                
+                OR e.description ILIKE ${`%${query}%`}
                 ${!isNaN(queryNumber)
                     ? Prisma.sql`OR e.id = ${queryNumber}`
+                    : Prisma.empty
+                })
+                ${owner !== ""
+                    ? Prisma.raw(`AND u.username = '${owner}'`)
                     : Prisma.empty
                 }
                 ${orderBy !== undefined
@@ -96,23 +101,27 @@ export default async function searchExperimentsAPI(
                 ),
             db.experiment.count({
                 where: {
-                    OR: [
+                    AND: [
                         {
-                            title: {
-                                contains: query as string,
-                                mode: "insensitive",
-                            },
-                        },
-                        {
-                            description: {
-                                contains: query as string,
-                                mode: "insensitive",
-                            },
-                        },
-                        {
-                            id: isNaN(queryNumber) ? undefined : queryNumber,
-                        },
-                    ],
+                            OR: [
+                                {
+                                    title: {
+                                        contains: query as string,
+                                        mode: "insensitive",
+                                    },
+                                },
+                                {
+                                    description: {
+                                        contains: query as string,
+                                        mode: "insensitive",
+                                    },
+                                },
+                                {
+                                    id: isNaN(queryNumber) ? undefined : queryNumber,
+                                },
+                            ],
+                        }
+                    ]
                 },
             }),
         ]);
