@@ -28,13 +28,13 @@ jest.mock('next-auth/jwt');
 
 
 
-describe('/api/users', () => {
+describe('/api/conditions/create', () => {
     let req: Partial<NextApiRequest>;
     let res: Partial<NextApiResponse>;
 
     beforeEach(() => {
         req = {
-            method: 'GET',
+            method: 'POST',
             body : {
                 "experimentId" : 1,
                 "name" : "myCondition",

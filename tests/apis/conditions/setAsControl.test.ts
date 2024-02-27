@@ -1,7 +1,7 @@
 // __tests__/api/users.test.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import deleteConditionAPI from '@/pages/api/conditions/[conditionId]/delete';
+import setConditionAsControlAPI from '@/pages/api/conditions/[conditionId]/setAsControl';
 import { db } from '@/lib/api/db';
 import "next-auth/jwt"
 import "next-auth/client"
@@ -28,7 +28,7 @@ jest.mock('next-auth/jwt');
 
 
 
-describe('/api/conditions/[conditionId]/delete', () => {
+describe('/api/conditions/[conditionId]/setAsControl', () => {
     let req: Partial<NextApiRequest>;
     let res: Partial<NextApiResponse>;
 
@@ -48,7 +48,7 @@ describe('/api/conditions/[conditionId]/delete', () => {
     it('rejects request from non-admin', async () => {
         (db.user.findUnique as jest.Mock).mockResolvedValueOnce(mockNonAdminUser);
 
-        await deleteConditionAPI(req as NextApiRequest, res as NextApiResponse);
+        await setConditionAsControlAPI(req as NextApiRequest, res as NextApiResponse);
         expect(res.status).toHaveBeenCalledWith(UNAUTHORIZED_STATUS_CODE);
         
     });
