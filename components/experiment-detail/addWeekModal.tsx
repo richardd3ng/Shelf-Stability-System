@@ -39,6 +39,7 @@ export const AddWeekModal: React.FC<AddWeekModalProps> = (
 
     const onSubmit = () => {
         if (!data) {
+            setWeek("");
             return;
         }
         const error: string =
@@ -46,8 +47,10 @@ export const AddWeekModal: React.FC<AddWeekModalProps> = (
             duplicateWeekValidation(week);
         if (error) {
             showAlert("error", error);
+            setWeek("");
             return;
         }
+        setWeek("");
         props.onSubmit(Number(week));
         props.onClose();
     };
