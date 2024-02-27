@@ -3,7 +3,7 @@
 ## Developer Guide
 This app uses [Next.js](https://nextjs.org/) to have both frontend and backend code contained within a single codebase with a RESTful API to connect them. We use [Prisma](https://www.prisma.io/) as an ORM to communicate with our database in a type-safe way.
 
-We use a postgres database with the tables `Assay`, `AssayType`, `Condition`, and `Experiment`. Experiments have some number of AssayTypes and Conditions, as expressed by an experiment id in each of them. Assays have ids for an Experiment, Condition, and AssayType that they belong to. There is no limit on how many Assays may link to a given Experiment, Conditon, or AssayType.
+We use a postgres database with the tables `Assay`, `AssayResult`, `Condition`, `Experiment`, and `User`. Experiments have some number of Conditions, as expressed by an experiment id in each condition. Assays have ids for an Experiment, Condition, and AssayType that they belong to. The AssayType id can be looked up in the `data/assayTypes.json` file, rather than the database. There is no limit on how many Assays may link to a given Experiment or AssayType. The exact details of our database schema are in the `prisma/schema.prisma` file.
 
 For development:
 - Install Node.js v21.6.1. We recommend using [nvm](https://github.com/nvm-sh/nvm) for this
@@ -12,6 +12,7 @@ For development:
 ```
 DATABASE_URL="<database connection string>"
 NEXTAUTH_SECRET=<secret>
+NEXTAUTH_URL=<public address of the webserver>
 ```
 - In the root of the project, run `npm install`
 - Run `npm run dev` to start the webserver. You should now be able to access it at [http://localhost:3000](http://localhost:3000)
@@ -35,7 +36,12 @@ Replace the database connection string with whatever connection string is used f
 
 ```bash
 npm install # Install all required packages
+
+# If starting a fresh install with no data:
 npx prisma migrate deploy # Deploy the database schema
+
+# If restoring from a backup
+pg_restore -U postgres -d postgres -1 <path/to/your/backup.sql>
 ```
 
 Then start the webserver. 
@@ -50,6 +56,15 @@ npm run start
 or if you're using pm2
 ```bash
 pm2 start npm --name "prod" -- start # "prod" may be replaced with a name of your choosing
+```
+
+To launch the webserver on boot with pm2:
+```bash
+pm2 startup
+
+# Paste the command it instructs you to run
+
+pm2 save
 ```
 
 The webserver will now be accepting http requests on port 8080. `nginx` will be needed to get it accepting https requests on port 80.
@@ -72,4 +87,20 @@ include /etc/nginx/sites-enabled/*;
 ```
 - Follow the instructions on the [Certbot website](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal) to obtain and install an HTTPS certificate
 
-The first time you connect to the website, you will be presented with a Set Password page to setup the initial password. It is recommended to do this sometime before the server can be accessed from outside the network.
+The first time you connect to the website, you will be presented with a page to setup the initial admin password. It is recommended to do this sometime before the server can be accessed from outside the network.
+
+## Backup Guide
+Our backup system is implemented using a cron job that SSHs into the webserver and dumps a backup using postgres's `pg_dump` utility. Progress notifications and failure alerts are sent using a discord webhook (although other alerts should be relatively simple to set up).
+
+To set up this system:
+Install python and [paramiko](https://www.paramiko.org/)
+
+Edit the constants in `scripts/make-backup` to specify the folder to save backups to, the authentication details to retrieve backups from the production server, and the webhook url to post updates and alerts to.
+
+Copy the script into `/etc/cron.daily`. Make sure the file is owned by the root user and that no other users or groups have write access to it.
+
+The files output by the backup system are long sets of SQL commands. They can easily be run by the database using the `pg_restore` command:
+```bash
+pg_restore -U postgres -d postgres -1 <path/to/your/backup.sql>
+```
+The username you use may be different depending on your SQL server setup. Note that this may conflict in minor ways if the database is not empty, so you should wipe the database before restoring a backup.
