@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
@@ -13,6 +13,7 @@ interface TableProps {
     sortModel?: any;
     checkboxSelection?: boolean;
     footer?: React.JSXElementConstructor<any>;
+    hideFooterContainer?: boolean;
     onDeleteRows?: (rows: GridRowSelectionModel) => void;
     handleCellClick?: (params: any) => void;
 }
@@ -31,8 +32,8 @@ const Table: React.FC<TableProps & DataGridProps> = (
     };
 
     const FooterComponent: React.FC = () => {
-        if (!props.footer && selectedRows.length === 0) {
-            return null;
+        if (props.hideFooterContainer) {
+            return <></>;
         }
         return (
             <GridFooterContainer>
@@ -94,7 +95,9 @@ const Table: React.FC<TableProps & DataGridProps> = (
                     setSelectedRows(newSelectedRows);
                 }}
                 {...props}
-                sx={{ "@media print": { breakInside: "avoid" } }}
+                sx={{
+                    "@media print": { breakInside: "avoid" },
+                }}
             />
         </Box>
     );
