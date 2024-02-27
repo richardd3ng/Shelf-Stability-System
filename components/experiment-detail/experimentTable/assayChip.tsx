@@ -63,9 +63,13 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                         }}
                     >
                         <Tooltip
-                            title={`Author: ${
-                                props.assayResult?.last_editor ?? "N/A"
-                            }`}
+                            title={
+                                <Typography fontSize={16}>
+                                    {`Author: ${
+                                        props.assayResult?.last_editor ?? "N/A"
+                                    }`}
+                                </Typography>
+                            }
                             open={showLastEditor}
                             arrow
                             slotProps={{
@@ -93,9 +97,13 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                             </IconButton>
                         </Tooltip>
                         <Tooltip
-                            title={`Comment: ${
-                                props.assayResult?.comment ?? "N/A"
-                            }`}
+                            title={
+                                <Typography fontSize={16}>
+                                    {`Comment: ${
+                                        props.assayResult?.comment ?? "N/A"
+                                    }`}
+                                </Typography>
+                            }
                             open={showComment}
                             arrow
                             slotProps={{

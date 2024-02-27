@@ -6,8 +6,6 @@ import {
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Box, Stack, Typography } from "@mui/material";
 import ExperimentEditorModal from "../modifications/editorModals/experimentEditorModal";
-import { ErrorMessage } from "@/components/shared/errorMessage";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
 import ExperimentEditingContext from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import DownloadExcelIconButton from "./downloadExcelIconButton";
@@ -15,7 +13,6 @@ import GenerateReportIconButton from "@/components/shared/generateReportIconButt
 import EditExperimentButton from "./editExperimentButton";
 import BackButton from "@/components/shared/backButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
-import { useRouter } from "next/router";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -61,7 +58,7 @@ export const ExperimentHeader = () => {
                         alignItems: "baseline",
                     }}
                 >
-                    <Typography variant="h4">
+                    <Typography variant="h5" sx={{ marginTop: 1 }}>
                         {experimentInfo
                             ? experimentInfo.experiment.title
                             : null}
@@ -81,11 +78,7 @@ export const ExperimentHeader = () => {
                         <DownloadExcelIconButton />
                     </Box>
                 </Box>
-                <Typography
-                    align="center"
-                    variant="h5"
-                    style={{ marginBottom: 8 }}
-                >
+                <Typography align="center" variant="h6">
                     {experimentInfo
                         ? experimentInfo.experiment.description
                         : null}
@@ -93,8 +86,8 @@ export const ExperimentHeader = () => {
                 {owner && (
                     <Typography
                         align="center"
-                        variant="h5"
-                        style={{ marginBottom: 8 }}
+                        variant="h6"
+                        sx={{ marginBottom: 1 }}
                     >
                         {`Started ${experimentInfo.experiment.start_date.toString()} by 
                     ${owner.username}`}
