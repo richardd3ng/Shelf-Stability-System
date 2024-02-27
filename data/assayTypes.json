@@ -20,7 +20,7 @@
         },
         {
             "id": 4,
-            "name": "Peroxide value",
+            "name": "Peroxide value (PV)",
             "abbrev": "PV",
             "units": "meq O2/kg"
         },
@@ -32,7 +32,7 @@
         },
         {
             "id": 6,
-            "name": "Free fatty acid",
+            "name": "Free fatty acid (FFA)",
             "abbrev": "FFA",
             "units": "% FFA"
         }

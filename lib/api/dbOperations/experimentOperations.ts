@@ -1,4 +1,4 @@
-import { ConditionCreationArgsNoExperimentId, ExperimentCreationArgs } from "../../controllers/types";
+import { ExperimentCreationArgs } from "../../controllers/types";
 import {db} from "../db";
 import { localDateToJsDate } from "../../datesUtils";
 import { Condition } from "@prisma/client";
@@ -15,7 +15,6 @@ export const createExperimentWithConditions = async (experiment : ExperimentCrea
         },
         data : 
             {
-
                 title : experiment.title,
                 ownerId : experiment.ownerId,
                 description : experiment.description,
