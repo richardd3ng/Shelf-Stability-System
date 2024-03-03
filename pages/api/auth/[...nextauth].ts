@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { USER_ID } from "@/lib/api/auth/authHelpers";
 import { db } from "@/lib/api/db";
 import { compare } from "bcryptjs";
+import DukeProvider from "@/lib/api/auth/dukeProvider";
 
 export const authOptions = {
     providers: [
@@ -52,6 +53,7 @@ export const authOptions = {
                 }
             },
         }),
+        DukeProvider(),
     ],
 
     secret: process.env.NEXTAUTH_SECRET,
