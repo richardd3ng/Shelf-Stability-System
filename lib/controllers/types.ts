@@ -1,5 +1,11 @@
 import { LocalDate } from "@js-joda/core";
-import { Experiment, Condition, Assay, AssayResult, User } from "@prisma/client";
+import {
+    Experiment,
+    Condition,
+    Assay,
+    AssayResult,
+    User,
+} from "@prisma/client";
 
 /* ----- Experiment ----- */
 
@@ -33,17 +39,18 @@ export type ExperimentTable = {
     rowCount: number;
 };
 
-export type ExperimentCreationRequiringConditionArgs =
-    Omit<ExperimentWithLocalDate, "id">
-    & {
-          conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
-      };
-
-export type ExperimentCreationArgs =
-| Omit<ExperimentWithLocalDate, "id">
-| {
+export type ExperimentCreationRequiringConditionArgs = Omit<
+    ExperimentWithLocalDate,
+    "id"
+> & {
     conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
 };
+
+export type ExperimentCreationArgs =
+    | Omit<ExperimentWithLocalDate, "id">
+    | {
+          conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+      };
 export type ExperimentCreationResponse = Omit<
     ExperimentInfo,
     "assays" | "assayResults"
@@ -130,4 +137,35 @@ export type UserTable = {
     rowCount: number;
 };
 
-export type UserWithoutPassword = Omit<User, 'password'>;
+export type UserWithoutPassword = Omit<User, "password">;
+
+/* ----- Email ----- */
+
+export type EmailQueryResult = {
+    userId: number;
+    email: string;
+    targetDate: string;
+    experimentId: number;
+    title: string;
+    owner: string;
+    condition: string;
+    week: number;
+    assayType: string;
+    technician: string;
+};
+
+export type EmailInfo = {
+    [userId: number]: {
+        email: string;
+        agenda: {
+            targetDate: LocalDate;
+            experimentId: number;
+            title: string;
+            owner: string;
+            condition: string;
+            week: number;
+            assayType: string;
+            technician: string;
+        }[];
+    };
+};

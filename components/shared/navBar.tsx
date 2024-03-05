@@ -31,7 +31,7 @@ const NavBar: React.FC = () => {
         <AppBar position="sticky" color="primary">
             <Toolbar >
                 <Typography variant="h6" style={{ flexGrow: 1 }}>
-                    Shelf Stability Tracking System
+                    Shelf Stability System
                 </Typography>
 
                 {options.filter(option => !option.hidden).map((option, index) => <NavBarButton key={index} text={option.text} onClick={option.onClick} />)}
