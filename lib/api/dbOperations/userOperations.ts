@@ -22,6 +22,28 @@ export async function createUserInDB(username: any, password: string, isAdmin: b
     };
 }
 
+export async function createOrUpdateUser(username: string, displayName: string, email: string, isSSO: boolean) {
+    return {
+        ...await db.user.upsert({
+            where: {
+                username
+            },
+            update: {
+                displayName,
+                email
+            },
+            create: {
+                username,
+                displayName,
+                email,
+                isSSO,
+                isAdmin: false,
+                isSuperAdmin: false
+            }
+        })
+    };
+};
+
 export async function getAllUsers () : Promise<User[]> {
     const user = await db.user.findFirst({
         where : {

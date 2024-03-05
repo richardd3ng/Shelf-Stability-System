@@ -1,11 +1,11 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { USER_ID } from "@/lib/api/auth/authHelpers";
 import { db } from "@/lib/api/db";
 import { compare } from "bcryptjs";
 import DukeProvider from "@/lib/api/auth/dukeProvider";
+import { decode } from "next-auth/jwt";
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             // The name to display on the sign in form (e.g. "Sign in with...")
@@ -15,10 +15,10 @@ export const authOptions = {
             // e.g. domain, username, password, 2FA token, etc.
             // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
-                username : { label: "Username", type : "username"},
+                username: { label: "Username", type: "username" },
                 password: { label: "Password", type: "password" },
             },
-            async authorize(credentials, req) {
+            async authorize(credentials, req) { // TODO block SSO accounts
                 try {
                     const username = credentials?.username;
                     const password = credentials?.password;
@@ -53,7 +53,10 @@ export const authOptions = {
                 }
             },
         }),
-        DukeProvider(),
+        DukeProvider(
+            process.env.DUKE_CLIENT_ID,
+            process.env.DUKE_CLIENT_SECRET
+        ),
     ],
 
     secret: process.env.NEXTAUTH_SECRET,
@@ -61,15 +64,14 @@ export const authOptions = {
     jwt: {
         secret: process.env.NEXTAUTH_SECRET,
         maxAge: 60 * 60 * 24 * 30,
-        encryption: false,
     },
 
     pages: {
-        signIn: "/login",
+        signIn: "/auth/login",
     },
 
     callbacks: {
-        async jwt({ token, user }: { token: any; user: any }) {
+        async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
                 token.name = user.name;
@@ -77,15 +79,9 @@ export const authOptions = {
             }
             return token;
         },
-
         async session({
             session,
             token,
-            user,
-        }: {
-            session: any;
-            token: any;
-            user: any;
         }) {
             session.user = token;
             return session;
