@@ -4,28 +4,29 @@ import { User } from "@prisma/client";
 import { LocalDate, ZoneId, nativeJs } from "@js-joda/core";
 import { EmailInfo, EmailQueryResult } from "@/lib/controllers/types";
 
-export async function createUserInDB(
-    username: any,
-    password: string,
-    isAdmin: boolean
-) {
-    return {
-        ...(await db.user.create({
-            select: {
-                id: true,
-                username: true,
-                is_admin: true,
-                is_super_admin: true,
-            },
-            data: {
-                username,
-                password: await hashPassword(password),
-                is_admin: isAdmin,
-                is_super_admin: false,
-            },
-        })),
-    };
-}
+// TODO: fix due to schema changes
+// export async function createUserInDB(
+//     username: any,
+//     password: string,
+//     isAdmin: boolean
+// ) {
+//     return {
+//         ...(await db.user.create({
+//             select: {
+//                 id: true,
+//                 username: true,
+//                 isAdmin: true,
+//                 isSuperAdmin: true,
+//             },
+//             data: {
+//                 username,
+//                 password: await hashPassword(password),
+//                 isAdmin: isAdmin,
+//                 isSuperAdmin: false,
+//             },
+//         })),
+//     };
+// }
 
 export async function getAllUsers(): Promise<User[]> {
     const user = await db.user.findFirst({
