@@ -13,6 +13,8 @@ For development:
 DATABASE_URL="<database connection string>"
 NEXTAUTH_SECRET=<secret>
 NEXTAUTH_URL=<public address of the webserver>
+SENDGRID_API_KEY=<secret>
+SENDER_EMAIL=<email address of sender for email service>
 ```
 - In the root of the project, run `npm install`
 - Run `npm run dev` to start the webserver. You should now be able to access it at [http://localhost:3000](http://localhost:3000)
