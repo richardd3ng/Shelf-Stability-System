@@ -1,10 +1,6 @@
 import { fetchEmailInfo } from "../../lib/api/dbOperations/userOperations";
 import { EmailInfo } from "../../lib/controllers/types";
 import sgMail from "@sendgrid/mail";
-import dotenv from "dotenv";
-import path from "path";
-
-dotenv.config({ path: path.resolve(__dirname, "sendgrid.env") });
 
 export const sendEmails = async () => {
     console.log("sending emails...");
@@ -58,7 +54,7 @@ export const sendEmails = async () => {
                 to: data.email,
                 from: senderEmail,
                 subject: "HM Labs: Upcoming Assay Reminder (2)",
-                html: `<p>You are listed as the owner and/or assay type technician for the following upcoming assays:</p>
+                html: `<p>You are listed as the owner and/or technician for the following upcoming assays:</p>
         ${tableHtml}`,
             };
             sgMail.send(msg);
@@ -68,4 +64,3 @@ export const sendEmails = async () => {
         console.error(error);
     }
 };
-sendEmails();
