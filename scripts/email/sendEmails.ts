@@ -54,7 +54,7 @@ export const sendEmails = async () => {
                 to: data.email,
                 from: senderEmail,
                 subject: "HM Labs: Upcoming Assay Reminder (2)",
-                html: `<p>You are listed as the owner and/or technician for the following upcoming assays:</p>
+                html: `<p>You are listed as the owner and/or technician for the following upcoming assays in Shelf Stability System:</p>
         ${tableHtml}`,
             };
             sgMail.send(msg);
