@@ -14,10 +14,15 @@ export const sendEmails = async () => {
         }
         const senderEmail = process.env.SENDER_EMAIL;
         sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        const unsubscribeHtml = `
+            <p style="margin-top: 20px; font-size: 12px;">
+                You are receiving this email because you subscribed to email reminders in Shelf Stability System.<br>
+                <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0">Click here to unsubscribe</a>.
+            </p>`;
+
         Object.entries(emailInfo).forEach(([_userId, data]) => {
             console.log("sending email to: ", data.email);
             let agendaItemsHtml = "";
-
             data.agenda.forEach((agendaItem) => {
                 agendaItemsHtml += `
                 <tr style="cursor: pointer; border-bottom: 1px solid #ccc;">
@@ -36,13 +41,13 @@ export const sendEmails = async () => {
                 <table style="border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th style="padding: 8px 8px 8px 0; text-align: left;">Target Date</th>
-                            <th style="padding: 8px 8px 8px 0; text-align: left;">Title</th>
-                            <th style="padding: 8px 8px 8px 0; text-align: left;">Owner</th>
-                            <th style="padding: 8px 8px 8px 0; text-align: left;">Condition</th>
-                            <th style="padding: 8px 8px 8px 0; text-align: left;">Week</th>
-                            <th style="padding: 8px 8px 8px 0; text-align: left;">Assay Type</th>
-                            <th style="padding: 8px 8px 8px 0; text-align: left;">Technician</th>
+                            <th style="padding: 8px 16px 8px 0; text-align: left;">Target Date</th>
+                            <th style="padding: 8px 144px 8px 0; text-align: left;">Title</th>
+                            <th style="padding: 8px 72px 8px 0; text-align: left;">Owner</th>
+                            <th style="padding: 8px 16px 8px 0; text-align: left;">Condition</th>
+                            <th style="padding: 8px 16px 8px 0; text-align: left;">Week</th>
+                            <th style="padding: 8px 16px 8px 0; text-align: left;">Assay Type</th>
+                            <th style="padding: 8px 16px 8px 0; text-align: left;">Technician</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +60,9 @@ export const sendEmails = async () => {
                 from: senderEmail,
                 subject: "HM Labs: Upcoming Assay Reminder (2)",
                 html: `<p>You are listed as the owner and/or technician for the following upcoming assays in Shelf Stability System:</p>
-        ${tableHtml}`,
+                        ${tableHtml}
+                        <br> <!-- Add space between table and unsubscribe text -->
+                        ${unsubscribeHtml}`,
             };
             sgMail.send(msg);
         });
