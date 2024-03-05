@@ -3,7 +3,6 @@ import { db } from "../db";
 import { User } from "@prisma/client";
 import { LocalDate, ZoneId, nativeJs } from "@js-joda/core";
 import { EmailInfo, EmailQueryResult } from "@/lib/controllers/types";
-
 // TODO: fix due to schema changes
 // export async function createUserInDB(
 //     username: any,
@@ -39,6 +38,7 @@ export async function getAllUsers(): Promise<User[]> {
 }
 
 export const fetchEmailInfo = async (): Promise<EmailInfo> => {
+    const today = LocalDate.now().toString();
     const dateLimit = LocalDate.now().plusWeeks(1).toString();
     const queryResults = await db.$queryRaw<EmailQueryResult[]>`
     WITH owners AS (
@@ -46,6 +46,7 @@ export const fetchEmailInfo = async (): Promise<EmailInfo> => {
             SELECT e."ownerId" AS "userId", e."startDate" + INTERVAL '1 WEEK' * a.week AS "targetDate", e.title, e."ownerId", a."conditionId", a.week, a."assayTypeId" AS "assayTypeFromExperimentId"
             FROM public."Assay" a INNER JOIN public."Experiment" e ON a."experimentId" = e.id
             WHERE NOT e."isCanceled" AND e."startDate" + INTERVAL '1 WEEK' * a.week <= Date(${dateLimit})
+            AND e."startDate" + INTERVAL '1 WEEK' * a.week >= Date(${today})
         )
         SELECT u."userId", u."targetDate", u.title, u."ownerId", u."conditionId", u.week, a."assayTypeId", a."technicianId"
         FROM upcoming_assays u INNER JOIN public."AssayTypeForExperiment" a ON u."assayTypeFromExperimentId" = a.id
@@ -55,6 +56,7 @@ export const fetchEmailInfo = async (): Promise<EmailInfo> => {
             SELECT e."startDate" + INTERVAL '1 WEEK' * a.week AS "targetDate", e.title, e."ownerId", a."conditionId", a.week, a."assayTypeId" AS "assayTypeFromExperimentId"
             FROM public."Assay" a INNER JOIN public."Experiment" e ON a."experimentId" = e.id
             WHERE NOT e."isCanceled" AND e."startDate" + INTERVAL '1 WEEK' * a.week <= Date(${dateLimit})
+            AND e."startDate" + INTERVAL '1 WEEK' * a.week >= Date(${today})
         )
         SELECT a."technicianId" AS "userId", u."targetDate", u.title, u."ownerId", u."conditionId", u.week, a."assayTypeId", a."technicianId"
         FROM upcoming_assays u INNER JOIN public."AssayTypeForExperiment" a ON u."assayTypeFromExperimentId" = a.id
