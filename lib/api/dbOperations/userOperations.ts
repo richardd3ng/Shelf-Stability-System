@@ -37,6 +37,28 @@ export async function getAllUsers(): Promise<User[]> {
     return users;
 }
 
+export async function createOrUpdateUser(username: string, displayName: string, email: string, isSSO: boolean) {
+    return {
+        ...await db.user.upsert({
+            where: {
+                username
+            },
+            update: {
+                displayName,
+                email
+            },
+            create: {
+                username,
+                displayName,
+                email,
+                isSSO,
+                isAdmin: false,
+                isSuperAdmin: false
+            }
+        })
+    };
+};
+
 export const fetchEmailInfo = async (): Promise<EmailInfo> => {
     const today = LocalDate.now().toString();
     const dateLimit = LocalDate.now().plusWeeks(1).toString();
