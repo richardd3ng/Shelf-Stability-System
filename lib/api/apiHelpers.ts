@@ -1,4 +1,6 @@
 import { NextApiRequest } from "next";
+import { ApiError } from "next/dist/server/api-utils";
+import { getApiError } from "./error";
 export function getErrorMessage(error: unknown): string {
     if (error instanceof Error) return error.message;
     return String(error);
@@ -30,4 +32,28 @@ export const getExperimentID = (req: NextApiRequest): number => {
     return req.query.experimentId
         ? Number(req.query.experimentId.toString())
         : INVALID_EXPERIMENT_ID;
+};
+
+export const requireQueryFields = <K extends string>(req: NextApiRequest, fields: K[], defaults: Partial<{ [P in K]: string }>): { [P in K]: string } | ApiError => {
+    const missing: string[] = [];
+    const result: { [P in K]: string } = {} as any;
+
+    for (const field of fields) {
+        const value = req.query[field];
+        if (value === undefined) {
+            if (field in defaults) {
+                result[field] = defaults[field] as string;
+            } else {
+                missing.push(field);
+            }
+        } else {
+            result[field] = value.toString();
+        }
+    }
+
+    if (missing.length > 0) {
+        return getApiError(400, `Missing required query fields: ${missing.join(", ")}`);
+    }
+
+    return result;
 };

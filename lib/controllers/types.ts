@@ -67,7 +67,7 @@ export type ExperimentUpdateArgs = {
 
 /* ----- Assay ----- */
 
-export type AssayInfo = {
+export type AssayAgendaInfo = {
     id: number;
     targetDate: LocalDate;
     title: string;
@@ -79,9 +79,9 @@ export type AssayInfo = {
     resultId: number | null;
 };
 
-export type AssayTable = {
+export type AssayAgendaTable = {
     // Rows on this page
-    rows: AssayInfo[];
+    rows: AssayAgendaInfo[];
     // Rows in the whole table
     rowCount: number;
 };

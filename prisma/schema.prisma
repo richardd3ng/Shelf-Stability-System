@@ -1,6 +1,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -20,7 +21,6 @@ model User {
   ownedExperiments  Experiment[]
   assayTypesAsTechnician AssayTypeForExperiment[]
 }
-
 
 model Experiment {
   id          Int         @id @default(autoincrement())
@@ -67,7 +67,7 @@ model AssayType {
   experimentSpecificTypes AssayTypeForExperiment[]
 }
 
-model AssayTypeForExperiment{
+model AssayTypeForExperiment {
   id          Int      @id @default(autoincrement())
   assayType   AssayType @relation(fields: [assayTypeId], references: [id], onDelete: Cascade)
   assayTypeId Int
@@ -78,12 +78,7 @@ model AssayTypeForExperiment{
   assays       Assay[]
 
   @@unique([experimentId, assayTypeId], name: "UniqueAssayTypesPerExperiment")
-
 }
-
-
-
-
 
 model Condition {
   id           Int        @id @default(autoincrement())
@@ -94,4 +89,17 @@ model Condition {
   assays        Assay[]
 
   @@unique([experimentId, name], name: "UniqueExperimentConditionName")
+}
+
+view AssayAgendaView {
+  id            Int       @unique
+  experimentId  Int
+  targetDate    DateTime  @db.Date
+  title         String
+  owner         String
+  technician    String?
+  condition     String
+  type          String
+  week          Int
+  resultId      Int?
 }

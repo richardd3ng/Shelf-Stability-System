@@ -1,6 +1,6 @@
 import Layout from "@/components/shared/layout";
 import { fetchAgendaList } from "@/lib/controllers/assayController";
-import { AssayInfo, AssayTable } from "@/lib/controllers/types";
+import { AssayAgendaInfo, AssayAgendaTable } from "@/lib/controllers/types";
 import { Box, Stack, Checkbox, FormControlLabel } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
@@ -88,7 +88,7 @@ export default function AssayAgenda() {
     const [assayResultBeingEdited, setAssayResultBeingEdited] = useState<AssayResult | undefined>(undefined);
     const [assayBeingEdited, setAssayBeingEdited] = useState<Assay | undefined>(undefined);
 
-    const [rows, setRows] = useState<AssayInfo[]>([]);
+    const [rows, setRows] = useState<AssayAgendaInfo[]>([]);
 
     function reloadAgendaList(paging: ServerPaginationArgs) {
         return fetchAgendaList(
@@ -97,7 +97,7 @@ export default function AssayAgenda() {
             includeRecordedAssays,
             ownedAssaysOnly,
             paging
-        ).then((res: AssayTable) => {
+        ).then((res: AssayAgendaTable) => {
             setRows(res.rows);
             return res;
         });
