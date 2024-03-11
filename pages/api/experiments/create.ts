@@ -13,13 +13,17 @@ import { LocalDate } from "@js-joda/core";
 import { localDateToJsDate } from "@/lib/datesUtils";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 import { dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
-
+import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 
 export default async function createExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentCreationResponse | ApiError>
 ) {
-    await denyReqIfUserIsNotLoggedInAdmin(req, res);
+    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
+    if (permissionTracker.shouldStopExecuting){
+        return;
+    }
     const {
         title,
         description,

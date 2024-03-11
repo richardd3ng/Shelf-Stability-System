@@ -3,7 +3,7 @@ import { db } from "../db";
 import { NextApiResponse, NextApiRequest } from "next";
 import { getToken } from "next-auth/jwt";
 import { UserWithoutPassword } from "../../controllers/types";
-import { denyAPIReq } from "./acessDeniers";
+import { APIPermissionTracker, denyAPIReq } from "./acessDeniers";
 import { denyReqIfUserIsNotAdmin } from "./checkIfAdminOrExperimentOwner";
 
 
@@ -37,12 +37,11 @@ export const checkIfAdminExists = async (): Promise<boolean> => {
 
 
 //meant to be used with backend apis that can only be accessed by loggged in users 
-export async function getUserAndDenyReqIfUserIsNotLoggedIn(req: NextApiRequest, res : NextApiResponse) : Promise<UserWithoutPassword | null> {
+export async function getUserAndDenyReqIfUserIsNotLoggedIn(req: NextApiRequest, res : NextApiResponse, permissionTracker : APIPermissionTracker) : Promise<UserWithoutPassword | null> {
     try{
         const token = await getToken({req : req});
-                
         if (!token || !token.name){
-            await denyAPIReq(req, res, "You must be logged in");
+            await denyAPIReq(req, res, "You must be logged in", permissionTracker);
         } else {
             const user = await db.user.findUnique({
                 where : {
@@ -64,20 +63,20 @@ export async function getUserAndDenyReqIfUserIsNotLoggedIn(req: NextApiRequest, 
             if (user) {
                 return user;
             } else {
-                await denyAPIReq(req, res, "You are not a valid user");
+                await denyAPIReq(req, res, "You are not a valid user", permissionTracker);
             }
         }
 
     } catch {
-        await denyAPIReq(req, res, "You must be logged in");
+        await denyAPIReq(req, res, "You must be logged in", permissionTracker);
     }
     return null;
 }
 
-export async function denyReqIfUserIsNotLoggedInAdmin(req : NextApiRequest, res : NextApiResponse){
-    const user = await getUserAndDenyReqIfUserIsNotLoggedIn(req, res);
+export async function denyReqIfUserIsNotLoggedInAdmin(req : NextApiRequest, res : NextApiResponse, permissionTracker : APIPermissionTracker){
+    const user = await getUserAndDenyReqIfUserIsNotLoggedIn(req, res, permissionTracker);
     if (user){
-        await denyReqIfUserIsNotAdmin(req, res, user);
+        await denyReqIfUserIsNotAdmin(req, res, user, permissionTracker);
     }
 }
 

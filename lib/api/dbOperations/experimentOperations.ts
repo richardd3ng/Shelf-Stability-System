@@ -19,11 +19,12 @@ export const createExperimentWithConditions = async (experiment : ExperimentCrea
                 ownerId : experiment.ownerId,
                 description : experiment.description,
                 startDate : localDateToJsDate(experiment.startDate),
+                isCanceled : false,
                 conditions : {
                     create : experiment.conditionCreationArgsNoExperimentIdArray.map((condition) => {
                         return {
                             name : condition.name,
-                            control : condition.isControl
+                            isControl : condition.isControl
                         }
                     })
                 }   

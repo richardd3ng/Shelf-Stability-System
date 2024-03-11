@@ -11,5 +11,14 @@ export const PrismaClient = jest.fn(() => ({
         findUnique : jest.fn(),
         count : jest.fn()
     },
+    condition : {
+        delete : jest.fn(),
+        findUnique : jest.fn(),
+        findMany : jest.fn(),
+        create : jest.fn(),
+        createMany : jest.fn(),
+        count : jest.fn(),
+        update : jest.fn()
+    }
 }));
   

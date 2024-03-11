@@ -42,7 +42,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
         const assayInfo: AssayCreationArgs = {
             experimentId: experimentId,
             conditionId: props.conditionId,
-            type: assayTypeNameToId(selectedAssayType),
+            assayTypeId: assayTypeNameToId(selectedAssayType),
             week: props.week,
         };
         await createAssay(assayInfo);

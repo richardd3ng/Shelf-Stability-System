@@ -8,7 +8,10 @@ export const mockSuperAdminUser : User = {
     username : mockToken.name,
     isAdmin : true,
     isSuperAdmin : true,
-    password : ""
+    password : "",
+    isSSO : false,
+    displayName : mockToken.name,
+    email : mockToken.email,
 }
 
 export const mockAdminUser : User = {
@@ -16,7 +19,10 @@ export const mockAdminUser : User = {
     username : mockToken.name,
     isAdmin : true,
     isSuperAdmin : false,
-    password : ""
+    password : "",
+    isSSO : false,
+    displayName : mockToken.name,
+    email : mockToken.email,
 }
 
 export const mockNonAdminUser : User = {
@@ -24,7 +30,10 @@ export const mockNonAdminUser : User = {
     username : mockToken.name,
     isAdmin : false,
     isSuperAdmin : false,
-    password : ""
+    password : "",
+    isSSO : false,
+    displayName : mockToken.name,
+    email : mockToken.email,
 }
 
 export const mockUsers : UserInfo[] = [

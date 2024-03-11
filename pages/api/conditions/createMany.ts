@@ -4,13 +4,18 @@ import { ApiError } from "next/dist/server/api-utils";
 import { Condition } from "@prisma/client";
 import { getApiError } from "@/lib/api/error";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 
 export default async function createConditionsAPI(
     req: NextApiRequest,
     res: NextApiResponse<Condition[] | ApiError>
 ) {
     try {
-        await denyReqIfUserIsNotLoggedInAdmin(req, res);
+        let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+        await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
+        if (permissionTracker.shouldStopExecuting){
+            return;
+        }
         const { experimentId, conditions } = req.body;
         if (!experimentId) {
             res.status(400).json(getApiError(400, "Experiment ID is required"));
