@@ -26,7 +26,7 @@ export default async function fetchOwnersAPI(
             .findMany({
                 select: {
                     id: true,
-                    is_admin: true,
+                    isAdmin: true,
                     username: true,
                 },
                 where: {
@@ -38,7 +38,7 @@ export default async function fetchOwnersAPI(
             .then((users) =>
                 users.map((user) => ({
                     ...user,
-                    is_admin: user.is_admin === true,
+                    isAdmin: user.isAdmin === true,
                 }))
             );
         res.status(200).json(owners);

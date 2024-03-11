@@ -34,7 +34,7 @@ export default async function updateAssayResultAPI(
     } else {
         await denyAPIReq(req, res, "An error occurred");
     }
-    if (!req.body.last_editor) {
+    if (!req.body.author) {
         res.status(400).json(
             getApiError(400, "Last editor is required to update assay result")
         );

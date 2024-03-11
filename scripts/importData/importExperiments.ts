@@ -76,7 +76,7 @@ async function parseAndCreateAssayResultsForExperimentInDB(createdExperiment: Cr
             assayId: correspondingAssayId,
             result: result.result.value,
             comment: result.result.comment,
-            last_editor: result.result.author ? result.result.author : ""
+            author: result.result.author ? result.result.author : ""
         });
 
     });
@@ -113,16 +113,17 @@ async function parseAndCreateExperimentWithConditionsInDB(experiment: Experiment
         (condition: string, index: number) => {
             return {
                 name: condition,
-                control: index === 0,
+                isControl: index === 0,
             };
         }
     );
     const experimentData: ExperimentCreationRequiringConditionArgs = {
         title: experiment.title,
         description: experiment.description,
-        start_date: LocalDate.parse(experiment.start_date, DateTimeFormatter.ISO_LOCAL_DATE),
+        startDate: LocalDate.parse(experiment.startDate, DateTimeFormatter.ISO_LOCAL_DATE),
         ownerId: getUserIdFromUsername(experiment.owner, allUsers),
         conditionCreationArgsNoExperimentIdArray: conditionCreationArgsNoExperimentIdArray,
+        isCanceled : false
     };
     const createdExperiment = await createExperimentWithConditions(experimentData);
     return createdExperiment;

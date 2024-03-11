@@ -65,7 +65,7 @@ export default async function updateExperimentAPI(
             description: description,
         };
         if (startDate) {
-            updateData.start_date = localDateToJsDate(
+            updateData.startDate = localDateToJsDate(
                 LocalDate.parse(startDate)
             );
         }
@@ -77,7 +77,7 @@ export default async function updateExperimentAPI(
                     },
                     data: updateData,
                 })
-                .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["start_date"]));
+                .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["startDate"]));
         if (!updatedExperiment) {
             res.status(404).json(
                 getApiError(

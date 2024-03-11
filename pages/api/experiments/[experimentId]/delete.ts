@@ -37,7 +37,7 @@ export default async function deleteExperimentAPI(
                 .delete({
                     where: { id: id },
                 })
-                .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["start_date"]));
+                .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["startDate"]));
         if (!deletedExperiment) {
             res.status(404).json(
                 getApiError(

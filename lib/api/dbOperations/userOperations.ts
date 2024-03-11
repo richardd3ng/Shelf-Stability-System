@@ -9,14 +9,14 @@ export async function createUserInDB(username: any, password: string, isAdmin: b
             select: {
                 id: true,
                 username: true,
-                is_admin: true,
-                is_super_admin: true
+                isAdmin: true,
+                isSuperAdmin: true
             },
             data: {
                 username,
                 password: await hashPassword(password),
-                is_admin: isAdmin,
-                is_super_admin: false
+                isAdmin: isAdmin,
+                isSuperAdmin: false
             }
         })
     };

@@ -41,7 +41,7 @@ export default async function fetchUserListAPI(
                     take: pageSize ?? userCount,
                     select: {
                         id: true,
-                        is_admin: true,
+                        isAdmin: true,
                         username: true,
                     },
                     where: {
@@ -54,9 +54,9 @@ export default async function fetchUserListAPI(
                 .then((users) =>
                     users.map((user) => ({
                         ...user,
-                        is_admin: user.is_admin === true,
+                        isAdmin: user.isAdmin === true,
                     }))
-                ), // Account for null is_admin
+                ), // Account for null isAdmin
             rowCount: userCount,
         };
         res.status(200).json(userTable);

@@ -37,7 +37,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = (
                 </Typography>
                 <Typography>
                     <strong>{`Start Date:`}</strong>{" "}
-                    {props.experimentInfo.experiment.start_date.toString()}
+                    {props.experimentInfo.experiment.startDate.toString()}
                 </Typography>
             </Stack>
             <Stack sx={{ width: "50%" }}>

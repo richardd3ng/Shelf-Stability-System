@@ -50,7 +50,7 @@ export default async function setConditionAsControlAPI(
                 await tx.condition.findFirst({
                     where: {
                         experimentId: newControlCondition.experimentId,
-                        control: true,
+                        isControl: true,
                     },
                 });
 
@@ -69,7 +69,7 @@ export default async function setConditionAsControlAPI(
                     id: oldControlCondition.id,
                 },
                 data: {
-                    control: false,
+                    isControl: false,
                 },
             });
             await tx.condition.update({
@@ -77,7 +77,7 @@ export default async function setConditionAsControlAPI(
                     id: id,
                 },
                 data: {
-                    control: true,
+                    isControl: true,
                 },
             });
         });

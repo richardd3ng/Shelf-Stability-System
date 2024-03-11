@@ -23,7 +23,7 @@ export default async function createExperimentAPI(
     const {
         title,
         description,
-        start_date,
+        startDate,
         conditionCreationArgsNoExperimentIdArray,
         ownerId,
     } = req.body;
@@ -35,7 +35,7 @@ export default async function createExperimentAPI(
     }
     if (
         !title ||
-        !start_date ||
+        !startDate ||
         !conditionCreationArgsNoExperimentIdArray ||
         conditionCreationArgsNoExperimentIdArray.length === 0
     ) {
@@ -47,18 +47,30 @@ export default async function createExperimentAPI(
         );
         return;
     }
+
     try {
-        const createdExperiment: ExperimentWithLocalDate = await db.experiment
+        const createdExperiment : ExperimentWithLocalDate = await db.experiment
             .create({
                 data: {
                     title,
                     description,
-                    start_date: localDateToJsDate(LocalDate.parse(start_date)),
+                    startDate: localDateToJsDate(LocalDate.parse(startDate)),
                     ownerId,
+                    isCanceled : false,
+                    assayTypes : {
+                        create : [1, 2, 3, 4, 5, 6].map((typeId) => ({
+                            assayTypeId : typeId,
+                            technicianId : null
+                        }))
+                    },
+                    conditions : {
+                        create : conditionCreationArgsNoExperimentIdArray
+                    }
                 },
             })
-            .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["start_date"]));
-
+            .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["startDate"]));
+        
+        /*
         let conditionCreationArgsArray: ConditionCreationArgs[] =
             conditionCreationArgsNoExperimentIdArray.map(
                 (condition: ConditionCreationArgsNoExperimentId) => {
@@ -71,6 +83,7 @@ export default async function createExperimentAPI(
         await db.condition.createMany({
             data: conditionCreationArgsArray,
         });
+        */
         const createdConditions: Condition[] = await db.condition.findMany({
             where: {
                 experimentId: createdExperiment.id,

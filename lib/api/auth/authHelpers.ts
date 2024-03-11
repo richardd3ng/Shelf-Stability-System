@@ -22,7 +22,7 @@ export const checkIfAdminExists = async (): Promise<boolean> => {
     try {
         const existingAdmin = await db.user.findFirst({
             where: {
-                is_super_admin: true,
+                isSuperAdmin: true,
             },
         });
         if (existingAdmin) {
@@ -52,8 +52,12 @@ export async function getUserAndDenyReqIfUserIsNotLoggedIn(req: NextApiRequest, 
                 select : {
                     id : true,
                     username : true,
-                    is_admin : true,
-                    is_super_admin : true,
+                    isAdmin : true,
+                    isSuperAdmin : true,
+                    isSSO : true,
+                    displayName : true,
+                    email : true,
+
                     password : false,
                     
                 }

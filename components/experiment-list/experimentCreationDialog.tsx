@@ -148,7 +148,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             const experimentData: ExperimentCreationArgs = {
                 title: title,
                 description: description,
-                start_date: date!,
+                startDate: date!,
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
                 ownerId: ownerId,

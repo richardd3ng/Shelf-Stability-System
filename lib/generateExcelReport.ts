@@ -22,7 +22,7 @@ function getSheet1Data(experimentInfo: ExperimentInfo, ownerUsername: string): S
         ["ID", experimentInfo.experiment.id],
         ["Owner", ownerUsername],
         ["Description", experimentInfo.experiment.description],
-        ["Start Date", experimentInfo.experiment.start_date.toString()]
+        ["Start Date", experimentInfo.experiment.startDate.toString()]
 
     ];
     return data;
@@ -37,10 +37,10 @@ function getSheet2Data(experimentInfo: ExperimentInfo): OneRowOfSheet2Data[] {
         data.push({
             "Week": assay.week,
             "Condition": experimentInfo.conditions.findLast((condition: Condition) => condition.id === assay.conditionId)?.name,
-            "Assay Type": assayTypeIdToName(assay.type),
+            "Assay Type": assayTypeIdToName(assay.assayTypeId),
             "Result": assayResult?.result,
-            "Units": assayResult?.result ? getAssayTypeUnits(assay.type) : null,
-            "Last Edited User": assayResult?.last_editor,
+            "Units": assayResult?.result ? getAssayTypeUnits(assay.assayTypeId) : null,
+            "Last Edited User": assayResult?.author,
             "Comment": assayResult?.comment
         })
     })

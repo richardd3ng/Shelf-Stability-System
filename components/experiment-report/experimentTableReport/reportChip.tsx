@@ -10,7 +10,7 @@ interface ReportChipProps {
 }
 
 const ReportChip: React.FC<ReportChipProps> = (props: ReportChipProps) => {
-    const units: string = getAssayTypeUnits(props.assay.type);
+    const units: string = getAssayTypeUnits(props.assay.assayTypeId);
     const resultText: string =
         props.assayResult && props.assayResult.result
             ? `${props.assayResult.result}${
@@ -33,7 +33,7 @@ const ReportChip: React.FC<ReportChipProps> = (props: ReportChipProps) => {
         >
             <Stack sx={{ margin: -0.25 }}>
                 <Typography sx={{ fontSize: 12 }}>
-                    {assayTypeIdToName(props.assay.type)}
+                    {assayTypeIdToName(props.assay.assayTypeId)}
                 </Typography>
                 <Typography
                     sx={{
@@ -49,7 +49,7 @@ const ReportChip: React.FC<ReportChipProps> = (props: ReportChipProps) => {
                         fontSize: 8,
                     }}
                 >
-                    Author: {props.assayResult?.last_editor || "N/A"}
+                    Author: {props.assayResult?.author || "N/A"}
                 </Typography>
                 <Typography
                     sx={{

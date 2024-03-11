@@ -6,7 +6,7 @@ import { denyAPIReq } from './acessDeniers';
 // This function can be marked `async` if using `await` inside
 export async function denyReqIfUserIsNeitherAdminNorExperimentOwner(req : NextApiRequest, res : NextApiResponse, user : UserWithoutPassword, experimentId : number) {
     try{
-        const isAdmin = user.is_admin;
+        const isAdmin = user.isAdmin;
         const isOwner = await checkIfUserIsExperimentOwner(user, experimentId);
         if (isAdmin || isOwner){
             return;
@@ -20,7 +20,7 @@ export async function denyReqIfUserIsNeitherAdminNorExperimentOwner(req : NextAp
 }
 
 export async function denyReqIfUserIsNotAdmin(req : NextApiRequest, res : NextApiResponse, user : UserWithoutPassword){
-    if (!user.is_admin){
+    if (!user.isAdmin){
         await denyAPIReq(req, res, "You are not an admin");
     }
 }
@@ -34,7 +34,7 @@ export const checkIfUserIsAdmin = async ( username : string ) : Promise<boolean>
                 username : username
             }
         });
-        if (user && user.is_admin){
+        if (user && user.isAdmin){
             return true;
         } else {
             return false;

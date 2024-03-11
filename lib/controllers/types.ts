@@ -3,8 +3,8 @@ import { Experiment, Condition, Assay, AssayResult, User } from "@prisma/client"
 
 /* ----- Experiment ----- */
 
-export type ExperimentWithLocalDate = Omit<Experiment, "start_date"> & {
-    start_date: LocalDate;
+export type ExperimentWithLocalDate = Omit<Experiment, "startDate"> & {
+    startDate: LocalDate;
 };
 
 export type ExperimentInfo = {
@@ -85,7 +85,7 @@ export type AssayCreationArgs = Omit<Assay, "id">;
 export type AssayUpdateArgs = {
     id: number;
     conditionId?: number;
-    type?: number;
+    assayTypeId?: number;
     week?: number;
 };
 
@@ -112,7 +112,7 @@ export type AssayResultUpdateArgs = {
     id: number;
     result?: number | null;
     comment?: string | null;
-    last_editor: string;
+    author: string;
 };
 
 /* ----- User ----- */
@@ -120,7 +120,7 @@ export type AssayResultUpdateArgs = {
 export type UserInfo = {
     id: number;
     username: string;
-    is_admin: boolean;
+    isAdmin: boolean;
 };
 
 export type UserTable = {

@@ -35,7 +35,7 @@ export default async function updateAssayAPI(
             updateData.conditionId = conditionId;
         }
         if (type !== null && type !== undefined) {
-            updateData.type = type;
+            updateData.assayTypeId = type;
         }
         if (week !== null && week !== undefined) {
             updateData.week = week;

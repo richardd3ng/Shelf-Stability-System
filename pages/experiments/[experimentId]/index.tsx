@@ -8,7 +8,7 @@ import { useContext } from "react";
 
 const ExperimentPage = () => {
     const { user } = useContext(CurrentUserContext);
-    const isAdmin: boolean = user?.is_admin ?? false;
+    const isAdmin: boolean = user?.isAdmin ?? false;
     return (
         <Layout>
             <ExperimentHeader />

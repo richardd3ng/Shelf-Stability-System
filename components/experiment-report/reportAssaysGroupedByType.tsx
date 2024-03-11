@@ -35,7 +35,7 @@ const ReportAssaysGroupedByType: React.FC<ReportAssaysGroupedByTypeProps> = (
                                 experimentInfo={props.experimentInfo}
                                 assayFilter={(experimentInfo: ExperimentInfo) =>
                                     experimentInfo.assays.filter(
-                                        (assay) => assay.type === typeId
+                                        (assay) => assay.assayTypeId === typeId
                                     )
                                 }
                             />

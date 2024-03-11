@@ -34,7 +34,7 @@ const getDataByAssayType = (experimentInfo : ExperimentInfo) : DataByAssayType =
         let correspondingAssay = experimentInfo.assays.find((assay) => assay.id === result.assayId);
         if (correspondingAssay){
             
-            let type = assayTypeIdToName(correspondingAssay.type);
+            let type = assayTypeIdToName(correspondingAssay.assayTypeId);
             let condition = experimentInfo.conditions.find((c) => c.id === correspondingAssay?.conditionId);
             console.log(condition?.name);
             if (condition) {
@@ -69,7 +69,6 @@ export function BasicScatter() {
     const {data} = useExperimentInfo(experimentId);
     if (data){
         const dataByAssayType = getDataByAssayType(data);
-        console.log(dataByAssayType);
         return (
             <Stack gap={4}>
                 {Array.from(dataByAssayType.assayTypeToData.entries()).map(([key , value]) => {

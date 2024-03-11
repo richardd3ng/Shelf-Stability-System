@@ -14,7 +14,7 @@ import { useLoading } from "@/lib/context/shared/loadingContext";
 
 const colDefs: GridColDef[] = [
     {
-        field: "is_admin",
+        field: "isAdmin",
         headerName: "Role",
         type: "boolean",
         sortable: false,
@@ -76,7 +76,7 @@ export default function Users() {
                         rowHeight={43}
                         pageSizeOptions={[15, 30, 60, 100]}
                         getCellClassName={(params) =>
-                            params.row.is_admin
+                            params.row.isAdmin
                                 ? "user-cell-admin"
                                 : "user-cell-not-admin"
                         }
