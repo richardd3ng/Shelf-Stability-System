@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { db } from "@/lib/api/db";
 import {
+    ADMIN_DISPLAY_NAME,
     ADMIN_USERNAME,
     checkIfAdminExists,
     hashPassword,
@@ -24,8 +24,10 @@ export default async function setPasswordOnSetupAPI(
             data: {
                 password: newPassword,
                 username: ADMIN_USERNAME,
-                is_admin: true,
-                is_super_admin: true,
+                displayName: ADMIN_DISPLAY_NAME,
+                isSSO: false,
+                isAdmin: true,
+                isSuperAdmin: true,
             },
         });
         res.status(200).json(jsonData);

@@ -7,9 +7,8 @@ import { denyAPIReq } from "./acessDeniers";
 import { denyReqIfUserIsNotAdmin } from "./checkIfAdminOrExperimentOwner";
 
 
-
-export const USER_ID = "ROOT_USER_afuqioweruwnvasf";
 export const ADMIN_USERNAME = "admin";
+export const ADMIN_DISPLAY_NAME = "Admin";
 
 
 const SALT = 15;
