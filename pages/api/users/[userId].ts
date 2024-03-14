@@ -10,8 +10,8 @@ import { checkIfUserIsAdmin } from "@/lib/api/auth/checkIfAdminOrExperimentOwner
 const selectExceptPassword = {
     id: true,
     username: true,
-    is_admin: true,
-    is_super_admin: true,
+    isAdmin: true,
+    isSuperAdmin: true,
 };
 
 export default async function accessUserAPI(
@@ -91,7 +91,7 @@ async function updateUser(userId: number, req: NextApiRequest, res: NextApiRespo
         select: selectExceptPassword,
         data: {
             password: password === "" ? undefined : password,
-            is_admin: isAdmin,
+            isAdmin: isAdmin,
         },
     });
 
@@ -110,7 +110,7 @@ async function deleteUser(userId: number, req: NextApiRequest, res: NextApiRespo
     // Maybe should be in a library function
     const admin = await db.user.findFirst({
         where: {
-            is_super_admin: true
+            isSuperAdmin: true
         },
         select: {
             id: true

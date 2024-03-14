@@ -8,7 +8,7 @@ import {
 } from "@/lib/api/apiHelpers";
 import { Assay } from "@prisma/client";
 
-export default async function fetchAssay(
+export default async function fetchAssayAPI(
     req: NextApiRequest,
     res: NextApiResponse<Assay | ApiError>
 ) {

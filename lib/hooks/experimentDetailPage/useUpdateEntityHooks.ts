@@ -70,7 +70,7 @@ export const useMutationToUpdateAssay = () => {
             showAlert(
                 "success",
                 `Succesfully updated ${assayTypeIdToName(
-                    updatedAssay.type
+                    updatedassay.assayTypeId
                 )} assay`
             );
         },

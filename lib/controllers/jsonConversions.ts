@@ -2,11 +2,11 @@ import { Experiment } from "@prisma/client";
 import { ExperimentWithLocalDate } from "./types";
 import { LocalDate, ZoneId, nativeJs } from "@js-joda/core";
 
-export type ExperimentJSON = Omit<Experiment, "start_date"> & {
-    start_date: string;
+export type ExperimentJSON = Omit<Experiment, "startDate"> & {
+    startDate: string;
 };
 
-export const JSONToExperiment = (JSONData: ExperimentJSON): ExperimentWithLocalDate => stringFieldsToLocalDate(JSONData, ["start_date"]);
+export const JSONToExperiment = (JSONData: ExperimentJSON): ExperimentWithLocalDate => stringFieldsToLocalDate(JSONData, ["startDate"]);
 
 // Convert all string fields listed in K to LocalDate
 // Fairly simple ultimately, but made complex for the sake of type safety

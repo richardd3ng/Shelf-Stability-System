@@ -49,7 +49,7 @@ export const conditionIsControl = async (
     const controlCondition: Condition | null = await db.condition.findUnique({
         where: {
             id: conditionId,
-            control: true,
+            isControl : true
         },
     });
     return controlCondition !== null;

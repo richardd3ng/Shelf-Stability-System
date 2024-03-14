@@ -10,12 +10,17 @@ import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 
 export default async function deleteConditionAPI(
     req: NextApiRequest,
     res: NextApiResponse<Condition | ApiError>
 ) {
-    await denyReqIfUserIsNotLoggedInAdmin(req, res);
+    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
+    if (permissionTracker.shouldStopExecuting){
+        return;
+    }
     const id = getConditionID(req);
     if (id === INVALID_CONDITION_ID) {
         res.status(400).json(getApiError(400, "Condition ID is required"));

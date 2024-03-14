@@ -7,8 +7,9 @@ import "next-auth/jwt"
 import "next-auth/client"
 import { mockAdminUser, mockNonAdminUser, mockUsers } from '@/tests/__mocks__/data/mockUsers';
 import { UNAUTHORIZED_STATUS_CODE } from '@/lib/api/auth/acessDeniers';
-
-
+import { assayHasResult } from '@/lib/api/validations';
+import { CONSTRAINT_ERROR_CODE } from '@/lib/api/error';
+import { mockAssay, mockAssayUpdateArgs } from '@/tests/__mocks__/data/mockAssays';
 
 jest.mock('@/lib/api/db', () => ({
     db: {
@@ -17,16 +18,14 @@ jest.mock('@/lib/api/db', () => ({
             findUnique : jest.fn(),
             count : jest.fn()
         },
-        condition : {
-            delete : jest.fn()
+        assay : {
+            update : jest.fn()
         }
     },
 }));
 
-jest.mock('next-auth/client');
-jest.mock('next-auth/jwt');
 
-
+jest.mock("@/lib/api/validations");
 
 describe('/api/assayResult/[assayResultId]/update', () => {
     let req: Partial<NextApiRequest>;
@@ -35,6 +34,9 @@ describe('/api/assayResult/[assayResultId]/update', () => {
     beforeEach(() => {
         req = {
             method: 'POST',
+            query : {
+                "assayId" : "1"
+            }, body : JSON.stringify(mockAssayUpdateArgs)
         };
         res = {
             status: jest.fn().mockReturnThis(),
@@ -49,6 +51,21 @@ describe('/api/assayResult/[assayResultId]/update', () => {
         expect(res.status).toHaveBeenCalledWith(UNAUTHORIZED_STATUS_CODE);
         
     });
+    it('rejects request if assay has results', async () => {
+        (db.user.findUnique as jest.Mock).mockResolvedValueOnce(mockAdminUser);
+        (assayHasResult as jest.Mock).mockResolvedValueOnce(true);
+        await updateAssayAPI(req as NextApiRequest, res as NextApiResponse);
+        expect(res.status).toHaveBeenCalledWith(CONSTRAINT_ERROR_CODE);
+    });
+
+    it('succeeds in standard case', async () => {
+        (db.user.findUnique as jest.Mock).mockResolvedValueOnce(mockAdminUser);
+        (assayHasResult as jest.Mock).mockResolvedValueOnce(false);
+        (db.assay.update as jest.Mock).mockResolvedValueOnce(mockAssay);
+        await updateAssayAPI(req as NextApiRequest, res as NextApiResponse);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(mockAssay);
+    })
 
   
 });

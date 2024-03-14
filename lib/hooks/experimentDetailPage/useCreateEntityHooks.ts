@@ -59,7 +59,7 @@ export const useMutationToCreateAssay = () => {
             showAlert(
                 "success",
                 `Succesfully created ${assayTypeIdToName(
-                    createdAssay.type
+                    createdassay.assayTypeId
                 )} assay`
             );
         },

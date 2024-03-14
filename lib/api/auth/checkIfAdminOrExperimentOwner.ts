@@ -1,17 +1,17 @@
 import { db } from '../db';
 import { NextApiResponse, NextApiRequest } from 'next';
 import { UserWithoutPassword } from '@/lib/controllers/types';
-import { denyAPIReq } from './acessDeniers';
+import { APIPermissionTracker, denyAPIReq } from './acessDeniers';
 
 // This function can be marked `async` if using `await` inside
-export async function denyReqIfUserIsNeitherAdminNorExperimentOwner(req : NextApiRequest, res : NextApiResponse, user : UserWithoutPassword, experimentId : number) {
+export async function denyReqIfUserIsNeitherAdminNorExperimentOwner(req : NextApiRequest, res : NextApiResponse, user : UserWithoutPassword, experimentId : number, permissionTracker : APIPermissionTracker) {
     try{
-        const isAdmin = user.is_admin;
+        const isAdmin = user.isAdmin;
         const isOwner = await checkIfUserIsExperimentOwner(user, experimentId);
         if (isAdmin || isOwner){
             return;
         } else {
-            denyAPIReq(req, res, "You are neither an admin nor an owner");
+            denyAPIReq(req, res, "You are neither an admin nor an owner", permissionTracker);
         }
             
     } catch {
@@ -19,9 +19,9 @@ export async function denyReqIfUserIsNeitherAdminNorExperimentOwner(req : NextAp
     }
 }
 
-export async function denyReqIfUserIsNotAdmin(req : NextApiRequest, res : NextApiResponse, user : UserWithoutPassword){
-    if (!user.is_admin){
-        await denyAPIReq(req, res, "You are not an admin");
+export async function denyReqIfUserIsNotAdmin(req : NextApiRequest, res : NextApiResponse, user : UserWithoutPassword, permissionTracker : APIPermissionTracker){
+    if (!user.isAdmin){
+        await denyAPIReq(req, res, "You are not an admin", permissionTracker);
     }
 }
 
@@ -34,7 +34,7 @@ export const checkIfUserIsAdmin = async ( username : string ) : Promise<boolean>
                 username : username
             }
         });
-        if (user && user.is_admin){
+        if (user && user.isAdmin){
             return true;
         } else {
             return false;

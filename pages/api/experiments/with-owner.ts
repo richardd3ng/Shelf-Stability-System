@@ -24,7 +24,7 @@ export default async function searchExperimentsAPI(
             where: {
                 ownerId,
             }
-        }).then((experiments) => experiments.map((experiment) => dateFieldsToLocalDate(experiment, ["start_date"])));
+        }).then((experiments) => experiments.map((experiment) => dateFieldsToLocalDate(experiment, ["startDate"])));
 
         res.status(200).json(experiments);
     } catch (error) {

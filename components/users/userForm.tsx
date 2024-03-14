@@ -42,8 +42,8 @@ export function UserForm(props: UserFormProps) {
                 }
 
                 setUsername(user.username);
-                setIsAdmin(user.is_admin ?? false);
-                setIsSuperAdmin(user.is_super_admin ?? false);
+                setIsAdmin(user.isAdmin ?? false);
+                setIsSuperAdmin(user.isSuperAdmin ?? false);
                 hideLoading();
             });
             setOwnedExperiments([]);

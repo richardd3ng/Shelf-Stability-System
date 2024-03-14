@@ -75,7 +75,7 @@ const ExperimentList: React.FC = () => {
 
     const [ownerList, setOwnerList] = useState<UserInfo[] | null>(null);
     const { user } = useContext(CurrentUserContext);
-    const isAdmin: boolean = user?.is_admin ?? false;
+    const isAdmin: boolean = user?.isAdmin ?? false;
 
     const reloadExperimentData = async (
         paging: ServerPaginationArgs

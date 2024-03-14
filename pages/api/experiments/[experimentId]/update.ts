@@ -11,13 +11,18 @@ import { LocalDate } from "@js-joda/core";
 import { ExperimentWithLocalDate } from "@/lib/controllers/types";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 import { dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
+import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 
 
 export default async function updateExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentWithLocalDate | ApiError>
 ) {
-    await denyReqIfUserIsNotLoggedInAdmin(req, res);
+    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
+    if (permissionTracker.shouldStopExecuting){
+        return;
+    }
     const id = getExperimentID(req);
     if (id === INVALID_EXPERIMENT_ID) {
         res.status(400).json(
@@ -65,7 +70,7 @@ export default async function updateExperimentAPI(
             description: description,
         };
         if (startDate) {
-            updateData.start_date = localDateToJsDate(
+            updateData.startDate = localDateToJsDate(
                 LocalDate.parse(startDate)
             );
         }
@@ -77,7 +82,7 @@ export default async function updateExperimentAPI(
                     },
                     data: updateData,
                 })
-                .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["start_date"]));
+                .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["startDate"]));
         if (!updatedExperiment) {
             res.status(404).json(
                 getApiError(

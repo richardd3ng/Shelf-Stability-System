@@ -32,7 +32,7 @@ export const AssayOptionsBox: React.FC<AssayOptionsBoxProps> = (
             >
                 <ViewIcon />
             </IconButton>
-            {(user?.is_admin || user?.username == props.owner) && <IconButton
+            {(user?.isAdmin || user?.username == props.owner) && <IconButton
                 onClick={() => {
                     const assayPromise = fetchAssay(props.assayId).then((assay) => {
                         setAssay(assay);

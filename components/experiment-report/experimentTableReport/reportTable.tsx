@@ -66,7 +66,7 @@ const ReportTable: React.FC<ReportTableProps> = (props: ReportTableProps) => {
                         textAlign: "center",
                     }}
                 >
-                    {`${condition.name}${condition.control ? " [Ctrl]" : ""}`}
+                    {`${condition.name}${condition.isControl ? " [Ctrl]" : ""}`}
                 </Typography>
             </Box>
         );
@@ -96,7 +96,7 @@ const ReportTable: React.FC<ReportTableProps> = (props: ReportTableProps) => {
                         ) ?? undefined;
                     return (
                         <ReportChip
-                            key={assay.type}
+                            key={assay.assayTypeId}
                             assay={assay}
                             assayResult={assayResult}
                         ></ReportChip>

@@ -26,7 +26,7 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
         const conditionInfo: ConditionCreationArgs = {
             experimentId: experimentId,
             name: condition,
-            control: false,
+            isControl: false,
         };
         createCondition(conditionInfo);
         setCondition("");

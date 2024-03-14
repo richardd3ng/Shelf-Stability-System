@@ -36,7 +36,7 @@ export default async function getExperimentInfoAPI(
                     if (!experiment) {
                         return null;
                     }
-                    return dateFieldsToLocalDate(experiment, ["start_date"]);
+                    return dateFieldsToLocalDate(experiment, ["startDate"]);
                 }),
             db.condition.findMany({
                 where: { experimentId: id },
