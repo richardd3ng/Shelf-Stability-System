@@ -94,11 +94,16 @@ const ReportTable: React.FC<ReportTableProps> = (props: ReportTableProps) => {
                             props.experimentInfo.assayResults,
                             assay
                         ) ?? undefined;
+                    const assayType = props.experimentInfo.assayTypes.find((type) => type.id === assay.assayTypeId);
+                    if (!assayType){
+                        return null;
+                    }
                     return (
                         <ReportChip
                             key={assay.assayTypeId}
                             assay={assay}
                             assayResult={assayResult}
+                            assayType={assayType}
                         ></ReportChip>
                     );
                 })}

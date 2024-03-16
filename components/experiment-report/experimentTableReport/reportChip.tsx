@@ -1,16 +1,16 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { getAssayTypeUnits } from "@/lib/controllers/assayTypeController";
 import React from "react";
 import { Assay, AssayResult } from "@prisma/client";
-import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
+import { AssayTypeInfo } from "@/lib/controllers/types";
 
 interface ReportChipProps {
     assay: Assay;
+    assayType : AssayTypeInfo;
     assayResult?: AssayResult;
 }
 
 const ReportChip: React.FC<ReportChipProps> = (props: ReportChipProps) => {
-    const units: string = getAssayTypeUnits(props.assay.assayTypeId);
+    const units: string = props.assayType.assayType.units ? props.assayType.assayType.units : "";
     const resultText: string =
         props.assayResult && props.assayResult.result
             ? `${props.assayResult.result}${
@@ -33,7 +33,7 @@ const ReportChip: React.FC<ReportChipProps> = (props: ReportChipProps) => {
         >
             <Stack sx={{ margin: -0.25 }}>
                 <Typography sx={{ fontSize: 12 }}>
-                    {assayTypeIdToName(props.assay.assayTypeId)}
+                    {props.assayType.assayType.name}
                 </Typography>
                 <Typography
                     sx={{

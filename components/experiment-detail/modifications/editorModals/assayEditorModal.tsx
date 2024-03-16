@@ -18,13 +18,12 @@ import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingCo
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { INVALID_USERNAME } from "@/lib/hooks/useUserInfo";
 import {
-    assayTypeIdToName,
-    assayTypeNameToId,
     getAssayTypeUnits,
 } from "@/lib/controllers/assayTypeController";
-import { getDistinctAssayTypes } from "@/lib/controllers/assayTypeController";
 import { EditGroup } from "@/lib/context/shared/editGroup";
 import { EditGroupSelect } from "@/components/shared/editGroupSelect";
+import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
+import { AssayTypeInfo } from "@/lib/controllers/types";
 
 export interface AssayEditorModalProps {
     onlyEditResult?: boolean;
@@ -37,24 +36,27 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
         setIsEditing: setIsEditingAssay,
         assay,
     } = useContext(AssayEditingContext);
+    const experimentId = useExperimentId();
+    const {data : experimentInfo} = useExperimentInfo(experimentId);
     const { assayResult } = useContext(
         AssayResultEditingContext
     );
-    const [type, setType] = useState<string>("");
+    const INVALID_ASSAY_TYPE_ID = -1;
+    const [assayTypeId, setAssayTypeId] = useState<number>(INVALID_ASSAY_TYPE_ID);
     const [week, setWeek] = useState<string>("");
     const [result, setResult] = useState<string>("");
     const [comment, setComment] = useState<string>("");
     const { user } = useContext(CurrentUserContext);
 
     useEffect(() => {
-        if (!isEditingAssay || assay === undefined) {
+        if (!isEditingAssay || assay === undefined || !experimentInfo) {
             return;
         }
         setWeek(assay.week.toString());
-        setType(assayTypeIdToName(assay.assayTypeId));
+        setAssayTypeId(assay.assayTypeId);
         setResult(assayResult?.result?.toString() ?? "");
         setComment(assayResult?.comment ?? "");
-    }, [assay, assayResult, isEditingAssay]);
+    }, [assay, assayResult, isEditingAssay, experimentInfo]);
 
     const { mutate: updateAssay } = useMutationToUpdateAssay();
     const { mutate: createAssayResult } = useMutationToCreateAssayResult();
@@ -68,12 +70,17 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
         setWeek(newWeek);
     };
 
-    const handleSelectAssayTypeChange = (assayTypeName: string) => {
+    const handleSelectAssayTypeChange = (assayTypeId : number) => {
         updateAssay({
             id: assay!.id,
-            assayTypeId: assayTypeNameToId(assayTypeName),
+            assayTypeId: assayTypeId
         });
-        setType(assayTypeName);
+        if (experimentInfo){
+            const correspondingTypes = experimentInfo.assayTypes.filter((type) => type.assayType.id === assayTypeId)
+            if (correspondingTypes.length > 0){
+                setAssayTypeId(correspondingTypes[0].id);
+            }
+        }
     };
 
     const handleSubmitResult = (newResult: string) => {
@@ -116,12 +123,12 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
         setComment("");
         setResult("");
         setWeek("");
-        setType("");
+        setAssayTypeId(INVALID_ASSAY_TYPE_ID);
         setIsEditingAssay(false);
         onClose?.();
     };
 
-    if (!assay || !user || !type || !week) {
+    if (!assay || !user || assayTypeId <= INVALID_ASSAY_TYPE_ID || !week || !experimentInfo) {
         return <></>;
     }
     return (
@@ -144,15 +151,15 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
                                 <EditGroupSelect
                                     id="assayType"
                                     labelId="Assay Type Select Label"
-                                    value={type}
+                                    value={assayTypeId}
                                     label="Assay Type"
                                     onChange={(e) =>
-                                        handleSelectAssayTypeChange(e.target.value)
+                                        handleSelectAssayTypeChange(Number(e.target.value))
                                     }
                                 >
-                                    {getDistinctAssayTypes().map((type: string) => (
-                                        <MenuItem key={type} value={type}>
-                                            {type}
+                                    {experimentInfo.assayTypes.map((type: AssayTypeInfo) => (
+                                        <MenuItem key={type.id} value={type.assayType.id}>
+                                            {type.assayType.name}
                                         </MenuItem>
                                     ))}
                                 </EditGroupSelect>
@@ -171,7 +178,7 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
                         defaultDisplayValue="N/A"
                         label="Result:"
                         numberType="float"
-                        units={getAssayTypeUnits(type)}
+                        units={getAssayTypeUnits(assayTypeId, experimentInfo.assayTypes)}
                         onSubmit={handleSubmitResult}
                     />
                     <EditableTextField
