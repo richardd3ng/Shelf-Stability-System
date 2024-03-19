@@ -20,7 +20,7 @@ import {
 
 export const getAssayTypesCoveredByAssays = (assays: Assay[]): string[] => {
     return getDistinctAssayTypes().filter((type: string) =>
-        assays.some((assay) => assay.type === assayTypeNameToId(type))
+        assays.some((assay) => assay.assayTypeId === assayTypeNameToId(type))
     );
 };
 
@@ -66,7 +66,7 @@ const AssaysGroupedByType: React.FC = () => {
                             <ExperimentTable
                                 assayFilter={(experimentInfo: ExperimentInfo) =>
                                     experimentInfo.assays.filter(
-                                        (assay) => assay.type === typeId
+                                        (assay) => assay.assayTypeId === typeId
                                     )
                                 }
                             />

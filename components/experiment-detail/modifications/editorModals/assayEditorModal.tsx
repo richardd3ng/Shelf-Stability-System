@@ -51,7 +51,7 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
             return;
         }
         setWeek(assay.week.toString());
-        setType(assayTypeIdToName(assay.type));
+        setType(assayTypeIdToName(assay.assayTypeId));
         setResult(assayResult?.result?.toString() ?? "");
         setComment(assayResult?.comment ?? "");
     }, [assay, assayResult, isEditingAssay]);
@@ -71,7 +71,7 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
     const handleSelectAssayTypeChange = (assayTypeName: string) => {
         updateAssay({
             id: assay!.id,
-            type: assayTypeNameToId(assayTypeName),
+            assayTypeId: assayTypeNameToId(assayTypeName),
         });
         setType(assayTypeName);
     };
@@ -81,14 +81,14 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
             updateAssayResult({
                 id: assayResult.id,
                 result: newResult ? parseFloat(newResult) : null,
-                last_editor: user?.username ?? INVALID_USERNAME,
+                author: user?.username ?? INVALID_USERNAME,
             });
         } else if (newResult) {
             createAssayResult({
                 assayId: assay!.id,
                 result: parseFloat(newResult),
                 comment: null,
-                last_editor: user?.username ?? INVALID_USERNAME,
+                author: user?.username ?? INVALID_USERNAME,
             });
         }
         setResult(newResult);
@@ -99,14 +99,14 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
             updateAssayResult({
                 id: assayResult.id,
                 comment: newComment ? newComment : null,
-                last_editor: user?.username ?? INVALID_USERNAME,
+                author: user?.username ?? INVALID_USERNAME,
             });
         } else if (newComment) {
             createAssayResult({
                 assayId: assay!.id,
                 result: null,
                 comment: newComment,
-                last_editor: user?.username ?? INVALID_USERNAME,
+                author: user?.username ?? INVALID_USERNAME,
             });
         }
         setComment(newComment);

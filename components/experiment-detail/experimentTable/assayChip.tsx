@@ -27,9 +27,9 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const { user } = useContext(CurrentUserContext);
     const isAdminOrOwner: boolean =
-        (user?.is_admin || user?.id === data?.experiment.ownerId) ?? false;
+        (user?.isAdmin || user?.id === data?.experiment.ownerId) ?? false;
 
-    const units: string = getAssayTypeUnits(props.assay.type);
+    const units: string = getAssayTypeUnits(props.assay.assayTypeId);
     const resultText: string =
         props.assayResult && props.assayResult.result
             ? `${props.assayResult.result}${
@@ -50,7 +50,7 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
             >
                 <Stack sx={{ margin: -0.25 }}>
                     <Typography sx={{ fontSize: 16 }}>
-                        {assayTypeIdToName(props.assay.type)}
+                        {assayTypeIdToName(props.assay.assayTypeId)}
                     </Typography>
                     <Typography sx={{ fontSize: 12 }}>{resultText}</Typography>
                     <Box
@@ -65,7 +65,7 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                             title={
                                 <Typography fontSize={16}>
                                     {`Author: ${
-                                        props.assayResult?.last_editor ?? "N/A"
+                                        props.assayResult?.author ?? "N/A"
                                     }`}
                                 </Typography>
                             }

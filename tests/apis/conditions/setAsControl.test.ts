@@ -7,6 +7,7 @@ import "next-auth/jwt"
 import "next-auth/client"
 import { mockAdminUser, mockNonAdminUser, mockUsers } from '@/tests/__mocks__/data/mockUsers';
 import { UNAUTHORIZED_STATUS_CODE } from '@/lib/api/auth/acessDeniers';
+import { mockCondition, mockControlCondition } from '@/tests/__mocks__/data/mockConditions';
 
 
 
@@ -18,14 +19,14 @@ jest.mock('@/lib/api/db', () => ({
             count : jest.fn()
         },
         condition : {
-            delete : jest.fn()
-        }
+            delete : jest.fn(),
+            findUnique : jest.fn(),
+            findFirst : jest.fn(),
+            update : jest.fn()
+        },
+        $transaction : jest.fn()
     },
 }));
-
-jest.mock('next-auth/client');
-jest.mock('next-auth/jwt');
-
 
 
 describe('/api/conditions/[conditionId]/setAsControl', () => {
@@ -52,6 +53,8 @@ describe('/api/conditions/[conditionId]/setAsControl', () => {
         expect(res.status).toHaveBeenCalledWith(UNAUTHORIZED_STATUS_CODE);
         
     });
+    
+
 
   
 });

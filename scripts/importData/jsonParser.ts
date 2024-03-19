@@ -24,7 +24,7 @@ export interface ExperimentImportJSON {
     number: number;
     owner : string;
     description: string;
-    start_date: string;
+    startDate: string;
     storage_conditions: string[];
     assay_types: string[];
     assay_schedule: AssayScheduleImportJSON;

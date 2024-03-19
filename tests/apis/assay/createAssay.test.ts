@@ -7,6 +7,7 @@ import "next-auth/jwt"
 import "next-auth/client"
 import { mockAdminUser, mockNonAdminUser, mockUsers } from '@/tests/__mocks__/data/mockUsers';
 import { UNAUTHORIZED_STATUS_CODE } from '@/lib/api/auth/acessDeniers';
+import { mockAssay, mockAssayCreationArgs } from '@/tests/__mocks__/data/mockAssays';
 
 
 
@@ -17,14 +18,12 @@ jest.mock('@/lib/api/db', () => ({
             findUnique : jest.fn(),
             count : jest.fn()
         },
-        condition : {
-            delete : jest.fn()
+        assay : {
+            create : jest.fn()
         }
     },
 }));
 
-jest.mock('next-auth/client');
-jest.mock('next-auth/jwt');
 
 
 
@@ -35,6 +34,7 @@ describe('/api/assay/create', () => {
     beforeEach(() => {
         req = {
             method: 'POST',
+            body : mockAssayCreationArgs
         };
         res = {
             status: jest.fn().mockReturnThis(),
@@ -49,6 +49,14 @@ describe('/api/assay/create', () => {
         expect(res.status).toHaveBeenCalledWith(UNAUTHORIZED_STATUS_CODE);
         
     });
+
+    it("succeeds in standard case", async () => {
+        (db.user.findUnique as jest.Mock).mockResolvedValueOnce(mockAdminUser);
+        (db.assay.create as jest.Mock).mockResolvedValueOnce(mockAssay);
+        await createAssayAPI(req as NextApiRequest, res as NextApiResponse);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(mockAssay);
+    })
 
   
 });

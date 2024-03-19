@@ -101,9 +101,9 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
     const WEEK_COL_WIDTH = 50;
     const CONDITION_COL_WIDTH = 150;
     const { user } = useContext(CurrentUserContext);
-    const isAdmin: boolean = user?.is_admin ?? false;
+    const isAdmin: boolean = user?.isAdmin ?? false;
     const isAdminOrOwner: boolean =
-        (user?.is_admin || user?.id === data?.experiment.ownerId) ?? false;
+        (user?.isAdmin || user?.id === data?.experiment.ownerId) ?? false;
 
     useEffect(() => {
         if (!data) {
@@ -162,7 +162,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                             <StarIcon
                                 sx={{ fontSize: 16 }}
                                 color="primary"
-                                visibility={condition.control ? "" : "hidden"}
+                                visibility={condition.isControl ? "" : "hidden"}
                             />
                         </Tooltip>
                     </Box>
@@ -261,7 +261,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                         ) ?? undefined;
                     return (
                         <AssayChip
-                            key={assay.type}
+                            key={assay.assayTypeId}
                             assay={assay}
                             assayResult={assayResult}
                         ></AssayChip>

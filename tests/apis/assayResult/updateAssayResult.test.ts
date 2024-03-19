@@ -7,6 +7,8 @@ import "next-auth/jwt"
 import "next-auth/client"
 import { mockAdminUser, mockNonAdminUser, mockUsers } from '@/tests/__mocks__/data/mockUsers';
 import { UNAUTHORIZED_STATUS_CODE } from '@/lib/api/auth/acessDeniers';
+import { MockAssayResultWithCommentAndResult, mockAssayResultUpdateArgsCommentOnly } from '@/tests/__mocks__/data/mockAssayResults';
+import { mockExperimentWithOwnerAsNonAdmin, mockExperimentWithOwnerOtherThanNonAdmin } from '@/tests/__mocks__/data/mockExperiments';
 
 
 
@@ -17,14 +19,17 @@ jest.mock('@/lib/api/db', () => ({
             findUnique : jest.fn(),
             count : jest.fn()
         },
-        condition : {
-            delete : jest.fn()
+        assayResult : {
+            update : jest.fn(),
+            delete : jest.fn(),
+            findUnique : jest.fn(),
+
+        },
+        experiment : {
+            findUnique : jest.fn()
         }
     },
 }));
-
-jest.mock('next-auth/client');
-jest.mock('next-auth/jwt');
 
 
 
@@ -35,6 +40,10 @@ describe('/api/assayResult/[assayResultId]/update', () => {
     beforeEach(() => {
         req = {
             method: 'POST',
+            body : mockAssayResultUpdateArgsCommentOnly,
+            query : {
+                "assayResultId" : "1"
+            }
         };
         res = {
             status: jest.fn().mockReturnThis(),
@@ -42,13 +51,47 @@ describe('/api/assayResult/[assayResultId]/update', () => {
         };
     });
 
-    it('rejects request from non-admin', async () => {
+    it('rejects request from non-admin non-owner', async () => {
         (db.user.findUnique as jest.Mock).mockResolvedValueOnce(mockNonAdminUser);
-
+        (db.assayResult.findUnique as jest.Mock).mockResolvedValueOnce({
+            ...MockAssayResultWithCommentAndResult,
+            assay : {
+                experimentId : mockExperimentWithOwnerOtherThanNonAdmin.id
+            }
+        });
+        (db.experiment.findUnique as jest.Mock).mockResolvedValueOnce(mockExperimentWithOwnerOtherThanNonAdmin);
         await updateAssayResultAPI(req as NextApiRequest, res as NextApiResponse);
         expect(res.status).toHaveBeenCalledWith(UNAUTHORIZED_STATUS_CODE);
         
     });
+
+    it('succeeds when called by admin', async () => {
+        (db.user.findUnique as jest.Mock).mockResolvedValueOnce(mockAdminUser);
+        (db.assayResult.findUnique as jest.Mock).mockResolvedValueOnce({
+            ...MockAssayResultWithCommentAndResult,
+            assay : {
+                experimentId : mockExperimentWithOwnerAsNonAdmin.id
+            }
+        });
+        (db.experiment.findUnique as jest.Mock).mockResolvedValueOnce(mockExperimentWithOwnerAsNonAdmin);
+        (db.assayResult.update as jest.Mock).mockResolvedValueOnce(mockAssayResultUpdateArgsCommentOnly);
+        await updateAssayResultAPI(req as NextApiRequest, res as NextApiResponse);
+        expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it ('succeeds when called by experiment owner', async () => {
+        (db.user.findUnique as jest.Mock).mockResolvedValueOnce(mockNonAdminUser);
+        (db.assayResult.findUnique as jest.Mock).mockResolvedValueOnce({
+            ...MockAssayResultWithCommentAndResult,
+            assay : {
+                experimentId : mockExperimentWithOwnerAsNonAdmin.id
+            }
+        });
+        (db.experiment.findUnique as jest.Mock).mockResolvedValueOnce(mockExperimentWithOwnerAsNonAdmin);
+        (db.assayResult.update as jest.Mock).mockResolvedValueOnce(mockAssayResultUpdateArgsCommentOnly);
+        await updateAssayResultAPI(req as NextApiRequest, res as NextApiResponse);
+        expect(res.status).toHaveBeenCalledWith(200);
+    })
 
   
 });

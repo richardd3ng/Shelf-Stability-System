@@ -92,7 +92,7 @@ export const updateAssay = async (
         method: "POST",
         body: JSON.stringify({
             conditionId: assayInfo.conditionId,
-            type: assayInfo.type,
+            type: assayInfo.assayTypeId,
             week: assayInfo.week,
         }),
         headers: {

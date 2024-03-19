@@ -40,7 +40,7 @@ export const updateAssayResult = async (
         body: JSON.stringify({
             result: assayResultUpdateArgs.result,
             comment: assayResultUpdateArgs.comment,
-            last_editor: assayResultUpdateArgs.last_editor,
+            author: assayResultUpdateArgs.author,
         }),
         headers: {
             "Content-Type": "application/json",

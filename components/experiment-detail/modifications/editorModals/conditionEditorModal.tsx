@@ -39,7 +39,7 @@ const ConditionEditorModal: React.FC = () => {
         }
         setName(condition.name);
         setOriginalName(condition.name);
-        setControl(condition.control || false);
+        setControl(condition.isControl || false);
     }, [conditionIdBeingEdited, data]);
 
     const handleSubmitName = (newName: string) => {

@@ -8,7 +8,7 @@ export const createAssays = async (assays : AssayCreationArgs[]) => {
             return {
                 conditionId : assay.conditionId,
                 experimentId : assay.experimentId,
-                type : assay.type,
+                assayTypeId : assay.assayTypeId,
                 week : assay.week,
                 
             };

@@ -7,6 +7,7 @@ import "next-auth/jwt"
 import "next-auth/client"
 import { mockAdminUser, mockNonAdminUser, mockUsers } from '@/tests/__mocks__/data/mockUsers';
 import { UNAUTHORIZED_STATUS_CODE } from '@/lib/api/auth/acessDeniers';
+import { mockCondition } from '@/tests/__mocks__/data/mockConditions';
 
 
 
@@ -23,8 +24,6 @@ jest.mock('@/lib/api/db', () => ({
     },
 }));
 
-jest.mock('next-auth/client');
-jest.mock('next-auth/jwt');
 
 
 
@@ -38,7 +37,7 @@ describe('/api/conditions/create', () => {
             body : {
                 "experimentId" : 1,
                 "name" : "myCondition",
-                "control" : false
+                "isControl" : false
 
             }
         };
@@ -55,6 +54,14 @@ describe('/api/conditions/create', () => {
         expect(res.status).toHaveBeenCalledWith(UNAUTHORIZED_STATUS_CODE);
         
     });
+    it('works in good case', async () => {
+        (db.user.findUnique as jest.Mock).mockResolvedValueOnce(mockAdminUser);
+        (db.condition.create as jest.Mock).mockResolvedValueOnce(mockCondition);
+        await createConditionAPI(req as NextApiRequest, res as NextApiResponse);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(mockCondition);
+
+    })
 
   
 });

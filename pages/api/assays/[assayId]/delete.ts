@@ -7,12 +7,17 @@ import { Assay } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 
 export default async function deleteAssayAPI(
     req: NextApiRequest,
     res: NextApiResponse<Assay | ApiError>
 ): Promise<void> {
-    await denyReqIfUserIsNotLoggedInAdmin(req, res);
+    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
+    if (permissionTracker.shouldStopExecuting){
+        return;
+    }
     
     const id = getAssayID(req);
     if (id === INVALID_ASSAY_ID) {

@@ -8,7 +8,7 @@ export const createAssayResults = async (assayResults : AssayResultCreationArgs[
                 assayId : assayResult.assayId,
                 result : assayResult.result,
                 comment : assayResult.comment,
-                last_editor : assayResult.last_editor
+                author : assayResult.author
             };
         })
             

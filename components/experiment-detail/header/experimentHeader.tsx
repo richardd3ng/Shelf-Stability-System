@@ -25,7 +25,7 @@ export const ExperimentHeader = () => {
     const { showLoading, hideLoading } = useLoading();
     const [isEditing, setIsEditing] = useState(false);
     const { user } = useContext(CurrentUserContext);
-    const isAdmin: boolean = user?.is_admin ?? false;
+    const isAdmin: boolean = user?.isAdmin ?? false;
 
     useEffect(() => {
         if (isLoading) {
@@ -89,7 +89,7 @@ export const ExperimentHeader = () => {
                         variant="h6"
                         sx={{ marginBottom: 1 }}
                     >
-                        {`Started ${experimentInfo.experiment.start_date.toString()} by 
+                        {`Started ${experimentInfo.experiment.startDate.toString()} by 
                     ${owner.username}`}
                     </Typography>
                 )}
