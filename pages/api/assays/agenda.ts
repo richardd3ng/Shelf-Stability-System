@@ -57,7 +57,9 @@ export default async function getAssays(
             {
                 owner: token.name ?? undefined
             },
-            // TODO check technician id against current user id
+            {
+                technician: token.name ?? undefined
+            }
         ] : undefined
     };
 
