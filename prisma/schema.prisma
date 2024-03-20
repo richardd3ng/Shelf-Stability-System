@@ -35,6 +35,17 @@ model Experiment {
   assayTypes  AssayTypeForExperiment[]         
 }
 
+view ExperimentWeekView {
+  id          Int         @id
+  title       String      @unique
+  description String
+  startDate   DateTime    @db.Date
+  week        Int
+  isCanceled  Boolean
+  owner       String
+  ownerId     Int
+}
+
 model Assay {
   id           Int        @id @default(autoincrement())
   experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
@@ -81,12 +92,12 @@ model AssayTypeForExperiment {
 }
 
 model Condition {
-  id           Int        @id @default(autoincrement())
-  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
-  experimentId Int
-  name         String
-  isControl      Boolean 
-  assays        Assay[]
+  id                Int                 @id @default(autoincrement())
+  experiment        Experiment          @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  experimentId      Int
+  name              String
+  isControl         Boolean 
+  assays            Assay[]
 
   @@unique([experimentId, name], name: "UniqueExperimentConditionName")
 }

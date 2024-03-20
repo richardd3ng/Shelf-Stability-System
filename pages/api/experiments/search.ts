@@ -5,45 +5,13 @@ import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
 import { ExperimentTable, ExperimentTableInfo } from "@/lib/controllers/types";
 import { dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
+import { requireQueryFields } from "@/lib/api/apiHelpers";
 
-// Be very careful with this function, it's very easy to introduce SQL injection vulnerabilities
-function convertSort(
-    field: string | string[] | undefined,
-    order: string | string[] | undefined
-) {
-    if (
-        field === undefined ||
-        order === undefined ||
-        Array.isArray(field) ||
-        Array.isArray(order)
-    ) {
-        return undefined;
-    }
-    const newOrder: "asc" | "desc" =
-        order.toLowerCase() === "asc" ? "asc" : "desc";
-
-    switch (field) {
-        case "startDate":
-            field = "start_date";
-        case "id":
-        case "title":
-            return {
-                field: "e." + field,
-                order: newOrder,
-            };
-        case "week":
-            return {
-                field: field,
-                order: newOrder,
-            };
-        case "owner":
-            return {
-                field: "u.username",
-                order: newOrder,
-            };
-    }
-
-    return undefined;
+// Not really needed as its own function, but maybe if we have nested objects
+function convertSort(field: string, order: string) {
+    return {
+        [field]: order,
+    };
 }
 
 export default async function searchExperimentsAPI(
@@ -51,78 +19,66 @@ export default async function searchExperimentsAPI(
     res: NextApiResponse<ExperimentTable | ApiError>
 ) {
     try {
-        const query = req.query.query !== undefined ? req.query.query : "";
-        const owner = req.query.owner !== undefined ? req.query.owner : "";
-        const queryNumber = Number(query);
+        const fields = requireQueryFields(req,
+            ["query", "owner", "page", "page_size", "sort_by", "sort_order"],
+            {
+                query: "",
+                owner: "",
+                sort_by: "id",
+                sort_order: "asc",
+            });
 
-        const orderBy = convertSort(req.query.sort_by, req.query.sort_order);
-        var page;
-        var pageSize;
-        try {
-            page = parseInt(req.query.page as string);
-            pageSize = parseInt(req.query.page_size as string);
-        } catch (error) {
+        if (fields instanceof ApiError) {
+            res.status(400).json(fields);
+            return;
+        }
+
+        const { query, queryNumber, owner, page, pageSize, orderBy } = {
+            ...fields,
+            queryNumber: Number(fields.query),
+            page: Number(fields.page),
+            pageSize: Number(fields.page_size),
+            orderBy: convertSort(fields.sort_by, fields.sort_order)
+        };
+
+        if (isNaN(page) || isNaN(pageSize)) {
             res.status(400).json(getApiError(400, "Invalid page or page_size"));
             return;
         }
 
-        const [experiments, totalRows] = await Promise.all([
-            // TODO look at views instead?
-            db.$queryRaw<
-                (Omit<ExperimentTableInfo, 'startDate'> & { start_date: Date })[]
-            >`SELECT e.id, e.title, e.start_date, ROUND((CAST(CURRENT_DATE AS DATE) - e.start_date) / 7.0) as week, u.username as "owner"
-                
-                FROM public."Experiment" e
-                JOIN public."User" u ON e."ownerId" = u.id
-                WHERE (e.title ILIKE ${`%${query}%`}
-                OR e.description ILIKE ${`%${query}%`}
-                ${!isNaN(queryNumber)
-                    ? Prisma.sql`OR e.id = ${queryNumber}`
-                    : Prisma.empty
-                })
-                ${owner !== ""
-                    ? Prisma.raw(`AND u.username = '${owner}'`)
-                    : Prisma.empty
-                }
-                ${orderBy !== undefined
-                    ? Prisma.raw(
-                        `ORDER BY ${orderBy.field} ${orderBy.order}`
-                    )
-                    : Prisma.empty
-                }
-                LIMIT ${pageSize} OFFSET ${page * pageSize}`.then<
-                    ExperimentTableInfo[]
-                >((experiments) =>
-                    experiments.map((experiment) => dateFieldsToLocalDate({
-                        ...experiment,
-                        start_date: undefined,
-                        startDate: experiment.start_date,
-                    }, ['startDate']))
-                ),
-            db.experiment.count({
-                where: {
-                    AND: [
-                        {
-                            OR: [
-                                {
-                                    title: {
-                                        contains: query as string,
-                                        mode: "insensitive",
-                                    },
-                                },
-                                {
-                                    description: {
-                                        contains: query as string,
-                                        mode: "insensitive",
-                                    },
-                                },
-                                {
-                                    id: isNaN(queryNumber) ? undefined : queryNumber,
-                                },
-                            ],
-                        }
-                    ]
+        const whereCondition: Prisma.ExperimentWeekViewWhereInput = {
+            OR: [
+                {
+                    title: {
+                        contains: query,
+                        mode: "insensitive",
+                    },
                 },
+                {
+                    description: {
+                        contains: query,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    id: isNaN(queryNumber) ? undefined : queryNumber,
+                },
+            ],
+            // TODO technician search?
+            owner: owner === "" ? undefined : owner,
+        };
+
+        const [experiments, totalRows] = await Promise.all([
+            db.experimentWeekView.findMany({
+                where: whereCondition,
+                orderBy: orderBy,
+                take: pageSize,
+                skip: page * pageSize,
+            }).then<ExperimentTableInfo[]>((experiments) =>
+                experiments.map((experiment) => dateFieldsToLocalDate(experiment, ['startDate']))
+            ),
+            db.experimentWeekView.count({
+                where: whereCondition
             }),
         ]);
 

@@ -29,7 +29,9 @@ export type ExperimentTableInfo = {
     title: string;
     startDate: LocalDate;
     week: number;
+    isCanceled: boolean;
     owner: string;
+    ownerId: number;
 };
 
 export type ExperimentTable = {

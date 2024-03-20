@@ -39,7 +39,7 @@ export default async function getAssays(
     };
 
     if (isNaN(page) || isNaN(pageSize)) {
-        res.status(400).json(getApiError(400, "Invalid page or pageSize"));
+        res.status(400).json(getApiError(400, "Invalid page or page_size"));
         return;
     }
 
