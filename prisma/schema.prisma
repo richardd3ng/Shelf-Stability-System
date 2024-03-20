@@ -1,6 +1,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -21,7 +22,6 @@ model User {
   assayTypesAsTechnician AssayTypeForExperiment[]
 }
 
-
 model Experiment {
   id          Int         @id @default(autoincrement())
   title       String      @unique
@@ -33,6 +33,17 @@ model Experiment {
   conditions  Condition[]
   assays      Assay[] 
   assayTypes  AssayTypeForExperiment[]         
+}
+
+view ExperimentWeekView {
+  id          Int         @id
+  title       String      @unique
+  description String
+  startDate   DateTime    @db.Date
+  week        Int
+  isCanceled  Boolean
+  owner       String
+  ownerId     Int
 }
 
 model Assay {
@@ -67,7 +78,7 @@ model AssayType {
   experimentSpecificTypes AssayTypeForExperiment[]
 }
 
-model AssayTypeForExperiment{
+model AssayTypeForExperiment {
   id          Int      @id @default(autoincrement())
   assayType   AssayType @relation(fields: [assayTypeId], references: [id], onDelete: Cascade)
   assayTypeId Int
@@ -78,20 +89,28 @@ model AssayTypeForExperiment{
   assays       Assay[]
 
   @@unique([experimentId, assayTypeId], name: "UniqueAssayTypesPerExperiment")
-
 }
 
-
-
-
-
 model Condition {
-  id           Int        @id @default(autoincrement())
-  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
-  experimentId Int
-  name         String
-  isControl      Boolean 
-  assays        Assay[]
+  id                Int                 @id @default(autoincrement())
+  experiment        Experiment          @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  experimentId      Int
+  name              String
+  isControl         Boolean 
+  assays            Assay[]
 
   @@unique([experimentId, name], name: "UniqueExperimentConditionName")
+}
+
+view AssayAgendaView {
+  id            Int       @unique
+  experimentId  Int
+  targetDate    DateTime  @db.Date
+  title         String
+  owner         String
+  technician    String?
+  condition     String
+  type          String
+  week          Int
+  resultId      Int?
 }
