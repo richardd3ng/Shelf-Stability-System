@@ -129,6 +129,7 @@ export type AssayResultUpdateArgs = {
 export type UserInfo = {
     id: number;
     username: string;
+    isSSO: boolean;
     isAdmin: boolean;
 };
 

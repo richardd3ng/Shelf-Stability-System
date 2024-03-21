@@ -17,6 +17,9 @@ export interface UserFormProps {
 
 export function UserForm(props: UserFormProps) {
     const [username, setUsername] = useState<string>("");
+    const [displayName, setDisplayName] = useState<string>("");
+    const [email, setEmail] = useState<string | null>("");
+    const [isSSO, setIsSSO] = useState<boolean>(false);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
     const [password, setPassword] = useState<string>("");
@@ -42,6 +45,9 @@ export function UserForm(props: UserFormProps) {
                 }
 
                 setUsername(user.username);
+                setDisplayName(user.displayName);
+                setEmail(user.email);
+                setIsSSO(user.isSSO);
                 setIsAdmin(user.isAdmin ?? false);
                 setIsSuperAdmin(user.isSuperAdmin ?? false);
                 hideLoading();
@@ -59,19 +65,19 @@ export function UserForm(props: UserFormProps) {
     }, [props.newUser, props.userId]);
 
     const passwordMismatch = password !== confirmPassword;
+    const usernameInvalid = !username.match(/^[a-z0-9]*$/i);
+    const usernameErrorMessage = usernameInvalid ? "Username must be alphanumeric" : "";
 
     async function submitForm(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         // Blank passwords should be prevented by the "required" field, but it doesn't hurt to check
-        if (passwordMismatch || (props.newUser && password === "")) return;
-
-        
+        if (passwordMismatch || usernameInvalid || (props.newUser && password === "")) return;
 
         var result: Omit<User, 'password'> | ApiError | undefined = undefined;
         if (props.newUser) {
             showLoading("Creating user...");
-            result = await createUser(username, password, isAdmin);
+            result = await createUser(username, displayName, email, password, isAdmin);
         } else {
             showLoading("Updating user...");
             result = await updateUser(props.userId!, password, isAdmin);
@@ -93,6 +99,7 @@ export function UserForm(props: UserFormProps) {
     async function handleDelete() {
         showLoading("Deleting user...");
 
+        // TODO handle warning about and deleting technicians
         const error = await deleteUser(props.userId!);
 
         if (error instanceof ApiError) {
@@ -108,13 +115,33 @@ export function UserForm(props: UserFormProps) {
         <form onSubmit={submitForm}>
             <Stack spacing={2} maxWidth={300}>
                 {props.newUser
-                    ? <TextField
-                        label="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                    : <Typography variant="h5">{username}</Typography>}
+                    ? <>
+                        <TextField
+                            label="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            error={usernameInvalid}
+                            helperText={usernameErrorMessage}
+                            inputProps={{ maxLength: 32 }} // No server side validation for this because I don't really care
+                            required
+                        />
+                        <TextField
+                            label="Display Name"
+                            value={displayName}
+                            onChange={(e) => setDisplayName(e.target.value)}
+                            required
+                        />
+                        <TextField
+                            label="Email Address"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </>
+                    : <>
+                        <Typography variant="h5">{displayName} ({username})</Typography>
+                        {email && <Typography variant="h6">{email}</Typography>}
+                    </>}
                 <FormControlLabel control={
                     <Checkbox
                         checked={isAdmin}
@@ -122,24 +149,27 @@ export function UserForm(props: UserFormProps) {
                         disabled={!majorEditsAllowed}
                     />
                 } label="Admin" />
-                <TextField
-                    label={props.newUser ? "Password" : "Change Password"}
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required={props.newUser || confirmPassword.length > 0}
-                />
-                <TextField
-                    label="Confirm Password"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    error={passwordMismatch}
-                    helperText={passwordMismatch ? "Passwords do not match" : ""}
-                    required={props.newUser || password.length > 0}
-                />
+                {!isSSO &&
+                    <>
+                        <TextField
+                            label={props.newUser ? "Password" : "Change Password"}
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required={props.newUser || confirmPassword.length > 0}
+                        />
+                        <TextField
+                            label="Confirm Password"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            error={passwordMismatch}
+                            helperText={passwordMismatch ? "Passwords do not match" : ""}
+                            required={props.newUser || password.length > 0}
+                        />
+                    </>}
                 <Button type="submit" variant="contained" color="primary">{props.newUser ? "Submit" : "Update"}</Button>
-                {(majorEditsAllowed && !props.newUser) && <Button variant="contained" color="error" onClick={() => setDeleteDialogOpen(true)}>Delete</Button>}
+                {(majorEditsAllowed && !isSSO && !props.newUser) && <Button variant="contained" color="error" onClick={() => setDeleteDialogOpen(true)}>Delete</Button>}
             </Stack>
             <DeleteUserDialog
                 open={deleteDialogOpen}

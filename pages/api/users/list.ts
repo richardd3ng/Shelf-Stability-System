@@ -42,6 +42,7 @@ export default async function fetchUserListAPI(
                     select: {
                         id: true,
                         isAdmin: true,
+                        isSSO: true,
                         username: true,
                     },
                     where: {
@@ -50,13 +51,7 @@ export default async function fetchUserListAPI(
                             mode: "insensitive",
                         },
                     },
-                })
-                .then((users) =>
-                    users.map((user) => ({
-                        ...user,
-                        isAdmin: user.isAdmin === true,
-                    }))
-                ), // Account for null isAdmin
+                }),
             rowCount: userCount,
         };
         res.status(200).json(userTable);

@@ -1,17 +1,21 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getApiError } from "@/lib/api/error";
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { getToken } from "next-auth/jwt";
 import { checkIfUserIsAdmin } from "@/lib/api/auth/checkIfAdminOrExperimentOwner";
+import { hashPassword } from "@/lib/api/auth/authHelpers";
 
 const selectExceptPassword = {
     id: true,
     username: true,
+    displayName: true,
+    email: true,
+    isSSO: true,
     isAdmin: true,
-    isSuperAdmin: true,
+    isSuperAdmin: true
 };
 
 export default async function accessUserAPI(
@@ -76,13 +80,42 @@ async function updateUser(userId: number, req: NextApiRequest, res: NextApiRespo
     const token = await getToken({ req });
 
     if (token === null || !token.name || !(await checkIfUserIsAdmin(token.name))) {
-        res.status(403).json(getApiError(403, "You are not authorized to update a user"));
+        res.status(401).json(getApiError(401, "You are not authorized to update a user"));
         return;
     }
 
+    const userToUpdate = await db.user.findUnique({
+        where: {
+            id: userId,
+        },
+        select: {
+            username: true,
+            isSSO: true,
+            isSuperAdmin: true,
+        },
+    });
+
     const { password, isAdmin } = req.body;
 
-    // TODO prevent updating own admin status or superadmin status
+    if (userToUpdate === null) {
+        res.status(404).json(
+            getApiError(404, `User with ID ${userId} not found`)
+        );
+        return;
+    }
+    if (userToUpdate.isSSO && password !== "" && password !== undefined) {
+        res.status(403).json(
+            getApiError(403, "Cannot set a password for SSO user")
+        );
+        return;
+    }
+    // Can't remove superadmin or own admin status
+    if (!isAdmin && (userToUpdate.isSuperAdmin || userToUpdate.username === token.name)) {
+        res.status(403).json(
+            getApiError(403, "Not permitted to remove admin status")
+        );
+        return;
+    }
 
     const updatedUser = await db.user.update({
         where: {
@@ -90,7 +123,7 @@ async function updateUser(userId: number, req: NextApiRequest, res: NextApiRespo
         },
         select: selectExceptPassword,
         data: {
-            password: password === "" ? undefined : password,
+            password: password === "" ? undefined : await hashPassword(password),
             isAdmin: isAdmin,
         },
     });
