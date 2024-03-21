@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Box, Button, Typography } from "@mui/material";
-import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
+import { useMutationToCancelExperiment } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
 import ConfirmationDialog from "../shared/confirmationDialog";
 
-const DeleteExperimentButton = () => {
+const CancelExperimentButton = () => {
     const experimentId = useExperimentId();
-    const { mutate: deleteExperiment } = useMutationToDeleteExperiment();
+    const { mutate: cancelExperiment } = useMutationToCancelExperiment();
     const [showConfirmationDialog, setShowConfirmationDialog] =
         useState<boolean>(false);
 
@@ -15,23 +15,21 @@ const DeleteExperimentButton = () => {
             <Box alignSelf="center">
                 <Button
                     variant="contained"
-                    color="error"
+                    color="warning"
                     onClick={() => setShowConfirmationDialog(true)}
                     sx={{ textTransform: "none" }}
                 >
-                    <Typography align="center">Delete Experiment</Typography>
+                    <Typography align="center">Cancel Experiment</Typography>
                 </Button>
             </Box>
             <ConfirmationDialog
                 open={showConfirmationDialog}
-                text="Are you sure you want to delete the selected experiment(s)?
-                    Only experiments without recorded assay results can be
-                    deleted. This action cannot be undone."
+                text="Are you sure you want to cancel this experiment? This action cannot be undone"
                 onClose={() => setShowConfirmationDialog(false)}
-                onConfirm={() => deleteExperiment(experimentId)}
+                onConfirm={() => cancelExperiment(experimentId)}
             />
         </>
     );
 };
 
-export default DeleteExperimentButton;
+export default CancelExperimentButton;

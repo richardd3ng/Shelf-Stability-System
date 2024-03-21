@@ -19,7 +19,7 @@ import {
     hasRecordedAssayResults,
 } from "@/lib/controllers/experimentController";
 import { fetchOwners } from "@/lib/controllers/userController";
-import ExperimentDeletionDialog from "@/components/shared/experimentDeletionDialog";
+import ExperimentDeletionDialog from "@/components/shared/confirmationDialog";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import {
@@ -344,7 +344,7 @@ const ExperimentList: React.FC = () => {
                     onClose={() => {
                         setShowDeletionDialog(false);
                     }}
-                    onDelete={handleDeleteExperiments}
+                    onConfirm={handleDeleteExperiments}
                 />
             </Stack>
         </Layout>

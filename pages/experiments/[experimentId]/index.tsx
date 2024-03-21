@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import DeleteExperimentButton from "@/components/experiment-detail/deleteExperimentButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { useContext } from "react";
+import CancelExperimentButton from "@/components/experiment-detail/cancelExperimentButton";
 
 const ExperimentPage = () => {
     const { user } = useContext(CurrentUserContext);
@@ -13,18 +14,17 @@ const ExperimentPage = () => {
         <Layout>
             <ExperimentHeader />
             <AssaysGroupedByType />
-            {
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        paddingY: 2,
-                        visibility: isAdmin ? "visible" : "hidden",
-                    }}
-                >
-                    <DeleteExperimentButton />
-                </Box>
-            }
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    paddingY: 2,
+                    visibility: isAdmin ? "visible" : "hidden",
+                }}
+            >
+                <DeleteExperimentButton />
+            </Box>
+            <CancelExperimentButton />
         </Layout>
     );
 };

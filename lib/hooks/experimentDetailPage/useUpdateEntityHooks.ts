@@ -7,10 +7,12 @@ import {
     setConditionAsControl,
     updateCondition,
 } from "@/lib/controllers/conditionController";
-import { updateExperiment } from "@/lib/controllers/experimentController";
+import {
+    cancelExperiment,
+    updateExperiment,
+} from "@/lib/controllers/experimentController";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
-import { Assay, AssayResult, Condition } from "@prisma/client";
-import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
+import { Assay, Condition } from "@prisma/client";
 import {
     AssayResultUpdateArgs,
     ExperimentUpdateArgs,
@@ -131,6 +133,36 @@ export const useMutationToUpdateExperiment = () => {
         },
         onMutate: (experimentUpdateArgs: ExperimentUpdateArgs) => {
             showLoading(`Updating experiment ${experimentUpdateArgs.id}...`);
+        },
+        onSettled: () => {
+            hideLoading();
+        },
+    });
+};
+
+export const useMutationToCancelExperiment = () => {
+    const queryClient = useQueryClient();
+    const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
+    return useMutation({
+        mutationFn: cancelExperiment,
+        onSuccess: (canceledExperiment: ExperimentWithLocalDate) => {
+            queryClient.invalidateQueries({
+                queryKey: getQueryKeyForUseExperimentInfo(
+                    canceledExperiment.id
+                ),
+            });
+            showAlert(
+                "success",
+                `Succesfully cancelled experiment ${canceledExperiment.id}`
+            );
+        },
+        onError: (error) => {
+            showAlert("error", getErrorMessage(error));
+        },
+        onMutate: (id: number) => {
+            showLoading(`Cancelling experiment ${id}...`);
         },
         onSettled: () => {
             hideLoading();

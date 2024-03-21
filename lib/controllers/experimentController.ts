@@ -171,3 +171,20 @@ export const updateExperiment = async (
     }
     throw new ApiError(response.status, resJson.message);
 };
+
+export const cancelExperiment = async (
+    id: number
+): Promise<ExperimentWithLocalDate> => {
+    const endpoint = `/api/experiments/${id}/cancel`;
+    const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    let resJson = await response.json();
+    if (response.ok) {
+        return JSONToExperiment(resJson);
+    }
+    throw new ApiError(response.status, resJson.message);
+}
