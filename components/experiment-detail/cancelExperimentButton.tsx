@@ -1,14 +1,24 @@
 import { useState } from "react";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Box, Button, Typography } from "@mui/material";
-import { useMutationToCancelExperiment } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
+import { useMutationToUpdateExperiment } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
 import ConfirmationDialog from "../shared/confirmationDialog";
 
-const CancelExperimentButton = () => {
+interface CancelExperimentButtonProps {
+    cancel: boolean;
+}
+
+const CancelExperimentButton = (props: CancelExperimentButtonProps) => {
     const experimentId = useExperimentId();
-    const { mutate: cancelExperiment } = useMutationToCancelExperiment();
+    const { mutate: updateExperiment } = useMutationToUpdateExperiment();
     const [showConfirmationDialog, setShowConfirmationDialog] =
         useState<boolean>(false);
+
+    const dialogText = `Are you sure you want to ${
+        props.cancel ? "cancel" : "uncancel"
+    } this experiment? This will ${
+        props.cancel ? "disallow" : "allow"
+    } modifications to the experiment and its assays.`;
 
     return (
         <>
@@ -19,14 +29,21 @@ const CancelExperimentButton = () => {
                     onClick={() => setShowConfirmationDialog(true)}
                     sx={{ textTransform: "none" }}
                 >
-                    <Typography align="center">Cancel Experiment</Typography>
+                    <Typography align="center">{`${
+                        props.cancel ? "Cancel" : "Uncancel"
+                    } Experiment`}</Typography>
                 </Button>
             </Box>
             <ConfirmationDialog
                 open={showConfirmationDialog}
-                text="Are you sure you want to cancel this experiment? This action cannot be undone"
+                text={dialogText}
                 onClose={() => setShowConfirmationDialog(false)}
-                onConfirm={() => cancelExperiment(experimentId)}
+                onConfirm={() =>
+                    updateExperiment({
+                        id: experimentId,
+                        isCanceled: props.cancel,
+                    })
+                }
             />
         </>
     );

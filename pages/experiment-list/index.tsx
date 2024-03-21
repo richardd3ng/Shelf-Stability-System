@@ -19,7 +19,6 @@ import {
     hasRecordedAssayResults,
 } from "@/lib/controllers/experimentController";
 import { fetchOwners } from "@/lib/controllers/userController";
-import ExperimentDeletionDialog from "@/components/shared/confirmationDialog";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import {
@@ -37,6 +36,7 @@ import GeneratePrintableReportButton from "@/components/shared/generateReportIco
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 import Delete from "@mui/icons-material/Delete";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import ConfirmationDialog from "@/components/shared/confirmationDialog";
 
 interface QueryParams {
     search: string;
@@ -57,7 +57,7 @@ const ExperimentList: React.FC = () => {
     );
     const [showCreationDialog, setShowCreationDialog] =
         useState<boolean>(false);
-    const [showDeletionDialog, setShowDeletionDialog] =
+    const [showConfirmationDialog, setShowConfirmationDialog] =
         useState<boolean>(false);
     const [selectedExperimentIds, setSelectedExperimentIds] =
         useState<GridRowSelectionModel>([]);
@@ -183,7 +183,7 @@ const ExperimentList: React.FC = () => {
 
     const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
         setSelectedExperimentIds(selectedRows);
-        setShowDeletionDialog(true);
+        setShowConfirmationDialog(true);
     };
 
     const handleSearch = (query: string, owner: string) => {
@@ -339,10 +339,11 @@ const ExperimentList: React.FC = () => {
                         reload();
                     }}
                 />
-                <ExperimentDeletionDialog
-                    open={showDeletionDialog}
+                <ConfirmationDialog
+                    open={showConfirmationDialog}
+                    text="Are you sure you want to delete this experiment? This action cannot be undone."
                     onClose={() => {
-                        setShowDeletionDialog(false);
+                        setShowConfirmationDialog(false);
                     }}
                     onConfirm={handleDeleteExperiments}
                 />

@@ -48,7 +48,6 @@ const ExperimentEditorModal: React.FC = () => {
             id: experimentId,
             title: title,
             description: description ? description : null,
-            userId: 1,
         };
         if (allowEditStartDate) {
             if (startDate) {
