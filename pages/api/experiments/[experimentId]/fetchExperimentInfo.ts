@@ -3,10 +3,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
     ExperimentInfo,
     ExperimentWithLocalDate,
+    AssayTypeInfo
 } from "@/lib/controllers/types";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
-import { Assay, AssayResult, Condition, Experiment } from "@prisma/client";
+import { Assay, AssayResult, AssayTypeForExperiment, Condition, Experiment } from "@prisma/client";
 import { getExperimentID, INVALID_EXPERIMENT_ID } from "@/lib/api/apiHelpers";
 import { JSONToExperiment, dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
 
@@ -23,10 +24,11 @@ export default async function getExperimentInfoAPI(
     }
 
     try {
-        const [experiment, conditions, assays]: [
+        const [experiment, conditions, assays, assayTypes]: [
             ExperimentWithLocalDate | null,
             Condition[],
-            Assay[]
+            Assay[],
+            AssayTypeInfo[]
         ] = await Promise.all([
             db.experiment
                 .findUnique({
@@ -44,7 +46,14 @@ export default async function getExperimentInfoAPI(
             db.assay.findMany({
                 where: { experimentId: id },
             }),
+            db.assayTypeForExperiment.findMany({
+                where : { experimentId : id},
+                include : {
+                    assayType : true
+                }
+            })
         ]);
+        
         if (!experiment) {
             res.status(404).json(
                 getApiError(
@@ -72,6 +81,7 @@ export default async function getExperimentInfoAPI(
             conditions: conditions,
             assays: assays,
             assayResults: experimentAssayResults,
+            assayTypes : assayTypes
         });
     } catch (error) {
         console.error(error);

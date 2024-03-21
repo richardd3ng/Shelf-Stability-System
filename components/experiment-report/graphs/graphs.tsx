@@ -1,10 +1,10 @@
-import { assayTypeIdToName, getAssayTypeUnits } from "@/lib/controllers/assayTypeController";
-import { stringFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
+import { assayTypeIdToName, getAssayTypeUnits, getCorrespondingAssayType } from "@/lib/controllers/assayTypeController";
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Stack } from "@mui/material";
 import { GraphForOneAssayType } from "./graphForOneAssayType";
+import { AssayTypeInfo } from "@/lib/controllers/types";
 
 export type ValAndLabel  = {
     val : number;
@@ -21,22 +21,25 @@ export type DataForOneAssayType = {
 };
 
 export type DataByAssayType = {
-    assayTypeToData : Map<string, DataForOneAssayType>;
+    assayTypeToData : Map<AssayTypeInfo, DataForOneAssayType>;
 };
 
 
 
 const getDataByAssayType = (experimentInfo : ExperimentInfo) : DataByAssayType => {
-    const map : Map<string, DataForOneAssayType> = new Map();
+    const map : Map<AssayTypeInfo, DataForOneAssayType> = new Map();
     
     experimentInfo.assayResults.forEach((result) => {
         
         let correspondingAssay = experimentInfo.assays.find((assay) => assay.id === result.assayId);
         if (correspondingAssay){
-            
-            let type = assayTypeIdToName(correspondingAssay.assayTypeId);
+            let type = getCorrespondingAssayType(correspondingAssay.assayTypeId, experimentInfo.assayTypes);
+            if (!type){
+                return;
+            }
+
             let condition = experimentInfo.conditions.find((c) => c.id === correspondingAssay?.conditionId);
-            console.log(condition?.name);
+
             if (condition) {
                 if (!map.has(type)){
                     map.set(type, {
@@ -72,7 +75,7 @@ export function BasicScatter() {
         return (
             <Stack gap={4}>
                 {Array.from(dataByAssayType.assayTypeToData.entries()).map(([key , value]) => {
-                    return <GraphForOneAssayType data={value} key={key} type={key} units={getAssayTypeUnits(key)}/>
+                    return <GraphForOneAssayType data={value} key={key.id} type={key.assayType.name} units={key.assayType.units ? key.assayType.units : ""}/>
                 })}
             </Stack>
         );

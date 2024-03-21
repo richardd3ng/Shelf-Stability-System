@@ -58,9 +58,7 @@ export const useMutationToCreateAssay = () => {
             });
             showAlert(
                 "success",
-                `Succesfully created ${assayTypeIdToName(
-                    createdassay.assayTypeId
-                )} assay`
+                `Succesfully created the assay!`
             );
         },
         onError: (error) => {
@@ -68,7 +66,7 @@ export const useMutationToCreateAssay = () => {
         },
         onMutate: (assayCreationArgs: AssayCreationArgs) => {
             showLoading(
-                `Creating ${assayTypeIdToName(assayCreationArgs.type)} assay...`
+                `Creating assay...`
             );
         },
         onSettled: () => {

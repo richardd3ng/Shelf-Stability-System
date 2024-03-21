@@ -97,6 +97,7 @@ export const fetchExperimentInfo = async (
             conditions: resJson.conditions,
             assays: resJson.assays,
             assayResults: resJson.assayResults,
+            assayTypes : resJson.assayTypes
         };
     }
     throw new ApiError(response.status, resJson.message);

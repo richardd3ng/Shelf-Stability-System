@@ -2,10 +2,7 @@ import CloseableModal from "@/components/shared/closeableModal";
 import { useMutationToCreateAssay } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import {
-    getDistinctAssayTypes,
-    assayTypeNameToId,
-} from "@/lib/controllers/assayTypeController";
+
 import {
     Button,
     FormControl,
@@ -17,6 +14,7 @@ import {
 import { useState } from "react";
 import { AssayCreationArgs } from "@/lib/controllers/types";
 import { useAlert } from "@/lib/context/shared/alertContext";
+import { AssayTypeInfo } from "@/lib/controllers/types";
 
 interface NewAssayModalProps {
     open: boolean;
@@ -29,27 +27,27 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
     props: NewAssayModalProps
 ) => {
     const experimentId = useExperimentId();
-    const { data } = useExperimentInfo(experimentId);
-    const [selectedAssayType, setSelectedAssayType] = useState<string>("");
+    const { data: experimentInfo } = useExperimentInfo(experimentId);
+    const [selectedAssayTypeId, setSelectedAssayTypeId] = useState<number>(-1);
     const { mutate: createAssay } = useMutationToCreateAssay();
     const { showAlert } = useAlert();
 
     const onSubmit = async () => {
-        if (!selectedAssayType) {
+        if (selectedAssayTypeId < 0) {
             showAlert("error", "Please select an assay type.");
             return;
         }
         const assayInfo: AssayCreationArgs = {
             experimentId: experimentId,
             conditionId: props.conditionId,
-            assayTypeId: assayTypeNameToId(selectedAssayType),
+            assayTypeId: selectedAssayTypeId,
             week: props.week,
         };
         await createAssay(assayInfo);
         props.onClose();
     };
 
-    if (!data) {
+    if (!experimentInfo) {
         return <></>;
     }
 
@@ -59,7 +57,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
             closeFn={props.onClose}
             title={"Add New Assay"}
         >
-            {data ? (
+            {experimentInfo ? (
                 <Stack gap={1}>
                     <FormControl fullWidth>
                         <InputLabel id="Assay Type Select Label">
@@ -67,15 +65,15 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
                         </InputLabel>
                         <Select
                             id="Assay Type Selection"
-                            value={selectedAssayType}
+                            value={selectedAssayTypeId}
                             label="Assay Type"
-                            onChange={(e) => {
-                                setSelectedAssayType(e.target.value);
+                            onChange={e => {
+                                setSelectedAssayTypeId(Number(e.target.value));
                             }}
                         >
-                            {getDistinctAssayTypes().map((type: string) => (
-                                <MenuItem key={type} value={type}>
-                                    {type}
+                            {experimentInfo.assayTypes.map((type: AssayTypeInfo ) => (
+                                <MenuItem key={type.id} value={type.id}>
+                                    {type.assayType.name}
                                 </MenuItem>
                             ))}
                         </Select>

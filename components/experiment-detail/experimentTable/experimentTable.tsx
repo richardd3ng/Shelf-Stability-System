@@ -86,7 +86,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
 ) => {
     const { showAlert } = useAlert();
     const experimentId = useExperimentId();
-    const { data } = useExperimentInfo(experimentId);
+    const { data: experimentInfo } = useExperimentInfo(experimentId);
     const [weekRows, setWeekRows] = useState<WeekRow[]>([]);
     const [idCounter, setIdCounter] = useState<number>(0);
     const [addAssayParams, setAddAssayParams] = useState<AddAssayParams | null>(
@@ -103,13 +103,13 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
     const { user } = useContext(CurrentUserContext);
     const isAdmin: boolean = user?.isAdmin ?? false;
     const isAdminOrOwner: boolean =
-        (user?.isAdmin || user?.id === data?.experiment.ownerId) ?? false;
+        (user?.isAdmin || user?.id === experimentInfo?.experiment.ownerId) ?? false;
 
     useEffect(() => {
-        if (!data) {
+        if (!experimentInfo) {
             return;
         } else {
-            const weeks: number[] = getAllWeeksCoveredByAssays(data.assays);
+            const weeks: number[] = getAllWeeksCoveredByAssays(experimentInfo.assays);
             const initialWeekRows: WeekRow[] = [];
             weeks.forEach((week: number, index: number) => {
                 initialWeekRows.push({
@@ -120,7 +120,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
             setWeekRows(initialWeekRows);
             setIdCounter(weeks.length);
         }
-    }, [data]);
+    }, [experimentInfo]);
 
     const columnHeader = (condition: Condition): React.JSX.Element => {
         return (
@@ -250,13 +250,13 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                 </Box>
 
                 {getAssaysForWeekAndCondition(
-                    data ? props.assayFilter(data) : [],
+                    experimentInfo ? props.assayFilter(experimentInfo) : [],
                     params.row.week,
                     condition.id
                 ).map((assay: Assay) => {
                     const assayResult: AssayResult | undefined =
                         getAssayResultForAssay(
-                            data?.assayResults ?? [],
+                            experimentInfo?.assayResults ?? [],
                             assay
                         ) ?? undefined;
                     return (
@@ -283,7 +283,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
             editable: false,
             sortable: false,
         };
-        const conditionCols: GridColDef[] = (data?.conditions || []).map(
+        const conditionCols: GridColDef[] = (experimentInfo?.conditions || []).map(
             (condition: Condition) => ({
                 field: condition.name,
                 headerName: condition.name,
