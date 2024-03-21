@@ -63,16 +63,11 @@ export const useMutationToUpdateAssay = () => {
 
     return useMutation({
         mutationFn: updateAssay,
-        onSuccess: (updatedAssay: Assay) => {
+        onSuccess: (_updatedAssay: Assay) => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
             });
-            showAlert(
-                "success",
-                `Succesfully updated ${assayTypeIdToName(
-                    updatedassay.assayTypeId
-                )} assay`
-            );
+            showAlert("success", `Succesfully updated assay`);
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));

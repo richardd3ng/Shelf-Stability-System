@@ -13,8 +13,6 @@ import ExperimentTable from "./experimentTable/experimentTable";
 import { AssayTypeInfo, ExperimentInfo } from "@/lib/controllers/types";
 import { ExpandMore } from "@mui/icons-material";
 
-
-
 const AssaysGroupedByType: React.FC = () => {
     const experimentId = useExperimentId();
     const { data, isLoading, isError } = useExperimentInfo(experimentId);
@@ -38,12 +36,14 @@ const AssaysGroupedByType: React.FC = () => {
                     </Stack>
                 </AccordionDetails>
             </Accordion>
-            {data.assayTypes.map((type : AssayTypeInfo) => {
+            {data.assayTypes.map((type: AssayTypeInfo) => {
                 const typeId: number = type.id;
                 return (
                     <Accordion key={typeId}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
-                            <Typography>Assays of type {type.assayType.name}</Typography>
+                            <Typography>
+                                Assays of type {type.assayType.name}
+                            </Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <ExperimentTable
