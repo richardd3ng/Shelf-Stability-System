@@ -34,10 +34,8 @@ import {
 import { useRouter } from "next/router";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import GeneratePrintableReportButton from "@/components/shared/generateReportIconButton";
-import ViewExperimentButton from "@/components/experiment-list/viewExperimentButton";
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 import Delete from "@mui/icons-material/Delete";
-import { useUserInfo } from "@/lib/hooks/useUserInfo";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
 interface QueryParams {
@@ -153,15 +151,16 @@ const ExperimentList: React.FC = () => {
             sortable: false,
             renderCell: (params) => (
                 <Box sx={{ display: "flex" }}>
-                    <ViewExperimentButton experimentId={params.row.id} />
                     <GeneratePrintableReportButton
                         experimentId={params.row.id}
                     />
-                    {isAdmin && <IconButtonWithTooltip
-                        text="Delete"
-                        icon={Delete}
-                        onClick={() => prepareForDeletion([params.row.id])}
-                    ></IconButtonWithTooltip>}
+                    {isAdmin && (
+                        <IconButtonWithTooltip
+                            text="Delete"
+                            icon={Delete}
+                            onClick={() => prepareForDeletion([params.row.id])}
+                        ></IconButtonWithTooltip>
+                    )}
                 </Box>
             ),
         },
@@ -307,14 +306,16 @@ const ExperimentList: React.FC = () => {
                             </Select>
                         </FormControl>
                     </Box>
-                    {isAdmin && (<Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => setShowCreationDialog(true)}
-                        sx={{ flex: 1, textTransform: "none" }}
-                    >
-                        Create Experiment
-                    </Button>)}
+                    {isAdmin && (
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => setShowCreationDialog(true)}
+                            sx={{ flex: 1, textTransform: "none" }}
+                        >
+                            Create Experiment
+                        </Button>
+                    )}
                 </Box>
 
                 <Table

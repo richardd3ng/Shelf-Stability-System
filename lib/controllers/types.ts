@@ -6,7 +6,7 @@ import {
     AssayResult,
     User,
     AssayType,
-    AssayTypeForExperiment
+    AssayTypeForExperiment,
 } from "@prisma/client";
 
 /* ----- Experiment ----- */
@@ -20,7 +20,7 @@ export type ExperimentInfo = {
     conditions: Condition[];
     assays: Assay[];
     assayResults: AssayResult[];
-    assayTypes : AssayTypeInfo[];
+    assayTypes: AssayTypeInfo[];
 };
 
 export type ExperimentOwner = {
@@ -80,7 +80,7 @@ export type AssayAgendaInfo = {
     owner: string;
     condition: string;
     week: number;
-    assayType : number;
+    type: string;
     resultId: number | null;
 };
 
@@ -116,9 +116,9 @@ export type ConditionUpdateArgs = {
 };
 
 /* ----- Assay Type ------ */
-export type AssayTypeInfo =  AssayTypeForExperiment & {
-    assayType : AssayType;
-}
+export type AssayTypeInfo = AssayTypeForExperiment & {
+    assayType: AssayType;
+};
 
 /* ----- Assay Result ----- */
 

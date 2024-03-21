@@ -30,7 +30,7 @@ export default async function fetchOwnersAPI(
                     username: true,
                 },
                 where: {
-                    experiments: {
+                    ownedExperiments: {
                         some: {},
                     },
                 },
