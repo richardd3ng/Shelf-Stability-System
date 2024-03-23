@@ -37,9 +37,9 @@ function getSheet2Data(experimentInfo: ExperimentInfo): OneRowOfSheet2Data[] {
         data.push({
             "Week": assay.week,
             "Condition": experimentInfo.conditions.findLast((condition: Condition) => condition.id === assay.conditionId)?.name,
-            "Assay Type": assayTypeIdToName(assay.assayTypeId),
+            "Assay Type": assayTypeIdToName(assay.assayTypeId, experimentInfo.assayTypes),
             "Result": assayResult?.result,
-            "Units": assayResult?.result ? getAssayTypeUnits(assay.assayTypeId) : null,
+            "Units": assayResult?.result ? getAssayTypeUnits(assay.assayTypeId, experimentInfo.assayTypes) : null,
             "Last Edited User": assayResult?.author,
             "Comment": assayResult?.comment
         })

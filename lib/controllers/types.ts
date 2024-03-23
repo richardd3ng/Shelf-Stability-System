@@ -5,6 +5,8 @@ import {
     Assay,
     AssayResult,
     User,
+    AssayType,
+    AssayTypeForExperiment,
 } from "@prisma/client";
 
 /* ----- Experiment ----- */
@@ -18,6 +20,7 @@ export type ExperimentInfo = {
     conditions: Condition[];
     assays: Assay[];
     assayResults: AssayResult[];
+    assayTypes: AssayTypeInfo[];
 };
 
 export type ExperimentOwner = {
@@ -55,17 +58,19 @@ export type ExperimentCreationArgs =
     };
 export type ExperimentCreationResponse = Omit<
     ExperimentInfo,
-    "assays" | "assayResults"
+    "assays" | "assayResults" | "assayTypes"
 >;
 
 // experiment updates are done in a single atomic transaction
 export type ExperimentUpdateArgs = {
     id: number;
-    title: string;
-    description: string | null;
+    title?: string;
+    description?: string | null;
     startDate?: LocalDate;
-    userId: number;
+    isCanceled?: boolean;
 };
+
+export type ExperimentStatus = "all" | "cancelled" | "non-cancelled";
 
 /* ----- Assay ----- */
 
@@ -110,6 +115,11 @@ export type ConditionCreationArgsNoExperimentId = Omit<
 export type ConditionUpdateArgs = {
     id: number;
     name?: string;
+};
+
+/* ----- Assay Type ------ */
+export type AssayTypeInfo = AssayTypeForExperiment & {
+    assayType: AssayType;
 };
 
 /* ----- Assay Result ----- */

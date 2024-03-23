@@ -1,37 +1,50 @@
-import assayTypesJSON from "../../data/assayTypes.json";
 import { ApiError } from "next/dist/server/api-utils";
+import { AssayTypeInfo } from "./types";
 
-export const getDistinctAssayTypes = (): string[] => {
-    return assayTypesJSON.assay_types.map((assayType) => assayType.name);
+export const assayTypeIdToName = (
+    assayTypeForExperimentId: number,
+    assayTypesForExperiment: AssayTypeInfo[]
+): string => {
+    const correspondingType = getCorrespondingAssayType(
+        assayTypeForExperimentId,
+        assayTypesForExperiment
+    );
+    if (correspondingType) {
+        return correspondingType.assayType.name;
+    } else {
+        throw new ApiError(
+            400,
+            `Assay type with ID ${assayTypeForExperimentId} is not found`
+        );
+    }
 };
 
-export const assayTypeNameToId = (name: string): number => {
-    const assayType = assayTypesJSON.assay_types.find(
-        (assayType) => assayType.name === name
+export const getAssayTypeUnits = (
+    assayTypeForExperimentId: number,
+    assayTypesForExperiment: AssayTypeInfo[]
+): string => {
+    const correspondingType = getCorrespondingAssayType(
+        assayTypeForExperimentId,
+        assayTypesForExperiment
     );
-    if (assayType) {
-        return assayType.id;
+    if (correspondingType) {
+        if (correspondingType.assayType.units) {
+            return correspondingType.assayType.units;
+        } else {
+            return "";
+        }
     }
-    throw new ApiError(400, `Assay type ${name} is not recognized`);
+    throw new ApiError(
+        400,
+        `Assay type ${assayTypeForExperimentId} is not recognized`
+    );
 };
 
-export const assayTypeIdToName = (id: number): string => {
-    const assayType = assayTypesJSON.assay_types.find(
-        (assayType) => assayType.id === id
+export const getCorrespondingAssayType = (
+    assayTypeForExperimentId: number,
+    assayTypesForExperiment: AssayTypeInfo[]
+): AssayTypeInfo | undefined => {
+    return assayTypesForExperiment.find(
+        (type) => type.id === assayTypeForExperimentId
     );
-    if (assayType) {
-        return assayType.name;
-    }
-    throw new ApiError(400, `Assay type with ID ${id} is not found`);
 };
-
-export const getAssayTypeUnits = (identifier: string | number): string => {
-    const assayType = assayTypesJSON.assay_types.find(
-        (assayType) =>
-            assayType.name === identifier || assayType.id === identifier
-    );
-    if (assayType) {
-        return assayType.units;
-    }
-    throw new ApiError(400, `Assay type ${identifier} is not recognized`);
-}

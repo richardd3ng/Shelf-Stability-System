@@ -8,34 +8,15 @@ import {
     AccordionDetails,
     Stack,
 } from "@mui/material";
-import React, { useEffect } from "react";
-import { Assay } from "@prisma/client";
+import React from "react";
 import ExperimentTable from "./experimentTable/experimentTable";
-import { ExperimentInfo } from "@/lib/controllers/types";
+import { AssayTypeInfo, ExperimentInfo } from "@/lib/controllers/types";
 import { ExpandMore } from "@mui/icons-material";
-import {
-    assayTypeNameToId,
-    getDistinctAssayTypes,
-} from "@/lib/controllers/assayTypeController";
-
-export const getAssayTypesCoveredByAssays = (assays: Assay[]): string[] => {
-    return getDistinctAssayTypes().filter((type: string) =>
-        assays.some((assay) => assay.assayTypeId === assayTypeNameToId(type))
-    );
-};
 
 const AssaysGroupedByType: React.FC = () => {
     const experimentId = useExperimentId();
     const { data, isLoading, isError } = useExperimentInfo(experimentId);
-    const [assayTypesCovered, setAssayTypesCovered] = React.useState<string[]>(
-        []
-    );
-    useEffect(() => {
-        if (!data) {
-            return;
-        }
-        setAssayTypesCovered(getAssayTypesCoveredByAssays(data.assays));
-    }, [data]);
+
     if (isLoading || isError || !data) {
         return <></>;
     }
@@ -55,12 +36,14 @@ const AssaysGroupedByType: React.FC = () => {
                     </Stack>
                 </AccordionDetails>
             </Accordion>
-            {assayTypesCovered.map((name: string) => {
-                const typeId: number = assayTypeNameToId(name);
+            {data.assayTypes.map((type: AssayTypeInfo) => {
+                const typeId: number = type.id;
                 return (
                     <Accordion key={typeId}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
-                            <Typography>Assays of type {name}</Typography>
+                            <Typography>
+                                Assays of type {type.assayType.name}
+                            </Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <ExperimentTable

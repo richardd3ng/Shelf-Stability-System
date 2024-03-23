@@ -7,12 +7,16 @@ interface ErrorDefaults {
     };
 }
 
+export const UNAUTHORIZED_STATUS_CODE = 403;
 export const CONSTRAINT_ERROR_CODE = 409;
 
 const defaults: ErrorDefaults = {
     400: { message: "Bad Request Format", name: "Bad Request" },
     404: { message: "Resource Not Found", name: "Not Found" },
-    403: { message: "Unauthorized Access", name: "Forbidden" },
+    [UNAUTHORIZED_STATUS_CODE]: {
+        message: "Unauthorized Access",
+        name: "Forbidden",
+    },
     [CONSTRAINT_ERROR_CODE]: {
         message: "Constraint Validation Failed",
         name: "Constraint Error",
