@@ -22,7 +22,13 @@ const ReportHeader: React.FC<ReportHeaderProps> = (
             <Typography>
                 <strong>{`Experiment #${props.experimentInfo.experiment.id}`}</strong>
             </Typography>
+
             <Stack sx={{ width: "50%" }}>
+                {props.experimentInfo.experiment.isCanceled && (
+                    <Typography sx={{ color: "red" }}>
+                        <strong>{"[Canceled]"}</strong>
+                    </Typography>
+                )}
                 <Typography>
                     <strong>{`Title:`}</strong>{" "}
                     {props.experimentInfo.experiment.title}

@@ -9,8 +9,7 @@ import {
 } from "@/lib/controllers/conditionController";
 import { updateExperiment } from "@/lib/controllers/experimentController";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
-import { Assay, AssayResult, Condition } from "@prisma/client";
-import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
+import { Assay, Condition } from "@prisma/client";
 import {
     AssayResultUpdateArgs,
     ExperimentUpdateArgs,

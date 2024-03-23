@@ -8,6 +8,7 @@ import {
     ExperimentUpdateArgs,
     ExperimentWithLocalDate,
     ExperimentOwner,
+    ExperimentStatus,
 } from "./types";
 import { ApiError } from "next/dist/server/api-utils";
 import { encodePaging, relativeURL } from "./url";
@@ -16,11 +17,13 @@ import { LocalDate } from "@js-joda/core";
 export const fetchExperimentList = async (
     searchQuery: string,
     ownerFilter: string,
+    statusFilter: ExperimentStatus,
     paging: ServerPaginationArgs
 ): Promise<ExperimentTable> => {
     const url = encodePaging(relativeURL("/api/experiments/search"), paging);
     url.searchParams.set("query", searchQuery);
     url.searchParams.set("owner", ownerFilter);
+    url.searchParams.set("status", statusFilter);
     const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -97,7 +100,7 @@ export const fetchExperimentInfo = async (
             conditions: resJson.conditions,
             assays: resJson.assays,
             assayResults: resJson.assayResults,
-            assayTypes : resJson.assayTypes
+            assayTypes: resJson.assayTypes,
         };
     }
     throw new ApiError(response.status, resJson.message);

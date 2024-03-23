@@ -64,11 +64,13 @@ export type ExperimentCreationResponse = Omit<
 // experiment updates are done in a single atomic transaction
 export type ExperimentUpdateArgs = {
     id: number;
-    title: string;
-    description: string | null;
+    title?: string;
+    description?: string | null;
     startDate?: LocalDate;
-    userId: number;
+    isCanceled?: boolean;
 };
+
+export type ExperimentStatus = "all" | "cancelled" | "non-cancelled";
 
 /* ----- Assay ----- */
 
