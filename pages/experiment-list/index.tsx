@@ -104,7 +104,6 @@ const ExperimentList: React.FC = () => {
     );
 
     useEffect(() => {
-        console.log("fetching data...");
         const fetchOwnerData = async () => {
             setOwnerList(await fetchOwners());
             setQueryParams(getQueryParamsFromURL());
