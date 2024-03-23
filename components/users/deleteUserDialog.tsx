@@ -32,7 +32,7 @@ export const DeleteUserDialog: React.FC<DeleteUserDialogProps> = (
 
                     {props.ownedExperiments.length > 0 &&
                         (<>
-                            This user will be removed as a technician for any assay types, and any owned experiments will have their owners changed to 'admin'. <br/>
+                            This user will be removed as a technician for any assay types, and any owned experiments will have their owners changed to &apos;admin&apos;. <br/>
                             {props.ownedExperiments.length == 1
                                 ? "The following experiment will be affected"
                                 : "The following experiments will be affected"

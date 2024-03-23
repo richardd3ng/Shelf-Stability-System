@@ -11,7 +11,7 @@ import {
 
 /* ----- Experiment ----- */
 
-export type ExperimentWithLocalDate = Experiment & {
+export type ExperimentWithLocalDate = Omit<Experiment, 'startDate'> & {
     startDate: LocalDate;
 };
 
