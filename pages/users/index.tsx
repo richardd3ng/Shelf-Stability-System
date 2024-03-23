@@ -34,8 +34,25 @@ const colDefs: GridColDef[] = [
         headerName: "Username",
         type: "string",
         sortable: false,
+        resizable: true,
         flex: 1
     },
+    {
+        field: "displayName",
+        headerName: "Display Name",
+        type: "string",
+        sortable: false,
+        resizable: true,
+        flex: 1
+    },
+    {
+        field: "email",
+        headerName: "Email",
+        type: "string",
+        sortable: false,
+        resizable: true,
+        flex: 1
+    }
 ];
 
 export default function Users() {

@@ -6,7 +6,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { DeleteUserDialog } from "./deleteUserDialog";
-import { fetchOwnedExperiments } from "@/lib/controllers/experimentController";
+import { fetchAssociatedExperiments } from "@/lib/controllers/experimentController";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 
@@ -53,7 +53,7 @@ export function UserForm(props: UserFormProps) {
                 hideLoading();
             });
             setOwnedExperiments([]);
-            fetchOwnedExperiments(props.userId!).then((experiments) => {
+            fetchAssociatedExperiments(props.userId!).then((experiments) => {
                 if (experiments instanceof ApiError) {
                     alert.showAlert("error", experiments.message);
                     return;
@@ -80,7 +80,7 @@ export function UserForm(props: UserFormProps) {
             result = await createUser(username, displayName, email, password, isAdmin);
         } else {
             showLoading("Updating user...");
-            result = await updateUser(props.userId!, password, isAdmin);
+            result = await updateUser(props.userId!, isSSO ? undefined : displayName, isSSO ? undefined : (email ?? ""), password, isAdmin);
         }
 
         if (result instanceof ApiError) {
@@ -99,7 +99,6 @@ export function UserForm(props: UserFormProps) {
     async function handleDelete() {
         showLoading("Deleting user...");
 
-        // TODO handle warning about and deleting technicians
         const error = await deleteUser(props.userId!);
 
         if (error instanceof ApiError) {
@@ -111,37 +110,52 @@ export function UserForm(props: UserFormProps) {
         }
     }
 
+    var biographicalInfo;
+
+    const localEditable = (<>
+        <TextField
+            label="Display Name"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            required
+        />
+        <TextField
+            label="Email Address"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+        />
+    </>);
+
+    if (props.newUser) {
+        biographicalInfo = (<>
+            <TextField
+                label="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                error={usernameInvalid}
+                helperText={usernameErrorMessage}
+                inputProps={{ maxLength: 32 }} // No server side validation for this because I don't really care
+                required
+            />
+            {localEditable}
+        </>);
+    } else if (isSSO) {
+        biographicalInfo = (<>
+            <Typography variant="h5">{displayName} ({username})</Typography>
+            {email && <Typography variant="h6">{email}</Typography>}
+        </>);
+    } else {
+        biographicalInfo = (<>
+            <Typography variant="h5">{username}</Typography>
+            {localEditable}
+        </>);
+    }
+
     return (
         <form onSubmit={submitForm}>
             <Stack spacing={2} maxWidth={300}>
-                {props.newUser
-                    ? <>
-                        <TextField
-                            label="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            error={usernameInvalid}
-                            helperText={usernameErrorMessage}
-                            inputProps={{ maxLength: 32 }} // No server side validation for this because I don't really care
-                            required
-                        />
-                        <TextField
-                            label="Display Name"
-                            value={displayName}
-                            onChange={(e) => setDisplayName(e.target.value)}
-                            required
-                        />
-                        <TextField
-                            label="Email Address"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </>
-                    : <>
-                        <Typography variant="h5">{displayName} ({username})</Typography>
-                        {email && <Typography variant="h6">{email}</Typography>}
-                    </>}
+                {biographicalInfo}
                 <FormControlLabel control={
                     <Checkbox
                         checked={isAdmin}

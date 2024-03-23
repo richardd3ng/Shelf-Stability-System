@@ -42,10 +42,10 @@ export const fetchExperimentList = async (
     throw new ApiError(response.status, resJson.message);
 };
 
-export const fetchOwnedExperiments = async (
+export const fetchAssociatedExperiments = async (
     ownerId: number
 ): Promise<ExperimentWithLocalDate[] | ApiError> => {
-    const endpoint = `/api/experiments/with-owner?id=${ownerId}`;
+    const endpoint = `/api/experiments/with-user?id=${ownerId}`;
     const response = await fetch(endpoint, {
         method: "GET",
         headers: {

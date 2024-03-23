@@ -12,8 +12,8 @@ export default async function fetchUserListAPI(
     const token = await getToken({ req });
 
     if (token === null || !token.name) {
-        res.status(403).json(
-            getApiError(403, "You are not authorized to view the list of users")
+        res.status(401).json(
+            getApiError(401, "You are not authorized to view the list of users")
         );
         return;
     }
@@ -41,6 +41,8 @@ export default async function fetchUserListAPI(
                     take: pageSize ?? userCount,
                     select: {
                         id: true,
+                        displayName: true,
+                        email: true,
                         isAdmin: true,
                         isSSO: true,
                         username: true,

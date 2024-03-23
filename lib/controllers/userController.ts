@@ -91,6 +91,8 @@ export const createUser = async (
 
 export const updateUser = async (
     id: number,
+    displayName: string | undefined,
+    email: string | undefined,
     password: string,
     isAdmin: boolean
 ): Promise<Omit<User, "password"> | ApiError> => {
@@ -101,6 +103,8 @@ export const updateUser = async (
         },
         body: JSON.stringify({
             password,
+            displayName,
+            email: (email?.trim() === "") ? null : email,
             isAdmin,
         }),
     });

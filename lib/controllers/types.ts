@@ -9,7 +9,7 @@ import {
 
 /* ----- Experiment ----- */
 
-export type ExperimentWithLocalDate = Omit<Experiment, "startDate"> & {
+export type ExperimentWithLocalDate = Experiment & {
     startDate: LocalDate;
 };
 
@@ -51,8 +51,8 @@ export type ExperimentCreationRequiringConditionArgs = Omit<
 export type ExperimentCreationArgs =
     | Omit<ExperimentWithLocalDate, "id">
     | {
-          conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
-      };
+        conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+    };
 export type ExperimentCreationResponse = Omit<
     ExperimentInfo,
     "assays" | "assayResults"
@@ -129,6 +129,8 @@ export type AssayResultUpdateArgs = {
 export type UserInfo = {
     id: number;
     username: string;
+    displayName: string;
+    email: string | null;
     isSSO: boolean;
     isAdmin: boolean;
 };
