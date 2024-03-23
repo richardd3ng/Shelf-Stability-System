@@ -26,11 +26,11 @@ const ExperimentPage = () => {
                     visibility: isAdmin ? "visible" : "hidden",
                 }}
             >
+                <CancelExperimentButton
+                    cancel={!experimentInfo?.experiment.isCanceled}
+                />
                 <DeleteExperimentButton />
             </Box>
-            <CancelExperimentButton
-                cancel={!experimentInfo?.experiment.isCanceled}
-            />
         </Layout>
     );
 };
