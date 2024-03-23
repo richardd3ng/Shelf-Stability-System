@@ -22,7 +22,7 @@ import {
     fetchExperimentList,
     hasRecordedAssayResults,
 } from "@/lib/controllers/experimentController";
-import { fetchOwners } from "@/lib/controllers/userController";
+import { fetchOwnersAndTechnicians } from "@/lib/controllers/userController";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import {
@@ -45,7 +45,7 @@ import ConfirmationDialog from "@/components/shared/confirmationDialog";
 
 interface QueryParams {
     search: string;
-    owner: string;
+    user: string;
     status: ExperimentStatus;
 }
 
@@ -53,7 +53,7 @@ const getQueryParamsFromURL = (): QueryParams => {
     const params: URLSearchParams = new URLSearchParams(window.location.search);
     return {
         search: params.get("search") ?? "",
-        owner: params.get("owner") ?? "",
+        user: params.get("user") ?? "",
         status: (params.get("status") ?? "all") as ExperimentStatus,
     };
 };
@@ -73,12 +73,13 @@ const ExperimentList: React.FC = () => {
     const router = useRouter();
     const [queryParams, setQueryParams] = useState<QueryParams>({
         search: "",
-        owner: "",
+        user: "",
         status: "all",
     });
     const [initialized, setInitialized] = useState<boolean>(false); // hacky way to make reload() run once on first render
-
-    const [ownerList, setOwnerList] = useState<UserInfo[] | null>(null);
+    const [userFilterList, setUserFilterList] = useState<UserInfo[] | null>(
+        null
+    );
     const { user } = useContext(CurrentUserContext);
     const isAdmin: boolean = user?.isAdmin ?? false;
 
@@ -102,12 +103,12 @@ const ExperimentList: React.FC = () => {
     );
 
     useEffect(() => {
-        const fetchOwnerData = async () => {
-            setOwnerList(await fetchOwners());
+        const fetchUserData = async () => {
+            setUserFilterList(await fetchOwnersAndTechnicians());
             setQueryParams(getQueryParamsFromURL());
             setInitialized(true);
         };
-        fetchOwnerData();
+        fetchUserData();
     }, []);
 
     useEffect(() => {
@@ -179,7 +180,7 @@ const ExperimentList: React.FC = () => {
         try {
             return await fetchExperimentList(
                 queryParams.search,
-                queryParams.owner,
+                queryParams.user,
                 queryParams.status,
                 paging
             );
@@ -279,12 +280,12 @@ const ExperimentList: React.FC = () => {
                             onSearch={(query: string) => {
                                 setQueryParams({
                                     search: query,
-                                    owner: queryParams.owner,
+                                    user: queryParams.user,
                                     status: queryParams.status,
                                 });
                                 handleSearch(
                                     query,
-                                    queryParams.owner,
+                                    queryParams.user,
                                     queryParams.status
                                 );
                             }}
@@ -292,17 +293,17 @@ const ExperimentList: React.FC = () => {
                     </Box>
                     <Box sx={{ flex: 1, paddingLeft: 10 }}>
                         <FormControl fullWidth size="small">
-                            <InputLabel id="Owner Filter Label">
-                                Owner Filter
+                            <InputLabel id="User Filter Label">
+                                User Filter
                             </InputLabel>
                             <Select
-                                id="Owner Filter Selection"
-                                value={queryParams.owner}
-                                label="Owner Filter"
+                                id="User Filter Selection"
+                                value={queryParams.user}
+                                label="User Filter"
                                 onChange={(e) => {
                                     setQueryParams({
                                         search: queryParams.search,
-                                        owner: e.target.value,
+                                        user: e.target.value,
                                         status: queryParams.status,
                                     });
                                     handleSearch(
@@ -315,14 +316,16 @@ const ExperimentList: React.FC = () => {
                                 <MenuItem key={0} value={""}>
                                     {"(None)"}
                                 </MenuItem>
-                                {(ownerList ?? []).map((owner: UserInfo) => (
-                                    <MenuItem
-                                        key={owner.id}
-                                        value={owner.username}
-                                    >
-                                        {owner.username}
-                                    </MenuItem>
-                                ))}
+                                {(userFilterList ?? []).map(
+                                    (user: UserInfo) => (
+                                        <MenuItem
+                                            key={user.id}
+                                            value={user.username}
+                                        >
+                                            {user.username}
+                                        </MenuItem>
+                                    )
+                                )}
                             </Select>
                         </FormControl>
                     </Box>
@@ -345,13 +348,13 @@ const ExperimentList: React.FC = () => {
                                 onChange={(e) => {
                                     setQueryParams({
                                         search: queryParams.search,
-                                        owner: queryParams.owner,
+                                        user: queryParams.user,
                                         status: e.target
                                             .value as ExperimentStatus,
                                     });
                                     handleSearch(
                                         queryParams.search,
-                                        queryParams.owner,
+                                        queryParams.user,
                                         e.target.value as ExperimentStatus
                                     );
                                 }}
