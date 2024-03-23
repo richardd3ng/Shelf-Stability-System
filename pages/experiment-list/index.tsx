@@ -77,12 +77,10 @@ const ExperimentList: React.FC = () => {
         status: "all",
     });
     const [initialized, setInitialized] = useState<boolean>(false); // hacky way to make reload() run once on first render
-    // TODO: this is still fetching the data twice, so it's not a perfect solution
 
     const [ownerList, setOwnerList] = useState<UserInfo[] | null>(null);
     const { user } = useContext(CurrentUserContext);
     const isAdmin: boolean = user?.isAdmin ?? false;
-    // const isAdmin = true;
 
     const reloadExperimentData = async (
         paging: ServerPaginationArgs
@@ -107,7 +105,7 @@ const ExperimentList: React.FC = () => {
         const fetchOwnerData = async () => {
             setOwnerList(await fetchOwners());
             setQueryParams(getQueryParamsFromURL());
-            setInitialized(true); // Move this line inside the fetchOwnerData function
+            setInitialized(true);
         };
         fetchOwnerData();
     }, []);
@@ -333,8 +331,8 @@ const ExperimentList: React.FC = () => {
                             <FormLabel
                                 component="legend"
                                 sx={{
-                                    color: "text.primary", // Set the color to the primary text color
-                                    "&.Mui-focused": { color: "text.primary" }, // Prevent color change on focus
+                                    color: "text.primary",
+                                    "&.Mui-focused": { color: "text.primary" },
                                 }}
                             >
                                 Status Filter
