@@ -2,8 +2,12 @@ import {
     Box,
     Button,
     FormControl,
+    FormControlLabel,
+    FormLabel,
     InputLabel,
     MenuItem,
+    Radio,
+    RadioGroup,
     Select,
     Stack,
 } from "@mui/material";
@@ -26,6 +30,7 @@ import {
     useServerPagination,
 } from "@/lib/hooks/useServerPagination";
 import {
+    ExperimentStatus,
     ExperimentTable,
     ExperimentTableInfo,
     UserInfo,
@@ -41,6 +46,7 @@ import ConfirmationDialog from "@/components/shared/confirmationDialog";
 interface QueryParams {
     search: string;
     owner: string;
+    status: ExperimentStatus;
 }
 
 const getQueryParamsFromURL = (): QueryParams => {
@@ -48,6 +54,7 @@ const getQueryParamsFromURL = (): QueryParams => {
     return {
         search: params.get("search") ?? "",
         owner: params.get("owner") ?? "",
+        status: (params.get("status") ?? "all") as ExperimentStatus,
     };
 };
 
@@ -67,6 +74,7 @@ const ExperimentList: React.FC = () => {
     const [queryParams, setQueryParams] = useState<QueryParams>({
         search: "",
         owner: "",
+        status: "all",
     });
     const [initialized, setInitialized] = useState<boolean>(false); // hacky way to make reload() run once on first render
     // TODO: this is still fetching the data twice, so it's not a perfect solution
@@ -74,6 +82,7 @@ const ExperimentList: React.FC = () => {
     const [ownerList, setOwnerList] = useState<UserInfo[] | null>(null);
     const { user } = useContext(CurrentUserContext);
     const isAdmin: boolean = user?.isAdmin ?? false;
+    // const isAdmin = true;
 
     const reloadExperimentData = async (
         paging: ServerPaginationArgs
@@ -95,10 +104,11 @@ const ExperimentList: React.FC = () => {
     );
 
     useEffect(() => {
+        console.log("fetching data...");
         const fetchOwnerData = async () => {
             setOwnerList(await fetchOwners());
             setQueryParams(getQueryParamsFromURL());
-            setInitialized(true);
+            setInitialized(true); // Move this line inside the fetchOwnerData function
         };
         fetchOwnerData();
     }, []);
@@ -107,7 +117,7 @@ const ExperimentList: React.FC = () => {
         if (initialized) {
             reload();
         }
-    }, [queryParams]);
+    }, [initialized, queryParams]);
 
     const colDefs: GridColDef[] = [
         {
@@ -173,6 +183,7 @@ const ExperimentList: React.FC = () => {
             return await fetchExperimentList(
                 queryParams.search,
                 queryParams.owner,
+                queryParams.status,
                 paging
             );
         } catch (error) {
@@ -186,11 +197,16 @@ const ExperimentList: React.FC = () => {
         setShowConfirmationDialog(true);
     };
 
-    const handleSearch = (query: string, owner: string) => {
+    const handleSearch = (
+        query: string,
+        owner: string,
+        status: ExperimentStatus
+    ) => {
         const queryParams = new URLSearchParams();
         queryParams.set("search", query);
         queryParams.set("owner", owner);
-        if (!query && !owner) {
+        queryParams.set("status", status);
+        if (!query && !owner && status === "all") {
             router.push("/experiment-list");
         } else {
             router.push(
@@ -267,12 +283,17 @@ const ExperimentList: React.FC = () => {
                                 setQueryParams({
                                     search: query,
                                     owner: queryParams.owner,
+                                    status: queryParams.status,
                                 });
-                                handleSearch(query, queryParams.owner);
+                                handleSearch(
+                                    query,
+                                    queryParams.owner,
+                                    queryParams.status
+                                );
                             }}
                         />
                     </Box>
-                    <Box sx={{ flex: 1, paddingX: 10 }}>
+                    <Box sx={{ flex: 1, paddingLeft: 10 }}>
                         <FormControl fullWidth size="small">
                             <InputLabel id="Owner Filter Label">
                                 Owner Filter
@@ -285,10 +306,12 @@ const ExperimentList: React.FC = () => {
                                     setQueryParams({
                                         search: queryParams.search,
                                         owner: e.target.value,
+                                        status: queryParams.status,
                                     });
                                     handleSearch(
                                         queryParams.search,
-                                        e.target.value
+                                        e.target.value,
+                                        queryParams.status
                                     );
                                 }}
                             >
@@ -306,6 +329,54 @@ const ExperimentList: React.FC = () => {
                             </Select>
                         </FormControl>
                     </Box>
+                    <Box sx={{ paddingX: 10 }}>
+                        <FormControl component="fieldset">
+                            <FormLabel
+                                component="legend"
+                                sx={{
+                                    color: "text.primary", // Set the color to the primary text color
+                                    "&.Mui-focused": { color: "text.primary" }, // Prevent color change on focus
+                                }}
+                            >
+                                Status Filter
+                            </FormLabel>
+                            <RadioGroup
+                                row
+                                aria-label="status"
+                                name="row-radio-buttons-group"
+                                value={queryParams.status}
+                                onChange={(e) => {
+                                    setQueryParams({
+                                        search: queryParams.search,
+                                        owner: queryParams.owner,
+                                        status: e.target
+                                            .value as ExperimentStatus,
+                                    });
+                                    handleSearch(
+                                        queryParams.search,
+                                        queryParams.owner,
+                                        e.target.value as ExperimentStatus
+                                    );
+                                }}
+                            >
+                                <FormControlLabel
+                                    value="all"
+                                    control={<Radio />}
+                                    label="All"
+                                />
+                                <FormControlLabel
+                                    value="canceled"
+                                    control={<Radio />}
+                                    label="Canceled"
+                                />
+                                <FormControlLabel
+                                    value="non-canceled"
+                                    control={<Radio />}
+                                    label="Non-Canceled"
+                                />
+                            </RadioGroup>
+                        </FormControl>
+                    </Box>
                     {isAdmin && (
                         <Button
                             variant="contained"
@@ -317,7 +388,6 @@ const ExperimentList: React.FC = () => {
                         </Button>
                     )}
                 </Box>
-
                 <Table
                     columns={colDefs}
                     rows={experimentData}

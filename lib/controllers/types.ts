@@ -70,6 +70,8 @@ export type ExperimentUpdateArgs = {
     isCanceled?: boolean;
 };
 
+export type ExperimentStatus = "all" | "cancelled" | "non-cancelled";
+
 /* ----- Assay ----- */
 
 export type AssayAgendaInfo = {
