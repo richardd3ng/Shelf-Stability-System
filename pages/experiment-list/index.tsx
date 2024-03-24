@@ -295,16 +295,22 @@ const ExperimentList: React.FC = () => {
                             disablePortal
                             id="user-filter-selection"
                             size="small"
-                            options={(userFilterList ?? []).map(
-                                (user: UserInfo) => ({
-                                    label: user.username,
-                                })
-                            )}
+                            options={[
+                                { label: "(None)", value: "" },
+                                ...(userFilterList ?? []).map(
+                                    (user: UserInfo) => ({
+                                        label: user.username,
+                                        value: user.username,
+                                    })
+                                ),
+                            ]}
                             value={{
-                                label: queryParams.user,
+                                label: queryParams.user || "(None)",
+                                value: queryParams.user,
                             }}
                             isOptionEqualToValue={(option, value) =>
-                                option.label === value.label
+                                option.label === value.label &&
+                                option.value === value.value
                             }
                             renderInput={(params) => (
                                 <TextField {...params} label="User Filter" />
@@ -312,7 +318,7 @@ const ExperimentList: React.FC = () => {
                             onChange={(_event, selectedOption) => {
                                 const selectedUser =
                                     selectedOption !== null
-                                        ? selectedOption.label
+                                        ? selectedOption.value
                                         : "";
                                 setQueryParams({
                                     search: queryParams.search,
