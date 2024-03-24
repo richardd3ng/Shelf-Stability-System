@@ -23,7 +23,7 @@ export default async function searchExperimentsAPI(
             req,
             [
                 "query",
-                "owner",
+                "user",
                 "status",
                 "page",
                 "page_size",
@@ -32,7 +32,7 @@ export default async function searchExperimentsAPI(
             ],
             {
                 query: "",
-                owner: "",
+                user: "",
                 status: "",
                 sort_by: "id",
                 sort_order: "asc",
@@ -44,7 +44,7 @@ export default async function searchExperimentsAPI(
             return;
         }
 
-        const { query, queryNumber, owner, page, pageSize, status, orderBy } = {
+        const { query, queryNumber, user, page, pageSize, status, orderBy } = {
             ...fields,
             queryNumber: Number(fields.query),
             page: Number(fields.page),
@@ -75,8 +75,7 @@ export default async function searchExperimentsAPI(
                     id: isNaN(queryNumber) ? undefined : queryNumber,
                 },
             ],
-            // TODO technician search?
-            owner: owner === "" ? undefined : owner,
+            owner: user === "" ? undefined : user,
             isCanceled:
                 status === "canceled"
                     ? true

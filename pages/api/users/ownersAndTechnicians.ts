@@ -9,7 +9,6 @@ export default async function fetchOwnersAndTechniciansAPI(
     req: NextApiRequest,
     res: NextApiResponse<UserInfo[] | ApiError>
 ) {
-    console.log("hitting endpoing");
     const token = await getToken({ req });
 
     if (token === null || !token.name) {
@@ -21,8 +20,6 @@ export default async function fetchOwnersAndTechniciansAPI(
         );
         return;
     }
-    console.log("token valid");
-
     try {
         const ownersAndTechnicians: UserInfo[] = await db.user
             .findMany({
@@ -52,7 +49,6 @@ export default async function fetchOwnersAndTechniciansAPI(
                     isAdmin: user.isAdmin === true,
                 }))
             );
-        console.log("ownersAndTechnicians:", ownersAndTechnicians);
         res.status(200).json(ownersAndTechnicians);
     } catch (error) {
         console.error(error);
