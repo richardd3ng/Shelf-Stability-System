@@ -28,6 +28,9 @@ export default async function fetchOwnersAPI(
                     id: true,
                     isAdmin: true,
                     username: true,
+                    displayName: true,
+                    email: true,
+                    isSSO: true
                 },
                 where: {
                     ownedExperiments: {
