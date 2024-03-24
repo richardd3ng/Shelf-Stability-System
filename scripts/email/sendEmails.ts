@@ -61,7 +61,7 @@ export const sendEmails = async () => {
                 subject: "HM Labs: Upcoming Assay Reminder (2)",
                 html: `<p>You are listed as the owner and/or technician for the following upcoming assays in Shelf Stability System:</p>
                         ${tableHtml}
-                        <br> <!-- Add space between table and unsubscribe text -->
+                        <br>
                         ${unsubscribeHtml}`,
             };
             sgMail.send(msg);
