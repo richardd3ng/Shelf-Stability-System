@@ -1,15 +1,14 @@
 import {
+    Autocomplete,
     Box,
     Button,
     FormControl,
     FormControlLabel,
     FormLabel,
-    InputLabel,
-    MenuItem,
     Radio,
     RadioGroup,
-    Select,
     Stack,
+    TextField,
 } from "@mui/material";
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import React, { useContext, useEffect, useState } from "react";
@@ -197,14 +196,14 @@ const ExperimentList: React.FC = () => {
 
     const handleSearch = (
         query: string,
-        owner: string,
+        user: string,
         status: ExperimentStatus
     ) => {
         const queryParams = new URLSearchParams();
         queryParams.set("search", query);
-        queryParams.set("owner", owner);
+        queryParams.set("user", user);
         queryParams.set("status", status);
-        if (!query && !owner && status === "all") {
+        if (!query && !user && status === "all") {
             router.push("/experiment-list");
         } else {
             router.push(
@@ -292,42 +291,36 @@ const ExperimentList: React.FC = () => {
                         />
                     </Box>
                     <Box sx={{ flex: 1, paddingLeft: 10 }}>
-                        <FormControl fullWidth size="small">
-                            <InputLabel id="User Filter Label">
-                                User Filter
-                            </InputLabel>
-                            <Select
-                                id="User Filter Selection"
-                                value={queryParams.user}
-                                label="User Filter"
-                                onChange={(e) => {
-                                    setQueryParams({
-                                        search: queryParams.search,
-                                        user: e.target.value,
-                                        status: queryParams.status,
-                                    });
-                                    handleSearch(
-                                        queryParams.search,
-                                        e.target.value,
-                                        queryParams.status
-                                    );
-                                }}
-                            >
-                                <MenuItem key={0} value={""}>
-                                    {"(None)"}
-                                </MenuItem>
-                                {(userFilterList ?? []).map(
-                                    (user: UserInfo) => (
-                                        <MenuItem
-                                            key={user.id}
-                                            value={user.username}
-                                        >
-                                            {user.username}
-                                        </MenuItem>
-                                    )
-                                )}
-                            </Select>
-                        </FormControl>
+                        <Autocomplete
+                            disablePortal
+                            id="user-filter-selection"
+                            size="small"
+                            options={(userFilterList ?? []).map(
+                                (user: UserInfo) => ({
+                                    label: user.username,
+                                    value: user.username,
+                                })
+                            )}
+                            renderInput={(params) => (
+                                <TextField {...params} label="User Filter" />
+                            )}
+                            onChange={(_event, selectedOption) => {
+                                const selectedUser =
+                                    selectedOption !== null
+                                        ? selectedOption.value
+                                        : "";
+                                setQueryParams({
+                                    search: queryParams.search,
+                                    user: selectedUser,
+                                    status: queryParams.status,
+                                });
+                                handleSearch(
+                                    queryParams.search,
+                                    selectedUser,
+                                    queryParams.status
+                                );
+                            }}
+                        />
                     </Box>
                     <Box sx={{ paddingX: 10 }}>
                         <FormControl component="fieldset">
