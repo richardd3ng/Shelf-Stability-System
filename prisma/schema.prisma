@@ -32,11 +32,13 @@ model Experiment {
   ownerId     Int 
   conditions  Condition[]
   assays      Assay[] 
-  assayTypes  AssayTypeForExperiment[]         
+  assayTypes  AssayTypeForExperiment[]   
+  experimentWeekView        ExperimentWeekView?
 }
 
 view ExperimentWeekView {
   id          Int         @id
+  experiment  Experiment @relation(fields: [id], references: [id])
   title       String      @unique
   description String
   startDate   DateTime    @db.Date
