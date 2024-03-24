@@ -14,17 +14,17 @@ function convertSort(field: string, order: string) {
     };
 }
 
-function getUserIDFromUsername(
-    username: string
-): Promise<{ id: number } | null> {
-    return db.user.findUnique({
-        where: {
-            username: username,
-        },
-        select: {
-            id: true,
-        },
-    });
+function getUserIDFromUsername(username: string): Promise<number | null> {
+    return db.user
+        .findUnique({
+            where: {
+                username: username,
+            },
+            select: {
+                id: true,
+            },
+        })
+        .then((user) => (user ? user.id : null));
 }
 
 export default async function searchExperimentsAPI(
@@ -70,28 +70,51 @@ export default async function searchExperimentsAPI(
             return;
         }
 
+        const userID: number | null = await getUserIDFromUsername(user);
+        console.log("userID:", userID);
+
         const whereCondition: Prisma.ExperimentWeekViewWhereInput = {
-            OR: [
+            AND: [
                 {
-                    title: {
-                        contains: query,
-                        mode: "insensitive",
-                    },
+                    OR: [
+                        {
+                            title: {
+                                contains: query,
+                                mode: "insensitive",
+                            },
+                        },
+                        {
+                            description: {
+                                contains: query,
+                                mode: "insensitive",
+                            },
+                        },
+                        {
+                            id: isNaN(queryNumber) ? undefined : queryNumber,
+                        },
+                    ],
                 },
-                {
-                    description: {
-                        contains: query,
-                        mode: "insensitive",
-                    },
-                },
-                {
-                    id: isNaN(queryNumber) ? undefined : queryNumber,
-                },
-                {
-                    assayTypes
-                }
+                ...(userID !== null
+                    ? [
+                          {
+                              OR: [
+                                  {
+                                      owner: user === "" ? undefined : user,
+                                  },
+                                  {
+                                      experiment: {
+                                          assayTypes: {
+                                              some: {
+                                                  technicianId: userID,
+                                              },
+                                          },
+                                      },
+                                  },
+                              ],
+                          },
+                      ]
+                    : []),
             ],
-            owner: user === "" ? undefined : user,
             isCanceled:
                 status === "canceled"
                     ? true
