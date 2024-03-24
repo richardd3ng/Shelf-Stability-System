@@ -301,6 +301,10 @@ const ExperimentList: React.FC = () => {
                                     value: user.username,
                                 })
                             )}
+                            value={{
+                                label: queryParams.user,
+                                value: queryParams.user,
+                            }}
                             renderInput={(params) => (
                                 <TextField {...params} label="User Filter" />
                             )}
