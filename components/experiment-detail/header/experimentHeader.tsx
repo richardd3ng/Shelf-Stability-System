@@ -25,7 +25,8 @@ export const ExperimentHeader = () => {
     const { showLoading, hideLoading } = useLoading();
     const [isEditing, setIsEditing] = useState(false);
     const { user } = useContext(CurrentUserContext);
-    const isAdmin: boolean = user?.isAdmin ?? false;
+    const isCanceled: boolean = experimentInfo?.experiment.isCanceled ?? false;
+    const isEditable: boolean = (!isCanceled && user?.isAdmin) ?? false;
 
     useEffect(() => {
         if (isLoading) {
@@ -66,8 +67,16 @@ export const ExperimentHeader = () => {
                     <Typography sx={{ fontSize: "small", marginLeft: 0.5 }}>
                         #{experimentId}
                     </Typography>
+                    {isCanceled && (
+                        <Typography
+                            variant="h5"
+                            sx={{ marginTop: 1, marginLeft: 1, color: "red" }}
+                        >
+                            {"[Canceled]"}
+                        </Typography>
+                    )}
                     <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-                        {isAdmin && (
+                        {isEditable && (
                             <ExperimentEditingContext.Provider
                                 value={{ isEditing, setIsEditing }}
                             >

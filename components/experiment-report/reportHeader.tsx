@@ -1,6 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { ExperimentInfo } from "@/lib/controllers/types";
-import { getAssayTypesCoveredByAssays } from "../experiment-detail/assaysGroupedByType";
 
 interface ReportHeaderProps {
     experimentInfo: ExperimentInfo;
@@ -23,7 +22,13 @@ const ReportHeader: React.FC<ReportHeaderProps> = (
             <Typography>
                 <strong>{`Experiment #${props.experimentInfo.experiment.id}`}</strong>
             </Typography>
+
             <Stack sx={{ width: "50%" }}>
+                {props.experimentInfo.experiment.isCanceled && (
+                    <Typography sx={{ color: "red" }}>
+                        <strong>{"[Canceled]"}</strong>
+                    </Typography>
+                )}
                 <Typography>
                     <strong>{`Title:`}</strong>{" "}
                     {props.experimentInfo.experiment.title}
@@ -43,9 +48,9 @@ const ReportHeader: React.FC<ReportHeaderProps> = (
             <Stack sx={{ width: "50%" }}>
                 <Typography>
                     <strong>{`Assay Types:`}</strong>{" "}
-                    {getAssayTypesCoveredByAssays(
-                        props.experimentInfo.assays
-                    ).join(", ")}
+                    {props.experimentInfo.assayTypes
+                        .map((type) => type.assayType.name)
+                        .join(", ")}
                 </Typography>
                 <Typography>
                     <strong>{`Conditions:`}</strong>{" "}

@@ -6,12 +6,12 @@ import {
     AssayResult,
     User,
     AssayType,
-    AssayTypeForExperiment
+    AssayTypeForExperiment,
 } from "@prisma/client";
 
 /* ----- Experiment ----- */
 
-export type ExperimentWithLocalDate = Omit<Experiment, "startDate"> & {
+export type ExperimentWithLocalDate = Omit<Experiment, 'startDate'> & {
     startDate: LocalDate;
 };
 
@@ -20,7 +20,7 @@ export type ExperimentInfo = {
     conditions: Condition[];
     assays: Assay[];
     assayResults: AssayResult[];
-    assayTypes : AssayTypeInfo[];
+    assayTypes: AssayTypeInfo[];
 };
 
 export type ExperimentOwner = {
@@ -54,8 +54,8 @@ export type ExperimentCreationRequiringConditionArgs = Omit<
 export type ExperimentCreationArgs =
     | Omit<ExperimentWithLocalDate, "id">
     | {
-          conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
-      };
+        conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+    };
 export type ExperimentCreationResponse = Omit<
     ExperimentInfo,
     "assays" | "assayResults" | "assayTypes"
@@ -64,11 +64,13 @@ export type ExperimentCreationResponse = Omit<
 // experiment updates are done in a single atomic transaction
 export type ExperimentUpdateArgs = {
     id: number;
-    title: string;
-    description: string | null;
+    title?: string;
+    description?: string | null;
     startDate?: LocalDate;
-    userId: number;
+    isCanceled?: boolean;
 };
+
+export type ExperimentStatus = "all" | "cancelled" | "non-cancelled";
 
 /* ----- Assay ----- */
 
@@ -80,7 +82,7 @@ export type AssayAgendaInfo = {
     owner: string;
     condition: string;
     week: number;
-    assayType : number;
+    type: string;
     resultId: number | null;
 };
 
@@ -116,9 +118,9 @@ export type ConditionUpdateArgs = {
 };
 
 /* ----- Assay Type ------ */
-export type AssayTypeInfo =  AssayTypeForExperiment & {
-    assayType : AssayType;
-}
+export type AssayTypeInfo = AssayTypeForExperiment & {
+    assayType: AssayType;
+};
 
 /* ----- Assay Result ----- */
 
@@ -137,6 +139,9 @@ export type AssayResultUpdateArgs = {
 export type UserInfo = {
     id: number;
     username: string;
+    displayName: string;
+    email: string | null;
+    isSSO: boolean;
     isAdmin: boolean;
 };
 

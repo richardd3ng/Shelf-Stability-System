@@ -115,7 +115,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     };
 
     const handleAddStorageCondition = () => {
-        if (conditionName.trim() === '') {
+        if (conditionName.trim() === "") {
             return;
         }
         if (storageConditions.includes(conditionName)) {
@@ -143,7 +143,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
                 storageConditions.map((condition: string, index: number) => ({
                     name: condition,
-                    control: index === 0,
+                    isControl: index === 0,
                 }));
             const experimentData: ExperimentCreationArgs = {
                 title: title,

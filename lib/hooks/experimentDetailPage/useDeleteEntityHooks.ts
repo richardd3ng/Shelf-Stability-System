@@ -10,6 +10,7 @@ import { AssayResult, Condition } from "@prisma/client";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
+import { ExperimentWithLocalDate } from "@/lib/controllers/types";
 
 export const useMutationToDeleteCondition = () => {
     const queryClient = useQueryClient();
@@ -104,7 +105,7 @@ export const useMutationToDeleteExperiment = () => {
 
     return useMutation({
         mutationFn: deleteExperiment,
-        onSuccess: (experiment) => {
+        onSuccess: (experiment: ExperimentWithLocalDate) => {
             router.push("/experiment-list");
             showAlert(
                 "success",

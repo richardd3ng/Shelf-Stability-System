@@ -19,26 +19,37 @@ export default async function searchExperimentsAPI(
     res: NextApiResponse<ExperimentTable | ApiError>
 ) {
     try {
-        const fields = requireQueryFields(req,
-            ["query", "owner", "page", "page_size", "sort_by", "sort_order"],
+        const fields = requireQueryFields(
+            req,
+            [
+                "query",
+                "owner",
+                "status",
+                "page",
+                "page_size",
+                "sort_by",
+                "sort_order",
+            ],
             {
                 query: "",
                 owner: "",
+                status: "",
                 sort_by: "id",
                 sort_order: "asc",
-            });
+            }
+        );
 
         if (fields instanceof ApiError) {
             res.status(400).json(fields);
             return;
         }
 
-        const { query, queryNumber, owner, page, pageSize, orderBy } = {
+        const { query, queryNumber, owner, page, pageSize, status, orderBy } = {
             ...fields,
             queryNumber: Number(fields.query),
             page: Number(fields.page),
             pageSize: Number(fields.page_size),
-            orderBy: convertSort(fields.sort_by, fields.sort_order)
+            orderBy: convertSort(fields.sort_by, fields.sort_order),
         };
 
         if (isNaN(page) || isNaN(pageSize)) {
@@ -66,19 +77,29 @@ export default async function searchExperimentsAPI(
             ],
             // TODO technician search?
             owner: owner === "" ? undefined : owner,
+            isCanceled:
+                status === "canceled"
+                    ? true
+                    : status === "non-canceled"
+                    ? false
+                    : undefined,
         };
 
         const [experiments, totalRows] = await Promise.all([
-            db.experimentWeekView.findMany({
-                where: whereCondition,
-                orderBy: orderBy,
-                take: pageSize,
-                skip: page * pageSize,
-            }).then<ExperimentTableInfo[]>((experiments) =>
-                experiments.map((experiment) => dateFieldsToLocalDate(experiment, ['startDate']))
-            ),
+            db.experimentWeekView
+                .findMany({
+                    where: whereCondition,
+                    orderBy: orderBy,
+                    take: pageSize,
+                    skip: page * pageSize,
+                })
+                .then<ExperimentTableInfo[]>((experiments) =>
+                    experiments.map((experiment) =>
+                        dateFieldsToLocalDate(experiment, ["startDate"])
+                    )
+                ),
             db.experimentWeekView.count({
-                where: whereCondition
+                where: whereCondition,
             }),
         ]);
 
