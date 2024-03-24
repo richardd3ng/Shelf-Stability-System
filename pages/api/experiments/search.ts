@@ -14,6 +14,19 @@ function convertSort(field: string, order: string) {
     };
 }
 
+function getUserIDFromUsername(
+    username: string
+): Promise<{ id: number } | null> {
+    return db.user.findUnique({
+        where: {
+            username: username,
+        },
+        select: {
+            id: true,
+        },
+    });
+}
+
 export default async function searchExperimentsAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentTable | ApiError>
@@ -74,6 +87,9 @@ export default async function searchExperimentsAPI(
                 {
                     id: isNaN(queryNumber) ? undefined : queryNumber,
                 },
+                {
+                    assayTypes
+                }
             ],
             owner: user === "" ? undefined : user,
             isCanceled:
