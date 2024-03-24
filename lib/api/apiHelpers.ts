@@ -34,6 +34,8 @@ export const getExperimentID = (req: NextApiRequest): number => {
         : INVALID_EXPERIMENT_ID;
 };
 
+export const INVALID_ASSAY_TYPE_ID = -1;
+
 export const requireQueryFields = <K extends string>(req: NextApiRequest, fields: K[], defaults: Partial<{ [P in K]: string }>): { [P in K]: string } | ApiError => {
     const missing: string[] = [];
     const result: { [P in K]: string } = {} as any;

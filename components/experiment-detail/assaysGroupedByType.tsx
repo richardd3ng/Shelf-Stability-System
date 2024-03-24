@@ -24,20 +24,7 @@ const AssaysGroupedByType: React.FC = () => {
     }
     return (
         <Container sx={{ marginTop: 2, minWidth: "100%" }}>
-            <Accordion defaultExpanded>
-                <AccordionSummary expandIcon={<ExpandMore />}>
-                    <Typography variant="h6">Assay Schedule</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Stack>
-                        <ExperimentTable
-                            assayFilter={(experimentInfo: ExperimentInfo) =>
-                                experimentInfo.assays
-                            }
-                        />
-                    </Stack>
-                </AccordionDetails>
-            </Accordion>
+
             {data.assayTypes.map((type : AssayTypeInfo) => {
                 const typeId: number = type.id;
                 return (
