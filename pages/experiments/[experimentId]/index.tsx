@@ -1,7 +1,7 @@
 import Layout from "@/components/shared/layout";
 import AssaysGroupedByType from "@/components/experiment-detail/assaysGroupedByType";
 import { ExperimentHeader } from "@/components/experiment-detail/header/experimentHeader";
-import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
 import DeleteExperimentButton from "@/components/experiment-detail/deleteExperimentButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { useContext } from "react";
@@ -18,10 +18,9 @@ const ExperimentPage = () => {
         <Layout>
             <ExperimentHeader />
             <AssaysGroupedByType />
-            <Box
+            <Stack
+                spacing={1}
                 sx={{
-                    display: "flex",
-                    justifyContent: "center",
                     paddingY: 2,
                     visibility: isAdmin ? "visible" : "hidden",
                 }}
@@ -30,7 +29,7 @@ const ExperimentPage = () => {
                     cancel={!experimentInfo?.experiment.isCanceled}
                 />
                 <DeleteExperimentButton />
-            </Box>
+            </Stack>
         </Layout>
     );
 };

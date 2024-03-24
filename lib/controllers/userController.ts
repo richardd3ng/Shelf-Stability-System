@@ -4,8 +4,8 @@ import { UserInfo, UserTable } from "./types";
 import { encodePaging, relativeURL } from "./url";
 import { User } from "@prisma/client";
 
-export const fetchOwners = async (): Promise<UserInfo[]> => {
-    const endpoint = "/api/users/owners";
+export const fetchOwnersAndTechnicians = async (): Promise<UserInfo[]> => {
+    const endpoint = "/api/users/ownersAndTechnicians";
     const response = await fetch(endpoint, {
         method: "GET",
         headers: {

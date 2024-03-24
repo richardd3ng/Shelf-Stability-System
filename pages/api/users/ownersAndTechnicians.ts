@@ -2,27 +2,26 @@ import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { UserInfo } from "@/lib/controllers/types";
-import { getApiError } from "@/lib/api/error";
+import { UNAUTHORIZED_STATUS_CODE, getApiError } from "@/lib/api/error";
 import { getToken } from "next-auth/jwt";
 
-export default async function fetchOwnersAPI(
+export default async function fetchOwnersAndTechniciansAPI(
     req: NextApiRequest,
     res: NextApiResponse<UserInfo[] | ApiError>
 ) {
     const token = await getToken({ req });
 
     if (token === null || !token.name) {
-        res.status(403).json(
+        res.status(UNAUTHORIZED_STATUS_CODE).json(
             getApiError(
-                403,
-                "You are not authorized to fetch the list of owners"
+                UNAUTHORIZED_STATUS_CODE,
+                "You are not authorized to fetch the list of owners and technicians"
             )
         );
         return;
     }
-
     try {
-        const owners: UserInfo[] = await db.user
+        const ownersAndTechnicians: UserInfo[] = await db.user
             .findMany({
                 select: {
                     id: true,
@@ -33,9 +32,18 @@ export default async function fetchOwnersAPI(
                     isSSO: true
                 },
                 where: {
-                    ownedExperiments: {
-                        some: {},
-                    },
+                    OR: [
+                        {
+                            ownedExperiments: {
+                                some: {},
+                            },
+                        },
+                        {
+                            assayTypesAsTechnician: {
+                                some: {},
+                            },
+                        },
+                    ],
                 },
             })
             .then((users) =>
@@ -44,11 +52,11 @@ export default async function fetchOwnersAPI(
                     isAdmin: user.isAdmin === true,
                 }))
             );
-        res.status(200).json(owners);
+        res.status(200).json(ownersAndTechnicians);
     } catch (error) {
         console.error(error);
         res.status(500).json(
-            getApiError(500, "Failed to fetch owners on server")
+            getApiError(500, "Failed to fetch owners and technicians on server")
         );
     }
 }
