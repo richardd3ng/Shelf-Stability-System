@@ -298,20 +298,21 @@ const ExperimentList: React.FC = () => {
                             options={(userFilterList ?? []).map(
                                 (user: UserInfo) => ({
                                     label: user.username,
-                                    value: user.username,
                                 })
                             )}
                             value={{
                                 label: queryParams.user,
-                                value: queryParams.user,
                             }}
+                            isOptionEqualToValue={(option, value) =>
+                                option.label === value.label
+                            }
                             renderInput={(params) => (
                                 <TextField {...params} label="User Filter" />
                             )}
                             onChange={(_event, selectedOption) => {
                                 const selectedUser =
                                     selectedOption !== null
-                                        ? selectedOption.value
+                                        ? selectedOption.label
                                         : "";
                                 setQueryParams({
                                     search: queryParams.search,
