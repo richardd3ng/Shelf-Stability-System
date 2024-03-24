@@ -71,7 +71,6 @@ export default async function searchExperimentsAPI(
         }
 
         const userID: number | null = await getUserIDFromUsername(user);
-        console.log("userID:", userID);
 
         const whereCondition: Prisma.ExperimentWeekViewWhereInput = {
             AND: [
