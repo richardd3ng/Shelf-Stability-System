@@ -1,7 +1,7 @@
 import Layout from "@/components/shared/layout";
 import { fetchAgendaList } from "@/lib/controllers/assayController";
 import { AssayAgendaInfo, AssayAgendaTable } from "@/lib/controllers/types";
-import { Box, Stack, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, Stack, Checkbox, FormControlLabel, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -68,11 +68,18 @@ export default function AssayAgenda() {
             headerName: "Technician",
             type: "string",
             width: 250,
+            // TODO underline hover to show all assay types for this technician
             renderCell: (params) => {
-                const name = params.row.technician === null ? "" : `${params.row.technicianDisplayName} (${params.row.technician})`;
-                return params.row.technician === username
-                    ? (<b>{name}</b>)
-                    : name;
+                if (params.row.technician === null) return "";
+                const name = `${params.row.technicianDisplayName} (${params.row.technician})`;
+                return (<Tooltip title={
+                    <Typography>Technician for {params.row.technicianTypes.join(", ")}</Typography>
+                }
+                className="hover-underline">
+                    {params.row.technician === username
+                        ? (<b>{name}</b>)
+                        : <span>{name}</span>}
+                </Tooltip>);
             },
         },
         {
