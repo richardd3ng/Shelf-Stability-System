@@ -14,6 +14,19 @@ function convertSort(field: string, order: string) {
     };
 }
 
+function getUserIDFromUsername(username: string): Promise<number | null> {
+    return db.user
+        .findUnique({
+            where: {
+                username: username,
+            },
+            select: {
+                id: true,
+            },
+        })
+        .then((user) => (user ? user.id : null));
+}
+
 export default async function searchExperimentsAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentTable | ApiError>
@@ -23,7 +36,7 @@ export default async function searchExperimentsAPI(
             req,
             [
                 "query",
-                "owner",
+                "user",
                 "status",
                 "page",
                 "page_size",
@@ -32,7 +45,7 @@ export default async function searchExperimentsAPI(
             ],
             {
                 query: "",
-                owner: "",
+                user: "",
                 status: "",
                 sort_by: "id",
                 sort_order: "asc",
@@ -44,7 +57,7 @@ export default async function searchExperimentsAPI(
             return;
         }
 
-        const { query, queryNumber, owner, page, pageSize, status, orderBy } = {
+        const { query, queryNumber, user, page, pageSize, status, orderBy } = {
             ...fields,
             queryNumber: Number(fields.query),
             page: Number(fields.page),
@@ -57,26 +70,50 @@ export default async function searchExperimentsAPI(
             return;
         }
 
+        const userID: number | null = await getUserIDFromUsername(user);
+
         const whereCondition: Prisma.ExperimentWeekViewWhereInput = {
-            OR: [
+            AND: [
                 {
-                    title: {
-                        contains: query,
-                        mode: "insensitive",
-                    },
+                    OR: [
+                        {
+                            title: {
+                                contains: query,
+                                mode: "insensitive",
+                            },
+                        },
+                        {
+                            description: {
+                                contains: query,
+                                mode: "insensitive",
+                            },
+                        },
+                        {
+                            id: isNaN(queryNumber) ? undefined : queryNumber,
+                        },
+                    ],
                 },
-                {
-                    description: {
-                        contains: query,
-                        mode: "insensitive",
-                    },
-                },
-                {
-                    id: isNaN(queryNumber) ? undefined : queryNumber,
-                },
+                ...(userID !== null
+                    ? [
+                          {
+                              OR: [
+                                  {
+                                      owner: user === "" ? undefined : user,
+                                  },
+                                  {
+                                      experiment: {
+                                          assayTypes: {
+                                              some: {
+                                                  technicianId: userID,
+                                              },
+                                          },
+                                      },
+                                  },
+                              ],
+                          },
+                      ]
+                    : []),
             ],
-            // TODO technician search?
-            owner: owner === "" ? undefined : owner,
             isCanceled:
                 status === "canceled"
                     ? true

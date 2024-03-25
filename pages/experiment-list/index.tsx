@@ -1,15 +1,14 @@
 import {
+    Autocomplete,
     Box,
     Button,
     FormControl,
     FormControlLabel,
     FormLabel,
-    InputLabel,
-    MenuItem,
     Radio,
     RadioGroup,
-    Select,
     Stack,
+    TextField,
 } from "@mui/material";
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import React, { useContext, useEffect, useState } from "react";
@@ -22,7 +21,7 @@ import {
     fetchExperimentList,
     hasRecordedAssayResults,
 } from "@/lib/controllers/experimentController";
-import { fetchOwners } from "@/lib/controllers/userController";
+import { fetchOwnersAndTechnicians } from "@/lib/controllers/userController";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import {
@@ -45,7 +44,7 @@ import ConfirmationDialog from "@/components/shared/confirmationDialog";
 
 interface QueryParams {
     search: string;
-    owner: string;
+    user: string;
     status: ExperimentStatus;
 }
 
@@ -53,7 +52,7 @@ const getQueryParamsFromURL = (): QueryParams => {
     const params: URLSearchParams = new URLSearchParams(window.location.search);
     return {
         search: params.get("search") ?? "",
-        owner: params.get("owner") ?? "",
+        user: params.get("user") ?? "",
         status: (params.get("status") ?? "all") as ExperimentStatus,
     };
 };
@@ -73,12 +72,13 @@ const ExperimentList: React.FC = () => {
     const router = useRouter();
     const [queryParams, setQueryParams] = useState<QueryParams>({
         search: "",
-        owner: "",
+        user: "",
         status: "all",
     });
     const [initialized, setInitialized] = useState<boolean>(false); // hacky way to make reload() run once on first render
-
-    const [ownerList, setOwnerList] = useState<UserInfo[] | null>(null);
+    const [userFilterList, setUserFilterList] = useState<UserInfo[] | null>(
+        null
+    );
     const { user } = useContext(CurrentUserContext);
     const isAdmin: boolean = user?.isAdmin ?? false;
 
@@ -102,12 +102,12 @@ const ExperimentList: React.FC = () => {
     );
 
     useEffect(() => {
-        const fetchOwnerData = async () => {
-            setOwnerList(await fetchOwners());
+        const fetchUserData = async () => {
+            setUserFilterList(await fetchOwnersAndTechnicians());
             setQueryParams(getQueryParamsFromURL());
             setInitialized(true);
         };
-        fetchOwnerData();
+        fetchUserData();
     }, []);
 
     useEffect(() => {
@@ -179,7 +179,7 @@ const ExperimentList: React.FC = () => {
         try {
             return await fetchExperimentList(
                 queryParams.search,
-                queryParams.owner,
+                queryParams.user,
                 queryParams.status,
                 paging
             );
@@ -196,14 +196,14 @@ const ExperimentList: React.FC = () => {
 
     const handleSearch = (
         query: string,
-        owner: string,
+        user: string,
         status: ExperimentStatus
     ) => {
         const queryParams = new URLSearchParams();
         queryParams.set("search", query);
-        queryParams.set("owner", owner);
+        queryParams.set("user", user);
         queryParams.set("status", status);
-        if (!query && !owner && status === "all") {
+        if (!query && !user && status === "all") {
             router.push("/experiment-list");
         } else {
             router.push(
@@ -279,52 +279,59 @@ const ExperimentList: React.FC = () => {
                             onSearch={(query: string) => {
                                 setQueryParams({
                                     search: query,
-                                    owner: queryParams.owner,
+                                    user: queryParams.user,
                                     status: queryParams.status,
                                 });
                                 handleSearch(
                                     query,
-                                    queryParams.owner,
+                                    queryParams.user,
                                     queryParams.status
                                 );
                             }}
                         />
                     </Box>
                     <Box sx={{ flex: 1, paddingLeft: 10 }}>
-                        <FormControl fullWidth size="small">
-                            <InputLabel id="Owner Filter Label">
-                                Owner Filter
-                            </InputLabel>
-                            <Select
-                                id="Owner Filter Selection"
-                                value={queryParams.owner}
-                                label="Owner Filter"
-                                onChange={(e) => {
-                                    setQueryParams({
-                                        search: queryParams.search,
-                                        owner: e.target.value,
-                                        status: queryParams.status,
-                                    });
-                                    handleSearch(
-                                        queryParams.search,
-                                        e.target.value,
-                                        queryParams.status
-                                    );
-                                }}
-                            >
-                                <MenuItem key={0} value={""}>
-                                    {"(None)"}
-                                </MenuItem>
-                                {(ownerList ?? []).map((owner: UserInfo) => (
-                                    <MenuItem
-                                        key={owner.id}
-                                        value={owner.username}
-                                    >
-                                        {owner.username}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <Autocomplete
+                            disablePortal
+                            id="user-filter-selection"
+                            size="small"
+                            options={[
+                                { label: "(None)", value: "" },
+                                ...(userFilterList ?? []).map(
+                                    (user: UserInfo) => ({
+                                        label: user.username,
+                                        value: user.username,
+                                    })
+                                ),
+                            ]}
+                            value={{
+                                label: queryParams.user || "(None)",
+                                value: queryParams.user,
+                            }}
+                            isOptionEqualToValue={(option, value) =>
+                                option.label === value.label &&
+                                option.value === value.value
+                            }
+                            renderInput={(params) => (
+                                <TextField {...params} label="User Filter" />
+                            )}
+                            onChange={(_event, selectedOption) => {
+                                const selectedUser =
+                                    selectedOption !== null
+                                        ? selectedOption.value
+                                        : "";
+                                setQueryParams({
+                                    search: queryParams.search,
+                                    user: selectedUser,
+                                    status: queryParams.status,
+                                });
+                                handleSearch(
+                                    queryParams.search,
+                                    selectedUser,
+                                    queryParams.status
+                                );
+                            }}
+                        />
                     </Box>
                     <Box sx={{ paddingX: 10 }}>
                         <FormControl component="fieldset">
@@ -345,13 +352,13 @@ const ExperimentList: React.FC = () => {
                                 onChange={(e) => {
                                     setQueryParams({
                                         search: queryParams.search,
-                                        owner: queryParams.owner,
+                                        user: queryParams.user,
                                         status: e.target
                                             .value as ExperimentStatus,
                                     });
                                     handleSearch(
                                         queryParams.search,
-                                        queryParams.owner,
+                                        queryParams.user,
                                         e.target.value as ExperimentStatus
                                     );
                                 }}

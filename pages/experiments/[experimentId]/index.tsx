@@ -1,19 +1,16 @@
 import Layout from "@/components/shared/layout";
 import AssaysGroupedByType from "@/components/experiment-detail/assaysGroupedByType";
 import { ExperimentHeader } from "@/components/experiment-detail/header/experimentHeader";
-import { Box, Container, Typography} from "@mui/material";
+import { Stack, Container, Typography, Box } from "@mui/material";
 import DeleteExperimentButton from "@/components/experiment-detail/deleteExperimentButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { useContext } from "react";
-<<<<<<< HEAD
-import { AssayTypes } from "@/components/experiment-detail/assayTypes/assayTypes";
-import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
-import { ExperimentInfo } from "@/lib/controllers/types";
-=======
 import CancelExperimentButton from "@/components/experiment-detail/cancelExperimentButton";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
->>>>>>> 73473c57c6121c1c6fd2081ebee8bf44538da993
+import { ExperimentInfo } from "@/lib/controllers/types";
+import { AssayTypes } from "@/components/experiment-detail/assayTypes/assayTypes";
+import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
 
 const ExperimentPage = () => {
     const { user } = useContext(CurrentUserContext);
@@ -33,7 +30,7 @@ const ExperimentPage = () => {
             </Container>
             <AssayTypes/>
             <AssaysGroupedByType />
-<<<<<<< HEAD
+
             
             {
                 <Box
@@ -47,11 +44,10 @@ const ExperimentPage = () => {
                     <DeleteExperimentButton />
                 </Box>
             }
-=======
-            <Box
+
+            <Stack
+                spacing={1}
                 sx={{
-                    display: "flex",
-                    justifyContent: "center",
                     paddingY: 2,
                     visibility: isAdmin ? "visible" : "hidden",
                 }}
@@ -60,8 +56,10 @@ const ExperimentPage = () => {
                     cancel={!experimentInfo?.experiment.isCanceled}
                 />
                 <DeleteExperimentButton />
-            </Box>
->>>>>>> 73473c57c6121c1c6fd2081ebee8bf44538da993
+
+
+            </Stack>
+
         </Layout>
     );
 };
