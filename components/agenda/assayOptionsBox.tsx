@@ -14,6 +14,7 @@ interface AssayOptionsBoxProps {
     assayId: number;
     assayResultId: number | null;
     owner: string;
+    technician: string | null;
 }
 
 export const AssayOptionsBox: React.FC<AssayOptionsBoxProps> = (
@@ -34,7 +35,7 @@ export const AssayOptionsBox: React.FC<AssayOptionsBoxProps> = (
             >
                 <ViewIcon />
             </IconButton>
-            {(user?.isAdmin || user?.username == props.owner) && (
+            {(user?.isAdmin || user?.username === props.owner || user?.username === props.technician) && (
                 <IconButton
                     onClick={() => {
                         const assayPromise = fetchAssay(props.assayId).then(

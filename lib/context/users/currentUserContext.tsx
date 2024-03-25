@@ -38,7 +38,7 @@ export const CurrentUserProvider: React.FC<{ children: ReactNode }> = ({
         const userId = userInfo.userId;
         setUser(undefined);
         
-        if (userId === undefined || userId < 0) {
+        if (userId === undefined || isNaN(userId) || userId < 0) {
             return;
         }
 

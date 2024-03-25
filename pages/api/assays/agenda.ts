@@ -56,6 +56,7 @@ export default async function getAssays(
     const ownedAssaysOnly =
         req.query.owned_assays_only === "true" && token?.name !== undefined;
 
+    // isCanceled = false is implicitly included in the view
     const whereCondition = {
         targetDate: {
             gte: minDate,
