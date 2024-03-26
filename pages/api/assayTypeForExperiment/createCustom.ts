@@ -3,6 +3,7 @@ import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 import { AssayTypeForExperiment, AssayType} from "@prisma/client";
 import { db } from "@/lib/api/db";
+import { getApiError } from "@/lib/api/error";
 
 export default async function createCustomAssayTypeAPI(
     req : NextApiRequest,
@@ -13,22 +14,34 @@ export default async function createCustomAssayTypeAPI(
     if (permissionTracker.shouldStopExecuting){
         return;
     }
-    const {name, description, units, experimentId, technicianId} = req.body;
+    const {experimentId} = req.body;
     try{
+        const assayType = await db.assayType.create({
+            data : {
+                isCustom : true,
+                name : "",
+                units : "",
+                description : ""
+            }
+        });
 
-    } catch (error) {
-        await db.assayTypeForExperiment.create({
+        const assayTypeForExperiment = await db.assayTypeForExperiment.create({
+            select : {
+                assayType : true
+            },
 
             data : {
                 experimentId : experimentId,
-                technicianId : 1,
-                
-                
-                assayType : {
-                    p
-                }
+                technicianId : null,
+                assayTypeId : assayType.id
             }
         })
+        res.status(200).json(assayTypeForExperiment);
+
+    } catch (error) {
+        res.status(500).json(
+            getApiError(500, "Failed to create experiment on server")
+        );
     }
 
 

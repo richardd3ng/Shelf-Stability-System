@@ -122,6 +122,17 @@ export type AssayTypeInfo = AssayTypeForExperiment & {
     assayType: AssayType;
 };
 
+export type UpdateAssayTypeArgs = {
+    assayTypeId : number;
+    newName : string | null;
+    newUnits : string | null;
+}
+
+export type UpdateTechnicianArgs = {
+    assayTypeForExperimentId : number;
+    technicianId : number;
+}
+
 /* ----- Assay Result ----- */
 
 export type AssayResultCreationArgs = Omit<AssayResult, "id">;
