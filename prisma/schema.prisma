@@ -47,6 +47,7 @@ view ExperimentWeekView {
   owner       String
   ownerDisplayName  String
   ownerId     Int
+  technicianIds String
 }
 
 model Assay {
