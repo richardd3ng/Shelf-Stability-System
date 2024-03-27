@@ -1,10 +1,10 @@
 import { Button, FormControl, Stack, TextField } from "@mui/material";
 import CloseableModal from "@/components/shared/closeableModal";
-import { getAllWeeksCoveredByAssays } from "./experimentTable/experimentTable";
+import { getAllWeeksCoveredByAssays } from "./experimentTable";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useState } from "react";
-import { WeekRow } from "./experimentTable/experimentTable";
+import { WeekRow } from "./experimentTable";
 import { getNumericalValidationError } from "@/lib/validationUtils";
 import { useAlert } from "@/lib/context/shared/alertContext";
 

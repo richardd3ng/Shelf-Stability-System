@@ -17,6 +17,7 @@ const DownloadExcelIconButton: React.FC = () => {
             text="Export Data to Excel"
             icon={DownloadIcon}
             onClick={() => generateExcelReport(experiment, owner.username)}
+            size="large"
         />
     ) : null;
 };

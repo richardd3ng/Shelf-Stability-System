@@ -65,13 +65,13 @@ export default async function getAssays(
         resultId: includeRecorded ? undefined : null,
         OR: ownedAssaysOnly
             ? [
-                {
-                    owner: token.name ?? undefined,
-                },
-                {
-                    technician: token.name ?? undefined,
-                },
-            ]
+                  {
+                      owner: token.name ?? undefined,
+                  },
+                  {
+                      technician: token.name ?? undefined,
+                  },
+              ]
             : undefined,
     };
 
@@ -86,7 +86,7 @@ export default async function getAssays(
             skip: page * pageSize,
             take: pageSize,
         })
-        .then<Omit<AssayAgendaInfo, 'technicianTypes'>[]>((assays) =>
+        .then<Omit<AssayAgendaInfo, "technicianTypes">[]>((assays) =>
             assays.map((assay) => dateFieldsToLocalDate(assay, ["targetDate"]))
         );
 
@@ -97,30 +97,33 @@ export default async function getAssays(
     const [assays, totalRows] = await Promise.all([queryRows, queryRowCount]);
 
     // This is a little questionably done, but it works fine
-    const assaysReal: AssayAgendaInfo[] = await Promise.all(assays
-        .map(
-            async (assay) => assay.technician === null
+    const assaysReal: AssayAgendaInfo[] = await Promise.all(
+        assays.map(async (assay) =>
+            assay.technician === null
                 ? { ...assay, technicianTypes: null }
-                : await db.assayTypeForExperiment.findMany({
-                    select: {
-                        assayType: {
-                            select: {
-                                name: true
-                            }
-                        }
-                    },
-                    where: {
-                        technician: {
-                            username: assay.technician
-                        },
-                        experiment: {
-                            id: assay.experimentId
-                        }
-                    }
-                }).then((types) => ({
-                    ...assay,
-                    technicianTypes: types.map((type) => type.assayType.name)
-                }))));
+                : await db.assayTypeForExperiment
+                      .findMany({
+                          select: {
+                              assayType: {
+                                  select: {
+                                      name: true,
+                                  },
+                              },
+                          },
+                          where: {
+                              technician: {
+                                  username: assay.technician,
+                              },
+                          },
+                      })
+                      .then((types) => ({
+                          ...assay,
+                          technicianTypes: types.map(
+                              (type) => type.assayType.name
+                          ),
+                      }))
+        )
+    );
 
     res.status(200).json({
         rows: assaysReal,

@@ -1,7 +1,14 @@
 import Layout from "@/components/shared/layout";
 import { fetchAgendaList } from "@/lib/controllers/assayController";
 import { AssayAgendaInfo, AssayAgendaTable } from "@/lib/controllers/types";
-import { Box, Stack, Checkbox, FormControlLabel, Tooltip, Typography } from "@mui/material";
+import {
+    Box,
+    Stack,
+    Checkbox,
+    FormControlLabel,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -14,7 +21,7 @@ import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
 import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 import { Assay, AssayResult } from "@prisma/client";
-import AssayEditorModal from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
+import AssayEditorModal from "@/components/experiment-detail/assays/assayEditorModal";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { useRouter } from "next/router";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
@@ -29,8 +36,12 @@ export default function AssayAgenda() {
     const [ownedAssaysOnly, setOwnedAssaysOnly] = useState<boolean>(true);
 
     const [isEditingAnAssay, setIsEditingAnAssay] = useState<boolean>(false);
-    const [assayResultBeingEdited, setAssayResultBeingEdited] = useState<AssayResult | undefined>(undefined);
-    const [assayBeingEdited, setAssayBeingEdited] = useState<Assay | undefined>(undefined);
+    const [assayResultBeingEdited, setAssayResultBeingEdited] = useState<
+        AssayResult | undefined
+    >(undefined);
+    const [assayBeingEdited, setAssayBeingEdited] = useState<Assay | undefined>(
+        undefined
+    );
 
     const [rows, setRows] = useState<AssayAgendaInfo[]>([]);
 
@@ -58,9 +69,7 @@ export default function AssayAgenda() {
             width: 250,
             renderCell: (params) => {
                 const name = `${params.row.ownerDisplayName} (${params.row.owner})`;
-                return params.row.owner === username
-                    ? (<b>{name}</b>)
-                    : name;
+                return params.row.owner === username ? <b>{name}</b> : name;
             },
         },
         {
@@ -72,14 +81,23 @@ export default function AssayAgenda() {
             renderCell: (params) => {
                 if (params.row.technician === null) return "";
                 const name = `${params.row.technicianDisplayName} (${params.row.technician})`;
-                return (<Tooltip title={
-                    <Typography>Technician for {params.row.technicianTypes.join(", ")}</Typography>
-                }
-                className="hover-underline">
-                    {params.row.technician === username
-                        ? (<b>{name}</b>)
-                        : <span>{name}</span>}
-                </Tooltip>);
+                return (
+                    <Tooltip
+                        title={
+                            <Typography>
+                                Technician for{" "}
+                                {params.row.technicianTypes.join(", ")}
+                            </Typography>
+                        }
+                        className="hover-underline"
+                    >
+                        {params.row.technician === username ? (
+                            <b>{name}</b>
+                        ) : (
+                            <span>{name}</span>
+                        )}
+                    </Tooltip>
+                );
             },
         },
         {
@@ -154,8 +172,12 @@ export default function AssayAgenda() {
     const router = useRouter();
 
     function onCellClick(params: any) {
-        if (params.field === 'actions') return;
-        router.push(`/experiments/${params.row.experimentId}#assay-chip-${params.row.id}`);
+        if (params.field === "actions") return;
+        router.push(
+            `/experiments/${params.row.experimentId}#assay-chip-${params.row.id}`
+        );
+        if (params.field === "actions") return;
+        router.push(`/experiments/${params.row.experimentId}`);
     }
 
     return (
@@ -184,7 +206,11 @@ export default function AssayAgenda() {
                         }}
                     >
                         <Stack spacing={2}>
-                            <Box display="flex" flexDirection="row" sx={{ px: 2 }}>
+                            <Box
+                                display="flex"
+                                flexDirection="row"
+                                sx={{ px: 2 }}
+                            >
                                 <Stack direction="row" spacing={2}>
                                     <MyDatePicker
                                         value={fromDate}
@@ -216,7 +242,9 @@ export default function AssayAgenda() {
                                             <Checkbox
                                                 checked={includeRecordedAssays}
                                                 onChange={(_, val) =>
-                                                    setIncludeRecordedAssays(val)
+                                                    setIncludeRecordedAssays(
+                                                        val
+                                                    )
                                                 }
                                             />
                                         }

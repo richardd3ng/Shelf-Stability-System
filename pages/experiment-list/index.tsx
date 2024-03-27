@@ -96,7 +96,7 @@ const ExperimentList: React.FC = () => {
         reloadExperimentData,
         [],
         {
-            pageSize: 10,
+            pageSize: 15,
             page: 0,
         }
     );
@@ -121,14 +121,14 @@ const ExperimentList: React.FC = () => {
             field: "id",
             headerName: "ID",
             type: "number",
-            flex: 1.5,
+            flex: 1,
             valueFormatter: (params: any) => String(params.value),
         },
         {
             field: "title",
             headerName: "Title",
             type: "string",
-            flex: 4,
+            flex: 6,
             renderCell: (params) => {
                 const title = params.row.title;
                 const isTechnician = params.row.technicianIds.includes(
@@ -157,7 +157,7 @@ const ExperimentList: React.FC = () => {
             field: "ownerDisplayName",
             headerName: "Owner",
             type: "string",
-            flex: 2,
+            flex: 3,
             renderCell: (params) => {
                 const name = `${params.row.ownerDisplayName} (${params.row.owner})`;
                 return params.row.ownerId === user?.id ? <b>{name}</b> : name;
@@ -168,7 +168,7 @@ const ExperimentList: React.FC = () => {
             headerName: "Start Date",
             type: "string",
             valueGetter: (params) => params.row.startDate.toString(),
-            flex: 2,
+            flex: 1,
         },
         {
             field: "week",

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Box, Button, Typography } from "@mui/material";
 import { useMutationToUpdateExperiment } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
-import ConfirmationDialog from "../shared/confirmationDialog";
+import ConfirmationDialog from "../../shared/confirmationDialog";
 
 interface CancelExperimentButtonProps {
     cancel: boolean;

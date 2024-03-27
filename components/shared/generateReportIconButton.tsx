@@ -17,6 +17,7 @@ const GenerateReportIconButton: React.FC<GenerateReportIconButtonProps> = (
             onClick={() =>
                 router.push(`/experiments/${props.experimentId}/report`)
             }
+            size="large"
         />
     );
 };
