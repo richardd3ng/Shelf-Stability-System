@@ -302,7 +302,7 @@ const ExperimentList: React.FC = () => {
                                 { label: "(None)", value: "" },
                                 ...(userFilterList ?? []).map(
                                     (user: UserInfo) => ({
-                                        label: user.username,
+                                        label: `${user.displayName} (${user.username})`,
                                         value: user.username,
                                     })
                                 ),
