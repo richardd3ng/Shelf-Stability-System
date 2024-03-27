@@ -112,6 +112,9 @@ export default async function getAssays(
                     where: {
                         technician: {
                             username: assay.technician
+                        },
+                        experiment: {
+                            id: assay.experimentId
                         }
                     }
                 }).then((types) => ({
