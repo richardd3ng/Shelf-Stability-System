@@ -4,8 +4,6 @@ import { ApiError } from "next/dist/server/api-utils";
 import { Condition, Experiment, Prisma } from "@prisma/client";
 import { getApiError } from "@/lib/api/error";
 import {
-    ConditionCreationArgs,
-    ConditionCreationArgsNoExperimentId,
     ExperimentCreationResponse,
     ExperimentWithLocalDate,
 } from "@/lib/controllers/types";
@@ -19,9 +17,11 @@ export default async function createExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentCreationResponse | ApiError>
 ) {
-    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    let permissionTracker: APIPermissionTracker = {
+        shouldStopExecuting: false,
+    };
     await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
-    if (permissionTracker.shouldStopExecuting){
+    if (permissionTracker.shouldStopExecuting) {
         return;
     }
     const {
@@ -53,41 +53,29 @@ export default async function createExperimentAPI(
     }
 
     try {
-        const createdExperiment : ExperimentWithLocalDate = await db.experiment
+        const createdExperiment: ExperimentWithLocalDate = await db.experiment
             .create({
                 data: {
                     title,
                     description,
                     startDate: localDateToJsDate(LocalDate.parse(startDate)),
                     ownerId,
-                    isCanceled : false,
-                    assayTypes : {
-                        create : [1, 2, 3, 4, 5, 6].map((typeId) => ({
-                            assayTypeId : typeId,
-                            technicianId : null
-                        }))
+                    isCanceled: false,
+                    assayTypes: {
+                        create: [1, 2, 3, 4, 5, 6].map((typeId) => ({
+                            assayTypeId: typeId,
+                            technicianId: null,
+                        })),
                     },
-                    conditions : {
-                        create : conditionCreationArgsNoExperimentIdArray
-                    }
+                    conditions: {
+                        create: conditionCreationArgsNoExperimentIdArray,
+                    },
                 },
             })
-            .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["startDate"]));
-        
-        /*
-        let conditionCreationArgsArray: ConditionCreationArgs[] =
-            conditionCreationArgsNoExperimentIdArray.map(
-                (condition: ConditionCreationArgsNoExperimentId) => {
-                    return {
-                        ...condition,
-                        experimentId: createdExperiment.id,
-                    };
-                }
+            .then((experiment: Experiment) =>
+                dateFieldsToLocalDate(experiment, ["startDate"])
             );
-        await db.condition.createMany({
-            data: conditionCreationArgsArray,
-        });
-        */
+
         const createdConditions: Condition[] = await db.condition.findMany({
             where: {
                 experimentId: createdExperiment.id,
@@ -120,6 +108,18 @@ export default async function createExperimentAPI(
                     getApiError(
                         409,
                         "Only registered users can create experiments"
+                    )
+                );
+                return;
+            } else if (
+                error.code === "P2003" &&
+                error.meta?.field_name ===
+                    "AssayTypeForExperiment_assayTypeId_fkey (index)"
+            ) {
+                res.status(400).json(
+                    getApiError(
+                        400,
+                        "Default assay types missing or malformed in database, please contact the administrator"
                     )
                 );
                 return;

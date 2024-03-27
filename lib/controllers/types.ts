@@ -34,6 +34,7 @@ export type ExperimentTableInfo = {
     week: number;
     isCanceled: boolean;
     owner: string;
+    ownerDisplayName: string;
     ownerId: number;
 };
 

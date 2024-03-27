@@ -45,6 +45,7 @@ view ExperimentWeekView {
   week        Int
   isCanceled  Boolean
   owner       String
+  ownerDisplayName  String
   ownerId     Int
 }
 

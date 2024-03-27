@@ -58,9 +58,7 @@ const getQueryParamsFromURL = (): QueryParams => {
 };
 
 const ExperimentList: React.FC = () => {
-    const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>(
-        []
-    );
+    const [rows, setRows] = useState<ExperimentTableInfo[]>([]);
     const [showCreationDialog, setShowCreationDialog] =
         useState<boolean>(false);
     const [showConfirmationDialog, setShowConfirmationDialog] =
@@ -80,6 +78,7 @@ const ExperimentList: React.FC = () => {
         null
     );
     const { user } = useContext(CurrentUserContext);
+    const username = user?.username;
     const isAdmin: boolean = user?.isAdmin ?? false;
 
     const reloadExperimentData = async (
@@ -87,7 +86,7 @@ const ExperimentList: React.FC = () => {
     ): Promise<ExperimentTable> => {
         showLoading("Loading experiments...");
         const fetchedData = await getExperiments(paging);
-        setExperimentData(fetchedData.rows);
+        setRows(fetchedData.rows);
         hideLoading();
         return fetchedData;
     };
@@ -131,10 +130,14 @@ const ExperimentList: React.FC = () => {
             flex: 4,
         },
         {
-            field: "owner",
+            field: "ownerDisplayName",
             headerName: "Owner",
             type: "string",
             flex: 2,
+            renderCell: (params) => {
+                const name = `${params.row.ownerDisplayName} (${params.row.owner})`;
+                return params.row.owner === username ? <b>{name}</b> : name;
+            },
         },
         {
             field: "startDate",
@@ -394,7 +397,7 @@ const ExperimentList: React.FC = () => {
                 </Box>
                 <Table
                     columns={colDefs}
-                    rows={experimentData}
+                    rows={rows}
                     pagination
                     onDeleteRows={prepareForDeletion}
                     onCellClick={(cell) => {
