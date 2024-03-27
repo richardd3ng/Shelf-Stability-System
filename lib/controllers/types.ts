@@ -11,7 +11,7 @@ import {
 
 /* ----- Experiment ----- */
 
-export type ExperimentWithLocalDate = Omit<Experiment, 'startDate'> & {
+export type ExperimentWithLocalDate = Omit<Experiment, "startDate"> & {
     startDate: LocalDate;
 };
 
@@ -34,7 +34,9 @@ export type ExperimentTableInfo = {
     week: number;
     isCanceled: boolean;
     owner: string;
+    ownerDisplayName: string;
     ownerId: number;
+    technicianIds: number[];
 };
 
 export type ExperimentTable = {
@@ -55,8 +57,8 @@ export type ExperimentCreationRequiringConditionAndAssayTypeArgs = Omit<
 export type ExperimentCreationArgs =
     | Omit<ExperimentWithLocalDate, "id">
     | {
-        conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
-    };
+          conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+      };
 export type ExperimentCreationResponse = Omit<
     ExperimentInfo,
     "assays" | "assayResults" | "assayTypes"
