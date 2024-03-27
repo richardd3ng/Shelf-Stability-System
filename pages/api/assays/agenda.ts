@@ -114,6 +114,7 @@ export default async function getAssays(
                               technician: {
                                   username: assay.technician,
                               },
+                              experimentId: assay.experimentId,
                           },
                       })
                       .then((types) => ({

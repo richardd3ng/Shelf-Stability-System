@@ -65,7 +65,6 @@ export default function LoginPage() {
                             variant="contained"
                             color="primary"
                             type="submit"
-                            onClick={handleSubmit}
                             sx={{ textTransform: "none" }}
                         >
                             <Typography>Submit</Typography>
