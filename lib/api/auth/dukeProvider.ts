@@ -1,5 +1,5 @@
 import { OAuthConfig } from "next-auth/providers/oauth"
-import { createOrUpdateUser } from "../dbOperations/userOperations";
+import { createOrUpdateUser } from "../../../scripts/dbOperations/userOperations";
 
 export interface DukeProfile {
     sub: string,

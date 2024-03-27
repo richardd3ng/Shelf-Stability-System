@@ -75,7 +75,7 @@ model AssayType {
   id          Int      @id @default(autoincrement())
   isCustom    Boolean
   name        String
-  description String
+  description String?
   units       String?
   experimentSpecificTypes AssayTypeForExperiment[]
 }

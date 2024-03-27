@@ -1,5 +1,5 @@
-import { AssayCreationArgs, AssayResultCreationArgs } from "../../controllers/types";
-import {db} from "../db";
+import { AssayCreationArgs, AssayResultCreationArgs } from "../../lib/controllers/types";
+import {db} from "../../lib/api/db";
 
 export const createAssayResults = async (assayResults : AssayResultCreationArgs[]) => {
     await db.assayResult.createMany({

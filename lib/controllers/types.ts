@@ -44,11 +44,12 @@ export type ExperimentTable = {
     rowCount: number;
 };
 
-export type ExperimentCreationRequiringConditionArgs = Omit<
+export type ExperimentCreationRequiringConditionAndAssayTypeArgs = Omit<
     ExperimentWithLocalDate,
     "id"
 > & {
     conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+    assayTypeForExperimentCreationArgsArray : Omit<Omit<AssayTypeForExperiment, "id">, "experimentId">[];
 };
 
 export type ExperimentCreationArgs =
@@ -127,6 +128,8 @@ export type UpdateAssayTypeArgs = {
     newName : string | null;
     newUnits : string | null;
 }
+
+export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 
 export type UpdateTechnicianArgs = {
     assayTypeForExperimentId : number;

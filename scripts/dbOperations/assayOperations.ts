@@ -1,6 +1,6 @@
-import { AssayCreationArgs } from "../../controllers/types";
+import { AssayCreationArgs } from "../../lib/controllers/types";
 import { Assay } from "@prisma/client";
-import {db} from "../db";
+import {db} from "../../lib/api/db";
 
 export const createAssays = async (assays : AssayCreationArgs[]) => {
     await db.assay.createMany({
