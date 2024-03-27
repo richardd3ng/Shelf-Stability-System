@@ -17,7 +17,8 @@ export default function LoginPage() {
     const router = useRouter();
     const { showAlert } = useAlert();
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
         showLoading("Logging in...");
         signIn("credentials", { username, password, redirect: false })
             .then((d) => {
@@ -41,44 +42,46 @@ export default function LoginPage() {
     return (
         <Stack>
             <Box alignSelf="center">
-                <AuthForm
-                    fields={[
-                        {
-                            value: username,
-                            setValue: setUsername,
-                            label: "Username",
-                            shouldBlurText: false,
-                        },
-                        {
-                            value: password,
-                            setValue: setPassword,
-                            label: "Password",
-                            shouldBlurText: true,
-                        },
-                    ]}
-                    title="Login"
-                />
-                <Stack alignSelf="center" spacing={1}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                        onClick={handleSubmit}
-                        sx={{ textTransform: "none" }}
-                    >
-                        <Typography>Submit</Typography>
-                    </Button>
-                    <Divider />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleOAuth}
+                <form onSubmit={handleSubmit}>
+                    <AuthForm
+                        fields={[
+                            {
+                                value: username,
+                                setValue: setUsername,
+                                label: "Username",
+                                shouldBlurText: false,
+                            },
+                            {
+                                value: password,
+                                setValue: setPassword,
+                                label: "Password",
+                                shouldBlurText: true,
+                            },
+                        ]}
+                        title="Login"
+                    />
+                    <Stack alignSelf="center" spacing={1}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            onClick={handleSubmit}
+                            sx={{ textTransform: "none" }}
+                        >
+                            <Typography>Submit</Typography>
+                        </Button>
+                        <Divider />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleOAuth}
 
-                        sx={{ textTransform: "none" }}
-                    >
-                        Sign in with Duke
-                    </Button>
-                </Stack>
+                            sx={{ textTransform: "none" }}
+                        >
+                            Sign in with Duke
+                        </Button>
+                    </Stack>
+                </form>
             </Box>
         </Stack>
     );
