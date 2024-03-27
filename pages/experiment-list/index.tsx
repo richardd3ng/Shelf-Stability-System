@@ -9,6 +9,8 @@ import {
     RadioGroup,
     Stack,
     TextField,
+    Tooltip,
+    Typography,
 } from "@mui/material";
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import React, { useContext, useEffect, useState } from "react";
@@ -58,9 +60,7 @@ const getQueryParamsFromURL = (): QueryParams => {
 };
 
 const ExperimentList: React.FC = () => {
-    const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>(
-        []
-    );
+    const [rows, setRows] = useState<ExperimentTableInfo[]>([]);
     const [showCreationDialog, setShowCreationDialog] =
         useState<boolean>(false);
     const [showConfirmationDialog, setShowConfirmationDialog] =
@@ -87,7 +87,7 @@ const ExperimentList: React.FC = () => {
     ): Promise<ExperimentTable> => {
         showLoading("Loading experiments...");
         const fetchedData = await getExperiments(paging);
-        setExperimentData(fetchedData.rows);
+        setRows(fetchedData.rows);
         hideLoading();
         return fetchedData;
     };
@@ -129,12 +129,39 @@ const ExperimentList: React.FC = () => {
             headerName: "Title",
             type: "string",
             flex: 4,
+            renderCell: (params) => {
+                const title = params.row.title;
+                const isTechnician = params.row.technicianIds.includes(
+                    user?.id
+                );
+                return isTechnician ? (
+                    <Tooltip
+                        title={
+                            <Typography fontSize={12}>
+                                You are listed as a technician for this
+                                experiment.
+                            </Typography>
+                        }
+                        className="hover-underline"
+                    >
+                        <b>{title}</b>
+                    </Tooltip>
+                ) : params.row.ownerId == user?.id ? (
+                    <b>{title}</b>
+                ) : (
+                    <span>{title}</span>
+                );
+            },
         },
         {
-            field: "owner",
+            field: "ownerDisplayName",
             headerName: "Owner",
             type: "string",
             flex: 2,
+            renderCell: (params) => {
+                const name = `${params.row.ownerDisplayName} (${params.row.owner})`;
+                return params.row.ownerId === user?.id ? <b>{name}</b> : name;
+            },
         },
         {
             field: "startDate",
@@ -299,7 +326,7 @@ const ExperimentList: React.FC = () => {
                                 { label: "(None)", value: "" },
                                 ...(userFilterList ?? []).map(
                                     (user: UserInfo) => ({
-                                        label: user.username,
+                                        label: `${user.displayName} (${user.username})`,
                                         value: user.username,
                                     })
                                 ),
@@ -394,7 +421,7 @@ const ExperimentList: React.FC = () => {
                 </Box>
                 <Table
                     columns={colDefs}
-                    rows={experimentData}
+                    rows={rows}
                     pagination
                     onDeleteRows={prepareForDeletion}
                     onCellClick={(cell) => {
