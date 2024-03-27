@@ -6,38 +6,62 @@ import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 interface NavBarButtonProps {
     text: string;
     onClick: () => void;
+    path: string;
     hidden?: boolean;
 }
 const NavBarButton: React.FC<NavBarButtonProps> = (
     props: NavBarButtonProps
 ) => {
+    const router = useRouter();
+    const isActive = router.pathname === props.path;
+
     return (
         <Button
             color="inherit"
             style={{ textTransform: "none" }}
             onClick={props.onClick}
+            sx={{
+                backgroundColor: isActive
+                    ? "rgba(255, 255, 255, 0.2)"
+                    : "inherit",
+            }}
         >
             <Typography>{props.text}</Typography>
         </Button>
     );
 };
+
 const NavBar: React.FC = () => {
     const router = useRouter();
     const { user } = useContext(CurrentUserContext);
 
     const options: NavBarButtonProps[] = [
-        { text: "Experiments", onClick: () => router.push("/experiment-list") },
-        { text: "Assay Agenda", onClick: () => router.push("/agenda") },
+        {
+            text: "Experiments",
+            onClick: () => router.push("/experiment-list"),
+            path: "/experiment-list",
+        },
+        {
+            text: "Assay Agenda",
+            onClick: () => router.push("/agenda"),
+            path: "/agenda",
+        },
         {
             text: "Users",
             onClick: () => router.push("/users"),
             hidden: !user?.isAdmin,
+            path: "/users",
         },
         {
             text: "Change Password",
             onClick: () => router.push("/auth/updatePassword"),
+            path: "/auth/updatePassword",
         },
-        { text: "Sign Out", onClick: () => router.push("/auth/signOut") },
+        {
+            text: "Sign Out",
+            onClick: () => router.push("/auth/signOut"),
+            path: "/auth/signOut",
+        },
     ];
 
     return (
@@ -59,6 +83,7 @@ const NavBar: React.FC = () => {
                             key={index}
                             text={option.text}
                             onClick={option.onClick}
+                            path={option.path}
                         />
                     ))}
             </Toolbar>
