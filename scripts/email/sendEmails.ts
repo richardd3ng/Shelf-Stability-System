@@ -1,4 +1,4 @@
-import { fetchEmailInfo } from "../../lib/api/dbOperations/userOperations";
+import { fetchEmailInfo } from "../dbOperations/userOperations";
 import { EmailInfo } from "../../lib/controllers/types";
 import sgMail from "@sendgrid/mail";
 

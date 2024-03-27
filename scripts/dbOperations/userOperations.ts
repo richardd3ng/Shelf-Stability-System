@@ -1,31 +1,34 @@
-import { hashPassword } from "../auth/authHelpers";
-import { db } from "../db";
+import { hashPassword } from "../../lib/api/auth/authHelpers";
+import { db } from "../../lib/api/db";
 import { User } from "@prisma/client";
 import { LocalDate, ZoneId, nativeJs } from "@js-joda/core";
 import { EmailInfo, EmailQueryResult } from "@/lib/controllers/types";
-// TODO: fix due to schema changes
-// export async function createUserInDB(
-//     username: any,
-//     password: string,
-//     isAdmin: boolean
-// ) {
-//     return {
-//         ...(await db.user.create({
-//             select: {
-//                 id: true,
-//                 username: true,
-//                 isAdmin: true,
-//                 isSuperAdmin: true,
-//             },
-//             data: {
-//                 username,
-//                 password: await hashPassword(password),
-//                 isAdmin: isAdmin,
-//                 isSuperAdmin: false,
-//             },
-//         })),
-//     };
-// }
+import { UserImportJSON } from "../importData/jsonParser";
+
+
+export async function createUserInDB(user : UserImportJSON) {
+    return {
+        ...(await db.user.create({
+            select: {
+                id: true,
+                username: true,
+                isAdmin: true,
+                isSuperAdmin: true,
+                displayName : true,
+                email : true
+            },
+            data: {
+                username : user.username,
+                password: await hashPassword(user.password),
+                isAdmin: user.administrator_permission,
+                isSuperAdmin: false,
+                displayName : user.display_name,
+                isSSO : user.authentication_type !== "local",
+                email : user.email_address
+            },
+        })),
+    };
+}
 
 export async function getAllUsers(): Promise<User[]> {
     const user = await db.user.findFirst({
