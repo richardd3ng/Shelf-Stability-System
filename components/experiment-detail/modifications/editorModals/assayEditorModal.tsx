@@ -146,7 +146,7 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, sho
                 <EditGroup
                     editable={isEditingAssay}
                 >
-                    {showFullContext && <Typography>{experimentInfo.experiment.title} - Week {assay.week}, {conditionName}, {assayTypeName}</Typography>}
+                    {showFullContext && <Typography>{experimentInfo.experiment.title}<br />Week {assay.week}, {conditionName}, {assayTypeName}</Typography>}
                     {onlyEditResult ? null : (
                         <>
                             <FormControl fullWidth>

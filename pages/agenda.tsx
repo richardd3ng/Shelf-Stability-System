@@ -155,7 +155,7 @@ export default function AssayAgenda() {
 
     function onCellClick(params: any) {
         if (params.field === 'actions') return;
-        router.push(`/experiments/${params.row.experimentId}`);
+        router.push(`/experiments/${params.row.experimentId}#assay-chip-${params.row.id}`);
     }
 
     return (

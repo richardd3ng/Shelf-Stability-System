@@ -23,7 +23,7 @@ const NavBar: React.FC = () => {
         { text: "Experiments", onClick: () => router.push("/experiment-list") },
         { text: "Assay Agenda", onClick: () => router.push("/agenda") },
         { text: "Users", onClick: () => router.push("/users"), hidden: !user?.isAdmin },
-        { text : "Change Password", onClick: () => router.push("/auth/updatePassword")},
+        { text : "Change Password", onClick: () => router.push("/auth/updatePassword"), hidden: user?.isSSO},
         { text : "Sign Out", onClick: () => router.push("/auth/signOut")}
     ]
     
