@@ -8,12 +8,13 @@ import React, { useContext, useState } from "react";
 import { Assay, AssayResult } from "@prisma/client";
 import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 import { useMutationToDeleteAssay } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
-import AssayEditorModal from "../assays/assayEditorModal";
+import AssayEditorModal from "./assayEditorModal";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { AssayTypeInfo } from "@/lib/controllers/types";
+import DeleteAssayButton from "./deleteAssayButton";
 
 interface AssayChipProps {
     assay: Assay;
@@ -65,7 +66,10 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                     padding: "4px",
                     display: "inline-block",
                     textAlign: "center",
-                    backgroundColor: (window && window.location.hash === `#${hash}`) ? "#dcdcec" : undefined,
+                    backgroundColor:
+                        window && window.location.hash === `#${hash}`
+                            ? "#dcdcec"
+                            : undefined,
                 }}
                 id={hash}
             >
@@ -165,14 +169,13 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                                         sx={{ fontSize: 20, color: "gray" }}
                                     />
                                 </IconButton>
-                                <IconButton
-                                    size="small"
-                                    onClick={() => deleteAssay(props.assay.id)}
-                                >
-                                    <DeleteIcon
-                                        sx={{ fontSize: 20, color: "gray" }}
-                                    />
-                                </IconButton>
+                                <DeleteAssayButton
+                                    id={props.assay.id}
+                                    type={assayTypeIdToName(
+                                        props.assay.assayTypeId,
+                                        experimentInfo.assayTypes
+                                    )}
+                                />
                             </Box>
                         )}
                     </Box>

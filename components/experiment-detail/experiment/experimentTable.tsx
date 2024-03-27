@@ -22,7 +22,7 @@ import Table from "@/components/shared/table";
 import AddIcon from "@mui/icons-material/Add";
 import { NewAssayModal } from "../assays/newAssayModal";
 import { AddWeekModal } from "./addWeekModal";
-import AssayChip from "./assayChip";
+import AssayChip from "../assays/assayChip";
 import { NewConditionModal } from "../conditions/newConditionModal";
 import StarIcon from "@mui/icons-material/Star";
 import Edit from "@mui/icons-material/Edit";
@@ -197,7 +197,10 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                         >
                             <Edit sx={{ fontSize: 20 }} />
                         </IconButton>
-                        <DeleteConditionButton id={condition.id} />
+                        <DeleteConditionButton
+                            id={condition.id}
+                            name={condition.name}
+                        />
                     </Box>
                 )}
             </Box>
