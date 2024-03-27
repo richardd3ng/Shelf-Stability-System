@@ -75,7 +75,13 @@ export const ExperimentHeader = () => {
                             {"[Canceled]"}
                         </Typography>
                     )}
-                    <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                        }}
+                    >
                         {isEditable && (
                             <ExperimentEditingContext.Provider
                                 value={{ isEditing, setIsEditing }}
