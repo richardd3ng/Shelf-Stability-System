@@ -5,7 +5,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import {
     GridColDef,
-    GridDeleteIcon,
     GridRenderCellParams,
     GridSortItem,
     GridTreeNodeWithRender,
@@ -25,13 +24,13 @@ import { NewAssayModal } from "../assays/newAssayModal";
 import { AddWeekModal } from "./addWeekModal";
 import AssayChip from "./assayChip";
 import { NewConditionModal } from "../conditions/newConditionModal";
-import { useMutationToDeleteCondition } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import StarIcon from "@mui/icons-material/Star";
 import Edit from "@mui/icons-material/Edit";
 import ConditionEditorModal from "../conditions/conditionEditorModal";
 import ConditionEditingContext from "@/lib/context/experimentDetailPage/conditionEditingContext";
 import { INVALID_CONDITION_ID } from "@/lib/api/apiHelpers";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import DeleteConditionButton from "../conditions/deleteConditionButton";
 
 export interface WeekRow {
     id: number;
@@ -95,7 +94,6 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
     const [showAddConditionModal, setShowAddConditionModal] =
         useState<boolean>(false);
     const [showAddWeekModal, setShowAddWeekModal] = useState<boolean>(false);
-    const { mutate: deleteCondition } = useMutationToDeleteCondition();
     const [conditionIdBeingEdited, setConditionIdBeingEdited] =
         useState<number>(INVALID_CONDITION_ID);
     const WEEK_COL_WIDTH = 50;
@@ -199,13 +197,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                         >
                             <Edit sx={{ fontSize: 20 }} />
                         </IconButton>
-                        <IconButton
-                            size="small"
-                            sx={{ marginLeft: -1 }}
-                            onClick={() => deleteCondition(condition.id)}
-                        >
-                            <GridDeleteIcon sx={{ fontSize: 20 }} />
-                        </IconButton>
+                        <DeleteConditionButton id={condition.id} />
                     </Box>
                 )}
             </Box>

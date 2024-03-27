@@ -9,7 +9,7 @@ import {
     Stack,
 } from "@mui/material";
 import React from "react";
-import ExperimentTable from "../experimentTable/experimentTable";
+import ExperimentTable from "../experiment/experimentTable";
 import { AssayTypeInfo, ExperimentInfo } from "@/lib/controllers/types";
 import { ExpandMore } from "@mui/icons-material";
 

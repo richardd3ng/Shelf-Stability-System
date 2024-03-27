@@ -10,7 +10,7 @@ import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentI
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { ExperimentInfo } from "@/lib/controllers/types";
 import { AssayTypes } from "@/components/experiment-detail/assayTypes/assayTypes";
-import ExperimentTable from "@/components/experiment-detail/experimentTable/experimentTable";
+import ExperimentTable from "@/components/experiment-detail/experiment/experimentTable";
 
 const ExperimentPage = () => {
     const { user } = useContext(CurrentUserContext);
