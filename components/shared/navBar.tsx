@@ -49,13 +49,14 @@ const NavBar: React.FC = () => {
         {
             text: "Users",
             onClick: () => router.push("/users"),
-            hidden: !user?.isAdmin,
             path: "/users",
+            hidden: !user?.isAdmin,
         },
         {
             text: "Change Password",
             onClick: () => router.push("/auth/updatePassword"),
             path: "/auth/updatePassword",
+            hidden: user?.isSSO,
         },
         {
             text: "Sign Out",

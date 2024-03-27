@@ -56,6 +56,7 @@ export default async function getAssays(
     const ownedAssaysOnly =
         req.query.owned_assays_only === "true" && token?.name !== undefined;
 
+    // isCanceled = false is implicitly included in the view
     const whereCondition = {
         targetDate: {
             gte: minDate,
@@ -85,7 +86,7 @@ export default async function getAssays(
             skip: page * pageSize,
             take: pageSize,
         })
-        .then<AssayAgendaInfo[]>((assays) =>
+        .then<Omit<AssayAgendaInfo, "technicianTypes">[]>((assays) =>
             assays.map((assay) => dateFieldsToLocalDate(assay, ["targetDate"]))
         );
 
@@ -95,8 +96,37 @@ export default async function getAssays(
 
     const [assays, totalRows] = await Promise.all([queryRows, queryRowCount]);
 
+    // This is a little questionably done, but it works fine
+    const assaysReal: AssayAgendaInfo[] = await Promise.all(
+        assays.map(async (assay) =>
+            assay.technician === null
+                ? { ...assay, technicianTypes: null }
+                : await db.assayTypeForExperiment
+                      .findMany({
+                          select: {
+                              assayType: {
+                                  select: {
+                                      name: true,
+                                  },
+                              },
+                          },
+                          where: {
+                              technician: {
+                                  username: assay.technician,
+                              },
+                          },
+                      })
+                      .then((types) => ({
+                          ...assay,
+                          technicianTypes: types.map(
+                              (type) => type.assayType.name
+                          ),
+                      }))
+        )
+    );
+
     res.status(200).json({
-        rows: assays,
+        rows: assaysReal,
         rowCount: totalRows,
     });
 }

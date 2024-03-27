@@ -1,9 +1,16 @@
 import Layout from "@/components/shared/layout";
 import { fetchAgendaList } from "@/lib/controllers/assayController";
 import { AssayAgendaInfo, AssayAgendaTable } from "@/lib/controllers/types";
-import { Box, Stack, Checkbox, FormControlLabel } from "@mui/material";
+import {
+    Box,
+    Stack,
+    Checkbox,
+    FormControlLabel,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
     useServerPagination,
     ServerPaginationArgs,
@@ -17,63 +24,7 @@ import { Assay, AssayResult } from "@prisma/client";
 import AssayEditorModal from "@/components/experiment-detail/assays/assayEditorModal";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { useRouter } from "next/router";
-
-const colDefs: GridColDef[] = [
-    {
-        field: "targetDate",
-        headerName: "Target Date",
-        type: "string",
-        valueGetter: (params) => params.row.targetDate.toString(),
-        flex: 2,
-    },
-    {
-        field: "title",
-        headerName: "Title",
-        type: "string",
-        flex: 4,
-    },
-    {
-        field: "owner",
-        headerName: "Owner",
-        type: "string",
-        flex: 2,
-    },
-    {
-        field: "condition",
-        headerName: "Condition",
-        type: "string",
-        flex: 2,
-    },
-    {
-        field: "week",
-        headerName: "Week",
-        type: "number",
-        flex: 1,
-    },
-    {
-        field: "type",
-        headerName: "Assay Type",
-        type: "string",
-        flex: 2,
-    },
-    {
-        field: "actions",
-        headerName: "Actions",
-        flex: 2,
-        align: "center",
-        headerAlign: "center",
-        disableColumnMenu: true,
-        sortable: false,
-        renderCell: (params) => (
-            <AssayOptionsBox
-                owner={params.row.owner}
-                assayId={params.row.id}
-                assayResultId={params.row.resultId}
-                experimentId={params.row.experimentId}
-            />
-        ),
-    },
-];
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
 export default function AssayAgenda() {
     const [fromDate, setFromDate] = useState<LocalDate | null>(
@@ -93,6 +44,99 @@ export default function AssayAgenda() {
     );
 
     const [rows, setRows] = useState<AssayAgendaInfo[]>([]);
+
+    const { user } = useContext(CurrentUserContext);
+    const username = user?.username;
+
+    const colDefs: GridColDef[] = [
+        {
+            field: "targetDate",
+            headerName: "Target Date",
+            type: "string",
+            valueGetter: (params) => params.row.targetDate.toString(),
+            width: 150,
+        },
+        {
+            field: "title",
+            headerName: "Title",
+            type: "string",
+            flex: 3,
+        },
+        {
+            field: "ownerDisplayName",
+            headerName: "Owner",
+            type: "string",
+            width: 250,
+            renderCell: (params) => {
+                const name = `${params.row.ownerDisplayName} (${params.row.owner})`;
+                return params.row.owner === username ? <b>{name}</b> : name;
+            },
+        },
+        {
+            field: "technicianDisplayName",
+            headerName: "Technician",
+            type: "string",
+            width: 250,
+            // TODO underline hover to show all assay types for this technician
+            renderCell: (params) => {
+                if (params.row.technician === null) return "";
+                const name = `${params.row.technicianDisplayName} (${params.row.technician})`;
+                return (
+                    <Tooltip
+                        title={
+                            <Typography>
+                                Technician for{" "}
+                                {params.row.technicianTypes.join(", ")}
+                            </Typography>
+                        }
+                        className="hover-underline"
+                    >
+                        {params.row.technician === username ? (
+                            <b>{name}</b>
+                        ) : (
+                            <span>{name}</span>
+                        )}
+                    </Tooltip>
+                );
+            },
+        },
+        {
+            field: "condition",
+            headerName: "Condition",
+            type: "string",
+            flex: 1,
+        },
+        {
+            field: "week",
+            headerName: "Week",
+            type: "number",
+            width: 70,
+        },
+        {
+            field: "type",
+            headerName: "Assay Type",
+            type: "string",
+            flex: 1,
+        },
+        {
+            field: "actions",
+            headerName: "Actions",
+            width: 150,
+            align: "center",
+            headerAlign: "center",
+            disableColumnMenu: true,
+            sortable: false,
+            renderCell: (params) => (
+                <AssayOptionsBox
+                    owner={params.row.owner}
+                    technician={params.row.technician}
+                    assayId={params.row.id}
+                    assayResultId={params.row.resultId}
+                    experimentId={params.row.experimentId}
+                />
+            ),
+        },
+    ];
 
     function reloadAgendaList(paging: ServerPaginationArgs) {
         return fetchAgendaList(
@@ -128,6 +172,10 @@ export default function AssayAgenda() {
     const router = useRouter();
 
     function onCellClick(params: any) {
+        if (params.field === "actions") return;
+        router.push(
+            `/experiments/${params.row.experimentId}#assay-chip-${params.row.id}`
+        );
         if (params.field === "actions") return;
         router.push(`/experiments/${params.row.experimentId}`);
     }
@@ -232,7 +280,11 @@ export default function AssayAgenda() {
                                 onCellClick={onCellClick}
                                 getRowClassName={(_) => "agenda-row-clickable"}
                             />
-                            <AssayEditorModal onlyEditResult onClose={reload} />
+                            <AssayEditorModal
+                                onlyEditResult
+                                showFullContext
+                                onClose={reload}
+                            />
                         </Stack>
                     </AgendaContext.Provider>
                 </AssayResultEditingContext.Provider>

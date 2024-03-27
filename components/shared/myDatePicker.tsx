@@ -25,6 +25,9 @@ export const MyDatePicker: React.FC<MyDatePickerProps> = (props) => {
         <DatePicker
             timezone="UTC"
             format="YYYY-MM-DD"
+            slotProps={{
+                actionBar: { actions: ["today"] },
+            }}
             {...props}
             value={
                 props.value === null || props.value === undefined

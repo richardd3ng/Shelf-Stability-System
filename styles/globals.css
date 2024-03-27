@@ -86,3 +86,7 @@ a {
 .agenda-row-clickable {
     cursor: pointer;
 }
+
+.hover-underline {
+    text-decoration: dotted underline;
+}

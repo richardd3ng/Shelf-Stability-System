@@ -51,6 +51,8 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
         return resultText;
     };
 
+    const hash = `assay-chip-${props.assay.id}`;
+
     if (!experimentInfo) {
         return null;
     }
@@ -63,7 +65,9 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                     padding: "4px",
                     display: "inline-block",
                     textAlign: "center",
+                    backgroundColor: (window && window.location.hash === `#${hash}`) ? "#dcdcec" : undefined,
                 }}
+                id={hash}
             >
                 <Stack sx={{ margin: -0.25 }}>
                     <Typography sx={{ fontSize: 16 }}>

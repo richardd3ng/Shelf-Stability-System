@@ -77,7 +77,7 @@ model AssayType {
   id          Int      @id @default(autoincrement())
   isCustom    Boolean
   name        String
-  description String
+  description String?
   units       String?
   experimentSpecificTypes AssayTypeForExperiment[]
 }
@@ -107,14 +107,16 @@ model Condition {
 }
 
 view AssayAgendaView {
-  id            Int       @unique
-  experimentId  Int
-  targetDate    DateTime  @db.Date
-  title         String
-  owner         String
-  technician    String?
-  condition     String
-  type          String
-  week          Int
-  resultId      Int?
+  id                    Int       @unique
+  experimentId          Int
+  targetDate            DateTime  @db.Date
+  title                 String
+  owner                 String
+  ownerDisplayName      String
+  technician            String?
+  technicianDisplayName String?
+  condition             String
+  type                  String
+  week                  Int
+  resultId              Int?
 }

@@ -6,6 +6,10 @@ export interface AssayScheduleImportJSON {
     };
 }
 
+export interface AssignedTechniciansImportJSON {
+    [assayType: string]: string;
+}
+
 export interface ValueCommentAuthor {
     value : number | null;
     comment : string | null;
@@ -24,17 +28,22 @@ export interface ExperimentImportJSON {
     number: number;
     owner : string;
     description: string;
-    startDate: string;
+    start_date: string;
+    canceled : boolean;
     storage_conditions: string[];
     assay_types: string[];
     assay_schedule: AssayScheduleImportJSON;
     assay_results: AssayResultImportJSON[];
+    assigned_technicians : AssignedTechniciansImportJSON;
 }
 
 export interface UserImportJSON {
-    name : string;
+    username : string;
     password : string;
     administrator_permission : boolean;
+    display_name : string;
+    authentication_type : string;
+    email_address : string;
 }
 
 export const readUsersFileToJSON = async (filePath : string) : Promise<UserImportJSON[]> => {
