@@ -254,6 +254,7 @@ export default function AssayAgenda() {
                             />
                             <AssayEditorModal
                                 onlyEditResult
+                                showFullContext
                                 onClose={reload}
                             />
                         </Stack>

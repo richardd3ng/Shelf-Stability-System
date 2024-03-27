@@ -9,6 +9,7 @@ import {
     InputLabel,
     MenuItem,
     Stack,
+    Typography,
 } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import CloseableModal from "@/components/shared/closeableModal";
@@ -22,22 +23,21 @@ import {
 } from "@/lib/controllers/assayTypeController";
 import { EditGroup } from "@/lib/context/shared/editGroup";
 import { EditGroupSelect } from "@/components/shared/editGroupSelect";
-import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { AssayTypeInfo } from "@/lib/controllers/types";
 
 export interface AssayEditorModalProps {
     onlyEditResult?: boolean;
+    showFullContext?: boolean;
     onClose?: () => void;
 }
 
-const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onClose }) => {
+const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, showFullContext, onClose }) => {
     const {
         isEditing: isEditingAssay,
         setIsEditing: setIsEditingAssay,
         assay,
     } = useContext(AssayEditingContext);
-    const experimentId = useExperimentId();
-    const {data : experimentInfo} = useExperimentInfo(experimentId);
+    const { data: experimentInfo } = useExperimentInfo(assay?.experimentId ?? -1);
     const { assayResult } = useContext(
         AssayResultEditingContext
     );
@@ -70,14 +70,14 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
         setWeek(newWeek);
     };
 
-    const handleSelectAssayTypeChange = (assayTypeId : number) => {
+    const handleSelectAssayTypeChange = (assayTypeId: number) => {
         updateAssay({
             id: assay!.id,
             assayTypeId: assayTypeId
         });
-        if (experimentInfo){
+        if (experimentInfo) {
             const correspondingTypes = experimentInfo.assayTypes.filter((type) => type.assayType.id === assayTypeId)
-            if (correspondingTypes.length > 0){
+            if (correspondingTypes.length > 0) {
                 setAssayTypeId(correspondingTypes[0].id);
             }
         }
@@ -131,6 +131,10 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
     if (!assay || !user || assayTypeId <= INVALID_ASSAY_TYPE_ID || !week || !experimentInfo) {
         return <></>;
     }
+
+    const conditionName = experimentInfo.conditions.find((condition) => condition.id === assay.conditionId)?.name;
+    const assayTypeName = experimentInfo.assayTypes.find((type) => type.id === assayTypeId)?.assayType.name;
+
     return (
         <CloseableModal
             open={isEditingAssay}
@@ -142,6 +146,7 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, onC
                 <EditGroup
                     editable={isEditingAssay}
                 >
+                    {showFullContext && <Typography>{experimentInfo.experiment.title} - Week {assay.week}, {conditionName}, {assayTypeName}</Typography>}
                     {onlyEditResult ? null : (
                         <>
                             <FormControl fullWidth>
