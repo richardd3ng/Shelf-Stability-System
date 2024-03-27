@@ -8,7 +8,7 @@ import React, { useContext, useState } from "react";
 import { Assay, AssayResult } from "@prisma/client";
 import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 import { useMutationToDeleteAssay } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
-import AssayEditorModal from "../modifications/editorModals/assayEditorModal";
+import AssayEditorModal from "../assays/assayEditorModal";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";

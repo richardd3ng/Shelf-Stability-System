@@ -14,7 +14,7 @@ import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
 import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 import { Assay, AssayResult } from "@prisma/client";
-import AssayEditorModal from "@/components/experiment-detail/modifications/editorModals/assayEditorModal";
+import AssayEditorModal from "@/components/experiment-detail/assays/assayEditorModal";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { useRouter } from "next/router";
 
@@ -85,8 +85,12 @@ export default function AssayAgenda() {
     const [ownedAssaysOnly, setOwnedAssaysOnly] = useState<boolean>(true);
 
     const [isEditingAnAssay, setIsEditingAnAssay] = useState<boolean>(false);
-    const [assayResultBeingEdited, setAssayResultBeingEdited] = useState<AssayResult | undefined>(undefined);
-    const [assayBeingEdited, setAssayBeingEdited] = useState<Assay | undefined>(undefined);
+    const [assayResultBeingEdited, setAssayResultBeingEdited] = useState<
+        AssayResult | undefined
+    >(undefined);
+    const [assayBeingEdited, setAssayBeingEdited] = useState<Assay | undefined>(
+        undefined
+    );
 
     const [rows, setRows] = useState<AssayAgendaInfo[]>([]);
 
@@ -124,7 +128,7 @@ export default function AssayAgenda() {
     const router = useRouter();
 
     function onCellClick(params: any) {
-        if (params.field === 'actions') return;
+        if (params.field === "actions") return;
         router.push(`/experiments/${params.row.experimentId}`);
     }
 
@@ -133,7 +137,7 @@ export default function AssayAgenda() {
             <AssayEditingContext.Provider
                 value={{
                     assay: assayBeingEdited,
-                    setAssay: setAssayBeingEdited, 
+                    setAssay: setAssayBeingEdited,
                     isEditing: isEditingAnAssay,
                     setIsEditing: setIsEditingAnAssay,
                 }}
@@ -154,7 +158,11 @@ export default function AssayAgenda() {
                         }}
                     >
                         <Stack spacing={2}>
-                            <Box display="flex" flexDirection="row" sx={{ px: 2 }}>
+                            <Box
+                                display="flex"
+                                flexDirection="row"
+                                sx={{ px: 2 }}
+                            >
                                 <Stack direction="row" spacing={2}>
                                     <MyDatePicker
                                         value={fromDate}
@@ -186,7 +194,9 @@ export default function AssayAgenda() {
                                             <Checkbox
                                                 checked={includeRecordedAssays}
                                                 onChange={(_, val) =>
-                                                    setIncludeRecordedAssays(val)
+                                                    setIncludeRecordedAssays(
+                                                        val
+                                                    )
                                                 }
                                             />
                                         }
@@ -222,10 +232,7 @@ export default function AssayAgenda() {
                                 onCellClick={onCellClick}
                                 getRowClassName={(_) => "agenda-row-clickable"}
                             />
-                            <AssayEditorModal
-                                onlyEditResult
-                                onClose={reload}
-                            />
+                            <AssayEditorModal onlyEditResult onClose={reload} />
                         </Stack>
                     </AgendaContext.Provider>
                 </AssayResultEditingContext.Provider>

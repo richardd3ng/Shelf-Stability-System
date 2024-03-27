@@ -5,7 +5,7 @@ import {
 } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Box, Stack, Typography } from "@mui/material";
-import ExperimentEditorModal from "../modifications/editorModals/experimentEditorModal";
+import ExperimentEditorModal from "./experimentEditorModal";
 import ExperimentEditingContext from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import DownloadExcelIconButton from "./downloadExcelIconButton";

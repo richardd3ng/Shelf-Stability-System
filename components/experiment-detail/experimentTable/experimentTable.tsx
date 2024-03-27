@@ -21,14 +21,14 @@ import {
 } from "@mui/material";
 import Table from "@/components/shared/table";
 import AddIcon from "@mui/icons-material/Add";
-import { NewAssayModal } from "../modifications/newEntityModals/newAssayModal";
-import { AddWeekModal } from "../addWeekModal";
+import { NewAssayModal } from "../assays/newAssayModal";
+import { AddWeekModal } from "./addWeekModal";
 import AssayChip from "./assayChip";
-import { NewConditionModal } from "../modifications/newEntityModals/newConditionModal";
+import { NewConditionModal } from "../conditions/newConditionModal";
 import { useMutationToDeleteCondition } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 import StarIcon from "@mui/icons-material/Star";
 import Edit from "@mui/icons-material/Edit";
-import ConditionEditorModal from "../modifications/editorModals/conditionEditorModal";
+import ConditionEditorModal from "../conditions/conditionEditorModal";
 import ConditionEditingContext from "@/lib/context/experimentDetailPage/conditionEditingContext";
 import { INVALID_CONDITION_ID } from "@/lib/api/apiHelpers";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
