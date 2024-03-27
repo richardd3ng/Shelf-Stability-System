@@ -34,11 +34,11 @@ export default function DukeProvider(clientId?: string, clientSecret?: string): 
         },
         async profile(profile) {
             var namespacedUsername = profile.dukeNetID + "@duke.edu";
-            await createOrUpdateUser(namespacedUsername, profile.name, profile.email, true);
+            const { id } = await createOrUpdateUser(namespacedUsername, profile.name, profile.email, true);
             
             return {
-                id: namespacedUsername,
-                name: profile.name,
+                id: id.toString(),
+                name: namespacedUsername,
                 email: profile.email,
                 image: null
             }

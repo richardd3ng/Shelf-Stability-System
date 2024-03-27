@@ -83,6 +83,10 @@ export type AssayAgendaInfo = {
     title: string;
     experimentId: number;
     owner: string;
+    ownerDisplayName: string;
+    technician: string | null;
+    technicianDisplayName: string | null;
+    technicianTypes: string[] | null;
     condition: string;
     week: number;
     type: string;
