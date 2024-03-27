@@ -9,6 +9,8 @@ import {
     RadioGroup,
     Stack,
     TextField,
+    Tooltip,
+    Typography,
 } from "@mui/material";
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import React, { useContext, useEffect, useState } from "react";
@@ -78,7 +80,6 @@ const ExperimentList: React.FC = () => {
         null
     );
     const { user } = useContext(CurrentUserContext);
-    const username = user?.username;
     const isAdmin: boolean = user?.isAdmin ?? false;
 
     const reloadExperimentData = async (
@@ -128,6 +129,29 @@ const ExperimentList: React.FC = () => {
             headerName: "Title",
             type: "string",
             flex: 4,
+            renderCell: (params) => {
+                const title = params.row.title;
+                const isTechnician = params.row.technicianIds.includes(
+                    user?.id
+                );
+                return isTechnician ? (
+                    <Tooltip
+                        title={
+                            <Typography fontSize={12}>
+                                You are listed as a technician for this
+                                experiment.
+                            </Typography>
+                        }
+                        className="hover-underline"
+                    >
+                        <b>{title}</b>
+                    </Tooltip>
+                ) : params.row.ownerId == user?.id ? (
+                    <b>{title}</b>
+                ) : (
+                    <span>{title}</span>
+                );
+            },
         },
         {
             field: "ownerDisplayName",
@@ -136,7 +160,7 @@ const ExperimentList: React.FC = () => {
             flex: 2,
             renderCell: (params) => {
                 const name = `${params.row.ownerDisplayName} (${params.row.owner})`;
-                return params.row.owner === username ? <b>{name}</b> : name;
+                return params.row.ownerId === user?.id ? <b>{name}</b> : name;
             },
         },
         {

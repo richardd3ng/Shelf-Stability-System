@@ -131,9 +131,19 @@ export default async function searchExperimentsAPI(
                     skip: page * pageSize,
                 })
                 .then<ExperimentTableInfo[]>((experiments) =>
-                    experiments.map((experiment) =>
-                        dateFieldsToLocalDate(experiment, ["startDate"])
-                    )
+                    experiments.map((experiment) => {
+                        const technicianIds: number[] = experiment.technicianIds
+                            .split(",")
+                            .map(Number);
+                        const experimentWithLocalDate = dateFieldsToLocalDate(
+                            experiment,
+                            ["startDate"]
+                        );
+                        return {
+                            ...experimentWithLocalDate,
+                            technicianIds,
+                        };
+                    })
                 ),
             db.experimentWeekView.count({
                 where: whereCondition,
