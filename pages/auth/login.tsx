@@ -17,7 +17,7 @@ export default function LoginPage() {
     const router = useRouter();
     const { showAlert } = useAlert();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: any) => {
         e.preventDefault();
         showLoading("Logging in...");
         signIn("credentials", { username, password, redirect: false })
@@ -28,7 +28,7 @@ export default function LoginPage() {
                     router.push("/experiment-list");
                 }
             })
-            .catch((_reason) => { })
+            .catch((_reason) => {})
             .finally(() => {
                 hideLoading();
             });
@@ -36,7 +36,7 @@ export default function LoginPage() {
 
     const handleOAuth = async () => {
         showLoading("Logging in...");
-        await signIn("duke")
+        await signIn("duke");
     };
 
     return (
@@ -75,7 +75,6 @@ export default function LoginPage() {
                             variant="contained"
                             color="primary"
                             onClick={handleOAuth}
-
                             sx={{ textTransform: "none" }}
                         >
                             Sign in with Duke
@@ -98,17 +97,21 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
                 },
             };
         } else {
-            const session = await getServerSession(context.req, context.res, authOptions)
+            const session = await getServerSession(
+                context.req,
+                context.res,
+                authOptions
+            );
 
             // Signed in, so redirect to the experiment list page
             if (session) {
-                return { redirect: { destination: "/experiment-list" } }
+                return { redirect: { destination: "/experiment-list" } };
             }
 
             return { props: {} };
         }
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return {
             redirect: {
                 destination: "/auth/setPasswordOnSetup",
