@@ -3,13 +3,15 @@ import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentI
 import { Typography, Container, Button } from "@mui/material";
 import React from "react";
 
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import Table from "@/components/shared/table";
-import { useMutationToCreateAssayType } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
+import { useAllUsers } from "@/lib/hooks/useAllUsers";
+import { useMutationToCreateCustomAssayType } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import { NameCell } from "./nameCell";
 import { UnitsCell } from "./unitsCell";
 import { TechnicianCell } from "./technicianCell";
 import { DeleteAssayTypeIcon } from "./deleteAssayTypeIcon";
+import { AssayTypesTableFooter } from "./tableFooter";
 
 const colDefs: GridColDef[] = [
     {
@@ -50,34 +52,17 @@ const colDefs: GridColDef[] = [
 
 export const AssayTypes: React.FC = () => {
     const experimentId = useExperimentId();
-    const { data: experimentInfo } = useExperimentInfo(experimentId);
-    const { mutate: addRow } = useMutationToCreateAssayType();
+    const {data : experimentInfo} = useExperimentInfo(experimentId);
 
     if (!experimentInfo) {
         return null;
     }
 
+    console.log("rendering assay types");
     return (
-        <Container
-            style={{ backgroundColor: "white", marginTop: 8, marginBottom: 8 }}
-        >
-            <Typography variant="h6" style={{ marginBottom: 8, marginTop: 8 }}>
-                Assay Types
-            </Typography>
-            <Table
-                columns={colDefs}
-                rows={experimentInfo.assayTypes}
-                footer={() => (
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => addRow(experimentId)}
-                        sx={{ textTransform: "none" }}
-                    >
-                        + Type
-                    </Button>
-                )}
-            />
+        <Container style={{backgroundColor : "white", marginTop : 8, marginBottom : 8}}>
+            <Typography variant="h6" style={{marginBottom : 8, marginTop : 8}}>Assay Types</Typography>
+            <Table columns={colDefs} rows={experimentInfo.assayTypes} footer={AssayTypesTableFooter}/>
         </Container>
     );
 };

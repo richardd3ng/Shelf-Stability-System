@@ -3,7 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
     ExperimentInfo,
     ExperimentWithLocalDate,
-    AssayTypeInfo
+    AssayTypeInfo,
+    AssayWithResult
 } from "@/lib/controllers/types";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
@@ -27,7 +28,7 @@ export default async function getExperimentInfoAPI(
         const [experiment, conditions, assays, assayTypes]: [
             ExperimentWithLocalDate | null,
             Condition[],
-            Assay[],
+            AssayWithResult[],
             AssayTypeInfo[]
         ] = await Promise.all([
             db.experiment
@@ -45,6 +46,9 @@ export default async function getExperimentInfoAPI(
             }),
             db.assay.findMany({
                 where: { experimentId: id },
+                include : {
+                    result : true
+                }
             }),
             db.assayTypeForExperiment.findMany({
                 where : { experimentId : id},
@@ -65,6 +69,12 @@ export default async function getExperimentInfoAPI(
             return;
         }
         const experimentAssayResults: AssayResult[] = [];
+        assays.forEach((assay) => {
+            if (assay.result){
+                experimentAssayResults.push(assay.result);
+            }
+        })
+        /*
         await Promise.all(
             assays.map(async (assay: Assay) => {
                 const assayResults: AssayResult[] =
@@ -73,13 +83,13 @@ export default async function getExperimentInfoAPI(
                     });
                 experimentAssayResults.push(...assayResults);
             })
-        );
+        );*/
         res.status(200).json({
             experiment: JSONToExperiment(
                 JSON.parse(JSON.stringify(experiment))
             ),
             conditions: conditions,
-            assays: assays,
+            assays: assays.map((assay) => ({...assay, result : undefined})),
             assayResults: experimentAssayResults,
             assayTypes : assayTypes
         });

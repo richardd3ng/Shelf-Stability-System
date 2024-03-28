@@ -113,6 +113,10 @@ export type AssayUpdateArgs = {
     week?: number;
 };
 
+export type AssayWithResult = Assay & {
+    result : AssayResult | null;
+}
+
 /* ----- Condition ----- */
 
 export type ConditionCreationArgs = Omit<Condition, "id">;
@@ -140,10 +144,15 @@ export type UpdateAssayTypeArgs = {
 
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 
+export type StandardAssayTypeForExperimentCreationsArgs = {
+    experimentId : number;
+    assayTypeId : number;
+}
+
 export type UpdateTechnicianArgs = {
-    assayTypeForExperimentId: number;
-    technicianId: number;
-};
+    assayTypeForExperimentId : number;
+    technicianId : number | null;
+}
 
 /* ----- Assay Result ----- */
 
