@@ -120,6 +120,7 @@ export const fetchExperimentOwner = async (
     if (response.ok) {
         return {
             username: resJson.username,
+            displayName: resJson.displayName,
         };
     }
     throw new ApiError(response.status, resJson.message);

@@ -108,7 +108,7 @@ export const ExperimentHeader = () => {
                         sx={{ marginBottom: 1 }}
                     >
                         {`Started ${experimentInfo.experiment.startDate.toString()} by 
-                    ${owner.username}`}
+                    ${owner.displayName} (${owner.username})`}
                     </Typography>
                 )}
             </Box>
