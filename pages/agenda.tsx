@@ -66,7 +66,7 @@ export default function AssayAgenda() {
             field: "ownerDisplayName",
             headerName: "Owner",
             type: "string",
-            width: 250,
+            flex: 1,
             renderCell: (params) => {
                 const name = `${params.row.ownerDisplayName} (${params.row.owner})`;
                 return params.row.owner === username ? <b>{name}</b> : name;
@@ -76,8 +76,7 @@ export default function AssayAgenda() {
             field: "technicianDisplayName",
             headerName: "Technician",
             type: "string",
-            width: 250,
-            // TODO underline hover to show all assay types for this technician
+            flex: 1,
             renderCell: (params) => {
                 if (params.row.technician === null) return "";
                 const name = `${params.row.technicianDisplayName} (${params.row.technician})`;
@@ -121,7 +120,7 @@ export default function AssayAgenda() {
         {
             field: "actions",
             headerName: "Actions",
-            width: 150,
+            width: 100,
             align: "center",
             headerAlign: "center",
             disableColumnMenu: true,
