@@ -455,7 +455,7 @@ const ExperimentList: React.FC = () => {
                         }
                     }}
                     {...paginationProps}
-                    rowClassName="experiment-row-clickable"
+                    getRowClassName={(params) => "experiment-row-clickable " + (params.row.isCanceled ? "experiment-row-canceled" : "")}
                 />
 
                 <ExperimentCreationDialog

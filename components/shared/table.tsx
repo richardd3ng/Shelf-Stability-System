@@ -14,7 +14,6 @@ interface TableProps {
     checkboxSelection?: boolean;
     footer?: React.JSXElementConstructor<any>;
     hideFooterContainer?: boolean;
-    rowClassName?: string;
     onDeleteRows?: (rows: GridRowSelectionModel) => void;
     handleCellClick?: (params: any) => void;
 }
@@ -99,11 +98,6 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 sx={{
                     "@media print": { breakInside: "avoid" },
                 }}
-                getRowClassName={
-                    props.rowClassName
-                        ? (_) => props.rowClassName ?? ""
-                        : undefined
-                }
             />
         </Box>
     );
