@@ -182,8 +182,8 @@ export function UserForm(props: UserFormProps) {
                             required={props.newUser || password.length > 0}
                         />
                     </>}
-                <Button type="submit" variant="contained" color="primary">{props.newUser ? "Submit" : "Update"}</Button>
-                {(majorEditsAllowed && !isSSO && !props.newUser) && <Button variant="contained" color="error" onClick={() => setDeleteDialogOpen(true)}>Delete</Button>}
+                <Button type="submit" variant="contained" color="primary" sx={{textTransform: "none"}}>{props.newUser ? "Submit" : "Update"}</Button>
+                {(majorEditsAllowed && !isSSO && !props.newUser) && <Button variant="contained" color="error" sx={{textTransform: "none"}} onClick={() => setDeleteDialogOpen(true)}>Delete</Button>}
             </Stack>
             <DeleteUserDialog
                 open={deleteDialogOpen}
