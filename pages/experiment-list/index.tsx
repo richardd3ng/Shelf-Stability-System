@@ -59,10 +59,15 @@ const getQueryParamsFromURL = (params: URLSearchParams | null): QueryParams => {
     };
 };
 
-function queryParamEquals(oldParams: QueryParams, newParams: QueryParams): boolean {
-    return oldParams.search === newParams.search
-        && oldParams.user === newParams.user
-        && oldParams.status === newParams.status;
+function queryParamEquals(
+    oldParams: QueryParams,
+    newParams: QueryParams
+): boolean {
+    return (
+        oldParams.search === newParams.search &&
+        oldParams.user === newParams.user &&
+        oldParams.status === newParams.status
+    );
 }
 
 const ExperimentList: React.FC = () => {
@@ -81,12 +86,12 @@ const ExperimentList: React.FC = () => {
         user: "",
         status: "all",
     });
-    const [userFilterList, setUserFilterList] = useState<{
-        label: string,
-        value: string
-    }[]>(
-        []
-    );
+    const [userFilterList, setUserFilterList] = useState<
+        {
+            label: string;
+            value: string;
+        }[]
+    >([]);
     const { user } = useContext(CurrentUserContext);
     const isAdmin: boolean = user?.isAdmin ?? false;
 
@@ -95,7 +100,9 @@ const ExperimentList: React.FC = () => {
     ): Promise<ExperimentTable> => {
         showLoading("Loading experiments...");
         const fetchedData = await getExperiments(paging);
-        const newParams = getQueryParamsFromURL(new URLSearchParams(router.asPath));
+        const newParams = getQueryParamsFromURL(
+            new URLSearchParams(router.asPath)
+        );
         if (!queryParamEquals(queryParams, newParams)) {
             return { rows: [], rowCount: 0 };
         }
@@ -121,12 +128,12 @@ const ExperimentList: React.FC = () => {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            setUserFilterList((await fetchOwnersAndTechnicians()).map(
-                (user: UserInfo) => ({
+            setUserFilterList(
+                (await fetchOwnersAndTechnicians()).map((user: UserInfo) => ({
                     label: `${user.displayName} (${user.username})`,
                     value: user.username,
-                })
-            ));
+                }))
+            );
         };
         fetchUserData();
     }, []);
@@ -336,16 +343,21 @@ const ExperimentList: React.FC = () => {
                             }}
                         />
                     </Box>
-                    <Box sx={{ flex: 1, paddingLeft: 10 }}>
+                    <Box sx={{ flex: 2, paddingLeft: 5 }}>
                         <Autocomplete
                             disablePortal
                             id="user-filter-selection"
                             size="small"
                             options={[
-                                ...userFilterList
+                                { label: "(None)", value: "" },
+                                ...userFilterList,
                             ]}
                             value={{
-                                label: queryParams.user,
+                                label:
+                                    userFilterList.find(
+                                        (user) =>
+                                            user.value === queryParams.user
+                                    )?.label ?? "",
                                 value: queryParams.user,
                             }}
                             isOptionEqualToValue={(option, value) =>
@@ -372,7 +384,7 @@ const ExperimentList: React.FC = () => {
                             }}
                         />
                     </Box>
-                    <Box sx={{ paddingX: 10 }}>
+                    <Box sx={{ paddingX: 5 }}>
                         <FormControl component="fieldset">
                             <FormLabel
                                 component="legend"
