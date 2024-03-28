@@ -53,6 +53,18 @@ const updateTechnician = async (assayTypeForExperimentId : number, req : NextApi
 }
 
 const deleteAssayTypeForExperiment = async (assayTypeForExperimentId : number, req : NextApiRequest, res : NextApiResponse) => {
+    const typeHasAssays = await db.assayTypeForExperiment.findFirst({
+        include : {
+            assays : true
+        },
+        where : {
+            id : assayTypeForExperimentId
+        }
+    });
+    if (typeHasAssays && typeHasAssays.assays.length > 0){
+        res.status(400).json(getApiError(400, "Cannot delete - this type has assays in the schedule"));
+        return;
+    }
     const assayTypeForExperiment = await db.assayTypeForExperiment.delete({
         where : {
             id : assayTypeForExperimentId

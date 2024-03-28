@@ -8,6 +8,7 @@ import { SaveOrCancelOptions } from "./saveOrCancelOptions";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { AssayTypeInfo } from "@/lib/controllers/types";
+import { checkIfThereAreRecordedResultsForAssayType } from "@/lib/controllers/assayTypeController";
 
 interface EditableTableCellProps {
     initialText : string | null;
@@ -27,28 +28,29 @@ export const EditableTableCell : React.FC<EditableTableCellProps> = (props : Edi
         setCellValue(props.initialText);
     }, [props.initialText]);
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    let canEdit = props.assayType && props.assayType.assayType.isCustom && isAdmin && experimentInfo && !experimentInfo.experiment.isCanceled;
+    let canEdit = props.assayType && props.assayType.assayType.isCustom && isAdmin && experimentInfo && !experimentInfo.experiment.isCanceled && !checkIfThereAreRecordedResultsForAssayType(props.assayType.id, experimentInfo);
 
     
-
+    let submitData = () => {
+        if (cellValue){
+            props.saveText(cellValue);
+        }
+        
+        setIsEditing(false);
+    }
 
     if (isEditing){
         return (
             <Stack direction="row">
-                <TextField value={cellValue} onChange={(e) => setCellValue(e.target.value)}>
-    
-                </TextField>
-                <SaveOrCancelOptions onSave={() => {
-                        if (cellValue){
-                            props.saveText(cellValue);
-                        }
-                        
-                        setIsEditing(false);
-                    }} onCancel={() => {
-                        setCellValue(props.initialText);
-                        setIsEditing(false);
-                    }}
-                />
+                <form onSubmit={submitData}>
+                    <TextField value={cellValue} onChange={(e) => setCellValue(e.target.value)} type="text"/>
+
+                    <SaveOrCancelOptions onSave={submitData} onCancel={() => {
+                            setCellValue(props.initialText);
+                            setIsEditing(false);
+                        }}
+                    />
+                </form>
             </Stack>
             
         )

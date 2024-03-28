@@ -16,7 +16,7 @@ export const createAssayTypes = async (assayTypes : AssayTypeCreationArgs[]) : P
     
 }
 
-interface BasicTypeInfo {
+export interface BasicTypeInfo {
     name : string;
     units : string;
     abbrev : string;

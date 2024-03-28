@@ -2,6 +2,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import { AssayTypeInfo, ExperimentInfo, StandardAssayTypeForExperimentCreationsArgs, UpdateAssayTypeArgs, UpdateTechnicianArgs } from "./types";
 import { AssayType, AssayTypeForExperiment } from "@prisma/client";
 
+
 export const assayTypeIdToName = (
     assayTypeForExperimentId: number,
     assayTypesForExperiment: AssayTypeInfo[]
@@ -100,6 +101,8 @@ export const getAllStandardAssayTypesThroughAPI = async () : Promise<AssayType[]
     }
     throw new ApiError(response.status, resJson.message);
 }
+
+
 
 
 const getUpdateAssayTypeBody = (updateArgs : UpdateAssayTypeArgs) => {

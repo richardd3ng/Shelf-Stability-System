@@ -48,7 +48,7 @@ export const UserSelector : React.FC<UserSelectorProps> = (props : UserSelectorP
                         <MenuItem key={user.id} value={user.id}>
                             {user.id >= 0
                             ?
-                            user.displayName
+                            user.displayName + " (" + user.username + ")"
                             :
                             <Typography color="red">{user.displayName}</Typography>
                             }
@@ -58,7 +58,7 @@ export const UserSelector : React.FC<UserSelectorProps> = (props : UserSelectorP
                     : 
                     users.map((user) => (
                         <MenuItem key={user.id} value={user.id}>
-                            {user.displayName}
+                            {user.displayName + " (" + user.username + ")"}
                         </MenuItem>
                     ))
                 }

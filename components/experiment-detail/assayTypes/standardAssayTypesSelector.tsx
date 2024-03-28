@@ -18,8 +18,7 @@ export const StandardAssayTypesSelector : React.FC<StandardAssayTypesSelector> =
     const [eligibleStandardTypes, setEligibleStandardTypes] = useState<AssayType[]>([]);
     useEffect(() => {
         if (standardAssayTypes && experimentInfo){
-            console.log(standardAssayTypes);
-            let missingTypes = standardAssayTypes.filter((standardType) => !experimentInfo.assayTypes.map((t) => t.id).includes(standardType.id));
+            let missingTypes = [...standardAssayTypes.filter((standardType : AssayType) => !experimentInfo.assayTypes.map((t) => t.assayType.id).includes(standardType.id))];
             setEligibleStandardTypes([...missingTypes]);
         }
         
@@ -37,7 +36,9 @@ export const StandardAssayTypesSelector : React.FC<StandardAssayTypesSelector> =
                 id="Assay Type"
                 
                 label="Assay Type"
-                onChange={(e) => props.setAssayTypeId(Number(e.target.value))}
+                onChange={(e) => {
+                    props.setAssayTypeId(Number(e.target.value))
+                }}
             >
 
                 {eligibleStandardTypes.map((type: AssayType) => (

@@ -12,7 +12,7 @@ interface SaveOrCancelOptionsProps {
 
 export const SaveOrCancelOptions : React.FC<SaveOrCancelOptionsProps> = (props : SaveOrCancelOptionsProps) => {
     return (
-        <Stack direction="row">
+        <Stack direction="column" >
             <IconButton onClick={() => props.onSave()}>
                 <Check/>
             </IconButton>

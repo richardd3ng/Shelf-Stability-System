@@ -15,7 +15,7 @@ const DownloadExcelIconButton: React.FC = () => {
     // TODO this probably should not be required - just used for technician names
     const { data: users } = useAllUsers();
 
-    return experiment && owner ? (
+    return experiment && owner && users ? (
         <IconButtonWithTooltip
             text="Export Data to Excel"
             icon={DownloadIcon}
