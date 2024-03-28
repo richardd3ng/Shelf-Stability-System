@@ -65,13 +65,14 @@ export function UserForm(props: UserFormProps) {
     }, [props.newUser, props.userId]);
 
     const passwordMismatch = password !== confirmPassword;
-    const usernameInvalid = !username.match(/^[a-z0-9]*$/i);
+    const usernameInvalid = props.newUser && !username.match(/^[a-z0-9]*$/i);
     const usernameErrorMessage = usernameInvalid ? "Username must be alphanumeric" : "";
 
     async function submitForm(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         // Blank passwords should be prevented by the "required" field, but it doesn't hurt to check
+        console.log(usernameInvalid)
         if (passwordMismatch || usernameInvalid || (props.newUser && password === "")) return;
 
         var result: Omit<User, 'password'> | ApiError | undefined = undefined;
