@@ -101,11 +101,12 @@ const ExperimentList: React.FC = () => {
         showLoading("Loading experiments...");
         const fetchedData = await getExperiments(paging);
         const newParams = getQueryParamsFromURL(
-            new URLSearchParams(router.asPath)
+            new URLSearchParams(router.asPath.split('?')[1])
         );
         if (!queryParamEquals(queryParams, newParams)) {
             return { rows: [], rowCount: 0 };
         }
+        
         setRows(fetchedData.rows);
         hideLoading();
         return fetchedData;
