@@ -28,11 +28,12 @@ export const UnitsCell : React.FC<AssayTypeInfo> = (props : AssayTypeInfo) => {
     const {mutate : updateAssayType} = useMutationToUpdateAssayType();
     return (
         <Typography >
-            <EditableTableCell onlyAdminCanEdit={true} nullDescription="No Units Yet" initialText={props.assayType.units ? props.assayType.units : ""} saveText={(newUnits : string) => {
+            <EditableTableCell onlyAdminCanEdit={true} nullDescription="No Units Yet" assayType={props} initialText={props.assayType.units ? props.assayType.units : ""} saveText={(newUnits : string) => {
                 updateAssayType({
                     assayTypeId : props.assayType.id,
-                    newName : null,
-                    newUnits : newUnits
+                    name : null,
+                    units : newUnits,
+                    description : null,
                 })
             }}/>
         </Typography>

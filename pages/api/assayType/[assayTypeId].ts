@@ -31,7 +31,7 @@ const updateAssayType = async (
     req: NextApiRequest,
     res: NextApiResponse
 ) => {
-    const { name, units } = req.body;
+    const { name, units, description } = req.body;
 
     var updatedAssayType: AssayType;
     if (name && units) {
@@ -62,6 +62,16 @@ const updateAssayType = async (
             },
             data: {
                 units: units,
+            },
+        });
+        res.status(200).json(updatedAssayType);
+    } else if (description) {
+        updatedAssayType = await db.assayType.update({
+            where: {
+                id: assayTypeId,
+            },
+            data: {
+                description : description
             },
         });
         res.status(200).json(updatedAssayType);
