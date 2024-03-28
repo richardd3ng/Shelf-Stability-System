@@ -3,7 +3,7 @@
 ## Developer Guide
 This app uses [Next.js](https://nextjs.org/) to have both frontend and backend code contained within a single codebase with a RESTful API to connect them. We use [Prisma](https://www.prisma.io/) as an ORM to communicate with our database in a type-safe way.
 
-We use a postgres database with the tables `Assay`, `AssayResult`, `Condition`, `Experiment`, and `User`. Experiments have some number of Conditions, as expressed by an experiment id in each condition. Assays have ids for an Experiment, Condition, and AssayType that they belong to. The AssayType id can be looked up in the `data/assayTypes.json` file, rather than the database. There is no limit on how many Assays may link to a given Experiment or AssayType. The exact details of our database schema are in the `prisma/schema.prisma` file.
+We use a postgres database with the tables `Assay`, `AssayResult`, `AssayType`, `AssayTypeForExperiment`, `Condition`, `Experiment`, and `User`. Experiments have some number of Conditions, as expressed by an experiment id in each condition, and some number of AssayTypeForExperiments. AssayTypeForExperiment serves as a table mapping assay types for a specific experiment to the associated technicians, along with any future experiment specific data. Assays have ids for an Experiment, Condition, and AssayType that they belong to. There is no limit on how many Assays may link to a given Experiment or AssayTypeForExperiment. The exact details of our database schema are in the `prisma/schema.prisma` file.
 
 For development:
 - Install Node.js v21.6.1. We recommend using [nvm](https://github.com/nvm-sh/nvm) for this
@@ -13,6 +13,8 @@ For development:
 DATABASE_URL="<database connection string>"
 NEXTAUTH_SECRET=<secret>
 NEXTAUTH_URL=<public address of the webserver>
+DUKE_CLIENT_ID=<SSO client ID>
+DUKE_CLIENT_SECRET=<SSO client secret>
 SENDGRID_API_KEY=<secret>
 SENDER_EMAIL=<email address of sender for email service>
 ```
