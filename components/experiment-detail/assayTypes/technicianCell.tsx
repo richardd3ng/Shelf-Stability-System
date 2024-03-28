@@ -32,7 +32,7 @@ export const TechnicianCell : React.FC<AssayTypeInfo> = (props : AssayTypeInfo) 
         let technicianName : string | null = null;
         const correspondingTechnician = users.find((user : UserInfo) => user.id === props.technicianId);
         if (correspondingTechnician){
-            technicianName = correspondingTechnician.displayName;
+            technicianName = correspondingTechnician.displayName + " (" + correspondingTechnician.username + ")";
         }
         if (isAdmin && experimentInfo && !experimentInfo.experiment.isCanceled){
             return (

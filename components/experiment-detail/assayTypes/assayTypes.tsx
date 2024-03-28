@@ -76,8 +76,6 @@ export const AssayTypes: React.FC = () => {
         return null;
     }
 
-
-    console.log("rendering assay types");
     return (
         <Container style={{backgroundColor : "white", marginTop : 8, marginBottom : 8}}>
             <Typography variant="h6" style={{marginBottom : 8, marginTop : 8}}>Assay Types</Typography>

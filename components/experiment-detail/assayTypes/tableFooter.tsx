@@ -20,7 +20,6 @@ export const AssayTypesTableFooter : React.FC = () => {
     //const addRow = (x : number) => {};
     const queryClient = useQueryClient();
 
-    console.log("rendering table footer");
     return (
         <Stack direction="row" gap={2}>
             
@@ -29,7 +28,7 @@ export const AssayTypesTableFooter : React.FC = () => {
                 queryClient.invalidateQueries({queryKey : getQueryKeyForUseExperimentInfo(experimentId)});
             }}>+ Add Custom Type</Button>
             {
-                //<CreateStandardAssayTypeButton/>
+                <CreateStandardAssayTypeButton/>
             }
             
             

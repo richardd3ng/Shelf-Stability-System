@@ -10,21 +10,22 @@ import { StandardAssayTypesSelector } from "./standardAssayTypesSelector";
 
 export const CreateStandardAssayTypeButton : React.FC = () => {
     const experimentId = useExperimentId();
-    //const {mutate : addRow} = useMutationToCreateStandardAssayType();
-    const addRow = (x : any) => {};
+    
+    const {mutate : addRow} = useMutationToCreateStandardAssayType();
+    
     const [isChoosing, setIsChoosing] = useState<boolean>(false);
-    const [chosenAssayTypeId, setChosenAssayTypeId] = useState<number>(-1);
+    const [chosenAssayTypeId, setChosenAssayTypeId] = useState<number>(1);
     
 
-    if (true){
+    if (isChoosing){
         return (
-            <Stack direction="row">
+            <Stack direction="row" gap={1} style={{border : "1px solid black"}}>
                 
 
-                <Button variant="contained" color="primary" style={{textTransform : "none"}} onClick={() => setIsChoosing(true)}>+ Add Standard Type</Button>
-                {
-                    <StandardAssayTypesSelector assayTypeId={chosenAssayTypeId} setAssayTypeId={(id : number) => setChosenAssayTypeId(id)}/>
-                }        
+                <Typography>Add Type</Typography>
+                
+                <StandardAssayTypesSelector assayTypeId={chosenAssayTypeId} setAssayTypeId={(id : number) => setChosenAssayTypeId(id)}/>
+                      
                 <SaveOrCancelOptions onSave={async () => {
                     if (chosenAssayTypeId >= 0){
                         await addRow({experimentId : experimentId, assayTypeId : chosenAssayTypeId});

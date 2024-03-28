@@ -1,6 +1,6 @@
 import { useAllUsers } from "@/lib/hooks/useAllUsers"
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import { UserInfo } from "@/lib/controllers/types";
+import { ExperimentInfo, UserInfo } from "@/lib/controllers/types";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useAllStandardAssayTypes } from "@/lib/hooks/useAllStandardAssayTypes";
@@ -10,20 +10,14 @@ import { AssayType } from "@prisma/client";
 interface StandardAssayTypesSelector {
     assayTypeId : number;
     setAssayTypeId : (n : number) => void;
+
 }
 export const StandardAssayTypesSelector : React.FC<StandardAssayTypesSelector> = (props : StandardAssayTypesSelector) => {
-    const experimentId = useExperimentId();
-    const {data : experimentInfo} = useExperimentInfo(experimentId);
+
+    //const {data : experimentInfo} = useExperimentInfo(experimentId);
     const {data : standardAssayTypes} = useAllStandardAssayTypes();
-    const [eligibleStandardTypes, setEligibleStandardTypes] = useState<AssayType[]>([]);
-    useEffect(() => {
-        if (standardAssayTypes && experimentInfo){
-            let missingTypes = [...standardAssayTypes.filter((standardType : AssayType) => !experimentInfo.assayTypes.map((t) => t.assayType.id).includes(standardType.id))];
-            setEligibleStandardTypes([...missingTypes]);
-        }
-        
-    }, [experimentInfo, standardAssayTypes]);
-    if (!experimentInfo || !standardAssayTypes){
+
+    if (!standardAssayTypes){
         return null;
     }
     
@@ -34,14 +28,14 @@ export const StandardAssayTypesSelector : React.FC<StandardAssayTypesSelector> =
             </InputLabel>
             <Select
                 id="Assay Type"
-                
+                value={props.assayTypeId}
                 label="Assay Type"
                 onChange={(e) => {
                     props.setAssayTypeId(Number(e.target.value))
                 }}
             >
 
-                {eligibleStandardTypes.map((type: AssayType) => (
+                {standardAssayTypes.map((type: AssayType) => (
                     <MenuItem key={type.id} value={type.id}>
                         {type.name}
                     </MenuItem>
