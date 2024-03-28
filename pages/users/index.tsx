@@ -14,7 +14,7 @@ import { useLoading } from "@/lib/context/shared/loadingContext";
 
 const colDefs: GridColDef[] = [
     {
-        field: "is_admin",
+        field: "isAdmin",
         headerName: "Role",
         type: "boolean",
         sortable: false,
@@ -22,12 +22,37 @@ const colDefs: GridColDef[] = [
         renderCell: (params) => (params.value === true ? <><Image src="/crown.png" width={35} height={35} alt="Crown indicating an admin" /> Admin</> : ''),
     },
     {
+        field: "isSSO",
+        headerName: "Type",
+        type: "boolean",
+        sortable: false,
+        width: 100,
+        renderCell: (params) => (params.value === true ? 'SSO' : 'Local'),
+    },
+    {
         field: "username",
         headerName: "Username",
         type: "string",
         sortable: false,
+        resizable: true,
         flex: 1
     },
+    {
+        field: "displayName",
+        headerName: "Display Name",
+        type: "string",
+        sortable: false,
+        resizable: true,
+        flex: 1
+    },
+    {
+        field: "email",
+        headerName: "Email",
+        type: "string",
+        sortable: false,
+        resizable: true,
+        flex: 1
+    }
 ];
 
 export default function Users() {
@@ -76,7 +101,7 @@ export default function Users() {
                         rowHeight={43}
                         pageSizeOptions={[15, 30, 60, 100]}
                         getCellClassName={(params) =>
-                            params.row.is_admin
+                            params.row.isAdmin
                                 ? "user-cell-admin"
                                 : "user-cell-not-admin"
                         }

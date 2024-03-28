@@ -1,37 +1,189 @@
-import assayTypesJSON from "../../data/assayTypes.json";
 import { ApiError } from "next/dist/server/api-utils";
+import { AssayTypeInfo, ExperimentInfo, StandardAssayTypeForExperimentCreationsArgs, UpdateAssayTypeArgs, UpdateTechnicianArgs } from "./types";
+import { AssayType, AssayTypeForExperiment } from "@prisma/client";
 
-export const getDistinctAssayTypes = (): string[] => {
-    return assayTypesJSON.assay_types.map((assayType) => assayType.name);
+
+export const assayTypeIdToName = (
+    assayTypeForExperimentId: number,
+    assayTypesForExperiment: AssayTypeInfo[]
+): string => {
+    const correspondingType = getCorrespondingAssayType(
+        assayTypeForExperimentId,
+        assayTypesForExperiment
+    );
+    if (correspondingType) {
+        return correspondingType.assayType.name;
+    } else {
+        throw new ApiError(
+            400,
+            `Assay type with ID ${assayTypeForExperimentId} is not found`
+        );
+    }
 };
 
-export const assayTypeNameToId = (name: string): number => {
-    const assayType = assayTypesJSON.assay_types.find(
-        (assayType) => assayType.name === name
+export const getAssayTypeUnits = (
+    assayTypeForExperimentId: number,
+    assayTypesForExperiment: AssayTypeInfo[]
+): string => {
+    const correspondingType = getCorrespondingAssayType(
+        assayTypeForExperimentId,
+        assayTypesForExperiment
     );
-    if (assayType) {
-        return assayType.id;
+    if (correspondingType) {
+        if (correspondingType.assayType.units) {
+            return correspondingType.assayType.units;
+        } else {
+            return "";
+        }
     }
-    throw new ApiError(400, `Assay type ${name} is not recognized`);
+    throw new ApiError(
+        400,
+        `Assay type ${assayTypeForExperimentId} is not recognized`
+    );
 };
 
-export const assayTypeIdToName = (id: number): string => {
-    const assayType = assayTypesJSON.assay_types.find(
-        (assayType) => assayType.id === id
+export const getCorrespondingAssayType = (
+    assayTypeForExperimentId: number,
+    assayTypesForExperiment: AssayTypeInfo[]
+): AssayTypeInfo | undefined => {
+    return assayTypesForExperiment.find(
+        (type) => type.id === assayTypeForExperimentId
     );
-    if (assayType) {
-        return assayType.name;
-    }
-    throw new ApiError(400, `Assay type with ID ${id} is not found`);
 };
 
-export const getAssayTypeUnits = (identifier: string | number): string => {
-    const assayType = assayTypesJSON.assay_types.find(
-        (assayType) =>
-            assayType.name === identifier || assayType.id === identifier
-    );
-    if (assayType) {
-        return assayType.units;
+export const createNewCustomAssayTypeForExperimentThroughAPI = async (experimentId : number) => {
+    const endpoint = "/api/assayTypeForExperiment/createCustom";
+    const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({experimentId}),
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return {...resJson};
     }
-    throw new ApiError(400, `Assay type ${identifier} is not recognized`);
+    throw new ApiError(response.status, resJson.message);
+}
+
+export const createNewStandardAssayTypeForExperimentThroughAPI = async (creationArgs : StandardAssayTypeForExperimentCreationsArgs) => {
+    const endpoint = "/api/assayTypeForExperiment/createStandard";
+    const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            experimentId : creationArgs.experimentId,
+            assayTypeId : creationArgs.assayTypeId
+        }),
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return {...resJson};
+    }
+    throw new ApiError(response.status, resJson.message);
+}
+
+export const getAllStandardAssayTypesThroughAPI = async () : Promise<AssayType[]> => {
+    const endpoint = "/api/assayTypeForExperiment/getAllStandardAssayTypes";
+    const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return [...resJson];
+    }
+    throw new ApiError(response.status, resJson.message);
+}
+
+
+
+
+const getUpdateAssayTypeBody = (updateArgs : UpdateAssayTypeArgs) => {
+    if (updateArgs.name && updateArgs.units){
+        return {
+            name : updateArgs.name,
+            units : updateArgs.units
+        };
+    } else if (updateArgs.name){
+        return {
+            name : updateArgs.name
+        };
+    } else if (updateArgs.units){
+        return {
+            units : updateArgs.units
+        };
+    } else {
+        return {};
+    }
+}
+
+export const updateAssayTypeThroughAPI = async (updateArgs : UpdateAssayTypeArgs) : Promise<AssayType> => {
+    const endpoint = "/api/assayType/" + updateArgs.assayTypeId.toString();
+
+    const response = await fetch(endpoint, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateArgs),
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return {...resJson};
+    }
+    throw new ApiError(response.status, resJson.message);
+}
+
+export const updateTechnicianOfAssayTypeForExperimentThroughAPI = async (updateArgs : UpdateTechnicianArgs) : Promise<AssayTypeForExperiment> => {
+    const endpoint = "/api/assayTypeForExperiment/" + updateArgs.assayTypeForExperimentId.toString();
+
+    const response = await fetch(endpoint, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({technicianId : updateArgs.technicianId}),
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return {...resJson};
+    }
+    throw new ApiError(response.status, resJson.message);
+}
+
+export const deleteAssayTypeForExperimentThroughAPI = async (assayTypeForExperimentId : number) : Promise<AssayTypeForExperiment> => {
+    const endpoint = "/api/assayTypeForExperiment/" + assayTypeForExperimentId.toString();
+
+    const response = await fetch(endpoint, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return {...resJson};
+    }
+    throw new ApiError(response.status, resJson.message);
+}
+
+export const checkIfThereAreRecordedResultsForAssayType = (assayTypeForExperimentId : number, experimentInfo : ExperimentInfo) : boolean => {
+    let hasResults : boolean = false;
+    experimentInfo.assays.forEach((assay) => {
+        if (assay.assayTypeId === assayTypeForExperimentId){
+            experimentInfo.assayResults.forEach((result) => {
+                if (result.assayId === assay.id && (result.result || result.comment)){
+                    hasResults = true;
+                }
+            })
+        }
+    });
+    return hasResults;
 }

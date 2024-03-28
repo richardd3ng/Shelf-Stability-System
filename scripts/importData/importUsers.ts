@@ -1,13 +1,12 @@
 import { UserImportJSON, readUsersFileToJSON } from "./jsonParser";
-import {createUserInDB, getAllUsers} from "../../lib/api/dbOperations/userOperations";
-
+import {createUserInDB, getAllUsers} from "../dbOperations/userOperations";
 
 async function importJSONUsers(filePath : string) {
-    
+
     const jsonData: UserImportJSON[] = await readUsersFileToJSON(filePath);
     for (const user of jsonData) {
         console.log(user);
-        await createUserInDB(user.name, user.password, user.administrator_permission);
+        await createUserInDB(user);
     }
 
 }

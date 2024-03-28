@@ -37,9 +37,6 @@ interface ExperimentCreationDialogProps {
     onClose: () => void;
 }
 
-const MAX_TITLE_LENGTH = 50;
-const MAX_DESCRIPTION_LENGTH = 200;
-
 const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     props: ExperimentCreationDialogProps
 ) => {
@@ -68,22 +65,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             setOwnerId(user.id);
         }
     }, [user]);
-
-    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newTitle = e.target.value;
-        if (newTitle.length <= MAX_TITLE_LENGTH) {
-            setTitle(newTitle);
-        }
-    };
-
-    const handleDescriptionChange = (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const newDescription = e.target.value;
-        if (newDescription.length <= MAX_DESCRIPTION_LENGTH) {
-            setDescription(newDescription);
-        }
-    };
 
     const checkMissingDetails = (): string[] => {
         const missingDetails: string[] = [];
@@ -115,6 +96,9 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     };
 
     const handleAddStorageCondition = () => {
+        if (conditionName.trim() === "") {
+            return;
+        }
         if (storageConditions.includes(conditionName)) {
             showAlert("error", "Condition already exists.");
             return;
@@ -140,12 +124,12 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
                 storageConditions.map((condition: string, index: number) => ({
                     name: condition,
-                    control: index === 0,
+                    isControl: index === 0,
                 }));
             const experimentData: ExperimentCreationArgs = {
                 title: title,
                 description: description,
-                start_date: date!,
+                startDate: date!,
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
                 ownerId: ownerId,
@@ -195,11 +179,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         label="Title"
                         fullWidth
                         value={title}
-                        onChange={handleTitleChange}
-                        inputProps={{
-                            maxLength: MAX_TITLE_LENGTH,
-                        }}
-                        helperText={`${title.length}/${MAX_TITLE_LENGTH} characters`}
+                        onChange={(e) => setTitle(e.target.value)}
                         required
                     />
                     <TextField
@@ -210,11 +190,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         multiline
                         rows={4}
                         value={description}
-                        onChange={handleDescriptionChange}
-                        inputProps={{
-                            maxLength: MAX_DESCRIPTION_LENGTH,
-                        }}
-                        helperText={`${description.length}/${MAX_DESCRIPTION_LENGTH} characters`}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
                     <FormControl fullWidth>
                         <InputLabel id="Owner" required>
@@ -228,7 +204,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         >
                             {users.map((user: UserInfo) => (
                                 <MenuItem key={user.id} value={user.id}>
-                                    {user.username}
+                                    {`${user.displayName} (${user.username})`}
                                 </MenuItem>
                             ))}
                         </Select>

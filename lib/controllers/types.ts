@@ -1,10 +1,18 @@
 import { LocalDate } from "@js-joda/core";
-import { Experiment, Condition, Assay, AssayResult, User } from "@prisma/client";
+import {
+    Experiment,
+    Condition,
+    Assay,
+    AssayResult,
+    User,
+    AssayType,
+    AssayTypeForExperiment,
+} from "@prisma/client";
 
 /* ----- Experiment ----- */
 
-export type ExperimentWithLocalDate = Omit<Experiment, "start_date"> & {
-    start_date: LocalDate;
+export type ExperimentWithLocalDate = Omit<Experiment, "startDate"> & {
+    startDate: LocalDate;
 };
 
 export type ExperimentInfo = {
@@ -12,10 +20,12 @@ export type ExperimentInfo = {
     conditions: Condition[];
     assays: Assay[];
     assayResults: AssayResult[];
+    assayTypes: AssayTypeInfo[];
 };
 
 export type ExperimentOwner = {
     username: string;
+    displayName: string;
 };
 
 export type ExperimentTableInfo = {
@@ -23,7 +33,11 @@ export type ExperimentTableInfo = {
     title: string;
     startDate: LocalDate;
     week: number;
+    isCanceled: boolean;
     owner: string;
+    ownerDisplayName: string;
+    ownerId: number;
+    technicianIds: number[];
 };
 
 export type ExperimentTable = {
@@ -33,48 +47,59 @@ export type ExperimentTable = {
     rowCount: number;
 };
 
-export type ExperimentCreationRequiringConditionArgs =
-    Omit<ExperimentWithLocalDate, "id">
-    & {
-          conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
-      };
+export type ExperimentCreationRequiringConditionAndAssayTypeArgs = Omit<
+    ExperimentWithLocalDate,
+    "id"
+> & {
+    conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+    assayTypeForExperimentCreationArgsArray: Omit<
+        Omit<AssayTypeForExperiment, "id">,
+        "experimentId"
+    >[];
+};
 
 export type ExperimentCreationArgs =
-| Omit<ExperimentWithLocalDate, "id">
-| {
-    conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
-};
+    | Omit<ExperimentWithLocalDate, "id">
+    | {
+          conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
+      };
 export type ExperimentCreationResponse = Omit<
     ExperimentInfo,
-    "assays" | "assayResults"
+    "assays" | "assayResults" | "assayTypes"
 >;
 
 // experiment updates are done in a single atomic transaction
 export type ExperimentUpdateArgs = {
     id: number;
-    title: string;
-    description: string | null;
+    title?: string;
+    description?: string | null;
     startDate?: LocalDate;
-    userId: number;
+    isCanceled?: boolean;
 };
+
+export type ExperimentStatus = "all" | "cancelled" | "non-cancelled";
 
 /* ----- Assay ----- */
 
-export type AssayInfo = {
+export type AssayAgendaInfo = {
     id: number;
     targetDate: LocalDate;
     title: string;
     experimentId: number;
     owner: string;
+    ownerDisplayName: string;
+    technician: string | null;
+    technicianDisplayName: string | null;
+    technicianTypes: string[] | null;
     condition: string;
     week: number;
     type: string;
     resultId: number | null;
 };
 
-export type AssayTable = {
+export type AssayAgendaTable = {
     // Rows on this page
-    rows: AssayInfo[];
+    rows: AssayAgendaInfo[];
     // Rows in the whole table
     rowCount: number;
 };
@@ -85,9 +110,13 @@ export type AssayCreationArgs = Omit<Assay, "id">;
 export type AssayUpdateArgs = {
     id: number;
     conditionId?: number;
-    type?: number;
+    assayTypeId?: number;
     week?: number;
 };
+
+export type AssayWithResult = Assay & {
+    result : AssayResult | null;
+}
 
 /* ----- Condition ----- */
 
@@ -103,6 +132,30 @@ export type ConditionUpdateArgs = {
     name?: string;
 };
 
+/* ----- Assay Type ------ */
+export type AssayTypeInfo = AssayTypeForExperiment & {
+    assayType: AssayType;
+};
+
+export type UpdateAssayTypeArgs = {
+    assayTypeId: number;
+    name: string | null;
+    units: string | null;
+    description : string | null;
+};
+
+export type AssayTypeCreationArgs = Omit<AssayType, "id">;
+
+export type StandardAssayTypeForExperimentCreationsArgs = {
+    experimentId : number;
+    assayTypeId : number;
+}
+
+export type UpdateTechnicianArgs = {
+    assayTypeForExperimentId : number;
+    technicianId : number | null;
+}
+
 /* ----- Assay Result ----- */
 
 export type AssayResultCreationArgs = Omit<AssayResult, "id">;
@@ -112,7 +165,7 @@ export type AssayResultUpdateArgs = {
     id: number;
     result?: number | null;
     comment?: string | null;
-    last_editor: string;
+    author: string;
 };
 
 /* ----- User ----- */
@@ -120,7 +173,10 @@ export type AssayResultUpdateArgs = {
 export type UserInfo = {
     id: number;
     username: string;
-    is_admin: boolean;
+    displayName: string;
+    email: string | null;
+    isSSO: boolean;
+    isAdmin: boolean;
 };
 
 export type UserTable = {
@@ -130,4 +186,37 @@ export type UserTable = {
     rowCount: number;
 };
 
-export type UserWithoutPassword = Omit<User, 'password'>;
+export type UserWithoutPassword = Omit<User, "password">;
+
+/* ----- Email ----- */
+
+export type EmailQueryResult = {
+    userId: number;
+    email: string;
+    targetDate: string;
+    experimentId: number;
+    title: string;
+    ownerUsername: string;
+    ownerDisplayName: string;
+    condition: string;
+    week: number;
+    assayType: string;
+    technicianUsername: string;
+    technicianDisplayName: string;
+};
+
+export type EmailInfo = {
+    [userId: number]: {
+        email: string;
+        agenda: {
+            targetDate: LocalDate;
+            experimentId: number;
+            title: string;
+            owner: string;
+            condition: string;
+            week: number;
+            assayType: string;
+            technician: string;
+        }[];
+    };
+};

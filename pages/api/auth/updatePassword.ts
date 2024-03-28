@@ -31,12 +31,15 @@ export default async function updatePasswordAPI(
         });
 
         if (userInDB) {
-            const oldPasswordIsCorrect = await compare(
-                oldPassword,
-                userInDB.password
-            );
+            // TODO: check this logic with optional passwords
+            const oldPasswordIsCorrect = userInDB.password
+                ? await compare(oldPassword, userInDB.password)
+                : false;
             if (!oldPasswordIsCorrect) {
-                throw new Error("Wrong previous password!");
+                res.status(400).json(
+                    getApiError(400, "Wrong previous password!")
+                );
+                return;
             } else {
                 const result = await db.user.update({
                     where: {

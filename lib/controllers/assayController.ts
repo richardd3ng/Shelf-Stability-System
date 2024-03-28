@@ -4,7 +4,7 @@ import { encodePaging, relativeURL } from "./url";
 import { deleteEntity } from "./deletions";
 import { LocalDate } from "@js-joda/core";
 import { Assay } from "@prisma/client";
-import { AssayCreationArgs, AssayInfo, AssayTable, AssayUpdateArgs } from "./types";
+import { AssayCreationArgs, AssayAgendaInfo, AssayAgendaTable, AssayUpdateArgs } from "./types";
 import { stringFieldsToLocalDate } from "./jsonConversions";
 
 export const fetchAgendaList = async (
@@ -13,16 +13,16 @@ export const fetchAgendaList = async (
     includeRecorded: boolean,
     ownedAssaysOnly: boolean,
     paging: ServerPaginationArgs
-): Promise<AssayTable> => {
+): Promise<AssayAgendaTable> => {
     const url = encodePaging(relativeURL("/api/assays/agenda"), paging);
 
     url.searchParams.set("include_recorded", includeRecorded.toString());
     url.searchParams.set("owned_assays_only", ownedAssaysOnly.toString());
     if (minDate !== null) {
-        url.searchParams.set("minDate", minDate.toString());
+        url.searchParams.set("min_date", minDate.toString());
     }
     if (maxDate !== null) {
-        url.searchParams.set("maxDate", maxDate.toString());
+        url.searchParams.set("max_date", maxDate.toString());
     }
 
     const response = await fetch(url, {
@@ -34,7 +34,7 @@ export const fetchAgendaList = async (
 
     const resJson = await response.json();
     if (response.ok) {
-        const table: { rows: (Omit<AssayInfo, 'targetDate'> & { targetDate: string })[]; rowCount: number } = resJson;
+        const table: { rows: (AssayAgendaInfo & { targetDate: string })[]; rowCount: number } = resJson;
         return {
             ...table,
             // Convert the startDate from string to Date
@@ -92,7 +92,7 @@ export const updateAssay = async (
         method: "POST",
         body: JSON.stringify({
             conditionId: assayInfo.conditionId,
-            type: assayInfo.type,
+            type: assayInfo.assayTypeId,
             week: assayInfo.week,
         }),
         headers: {

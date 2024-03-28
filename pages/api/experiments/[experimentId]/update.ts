@@ -11,13 +11,19 @@ import { LocalDate } from "@js-joda/core";
 import { ExperimentWithLocalDate } from "@/lib/controllers/types";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 import { dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
-
+import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 
 export default async function updateExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentWithLocalDate | ApiError>
 ) {
-    await denyReqIfUserIsNotLoggedInAdmin(req, res);
+    let permissionTracker: APIPermissionTracker = {
+        shouldStopExecuting: false,
+    };
+    await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
+    if (permissionTracker.shouldStopExecuting) {
+        return;
+    }
     const id = getExperimentID(req);
     if (id === INVALID_EXPERIMENT_ID) {
         res.status(400).json(
@@ -25,29 +31,7 @@ export default async function updateExperimentAPI(
         );
         return;
     }
-    const { title, description, startDate, userId } = req.body;
-    if (userId === undefined) {
-        // TODO: also check if userId is an admin
-        res.status(409).json(
-            getApiError(409, "You must be an admin to update an experiment")
-        );
-        return;
-    }
-    if (!title) {
-        res.status(400).json(
-            getApiError(400, "Experiment title cannot be empty")
-        );
-        return;
-    }
-    if (startDate === null) {
-        res.status(400).json(
-            getApiError(
-                400,
-                "If provided, experiment start date cannot be empty"
-            )
-        );
-        return;
-    }
+    const { title, description, startDate, isCanceled } = req.body;
     try {
         if (startDate) {
             if (await experimentHasAssaysWithResults(id)) {
@@ -60,14 +44,20 @@ export default async function updateExperimentAPI(
                 return;
             }
         }
-        const updateData: { [key: string]: any } = {
-            title: title,
-            description: description,
-        };
+        const updateData: { [key: string]: any } = {};
+        if (title) {
+            updateData.title = title;
+        }
+        if (description) {
+            updateData.description = description;
+        }
         if (startDate) {
-            updateData.start_date = localDateToJsDate(
+            updateData.startDate = localDateToJsDate(
                 LocalDate.parse(startDate)
             );
+        }
+        if (isCanceled !== undefined && isCanceled !== null) {
+            updateData.isCanceled = isCanceled;
         }
         const updatedExperiment: ExperimentWithLocalDate | null =
             await db.experiment
@@ -77,7 +67,9 @@ export default async function updateExperimentAPI(
                     },
                     data: updateData,
                 })
-                .then((experiment: Experiment) => dateFieldsToLocalDate(experiment, ["start_date"]));
+                .then((experiment: Experiment) =>
+                    dateFieldsToLocalDate(experiment, ["startDate"])
+                );
         if (!updatedExperiment) {
             res.status(404).json(
                 getApiError(

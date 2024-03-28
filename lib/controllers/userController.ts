@@ -4,8 +4,8 @@ import { UserInfo, UserTable } from "./types";
 import { encodePaging, relativeURL } from "./url";
 import { User } from "@prisma/client";
 
-export const fetchOwners = async (): Promise<UserInfo[]> => {
-    const endpoint = "/api/users/owners";
+export const fetchOwnersAndTechnicians = async (): Promise<UserInfo[]> => {
+    const endpoint = "/api/users/ownersAndTechnicians";
     const response = await fetch(endpoint, {
         method: "GET",
         headers: {
@@ -62,6 +62,8 @@ export const fetchUser = async (
 
 export const createUser = async (
     username: string,
+    displayName: string,
+    email: string | null,
     password: string,
     isAdmin: boolean
 ): Promise<Omit<User, "password"> | ApiError> => {
@@ -73,6 +75,8 @@ export const createUser = async (
         body: JSON.stringify({
             username,
             password,
+            displayName,
+            email: (email?.trim() === "") ? null : email,
             isAdmin,
         }),
     });
@@ -87,6 +91,8 @@ export const createUser = async (
 
 export const updateUser = async (
     id: number,
+    displayName: string | undefined,
+    email: string | undefined,
     password: string,
     isAdmin: boolean
 ): Promise<Omit<User, "password"> | ApiError> => {
@@ -97,6 +103,8 @@ export const updateUser = async (
         },
         body: JSON.stringify({
             password,
+            displayName,
+            email: (email?.trim() === "") ? null : email,
             isAdmin,
         }),
     });

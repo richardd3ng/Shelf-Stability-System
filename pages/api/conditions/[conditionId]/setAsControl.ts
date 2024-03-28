@@ -6,27 +6,34 @@ import { ApiError } from "next/dist/server/api-utils";
 import { db } from "@/lib/api/db";
 import { Condition } from "@prisma/client";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 
 export default async function setConditionAsControlAPI(
     req: NextApiRequest,
     res: NextApiResponse<Condition | ApiError>
 ) {
-    await denyReqIfUserIsNotLoggedInAdmin(req, res);
+    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
+    if (permissionTracker.shouldStopExecuting){
+        return;
+    }
     const id = getConditionID(req);
     if (id === INVALID_CONDITION_ID) {
         res.status(400).json(getApiError(400, "Condition ID is required"));
         return;
     }
     try {
-        if (await conditionHasAssaysWithResults(id)) {
-            res.status(CONSTRAINT_ERROR_CODE).json(
-                getApiError(
-                    CONSTRAINT_ERROR_CODE,
-                    "Cannot edit condition affecting recorded results"
-                )
-            );
-            return;
-        }
+        // Note: we should discuss if we want this
+        // With the below code, the control condition can be changed away from a condition with results, but not back, which is inconsistent
+        // if (await conditionHasAssaysWithResults(id)) {
+        //     res.status(CONSTRAINT_ERROR_CODE).json(
+        //         getApiError(
+        //             CONSTRAINT_ERROR_CODE,
+        //             "Cannot edit condition affecting recorded results"
+        //         )
+        //     );
+        //     return;
+        // }
         let newControlCondition: Condition | null = null;
         await db.$transaction(async (tx) => {
             newControlCondition = await tx.condition.findUnique({
@@ -48,7 +55,7 @@ export default async function setConditionAsControlAPI(
                 await tx.condition.findFirst({
                     where: {
                         experimentId: newControlCondition.experimentId,
-                        control: true,
+                        isControl: true,
                     },
                 });
 
@@ -67,7 +74,7 @@ export default async function setConditionAsControlAPI(
                     id: oldControlCondition.id,
                 },
                 data: {
-                    control: false,
+                    isControl: false,
                 },
             });
             await tx.condition.update({
@@ -75,7 +82,7 @@ export default async function setConditionAsControlAPI(
                     id: id,
                 },
                 data: {
-                    control: true,
+                    isControl: true,
                 },
             });
         });

@@ -6,7 +6,7 @@ import { createAssayResult } from "@/lib/controllers/assayResultController";
 import { createCondition } from "@/lib/controllers/conditionController";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { Assay, Condition } from "@prisma/client";
-import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
+import { assayTypeIdToName, createNewCustomAssayTypeForExperimentThroughAPI, createNewStandardAssayTypeForExperimentThroughAPI } from "@/lib/controllers/assayTypeController";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import {
@@ -58,9 +58,7 @@ export const useMutationToCreateAssay = () => {
             });
             showAlert(
                 "success",
-                `Succesfully created ${assayTypeIdToName(
-                    createdAssay.type
-                )} assay`
+                `Succesfully created the assay!`
             );
         },
         onError: (error) => {
@@ -68,7 +66,7 @@ export const useMutationToCreateAssay = () => {
         },
         onMutate: (assayCreationArgs: AssayCreationArgs) => {
             showLoading(
-                `Creating ${assayTypeIdToName(assayCreationArgs.type)} assay...`
+                `Creating assay...`
             );
         },
         onSettled: () => {
@@ -100,6 +98,61 @@ export const useMutationToCreateAssayResult = () => {
                     ? "result"
                     : "comment"
             }...`;
+            showLoading(loadingText);
+        },
+        onSettled: () => {
+            hideLoading();
+        },
+    });
+};
+
+export const useMutationToCreateCustomAssayType = () => {
+    const queryClient = useQueryClient();
+    const experimentId = useExperimentId();
+    const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
+    return useMutation({
+        mutationFn: createNewCustomAssayTypeForExperimentThroughAPI,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: getQueryKeyForUseExperimentInfo(experimentId),
+            });
+            showAlert("success", "Succesfully updated assay data");
+        },
+        onError: (error) => {
+            showAlert("error", getErrorMessage(error));
+        },
+        onMutate: (experimentId : number) => {
+            const loadingText: string = "Creating New Type";
+            showLoading(loadingText);
+        },
+        onSettled: () => {
+            hideLoading();
+        },
+        
+    });
+};
+
+export const useMutationToCreateStandardAssayType = () => {
+    const queryClient = useQueryClient();
+    const experimentId = useExperimentId();
+    const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
+    return useMutation({
+        mutationFn: createNewStandardAssayTypeForExperimentThroughAPI,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: getQueryKeyForUseExperimentInfo(experimentId),
+            });
+            showAlert("success", "Succesfully updated assay data");
+        },
+        onError: (error) => {
+            showAlert("error", getErrorMessage(error));
+        },
+        onMutate: () => {
+            const loadingText: string = "Creating New Type";
             showLoading(loadingText);
         },
         onSettled: () => {

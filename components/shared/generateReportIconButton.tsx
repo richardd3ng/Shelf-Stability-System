@@ -4,6 +4,7 @@ import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 
 interface GenerateReportIconButtonProps {
     experimentId: number;
+    size?: "small" | "medium" | "large";
 }
 
 const GenerateReportIconButton: React.FC<GenerateReportIconButtonProps> = (
@@ -17,6 +18,7 @@ const GenerateReportIconButton: React.FC<GenerateReportIconButtonProps> = (
             onClick={() =>
                 router.push(`/experiments/${props.experimentId}/report`)
             }
+            size={props.size}
         />
     );
 };

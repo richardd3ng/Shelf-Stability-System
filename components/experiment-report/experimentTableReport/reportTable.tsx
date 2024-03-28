@@ -10,12 +10,12 @@ import { Assay, AssayResult, Condition } from "@prisma/client";
 import { Box, Stack, Typography } from "@mui/material";
 import Table from "@/components/shared/table";
 import ReportChip from "./reportChip";
-import { WeekRow } from "@/components/experiment-detail/experimentTable/experimentTable";
+import { WeekRow } from "@/components/experiment-detail/experiment/experimentTable";
 import {
     getAllWeeksCoveredByAssays,
     getAssayResultForAssay,
     getAssaysForWeekAndCondition,
-} from "@/components/experiment-detail/experimentTable/experimentTable";
+} from "@/components/experiment-detail/experiment/experimentTable";
 
 interface ReportTableProps {
     experimentInfo: ExperimentInfo;
@@ -66,7 +66,7 @@ const ReportTable: React.FC<ReportTableProps> = (props: ReportTableProps) => {
                         textAlign: "center",
                     }}
                 >
-                    {`${condition.name}${condition.control ? " [Ctrl]" : ""}`}
+                    {`${condition.name}${condition.isControl ? " [Ctrl]" : ""}`}
                 </Typography>
             </Box>
         );
@@ -94,11 +94,18 @@ const ReportTable: React.FC<ReportTableProps> = (props: ReportTableProps) => {
                             props.experimentInfo.assayResults,
                             assay
                         ) ?? undefined;
+                    const assayType = props.experimentInfo.assayTypes.find(
+                        (type) => type.id === assay.assayTypeId
+                    );
+                    if (!assayType) {
+                        return null;
+                    }
                     return (
                         <ReportChip
-                            key={assay.type}
+                            key={assay.assayTypeId}
                             assay={assay}
                             assayResult={assayResult}
+                            assayType={assayType}
                         ></ReportChip>
                     );
                 })}

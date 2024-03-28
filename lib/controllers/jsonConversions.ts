@@ -2,15 +2,15 @@ import { Experiment } from "@prisma/client";
 import { ExperimentWithLocalDate } from "./types";
 import { LocalDate, ZoneId, nativeJs } from "@js-joda/core";
 
-export type ExperimentJSON = Omit<Experiment, "start_date"> & {
-    start_date: string;
+export type ExperimentJSON = Omit<Experiment, "startDate"> & {
+    startDate: string;
 };
 
-export const JSONToExperiment = (JSONData: ExperimentJSON): ExperimentWithLocalDate => stringFieldsToLocalDate(JSONData, ["start_date"]);
+export const JSONToExperiment = (JSONData: ExperimentJSON): ExperimentWithLocalDate => stringFieldsToLocalDate(JSONData, ["startDate"]);
 
 // Convert all string fields listed in K to LocalDate
 // Fairly simple ultimately, but made complex for the sake of type safety
-export function stringFieldsToLocalDate<T extends { [P in K]: string }, K extends string | number | symbol>(obj: T, fields: K[]): Omit<T, K> & { [P in K]: LocalDate } {
+export function stringFieldsToLocalDate<T extends { [P in K]: string }, K extends string | number | symbol>(obj: T, fields: K[]): T & { [P in K]: LocalDate } {
     const replacements: Partial<{ [key in K]: LocalDate }> = {};
 
     // Convert all string fields listed in K to LocalDate
@@ -27,7 +27,7 @@ export function stringFieldsToLocalDate<T extends { [P in K]: string }, K extend
     };
 }
 
-export function dateFieldsToLocalDate<T extends { [P in K]: Date }, K extends string | number | symbol>(obj: T, fields: K[]): Omit<T, K> & { [P in K]: LocalDate } {
+export function dateFieldsToLocalDate<T extends { [P in K]: Date }, K extends string | number | symbol>(obj: T, fields: K[]): T & { [P in K]: LocalDate } {
     const replacements: Partial<{ [key in K]: LocalDate }> = {};
 
     // Convert all string fields listed in K to LocalDate

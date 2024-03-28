@@ -1,8 +1,6 @@
-import { ExperimentInfo } from "@/lib/controllers/types";
-import { assayTypeNameToId } from "@/lib/controllers/assayTypeController";
+import { AssayTypeInfo, ExperimentInfo } from "@/lib/controllers/types";
 import { Stack, Typography } from "@mui/material";
 import ReportTable from "./experimentTableReport/reportTable";
-import { getAssayTypesCoveredByAssays } from "../experiment-detail/assaysGroupedByType";
 
 interface ReportAssaysGroupedByTypeProps {
     experimentInfo: ExperimentInfo;
@@ -22,20 +20,20 @@ const ReportAssaysGroupedByType: React.FC<ReportAssaysGroupedByTypeProps> = (
                     }
                 />
             </Stack>
-            {getAssayTypesCoveredByAssays(props.experimentInfo.assays).map(
-                (name: string) => {
-                    const typeId: number = assayTypeNameToId(name);
+            {props.experimentInfo.assayTypes.map(
+                (type : AssayTypeInfo) => {
+                    const typeId: number = type.id;
                     return (
                         <Stack
                             key={typeId}
                             sx={{ "@media print": { breakInside: "avoid" } }}
                         >
-                            <Typography>Assays of type {name}</Typography>
+                            <Typography>Assays of type {type.assayType.name}</Typography>
                             <ReportTable
                                 experimentInfo={props.experimentInfo}
                                 assayFilter={(experimentInfo: ExperimentInfo) =>
                                     experimentInfo.assays.filter(
-                                        (assay) => assay.type === typeId
+                                        (assay) => assay.assayTypeId === typeId
                                     )
                                 }
                             />

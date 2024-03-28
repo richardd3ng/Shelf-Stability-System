@@ -6,10 +6,12 @@ import { deleteAssay } from "@/lib/controllers/assayController";
 import { deleteAssayResult } from "@/lib/controllers/assayResultController";
 import { deleteExperiment } from "@/lib/controllers/experimentController";
 import { useRouter } from "next/router";
-import { AssayResult, Condition } from "@prisma/client";
+import { AssayResult, AssayTypeForExperiment, Condition } from "@prisma/client";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
+import { ExperimentWithLocalDate } from "@/lib/controllers/types";
+import { deleteAssayTypeForExperimentThroughAPI } from "@/lib/controllers/assayTypeController";
 
 export const useMutationToDeleteCondition = () => {
     const queryClient = useQueryClient();
@@ -104,7 +106,7 @@ export const useMutationToDeleteExperiment = () => {
 
     return useMutation({
         mutationFn: deleteExperiment,
-        onSuccess: (experiment) => {
+        onSuccess: (experiment: ExperimentWithLocalDate) => {
             router.push("/experiment-list");
             showAlert(
                 "success",
@@ -116,6 +118,36 @@ export const useMutationToDeleteExperiment = () => {
         },
         onMutate: (id: number) => {
             showLoading(`Deleting experiment ${id}...`);
+        },
+        onSettled: () => {
+            hideLoading();
+        },
+    });
+};
+
+export const useMutationToDeleteAssayTypeForExperiment = () => {
+    const router = useRouter();
+    const queryClient = useQueryClient();
+    const experimentId = useExperimentId();
+    const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
+    return useMutation({
+        mutationFn: deleteAssayTypeForExperimentThroughAPI,
+        onSuccess: (assayTypeForExperiment : AssayTypeForExperiment) => {
+            queryClient.invalidateQueries({
+                queryKey: getQueryKeyForUseExperimentInfo(experimentId),
+            });
+            showAlert(
+                "success",
+                `Succesfully deleted`
+            );
+        },
+        onError: (error) => {
+            showAlert("error", getErrorMessage(error));
+        },
+        onMutate: (id: number) => {
+            showLoading(`Deleting Assay Type`);
         },
         onSettled: () => {
             hideLoading();

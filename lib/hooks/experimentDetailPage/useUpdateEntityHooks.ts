@@ -9,15 +9,16 @@ import {
 } from "@/lib/controllers/conditionController";
 import { updateExperiment } from "@/lib/controllers/experimentController";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
-import { Assay, AssayResult, Condition } from "@prisma/client";
-import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
+import { Assay, Condition, AssayType } from "@prisma/client";
 import {
     AssayResultUpdateArgs,
+    AssayTypeInfo,
     ExperimentUpdateArgs,
     ExperimentWithLocalDate,
 } from "@/lib/controllers/types";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
+import { updateAssayTypeThroughAPI, updateTechnicianOfAssayTypeForExperimentThroughAPI } from "@/lib/controllers/assayTypeController";
 
 export const useMutationToUpdateAssayResult = () => {
     const queryClient = useQueryClient();
@@ -63,16 +64,11 @@ export const useMutationToUpdateAssay = () => {
 
     return useMutation({
         mutationFn: updateAssay,
-        onSuccess: (updatedAssay: Assay) => {
+        onSuccess: (_updatedAssay: Assay) => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
             });
-            showAlert(
-                "success",
-                `Succesfully updated ${assayTypeIdToName(
-                    updatedAssay.type
-                )} assay`
-            );
+            showAlert("success", `Succesfully updated assay`);
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
@@ -165,6 +161,64 @@ export const useMutationToSetConditionAsControl = () => {
         },
         onMutate: () => {
             showLoading("Setting condition as control...");
+        },
+        onSettled: () => {
+            hideLoading();
+        },
+    });
+};
+
+export const useMutationToUpdateAssayType = () => {
+    const queryClient = useQueryClient();
+    const experimentId = useExperimentId();
+    const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
+    return useMutation({
+        mutationFn: updateAssayTypeThroughAPI,
+        onSuccess: (updatedAssayType : AssayType) => {
+            queryClient.invalidateQueries({
+                queryKey: getQueryKeyForUseExperimentInfo(experimentId),
+            });
+            showAlert(
+                "success",
+                `Succesfully updated`
+            );
+        },
+        onError: (error) => {
+            showAlert("error", getErrorMessage(error));
+        },
+        onMutate: () => {
+            showLoading("Updating");
+        },
+        onSettled: () => {
+            hideLoading();
+        },
+    });
+};
+
+export const useMutationToUpdateTechnicianOfAssayTypeForExperiment = () => {
+    const queryClient = useQueryClient();
+    const experimentId = useExperimentId();
+    const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
+    return useMutation({
+        mutationFn: updateTechnicianOfAssayTypeForExperimentThroughAPI,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: getQueryKeyForUseExperimentInfo(experimentId),
+            });
+            showAlert(
+                "success",
+                `Succesfully updated`
+            );
+        },
+        onError: (error) => {
+            showAlert("error", getErrorMessage(error));
+        },
+        onMutate: () => {
+            showLoading("Updating");
         },
         onSettled: () => {
             hideLoading();

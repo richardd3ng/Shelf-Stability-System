@@ -7,12 +7,18 @@ import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { CONSTRAINT_ERROR_CODE } from "@/lib/api/error";
 import { Prisma } from "@prisma/client";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 
 export default async function createConditionAPI(
     req: NextApiRequest,
     res: NextApiResponse<Condition | ApiError>
 ) {
-    await denyReqIfUserIsNotLoggedInAdmin(req, res);
+    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
+    if (permissionTracker.shouldStopExecuting){
+        return;
+    }
+    
     const { experimentId, name } = req.body;
     if (experimentId === null || name === null) {
         res.status(400).json(

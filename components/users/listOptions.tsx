@@ -24,6 +24,7 @@ export default function UserListOptions() {
                     onClick={createUser}
                     variant="contained"
                     color="primary"
+                    sx={{textTransform: "none"}}
                 >
                     Add User
                 </Button>

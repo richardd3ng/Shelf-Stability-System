@@ -1,35 +1,43 @@
 {
-    "users": [
-      {
-        "name": "user1",
-        "password": "ece458test1",
-        "administrator_permission": true
-      },
-      {
-        "name": "user2",
-        "password": "ece458test2",
-        "administrator_permission": false
-      },
-      {
-        "name": "user3",
-        "password": "ece458test3",
-        "administrator_permission": false
-      },
-      {
-        "name": "user4",
-        "password": "ece458test4",
-        "administrator_permission": true
-      },
-      {
-        "name": "user5",
-        "password": "ece458test5",
-        "administrator_permission": false
-      },
-      {
-        "name": "user6",
-        "password": "ece458test6",
-        "administrator_permission": false
-      }
-    ]
+  "users": [
+    {
+      "username": "user1",
+      "display_name": "Yifan Jiang",
+      "password": "ece458test1",
+      "email_address": "yifan.jiang999@gmail.com",
+      "administrator_permission": true,
+      "authentication_type": "local"
+    },
+    {
+      "username": "user2",
+      "display_name": "Emma Johnson",
+      "password": "ece458test2",
+      "email_address": "emmajohnson678@gmail.com",
+      "administrator_permission": true,
+      "authentication_type": "local"
+    },
+    {
+      "username": "user3",
+      "display_name": "Michael Smith",
+      "password": "ece458test3",
+      "administrator_permission": false,
+      "authentication_type": "local"
+    },
+    {
+      "username": "user4",
+      "display_name": "Eva Samuel",
+      "password": "ece458test4",
+      "email_address": "es1827@gmail.com",
+      "administrator_permission": false,
+      "authentication_type": "local"
+    },
+    {
+      "username": "user5",
+      "display_name": "Olivia Martinez",
+      "password": "ece458test5",
+      "email_address": "om345@gmail.com",
+      "administrator_permission": false,
+      "authentication_type": "local"
+    }
+  ]
 }
-  

@@ -1,6 +1,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -11,22 +12,42 @@ datasource db {
 model User {
   id             Int      @id @default(autoincrement())
   username       String   @unique
-  password       String
-  is_admin       Boolean? @default(false)
-  is_super_admin Boolean? @default(false)
-  experiments    Experiment[]
+  displayName    String
+  password       String?
+  email          String?
+  isSSO          Boolean    
+  isAdmin        Boolean @default(false)
+  isSuperAdmin   Boolean @default(false)
+  ownedExperiments  Experiment[]
+  assayTypesAsTechnician AssayTypeForExperiment[]
 }
-
 
 model Experiment {
   id          Int         @id @default(autoincrement())
   title       String      @unique
-  description String?
-  start_date  DateTime    @db.Date
+  description String
+  startDate  DateTime    @db.Date
+  isCanceled  Boolean
   owner       User        @relation(fields: [ownerId], references: [id])
   ownerId     Int 
   conditions  Condition[]
-  assays      Assay[]          
+  assays      Assay[] 
+  assayTypes  AssayTypeForExperiment[]   
+  experimentWeekView        ExperimentWeekView?
+}
+
+view ExperimentWeekView {
+  id          Int         @id
+  experiment  Experiment @relation(fields: [id], references: [id])
+  title       String      @unique
+  description String
+  startDate   DateTime    @db.Date
+  week        Int
+  isCanceled  Boolean
+  owner       String
+  ownerDisplayName  String
+  ownerId     Int
+  technicianIds String
 }
 
 model Assay {
@@ -35,10 +56,12 @@ model Assay {
   experimentId Int
   condition    Condition  @relation(fields: [conditionId], references: [id], onDelete: Cascade)
   conditionId  Int
+  assayType    AssayTypeForExperiment @relation(fields: [assayTypeId], references: [id], onDelete: Cascade)
+  assayTypeId  Int
   result       AssayResult?
-  type         Int
+
   week         Int
-  @@unique([experimentId, conditionId, week, type], name: "UniqueAssayTypePerWeekAndCondition")
+  @@unique([experimentId, conditionId, week, assayTypeId], name: "UniqueAssayTypePerWeekAndCondition")
 }
 
 model AssayResult {
@@ -47,18 +70,53 @@ model AssayResult {
   assayId     Int      @unique
   result      Float?
   comment     String?
-  last_editor String
+  author      String
 }
 
+model AssayType {
+  id          Int      @id @default(autoincrement())
+  isCustom    Boolean
+  name        String
+  description String?
+  units       String?
+  experimentSpecificTypes AssayTypeForExperiment[]
+}
 
-
-model Condition {
-  id           Int        @id @default(autoincrement())
+model AssayTypeForExperiment {
+  id          Int      @id @default(autoincrement())
+  assayType   AssayType @relation(fields: [assayTypeId], references: [id], onDelete: Cascade)
+  assayTypeId Int
   experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
   experimentId Int
-  name         String
-  control      Boolean?   @default(false)
-  Assay        Assay[]
+  technician   User? @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+  technicianId Int?
+  assays       Assay[]
+
+  @@unique([experimentId, assayTypeId], name: "UniqueAssayTypesPerExperiment")
+}
+
+model Condition {
+  id                Int                 @id @default(autoincrement())
+  experiment        Experiment          @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  experimentId      Int
+  name              String
+  isControl         Boolean 
+  assays            Assay[]
 
   @@unique([experimentId, name], name: "UniqueExperimentConditionName")
+}
+
+view AssayAgendaView {
+  id                    Int       @unique
+  experimentId          Int
+  targetDate            DateTime  @db.Date
+  title                 String
+  owner                 String
+  ownerDisplayName      String
+  technician            String?
+  technicianDisplayName String?
+  condition             String
+  type                  String
+  week                  Int
+  resultId              Int?
 }

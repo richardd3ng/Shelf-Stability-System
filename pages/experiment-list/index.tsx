@@ -1,14 +1,19 @@
 import {
+    Autocomplete,
     Box,
     Button,
     FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
+    FormControlLabel,
+    FormLabel,
+    Radio,
+    RadioGroup,
     Stack,
+    TextField,
+    Tooltip,
+    Typography,
 } from "@mui/material";
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ExperimentCreationDialog from "@/components/experiment-list/experimentCreationDialog";
 import Layout from "../../components/shared/layout";
 import SearchBar from "../../components/shared/searchBar";
@@ -18,8 +23,7 @@ import {
     fetchExperimentList,
     hasRecordedAssayResults,
 } from "@/lib/controllers/experimentController";
-import { fetchOwners } from "@/lib/controllers/userController";
-import ExperimentDeletionDialog from "@/components/shared/experimentDeletionDialog";
+import { fetchOwnersAndTechnicians } from "@/lib/controllers/userController";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import {
@@ -27,6 +31,7 @@ import {
     useServerPagination,
 } from "@/lib/hooks/useServerPagination";
 import {
+    ExperimentStatus,
     ExperimentTable,
     ExperimentTableInfo,
     UserInfo,
@@ -34,31 +39,42 @@ import {
 import { useRouter } from "next/router";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import GeneratePrintableReportButton from "@/components/shared/generateReportIconButton";
-import ViewExperimentButton from "@/components/experiment-list/viewExperimentButton";
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 import Delete from "@mui/icons-material/Delete";
-import { useUserInfo } from "@/lib/hooks/useUserInfo";
+import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import ConfirmationDialog from "@/components/shared/confirmationDialog";
+import { useSearchParams } from "next/navigation";
 
 interface QueryParams {
     search: string;
-    owner: string;
+    user: string;
+    status: ExperimentStatus;
 }
 
-const getQueryParamsFromURL = (): QueryParams => {
-    const params: URLSearchParams = new URLSearchParams(window.location.search);
+const getQueryParamsFromURL = (params: URLSearchParams | null): QueryParams => {
     return {
-        search: params.get("search") ?? "",
-        owner: params.get("owner") ?? "",
+        search: params?.get("search") ?? "",
+        user: params?.get("user") ?? "",
+        status: (params?.get("status") ?? "all") as ExperimentStatus,
     };
 };
 
-const ExperimentList: React.FC = () => {
-    const [experimentData, setExperimentData] = useState<ExperimentTableInfo[]>(
-        []
+function queryParamEquals(
+    oldParams: QueryParams,
+    newParams: QueryParams
+): boolean {
+    return (
+        oldParams.search === newParams.search &&
+        oldParams.user === newParams.user &&
+        oldParams.status === newParams.status
     );
+}
+
+const ExperimentList: React.FC = () => {
+    const [rows, setRows] = useState<ExperimentTableInfo[]>([]);
     const [showCreationDialog, setShowCreationDialog] =
         useState<boolean>(false);
-    const [showDeletionDialog, setShowDeletionDialog] =
+    const [showConfirmationDialog, setShowConfirmationDialog] =
         useState<boolean>(false);
     const [selectedExperimentIds, setSelectedExperimentIds] =
         useState<GridRowSelectionModel>([]);
@@ -67,19 +83,31 @@ const ExperimentList: React.FC = () => {
     const router = useRouter();
     const [queryParams, setQueryParams] = useState<QueryParams>({
         search: "",
-        owner: "",
+        user: "",
+        status: "all",
     });
-    const [initialized, setInitialized] = useState<boolean>(false); // hacky way to make reload() run once on first render
-    // TODO: this is still fetching the data twice, so it's not a perfect solution
-
-    const [ownerList, setOwnerList] = useState<UserInfo[] | null>(null);
+    const [userFilterList, setUserFilterList] = useState<
+        {
+            label: string;
+            value: string;
+        }[]
+    >([]);
+    const { user } = useContext(CurrentUserContext);
+    const isAdmin: boolean = user?.isAdmin ?? false;
 
     const reloadExperimentData = async (
         paging: ServerPaginationArgs
     ): Promise<ExperimentTable> => {
         showLoading("Loading experiments...");
         const fetchedData = await getExperiments(paging);
-        setExperimentData(fetchedData.rows);
+        const newParams = getQueryParamsFromURL(
+            new URLSearchParams(router.asPath.split('?')[1])
+        );
+        if (!queryParamEquals(queryParams, newParams)) {
+            return { rows: [], rowCount: 0 };
+        }
+        
+        setRows(fetchedData.rows);
         hideLoading();
         return fetchedData;
     };
@@ -88,24 +116,31 @@ const ExperimentList: React.FC = () => {
         reloadExperimentData,
         [],
         {
-            pageSize: 10,
+            pageSize: 15,
             page: 0,
         }
     );
 
+    const searchParams = useSearchParams();
+
     useEffect(() => {
-        const fetchOwnerData = async () => {
-            setOwnerList(await fetchOwners());
-            setQueryParams(getQueryParamsFromURL());
-            setInitialized(true);
+        setQueryParams(getQueryParamsFromURL(searchParams));
+    }, [searchParams]);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            setUserFilterList(
+                (await fetchOwnersAndTechnicians()).map((user: UserInfo) => ({
+                    label: `${user.displayName} (${user.username})`,
+                    value: user.username,
+                }))
+            );
         };
-        fetchOwnerData();
+        fetchUserData();
     }, []);
 
     useEffect(() => {
-        if (initialized) {
-            reload();
-        }
+        reload();
     }, [queryParams]);
 
     const colDefs: GridColDef[] = [
@@ -113,52 +148,80 @@ const ExperimentList: React.FC = () => {
             field: "id",
             headerName: "ID",
             type: "number",
-            flex: 1.5,
+            width: 80,
             valueFormatter: (params: any) => String(params.value),
         },
         {
             field: "title",
             headerName: "Title",
             type: "string",
-            flex: 4,
+            flex: 6,
+            renderCell: (params) => {
+                const title = params.row.title;
+                const isTechnician = params.row.technicianIds.includes(
+                    user?.id
+                );
+                return isTechnician ? (
+                    <Tooltip
+                        title={
+                            <Typography fontSize={12}>
+                                You are listed as a technician for this
+                                experiment.
+                            </Typography>
+                        }
+                        className="hover-underline"
+                    >
+                        <b>{title}</b>
+                    </Tooltip>
+                ) : params.row.ownerId == user?.id ? (
+                    <b>{title}</b>
+                ) : (
+                    <span>{title}</span>
+                );
+            },
         },
         {
-            field: "owner",
+            field: "ownerDisplayName",
             headerName: "Owner",
             type: "string",
-            flex: 2,
+            flex: 3,
+            renderCell: (params) => {
+                const name = `${params.row.ownerDisplayName} (${params.row.owner})`;
+                return params.row.ownerId === user?.id ? <b>{name}</b> : name;
+            },
         },
         {
             field: "startDate",
             headerName: "Start Date",
             type: "string",
             valueGetter: (params) => params.row.startDate.toString(),
-            flex: 2,
+            width: 110,
         },
         {
             field: "week",
             headerName: "Week",
             type: "number",
-            flex: 1,
+            width: 70,
         },
         {
             field: "actions",
             headerName: "Actions",
-            flex: 2,
+            width: 100,
             align: "center",
             headerAlign: "center",
             sortable: false,
             renderCell: (params) => (
                 <Box sx={{ display: "flex" }}>
-                    <ViewExperimentButton experimentId={params.row.id} />
                     <GeneratePrintableReportButton
                         experimentId={params.row.id}
                     />
-                    <IconButtonWithTooltip
-                        text="Delete"
-                        icon={Delete}
-                        onClick={() => prepareForDeletion([params.row.id])}
-                    ></IconButtonWithTooltip>
+                    {isAdmin && (
+                        <IconButtonWithTooltip
+                            text="Delete"
+                            icon={Delete}
+                            onClick={() => prepareForDeletion([params.row.id])}
+                        ></IconButtonWithTooltip>
+                    )}
                 </Box>
             ),
         },
@@ -170,7 +233,8 @@ const ExperimentList: React.FC = () => {
         try {
             return await fetchExperimentList(
                 queryParams.search,
-                queryParams.owner,
+                queryParams.user,
+                queryParams.status,
                 paging
             );
         } catch (error) {
@@ -181,14 +245,19 @@ const ExperimentList: React.FC = () => {
 
     const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
         setSelectedExperimentIds(selectedRows);
-        setShowDeletionDialog(true);
+        setShowConfirmationDialog(true);
     };
 
-    const handleSearch = (query: string, owner: string) => {
+    const handleSearch = (
+        query: string,
+        user: string,
+        status: ExperimentStatus
+    ) => {
         const queryParams = new URLSearchParams();
         queryParams.set("search", query);
-        queryParams.set("owner", owner);
-        if (!query && !owner) {
+        queryParams.set("user", user);
+        queryParams.set("status", status);
+        if (!query && !user && status === "all") {
             router.push("/experiment-list");
         } else {
             router.push(
@@ -264,61 +333,121 @@ const ExperimentList: React.FC = () => {
                             onSearch={(query: string) => {
                                 setQueryParams({
                                     search: query,
-                                    owner: queryParams.owner,
+                                    user: queryParams.user,
+                                    status: queryParams.status,
                                 });
-                                handleSearch(query, queryParams.owner);
+                                handleSearch(
+                                    query,
+                                    queryParams.user,
+                                    queryParams.status
+                                );
                             }}
                         />
                     </Box>
-                    <Box sx={{ flex: 1, paddingX: 10 }}>
-                        <FormControl fullWidth size="small">
-                            <InputLabel id="Owner Filter Label">
-                                Owner Filter
-                            </InputLabel>
-                            <Select
-                                id="Owner Filter Selection"
-                                value={queryParams.owner}
-                                label="Owner Filter"
+                    <Box sx={{ flex: 2, paddingLeft: 5 }}>
+                        <Autocomplete
+                            disablePortal
+                            id="user-filter-selection"
+                            size="small"
+                            options={[
+                                { label: "(None)", value: "" },
+                                ...userFilterList,
+                            ]}
+                            value={{
+                                label:
+                                    userFilterList.find(
+                                        (user) =>
+                                            user.value === queryParams.user
+                                    )?.label ?? "",
+                                value: queryParams.user,
+                            }}
+                            isOptionEqualToValue={(option, value) =>
+                                option.value === value.value
+                            }
+                            renderInput={(params) => (
+                                <TextField {...params} label="User Filter" />
+                            )}
+                            onChange={(_event, selectedOption) => {
+                                const selectedUser =
+                                    selectedOption !== null
+                                        ? selectedOption.value
+                                        : "";
+                                setQueryParams({
+                                    search: queryParams.search,
+                                    user: selectedUser,
+                                    status: queryParams.status,
+                                });
+                                handleSearch(
+                                    queryParams.search,
+                                    selectedUser,
+                                    queryParams.status
+                                );
+                            }}
+                        />
+                    </Box>
+                    <Box sx={{ paddingX: 5 }}>
+                        <FormControl component="fieldset">
+                            <FormLabel
+                                component="legend"
+                                sx={{
+                                    color: "text.primary",
+                                    "&.Mui-focused": { color: "text.primary" },
+                                }}
+                            >
+                                Status Filter
+                            </FormLabel>
+                            <RadioGroup
+                                row
+                                aria-label="status"
+                                name="row-radio-buttons-group"
+                                value={queryParams.status}
                                 onChange={(e) => {
                                     setQueryParams({
                                         search: queryParams.search,
-                                        owner: e.target.value,
+                                        user: queryParams.user,
+                                        status: e.target
+                                            .value as ExperimentStatus,
                                     });
                                     handleSearch(
                                         queryParams.search,
-                                        e.target.value
+                                        queryParams.user,
+                                        e.target.value as ExperimentStatus
                                     );
                                 }}
                             >
-                                <MenuItem key={0} value={""}>
-                                    {"(None)"}
-                                </MenuItem>
-                                {(ownerList ?? []).map((owner: UserInfo) => (
-                                    <MenuItem
-                                        key={owner.id}
-                                        value={owner.username}
-                                    >
-                                        {owner.username}
-                                    </MenuItem>
-                                ))}
-                            </Select>
+                                <FormControlLabel
+                                    value="all"
+                                    control={<Radio />}
+                                    label="All"
+                                />
+                                <FormControlLabel
+                                    value="canceled"
+                                    control={<Radio />}
+                                    label="Canceled"
+                                />
+                                <FormControlLabel
+                                    value="non-canceled"
+                                    control={<Radio />}
+                                    label="Non-Canceled"
+                                />
+                            </RadioGroup>
                         </FormControl>
                     </Box>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => setShowCreationDialog(true)}
-                        sx={{ flex: 1, textTransform: "none" }}
-                    >
-                        Create Experiment
-                    </Button>
+                    {isAdmin && (
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => setShowCreationDialog(true)}
+                            sx={{ flex: 1, textTransform: "none" }}
+                        >
+                            Create Experiment
+                        </Button>
+                    )}
                 </Box>
-
                 <Table
                     columns={colDefs}
-                    rows={experimentData}
+                    rows={rows}
                     pagination
-                    checkboxSelection
                     onDeleteRows={prepareForDeletion}
                     onCellClick={(cell) => {
                         if (cell.field !== "actions") {
@@ -326,7 +455,7 @@ const ExperimentList: React.FC = () => {
                         }
                     }}
                     {...paginationProps}
-                    rowClassName="experiment-row-clickable"
+                    getRowClassName={(params) => "experiment-row-clickable " + (params.row.isCanceled ? "experiment-row-canceled" : "")}
                 />
 
                 <ExperimentCreationDialog
@@ -336,12 +465,13 @@ const ExperimentList: React.FC = () => {
                         reload();
                     }}
                 />
-                <ExperimentDeletionDialog
-                    open={showDeletionDialog}
+                <ConfirmationDialog
+                    open={showConfirmationDialog}
+                    text="Are you sure you want to delete this experiment? This action cannot be undone."
                     onClose={() => {
-                        setShowDeletionDialog(false);
+                        setShowConfirmationDialog(false);
                     }}
-                    onDelete={handleDeleteExperiments}
+                    onConfirm={handleDeleteExperiments}
                 />
             </Stack>
         </Layout>

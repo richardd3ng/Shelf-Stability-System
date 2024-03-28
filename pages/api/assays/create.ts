@@ -5,15 +5,21 @@ import { CONSTRAINT_ERROR_CODE, getApiError } from "@/lib/api/error";
 import { Assay } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
+import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 
 export default async function createAssayAPI(
     req: NextApiRequest,
     res: NextApiResponse<Assay | ApiError>
 ) {
-    await denyReqIfUserIsNotLoggedInAdmin(req, res);
-    const { experimentId, conditionId, type, week } = req.body;
+    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
+    if (permissionTracker.shouldStopExecuting){
+        return;
+    }
+
+    const { experimentId, conditionId, assayTypeId, week } = req.body;
     if (
-        type === undefined ||
+        assayTypeId === undefined ||
         week === undefined ||
         experimentId === undefined ||
         conditionId === undefined

@@ -3,10 +3,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
     ExperimentInfo,
     ExperimentWithLocalDate,
+    AssayTypeInfo,
+    AssayWithResult
 } from "@/lib/controllers/types";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
-import { Assay, AssayResult, Condition, Experiment } from "@prisma/client";
+import { Assay, AssayResult, AssayTypeForExperiment, Condition, Experiment } from "@prisma/client";
 import { getExperimentID, INVALID_EXPERIMENT_ID } from "@/lib/api/apiHelpers";
 import { JSONToExperiment, dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
 
@@ -23,10 +25,11 @@ export default async function getExperimentInfoAPI(
     }
 
     try {
-        const [experiment, conditions, assays]: [
+        const [experiment, conditions, assays, assayTypes]: [
             ExperimentWithLocalDate | null,
             Condition[],
-            Assay[]
+            AssayWithResult[],
+            AssayTypeInfo[]
         ] = await Promise.all([
             db.experiment
                 .findUnique({
@@ -36,15 +39,25 @@ export default async function getExperimentInfoAPI(
                     if (!experiment) {
                         return null;
                     }
-                    return dateFieldsToLocalDate(experiment, ["start_date"]);
+                    return dateFieldsToLocalDate(experiment, ["startDate"]);
                 }),
             db.condition.findMany({
                 where: { experimentId: id },
             }),
             db.assay.findMany({
                 where: { experimentId: id },
+                include : {
+                    result : true
+                }
             }),
+            db.assayTypeForExperiment.findMany({
+                where : { experimentId : id},
+                include : {
+                    assayType : true
+                }
+            })
         ]);
+        
         if (!experiment) {
             res.status(404).json(
                 getApiError(
@@ -56,6 +69,12 @@ export default async function getExperimentInfoAPI(
             return;
         }
         const experimentAssayResults: AssayResult[] = [];
+        assays.forEach((assay) => {
+            if (assay.result){
+                experimentAssayResults.push(assay.result);
+            }
+        })
+        /*
         await Promise.all(
             assays.map(async (assay: Assay) => {
                 const assayResults: AssayResult[] =
@@ -64,14 +83,15 @@ export default async function getExperimentInfoAPI(
                     });
                 experimentAssayResults.push(...assayResults);
             })
-        );
+        );*/
         res.status(200).json({
             experiment: JSONToExperiment(
                 JSON.parse(JSON.stringify(experiment))
             ),
             conditions: conditions,
-            assays: assays,
+            assays: assays.map((assay) => ({...assay, result : undefined})),
             assayResults: experimentAssayResults,
+            assayTypes : assayTypes
         });
     } catch (error) {
         console.error(error);
