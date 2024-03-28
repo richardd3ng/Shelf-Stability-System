@@ -30,7 +30,7 @@ export const DeleteAssayTypeIcon : React.FC<AssayTypeInfo> = (props : AssayTypeI
             />
             <ConfirmationDialog
                 open={showConfirmationDialog}
-                text="Are you sure you want to delete this assay type?"
+                text={"Are you sure you want to delete this assay type (" + (props.assayType.name) + ")?"}
                 onClose={() => setShowConfirmationDialog(false)}
                 onConfirm={() => deleteAssayType(props.id)}
             />

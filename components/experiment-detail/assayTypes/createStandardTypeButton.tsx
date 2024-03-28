@@ -22,8 +22,9 @@ export const CreateStandardAssayTypeButton : React.FC = () => {
                 
 
                 <Button variant="contained" color="primary" style={{textTransform : "none"}} onClick={() => setIsChoosing(true)}>+ Add Standard Type</Button>
-                <StandardAssayTypesSelector assayTypeId={chosenAssayTypeId} setAssayTypeId={(id : number) => setChosenAssayTypeId(id)}/>
-                           
+                {
+                    <StandardAssayTypesSelector assayTypeId={chosenAssayTypeId} setAssayTypeId={(id : number) => setChosenAssayTypeId(id)}/>
+                }        
                 <SaveOrCancelOptions onSave={async () => {
                     if (chosenAssayTypeId >= 0){
                         await addRow({experimentId : experimentId, assayTypeId : chosenAssayTypeId});
