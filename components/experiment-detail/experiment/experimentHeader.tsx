@@ -89,7 +89,10 @@ export const ExperimentHeader = () => {
                                 <EditExperimentButton />
                             </ExperimentEditingContext.Provider>
                         )}
-                        <GenerateReportIconButton experimentId={experimentId} />
+                        <GenerateReportIconButton
+                            experimentId={experimentId}
+                            size="large"
+                        />
                         <DownloadExcelIconButton />
                     </Box>
                 </Box>
