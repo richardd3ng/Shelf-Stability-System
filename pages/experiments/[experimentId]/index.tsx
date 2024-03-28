@@ -17,6 +17,7 @@ const ExperimentPage = () => {
     const experimentId = useExperimentId();
     const { data: experimentInfo } = useExperimentInfo(experimentId);
     const isAdmin: boolean = user?.isAdmin ?? false;
+    
     return (
         <Layout>
             <ExperimentHeader />
@@ -28,7 +29,9 @@ const ExperimentPage = () => {
                     }
                 />
             </Container>
+            
             <AssayTypes/>
+            
             <AssaysGroupedByType />
 
             
