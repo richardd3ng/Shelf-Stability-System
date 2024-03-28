@@ -84,36 +84,40 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, sho
     };
 
     const handleSubmitResult = (newResult: string) => {
+        const author = `${user?.displayName} (${user?.username})`;
+
         if (assayResult !== undefined) {
             updateAssayResult({
                 id: assayResult.id,
                 result: newResult ? parseFloat(newResult) : null,
-                author: user?.username ?? INVALID_USERNAME,
+                author: author,
             });
         } else if (newResult) {
             createAssayResult({
                 assayId: assay!.id,
                 result: parseFloat(newResult),
                 comment: null,
-                author: user?.username ?? INVALID_USERNAME,
+                author: author,
             });
         }
         setResult(newResult);
     };
 
     const handleSubmitComment = (newComment: string) => {
+        const author = `${user?.displayName} (${user?.username})`;
+
         if (assayResult !== undefined) {
             updateAssayResult({
                 id: assayResult.id,
                 comment: newComment ? newComment : null,
-                author: user?.username ?? INVALID_USERNAME,
+                author: author,
             });
         } else if (newComment) {
             createAssayResult({
                 assayId: assay!.id,
                 result: null,
                 comment: newComment,
-                author: user?.username ?? INVALID_USERNAME,
+                author: author,
             });
         }
         setComment(newComment);
