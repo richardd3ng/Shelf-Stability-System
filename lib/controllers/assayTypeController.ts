@@ -1,5 +1,5 @@
 import { ApiError } from "next/dist/server/api-utils";
-import { AssayTypeInfo, StandardAssayTypeForExperimentCreationsArgs, UpdateAssayTypeArgs, UpdateTechnicianArgs } from "./types";
+import { AssayTypeInfo, ExperimentInfo, StandardAssayTypeForExperimentCreationsArgs, UpdateAssayTypeArgs, UpdateTechnicianArgs } from "./types";
 import { AssayType, AssayTypeForExperiment } from "@prisma/client";
 
 export const assayTypeIdToName = (
@@ -103,18 +103,18 @@ export const getAllStandardAssayTypesThroughAPI = async () : Promise<AssayType[]
 
 
 const getUpdateAssayTypeBody = (updateArgs : UpdateAssayTypeArgs) => {
-    if (updateArgs.newName && updateArgs.newUnits){
+    if (updateArgs.name && updateArgs.units){
         return {
-            name : updateArgs.newName,
-            units : updateArgs.newUnits
+            name : updateArgs.name,
+            units : updateArgs.units
         };
-    } else if (updateArgs.newName){
+    } else if (updateArgs.name){
         return {
-            name : updateArgs.newName
+            name : updateArgs.name
         };
-    } else if (updateArgs.newUnits){
+    } else if (updateArgs.units){
         return {
-            units : updateArgs.newUnits
+            units : updateArgs.units
         };
     } else {
         return {};
@@ -129,7 +129,7 @@ export const updateAssayTypeThroughAPI = async (updateArgs : UpdateAssayTypeArgs
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(getUpdateAssayTypeBody(updateArgs)),
+        body: JSON.stringify(updateArgs),
     });
     const resJson = await response.json();
     if (response.ok) {
@@ -171,3 +171,16 @@ export const deleteAssayTypeForExperimentThroughAPI = async (assayTypeForExperim
     throw new ApiError(response.status, resJson.message);
 }
 
+export const checkIfThereAreRecordedResultsForAssayType = (assayTypeForExperimentId : number, experimentInfo : ExperimentInfo) : boolean => {
+    let hasResults : boolean = false;
+    experimentInfo.assays.forEach((assay) => {
+        if (assay.assayTypeId === assayTypeForExperimentId){
+            experimentInfo.assayResults.forEach((result) => {
+                if (result.assayId === assay.id && (result.result || result.comment)){
+                    hasResults = true;
+                }
+            })
+        }
+    });
+    return hasResults;
+}

@@ -1,21 +1,24 @@
-import { Button, Stack, TextField, IconButton } from "@mui/material";
-import Check from "@mui/icons-material/Check";
-import { Cancel } from "@mui/icons-material";
+import { Stack, TextField, } from "@mui/material";
+import Edit from "@mui/icons-material/Edit";
+import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 import React, {useState, useEffect} from "react";
 import { useUserInfo } from "@/lib/hooks/useUserInfo";
-import { InitialTextDisplay, TextDisplayWithHover } from "./initialTextDisplay";
+import { InitialTextDisplay } from "./initialTextDisplay";
 import { SaveOrCancelOptions } from "./saveOrCancelOptions";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
+import { AssayTypeInfo } from "@/lib/controllers/types";
 
 interface EditableTableCellProps {
     initialText : string | null;
     saveText : (s : string) => void;
     onlyAdminCanEdit : boolean;
     nullDescription : string;
+    assayType : AssayTypeInfo;
 }
 
 export const EditableTableCell : React.FC<EditableTableCellProps> = (props : EditableTableCellProps) => {
+    
     const [cellValue, setCellValue] = useState<string | null>("");
     const {isAdmin} = useUserInfo();
     const experimentId = useExperimentId();
@@ -24,16 +27,9 @@ export const EditableTableCell : React.FC<EditableTableCellProps> = (props : Edi
         setCellValue(props.initialText);
     }, [props.initialText]);
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    let canEdit = true;
-    let reasonCantEdit = "";
-    if (experimentInfo && experimentInfo.experiment.isCanceled){
-        canEdit = false;
-        reasonCantEdit = "Can't edit because the experiment is canceled"
-    }
-    if (props.onlyAdminCanEdit && !isAdmin){
-        canEdit = false;
-        reasonCantEdit = "Must be an admin to edit";
-    }
+    let canEdit = props.assayType && props.assayType.assayType.isCustom && isAdmin && experimentInfo && !experimentInfo.experiment.isCanceled;
+
+    
 
 
     if (isEditing){
@@ -63,9 +59,21 @@ export const EditableTableCell : React.FC<EditableTableCellProps> = (props : Edi
             )
         } else {
             return (
-                <Button  onClick={() => setIsEditing(true)} style={{textTransform : "none"}}>
+                <Stack direction="row">
                     <InitialTextDisplay text={cellValue} nullDescription={props.nullDescription}/>
-                </Button>
+                    {
+                        canEdit ?
+                        <IconButtonWithTooltip
+                            text="Edit"
+                            icon={Edit}
+                            onClick={() => setIsEditing(true)}
+                        />
+                        :
+                        null
+
+                    }
+                    
+                </Stack >
             )
         }
 

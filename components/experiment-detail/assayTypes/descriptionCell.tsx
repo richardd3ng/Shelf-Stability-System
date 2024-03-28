@@ -5,16 +5,16 @@ import { Typography } from "@mui/material";
 import { EditableTableCell } from "./editableTableCell";
 
 
-export const NameCell : React.FC<AssayTypeInfo> = (props : AssayTypeInfo) => {
+export const DescriptionCell : React.FC<AssayTypeInfo> = (props : AssayTypeInfo) => {
     const {mutate : updateAssayType} = useMutationToUpdateAssayType();
     return (
-        <Typography color={props.assayType.isCustom ? "green" : "black" } >
-            <EditableTableCell onlyAdminCanEdit={true} assayType={props} nullDescription="No Name Yet" initialText={props.assayType.name} saveText={(newName : string) => {
+        <Typography  >
+            <EditableTableCell onlyAdminCanEdit={true} nullDescription="No Description" assayType={props} initialText={props.assayType.description} saveText={(newDescription : string) => {
                 updateAssayType({
                     assayTypeId : props.assayType.id,
-                    name : newName,
+                    name : null,
                     units : null,
-                    description : null
+                    description : newDescription
                 })
             }}/>
         </Typography>

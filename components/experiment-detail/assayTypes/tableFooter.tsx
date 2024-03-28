@@ -29,7 +29,7 @@ export const AssayTypesTableFooter : React.FC = () => {
                 queryClient.invalidateQueries({queryKey : getQueryKeyForUseExperimentInfo(experimentId)});
             }}>+ Add Custom Type</Button>
             {
-               // <CreateStandardAssayTypeButton/>
+                //<CreateStandardAssayTypeButton/>
             }
             
             

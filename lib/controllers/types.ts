@@ -138,8 +138,9 @@ export type AssayTypeInfo = AssayTypeForExperiment & {
 
 export type UpdateAssayTypeArgs = {
     assayTypeId: number;
-    newName: string | null;
-    newUnits: string | null;
+    name: string | null;
+    units: string | null;
+    description : string | null;
 };
 
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;

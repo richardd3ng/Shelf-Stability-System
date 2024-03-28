@@ -3,11 +3,13 @@ import { AssayTypeInfo, UserInfo } from "@/lib/controllers/types";
 import { UserSelector } from "@/components/shared/userSelector";
 import { useMutationToUpdateTechnicianOfAssayTypeForExperiment } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
 import { useAllUsers } from "@/lib/hooks/useAllUsers";
-import { Typography, Button, Tooltip } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useUserInfo } from "@/lib/hooks/useUserInfo";
 import { InitialTextDisplay } from "./initialTextDisplay";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
+import Edit from "@mui/icons-material/Edit";
+import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 
 export const TechnicianCell : React.FC<AssayTypeInfo> = (props : AssayTypeInfo) => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -34,9 +36,21 @@ export const TechnicianCell : React.FC<AssayTypeInfo> = (props : AssayTypeInfo) 
         }
         if (isAdmin && experimentInfo && !experimentInfo.experiment.isCanceled){
             return (
-                <Button style={{textTransform : "none"}} onClick={() => setIsEditing(true)}>
+                <Stack direction="row">
                     <InitialTextDisplay text={technicianName} nullDescription="None"/>
-                </Button>
+                    {
+                        isAdmin && experimentInfo && !experimentInfo.experiment.isCanceled
+                        ?
+                        <IconButtonWithTooltip
+                            text="Edit"
+                            icon={Edit}
+                            onClick={() => setIsEditing(true)}
+                        />
+                        :
+                        null
+                    }
+
+                </Stack>
             )
         } else {
             return (
