@@ -41,13 +41,13 @@ export const sendEmails = async () => {
                 <table style="border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th style="padding: 8px 16px 8px 0; text-align: left;">Target Date</th>
+                            <th style="padding: 8px 48px 8px 0; text-align: left;">Target Date</th>
                             <th style="padding: 8px 144px 8px 0; text-align: left;">Title</th>
-                            <th style="padding: 8px 72px 8px 0; text-align: left;">Owner</th>
-                            <th style="padding: 8px 16px 8px 0; text-align: left;">Condition</th>
+                            <th style="padding: 8px 144px 8px 0; text-align: left;">Owner</th>
+                            <th style="padding: 8px 48px 8px 0; text-align: left;">Condition</th>
                             <th style="padding: 8px 16px 8px 0; text-align: left;">Week</th>
-                            <th style="padding: 8px 16px 8px 0; text-align: left;">Assay Type</th>
-                            <th style="padding: 8px 16px 8px 0; text-align: left;">Technician</th>
+                            <th style="padding: 8px 48px 8px 0; text-align: left;">Assay Type</th>
+                            <th style="padding: 8px 144px 8px 0; text-align: left;">Technician</th>
                         </tr>
                     </thead>
                     <tbody>

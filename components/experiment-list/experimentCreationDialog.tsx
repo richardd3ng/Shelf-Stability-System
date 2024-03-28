@@ -204,7 +204,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         >
                             {users.map((user: UserInfo) => (
                                 <MenuItem key={user.id} value={user.id}>
-                                    {user.username}
+                                    {`${user.displayName} (${user.username})`}
                                 </MenuItem>
                             ))}
                         </Select>
