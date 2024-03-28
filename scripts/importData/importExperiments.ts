@@ -30,7 +30,7 @@ const importExperiments = async (filePath: string) => {
             const createdExperiment = await parseAndCreateExperimentWithConditionsAndAssayTypesInDB(experiment, allUsers, assayTypes);
             const conditionToId = getConditionToIdMap(createdExperiment.conditions);
             await parseAndCreateAssaysForExperimentInDB(experiment, conditionToId, createdExperiment);
-            await parseAndCreateAssayResultsForExperimentInDB(createdExperiment, experiment, conditionToId);
+            await parseAndCreateAssayResultsForExperimentInDB(createdExperiment, experiment, conditionToId, allUsers);
         }
 
         console.log("Successfully imported data!");
@@ -110,18 +110,19 @@ async function parseAndCreateAssayTypesIfNeeded(experiment : ExperimentImportJSO
 
 
 
-async function parseAndCreateAssayResultsForExperimentInDB(createdExperiment: CreatedExperimentIdAndConditionsAndAssayTypes, experiment: ExperimentImportJSON, conditionToId: Map<string, number>) {
+async function parseAndCreateAssayResultsForExperimentInDB(createdExperiment: CreatedExperimentIdAndConditionsAndAssayTypes, experiment: ExperimentImportJSON, conditionToId: Map<string, number>, allUsers: User[]) {
     const createdAssays = await getAssaysForExperiment(createdExperiment.id);
     let assayResults: AssayResultCreationArgs[] = [];
     experiment.assay_results.forEach((result) => {
         const conditionId = getConditionIdFromName(conditionToId, result.condition);
         const type = getCorrespondingAssayTypeId(result.assay_type, createdExperiment);
         const correspondingAssayId = getCorrespondingAssayId(createdAssays, result.week, conditionId, type);
+        const displayName = allUsers.find((u) => u.username === result.result.author)?.displayName;
         assayResults.push({
             assayId: correspondingAssayId,
             result: result.result.value,
             comment: result.result.comment,
-            author: result.result.author ? result.result.author : ""
+            author: result.result.author ? `${displayName} (${result.result.author})` : ""
         });
 
     });

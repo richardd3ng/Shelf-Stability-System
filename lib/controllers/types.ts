@@ -25,6 +25,7 @@ export type ExperimentInfo = {
 
 export type ExperimentOwner = {
     username: string;
+    displayName: string;
 };
 
 export type ExperimentTableInfo = {

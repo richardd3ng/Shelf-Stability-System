@@ -26,7 +26,10 @@ export default async function getExperimentOwnerAPI(
             },
         });
         if (experiment) {
-            res.status(200).json({ username: experiment.owner.username });
+            res.status(200).json({
+                username: experiment.owner.username,
+                displayName: experiment.owner.displayName,
+            });
         }
     } catch (error) {
         console.error(error);
