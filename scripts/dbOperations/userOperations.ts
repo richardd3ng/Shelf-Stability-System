@@ -134,7 +134,10 @@ export const fetchEmailInfo = async (): Promise<EmailInfo> => {
                 condition: row.condition,
                 week: row.week,
                 assayType: row.assayType,
-                technician: `${row.technicianDisplayName} (${row.technicianUsername})`,
+                technician:
+                    row.technicianUsername !== "N/A"
+                        ? `${row.technicianDisplayName} (${row.technicianUsername})`
+                        : "N/A",
             });
         }
     });
