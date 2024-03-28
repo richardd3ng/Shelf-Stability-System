@@ -17,7 +17,8 @@ export default function LoginPage() {
     const router = useRouter();
     const { showAlert } = useAlert();
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
         showLoading("Logging in...");
         signIn("credentials", { username, password, redirect: false })
             .then((d) => {
@@ -27,7 +28,7 @@ export default function LoginPage() {
                     router.push("/experiment-list");
                 }
             })
-            .catch((_reason) => { })
+            .catch((_reason) => {})
             .finally(() => {
                 hideLoading();
             });
@@ -35,50 +36,50 @@ export default function LoginPage() {
 
     const handleOAuth = async () => {
         showLoading("Logging in...");
-        await signIn("duke")
+        await signIn("duke");
     };
 
     return (
         <Stack>
             <Box alignSelf="center">
-                <AuthForm
-                    fields={[
-                        {
-                            value: username,
-                            setValue: setUsername,
-                            label: "Username",
-                            shouldBlurText: false,
-                        },
-                        {
-                            value: password,
-                            setValue: setPassword,
-                            label: "Password",
-                            shouldBlurText: true,
-                        },
-                    ]}
-                    title="Login"
-                />
-                <Stack alignSelf="center" spacing={1}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                        onClick={handleSubmit}
-                        sx={{ textTransform: "none" }}
-                    >
-                        <Typography>Submit</Typography>
-                    </Button>
-                    <Divider />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleOAuth}
-
-                        sx={{ textTransform: "none" }}
-                    >
-                        Sign in with Duke
-                    </Button>
-                </Stack>
+                <form onSubmit={handleSubmit}>
+                    <AuthForm
+                        fields={[
+                            {
+                                value: username,
+                                setValue: setUsername,
+                                label: "Username",
+                                shouldBlurText: false,
+                            },
+                            {
+                                value: password,
+                                setValue: setPassword,
+                                label: "Password",
+                                shouldBlurText: true,
+                            },
+                        ]}
+                        title="Login"
+                    />
+                    <Stack alignSelf="center" spacing={1}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            sx={{ textTransform: "none" }}
+                        >
+                            <Typography>Submit</Typography>
+                        </Button>
+                        <Divider />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleOAuth}
+                            sx={{ textTransform: "none" }}
+                        >
+                            Sign in with Duke
+                        </Button>
+                    </Stack>
+                </form>
             </Box>
         </Stack>
     );
@@ -95,17 +96,21 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
                 },
             };
         } else {
-            const session = await getServerSession(context.req, context.res, authOptions)
+            const session = await getServerSession(
+                context.req,
+                context.res,
+                authOptions
+            );
 
             // Signed in, so redirect to the experiment list page
             if (session) {
-                return { redirect: { destination: "/experiment-list" } }
+                return { redirect: { destination: "/experiment-list" } };
             }
 
             return { props: {} };
         }
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return {
             redirect: {
                 destination: "/auth/setPasswordOnSetup",

@@ -1,5 +1,5 @@
 import { Box, IconButton, Stack, Typography, Tooltip } from "@mui/material";
-import { getAssayTypeUnits } from "@/lib/controllers/assayTypeController";
+import { getAssayTypeUnits, getCorrespondingAssayType } from "@/lib/controllers/assayTypeController";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MessageIcon from "@mui/icons-material/Message";
@@ -8,12 +8,13 @@ import React, { useContext, useState } from "react";
 import { Assay, AssayResult } from "@prisma/client";
 import { assayTypeIdToName } from "@/lib/controllers/assayTypeController";
 import { useMutationToDeleteAssay } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
-import AssayEditorModal from "../modifications/editorModals/assayEditorModal";
+import AssayEditorModal from "./assayEditorModal";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { AssayTypeInfo } from "@/lib/controllers/types";
+import DeleteAssayButton from "./deleteAssayButton";
 
 interface AssayChipProps {
     assay: Assay;
@@ -29,11 +30,16 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
     const [showComment, setShowComment] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const { user } = useContext(CurrentUserContext);
+    const experimentSpecificAssayType = getCorrespondingAssayType(props.assay.assayTypeId, experimentInfo?.assayTypes ?? []);
+    const isTechnician: boolean = user?.id === experimentSpecificAssayType?.technicianId ?? false;
     const isAdminOrOwner: boolean =
         (user?.isAdmin || user?.id === experimentInfo?.experiment.ownerId) ??
         false;
-    const isEditable: boolean =
+
+    const isDeletable: boolean =
         !experimentInfo?.experiment.isCanceled && isAdminOrOwner;
+    const isEditable: boolean =
+        !experimentInfo?.experiment.isCanceled && (isAdminOrOwner || isTechnician);
 
     const getResultText = (
         assayTypesForExperiment: AssayTypeInfo[]
@@ -44,12 +50,13 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
         );
         const resultText: string =
             props.assayResult && props.assayResult.result
-                ? `${props.assayResult.result}${
-                      units.startsWith("%") ? units : ` ${units}`
-                  }`
+                ? `${props.assayResult.result}${units.startsWith("%") ? units : ` ${units}`
+                }`
                 : "N/A";
         return resultText;
     };
+
+    const hash = `assay-chip-${props.assay.id}`;
 
     if (!experimentInfo) {
         return null;
@@ -63,7 +70,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                     padding: "4px",
                     display: "inline-block",
                     textAlign: "center",
+                    backgroundColor:
+                        window && window.location.hash === `#${hash}`
+                            ? "#dcdcec"
+                            : undefined,
                 }}
+                id={hash}
             >
                 <Stack sx={{ margin: -0.25 }}>
                     <Typography sx={{ fontSize: 16 }}>
@@ -86,25 +98,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                         <Tooltip
                             title={
                                 <Typography fontSize={16}>
-                                    {`Author: ${
-                                        props.assayResult?.author ?? "N/A"
-                                    }`}
+                                    {`Author: ${props.assayResult?.author ?? "N/A"
+                                        }`}
                                 </Typography>
                             }
                             open={showLastEditor}
                             arrow
-                            slotProps={{
-                                popper: {
-                                    modifiers: [
-                                        {
-                                            name: "offset",
-                                            options: {
-                                                offset: [0, -14],
-                                            },
-                                        },
-                                    ],
-                                },
-                            }}
                         >
                             <IconButton
                                 size="small"
@@ -120,25 +119,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                         <Tooltip
                             title={
                                 <Typography fontSize={16}>
-                                    {`Comment: ${
-                                        props.assayResult?.comment ?? "N/A"
-                                    }`}
+                                    {`Comment: ${props.assayResult?.comment ?? "N/A"
+                                        }`}
                                 </Typography>
                             }
                             open={showComment}
                             arrow
-                            slotProps={{
-                                popper: {
-                                    modifiers: [
-                                        {
-                                            name: "offset",
-                                            options: {
-                                                offset: [0, -14],
-                                            },
-                                        },
-                                    ],
-                                },
-                            }}
                         >
                             <IconButton
                                 size="small"
@@ -152,24 +138,23 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                             </IconButton>
                         </Tooltip>
                         {isEditable && (
-                            <Box>
-                                <IconButton
-                                    size="small"
-                                    onClick={() => setIsEditing(true)}
-                                >
-                                    <EditIcon
-                                        sx={{ fontSize: 20, color: "gray" }}
-                                    />
-                                </IconButton>
-                                <IconButton
-                                    size="small"
-                                    onClick={() => deleteAssay(props.assay.id)}
-                                >
-                                    <DeleteIcon
-                                        sx={{ fontSize: 20, color: "gray" }}
-                                    />
-                                </IconButton>
-                            </Box>
+                            <IconButton
+                                size="small"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                <EditIcon
+                                    sx={{ fontSize: 20, color: "gray" }}
+                                />
+                            </IconButton>
+                        )}
+                        {isDeletable && (
+                            <DeleteAssayButton
+                                id={props.assay.id}
+                                type={assayTypeIdToName(
+                                    props.assay.assayTypeId,
+                                    experimentInfo.assayTypes
+                                )}
+                            />
                         )}
                     </Box>
                 </Stack>
@@ -177,7 +162,7 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
             <AssayEditingContext.Provider
                 value={{
                     assay: props.assay,
-                    setAssay: (_assay: Assay) => {},
+                    setAssay: (_assay: Assay) => { },
                     isEditing,
                     setIsEditing,
                 }}
@@ -187,12 +172,14 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                         assayResult: props.assayResult,
                         setAssayResult: (
                             _result: AssayResult | undefined
-                        ) => {},
+                        ) => { },
                         isEditing,
                         setIsEditing,
                     }}
                 >
-                    <AssayEditorModal />
+                    <AssayEditorModal 
+                        onlyEditResult={!isDeletable}
+                    />
                 </AssayResultEditingContext.Provider>
             </AssayEditingContext.Provider>
         </>

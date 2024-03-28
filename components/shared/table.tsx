@@ -14,7 +14,6 @@ interface TableProps {
     checkboxSelection?: boolean;
     footer?: React.JSXElementConstructor<any>;
     hideFooterContainer?: boolean;
-    rowClassName?: string;
     onDeleteRows?: (rows: GridRowSelectionModel) => void;
     handleCellClick?: (params: any) => void;
 }
@@ -77,7 +76,7 @@ const Table: React.FC<TableProps & DataGridProps> = (
             <DataGrid
                 hideFooterPagination={!props.pagination}
                 initialState={{
-                    pagination: { paginationModel: { pageSize: 10 } },
+                    pagination: { paginationModel: { pageSize: 15 } },
                     sorting: {
                         sortModel: props.sortModel,
                     },
@@ -85,13 +84,7 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 disableColumnMenu
                 autoHeight
                 getRowHeight={() => "auto"}
-                pageSizeOptions={[
-                    10,
-                    25,
-                    50,
-                    100,
-                    // { value: 100, label: "All" }, // Note, seems to conflict with 100 setting in a weird way
-                ]}
+                pageSizeOptions={[15, 30, 60, 100]}
                 checkboxSelection={props.checkboxSelection ?? false}
                 disableRowSelectionOnClick
                 slots={{ footer: FooterComponent }}
@@ -105,12 +98,6 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 sx={{
                     "@media print": { breakInside: "avoid" },
                 }}
-                getRowClassName={
-                    props.rowClassName
-                        ? (_) => props.rowClassName ?? ""
-                        : undefined
-                }
-                // getRowClassName={(_) => "user-row-clickable"}
             />
         </Box>
     );

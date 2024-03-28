@@ -5,8 +5,7 @@ import { LocalDate, ZoneId, nativeJs } from "@js-joda/core";
 import { EmailInfo, EmailQueryResult } from "@/lib/controllers/types";
 import { UserImportJSON } from "../importData/jsonParser";
 
-
-export async function createUserInDB(user : UserImportJSON) {
+export async function createUserInDB(user: UserImportJSON) {
     return {
         ...(await db.user.create({
             select: {
@@ -14,17 +13,17 @@ export async function createUserInDB(user : UserImportJSON) {
                 username: true,
                 isAdmin: true,
                 isSuperAdmin: true,
-                displayName : true,
-                email : true
+                displayName: true,
+                email: true,
             },
             data: {
-                username : user.username,
+                username: user.username,
                 password: await hashPassword(user.password),
                 isAdmin: user.administrator_permission,
                 isSuperAdmin: false,
-                displayName : user.display_name,
-                isSSO : user.authentication_type !== "local",
-                email : user.email_address
+                displayName: user.display_name,
+                isSSO: user.authentication_type !== "local",
+                email: user.email_address,
             },
         })),
     };
@@ -40,15 +39,20 @@ export async function getAllUsers(): Promise<User[]> {
     return users;
 }
 
-export async function createOrUpdateUser(username: string, displayName: string, email: string, isSSO: boolean) {
+export async function createOrUpdateUser(
+    username: string,
+    displayName: string,
+    email: string,
+    isSSO: boolean
+) {
     return {
-        ...await db.user.upsert({
+        ...(await db.user.upsert({
             where: {
-                username
+                username,
             },
             update: {
                 displayName,
-                email
+                email,
             },
             create: {
                 username,
@@ -56,11 +60,11 @@ export async function createOrUpdateUser(username: string, displayName: string, 
                 email,
                 isSSO,
                 isAdmin: false,
-                isSuperAdmin: false
-            }
-        })
+                isSuperAdmin: false,
+            },
+        })),
     };
-};
+}
 
 export const fetchEmailInfo = async (): Promise<EmailInfo> => {
     const today = LocalDate.now().toString();
@@ -68,22 +72,22 @@ export const fetchEmailInfo = async (): Promise<EmailInfo> => {
     const queryResults = await db.$queryRaw<EmailQueryResult[]>`
     WITH owners AS (
         WITH upcoming_assays AS (
-            SELECT e."ownerId" AS "userId", e."startDate" + INTERVAL '1 WEEK' * a.week AS "targetDate", e.title, e."ownerId", a."conditionId", a.week, a."assayTypeId" AS "assayTypeFromExperimentId"
+            SELECT e."ownerId" AS "userId", e."startDate" + INTERVAL '1 WEEK' * a.week AS "targetDate", e.id AS "experimentId", e.title, e."ownerId", a."conditionId", a.week, a."assayTypeId" AS "assayTypeFromExperimentId"
             FROM public."Assay" a INNER JOIN public."Experiment" e ON a."experimentId" = e.id
             WHERE NOT e."isCanceled" AND e."startDate" + INTERVAL '1 WEEK' * a.week <= Date(${dateLimit})
             AND e."startDate" + INTERVAL '1 WEEK' * a.week >= Date(${today})
         )
-        SELECT u."userId", u."targetDate", u.title, u."ownerId", u."conditionId", u.week, a."assayTypeId", a."technicianId"
+        SELECT u."userId", u."targetDate", u."experimentId", u.title, u."ownerId", u."conditionId", u.week, a."assayTypeId", a."technicianId"
         FROM upcoming_assays u INNER JOIN public."AssayTypeForExperiment" a ON u."assayTypeFromExperimentId" = a.id
     ),
     technicians AS (
         WITH upcoming_assays AS (
-            SELECT e."startDate" + INTERVAL '1 WEEK' * a.week AS "targetDate", e.title, e."ownerId", a."conditionId", a.week, a."assayTypeId" AS "assayTypeFromExperimentId"
+            SELECT e."startDate" + INTERVAL '1 WEEK' * a.week AS "targetDate", e.id AS "experimentId", e.title, e."ownerId", a."conditionId", a.week, a."assayTypeId" AS "assayTypeFromExperimentId"
             FROM public."Assay" a INNER JOIN public."Experiment" e ON a."experimentId" = e.id
             WHERE NOT e."isCanceled" AND e."startDate" + INTERVAL '1 WEEK' * a.week <= Date(${dateLimit})
             AND e."startDate" + INTERVAL '1 WEEK' * a.week >= Date(${today})
         )
-        SELECT a."technicianId" AS "userId", u."targetDate", u.title, u."ownerId", u."conditionId", u.week, a."assayTypeId", a."technicianId"
+        SELECT a."technicianId" AS "userId", u."targetDate", u."experimentId", u.title, u."ownerId", u."conditionId", u.week, a."assayTypeId", a."technicianId"
         FROM upcoming_assays u INNER JOIN public."AssayTypeForExperiment" a ON u."assayTypeFromExperimentId" = a.id
         WHERE a."technicianId" IS NOT NULL
     ),
@@ -95,22 +99,22 @@ export const fetchEmailInfo = async (): Promise<EmailInfo> => {
         FROM technicians
     ),
     with_type_names AS (
-        SELECT r."userId", r."targetDate", r.title, r."ownerId", r."conditionId", r.week, a.name AS "assayType", r."technicianId"
+        SELECT r."userId", r."targetDate", r."experimentId", r.title, r."ownerId", r."conditionId", r.week, a.name AS "assayType", r."technicianId"
         FROM recipients r INNER JOIN public."AssayType" a ON r."assayTypeId" = a.id
     ),
     with_conditions AS (
-        SELECT w."userId", w."targetDate", w.title, w."ownerId", c.name AS condition, w.week, w."assayType", w."technicianId"
+        SELECT w."userId", w."targetDate", w."experimentId", w.title, w."ownerId", c.name AS condition, w.week, w."assayType", w."technicianId"
         FROM with_type_names w INNER JOIN public."Condition" c ON w."conditionId" = c.id
     ),
     with_technician AS (
-        SELECT w."userId", w."targetDate", w.title, w."ownerId", w.condition, w.week, w."assayType", COALESCE(u.username, 'N/A') AS technician
+        SELECT w."userId", w."targetDate", w."experimentId", w.title, w."ownerId", w.condition, w.week, w."assayType", COALESCE(u.username, 'N/A') AS "technicianUsername", COALESCE(u."displayName", 'N/A') AS "technicianDisplayName"
         FROM with_conditions w LEFT OUTER JOIN public."User" u ON w."technicianId" = u.id
     ),
     with_owner AS (
-        SELECT w."userId", w."targetDate", w.title, u.username AS owner, w.condition, w.week, w."assayType", w.technician
+        SELECT w."userId", w."targetDate", w."experimentId", w.title, u.username AS "ownerUsername", u."displayName" as "ownerDisplayName", w.condition, w.week, w."assayType", w."technicianUsername", w."technicianDisplayName"
         FROM with_technician w INNER JOIN public."User" u ON w."ownerId" = u.id
     )
-    SELECT w."userId", u.email, w."targetDate", w.title, w.owner, w.condition, w.week, w."assayType", w.technician
+    SELECT w."userId", u.email, w."targetDate", w."experimentId", w.title, w."ownerUsername", w."ownerDisplayName", w.condition, w.week, w."assayType", w."technicianUsername", w."technicianDisplayName"
     FROM with_owner w INNER JOIN public."User" u ON w."userId" = u.id
     ORDER BY "targetDate"`;
 
@@ -126,11 +130,14 @@ export const fetchEmailInfo = async (): Promise<EmailInfo> => {
                 ),
                 experimentId: row.experimentId,
                 title: row.title,
-                owner: row.owner,
+                owner: `${row.ownerDisplayName} (${row.ownerUsername})`,
                 condition: row.condition,
                 week: row.week,
                 assayType: row.assayType,
-                technician: row.technician,
+                technician:
+                    row.technicianUsername !== "N/A"
+                        ? `${row.technicianDisplayName} (${row.technicianUsername})`
+                        : "N/A",
             });
         }
     });

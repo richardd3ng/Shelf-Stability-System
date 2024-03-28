@@ -1,7 +1,7 @@
 import { ExperimentInfo } from "./controllers/types";
 import { utils, writeFile } from "xlsx/";
 import { Assay, AssayResult, Condition } from "@prisma/client";
-import { assayTypeIdToName, getAssayTypeUnits } from "./controllers/assayTypeController";
+import { assayTypeIdToName, getAssayTypeUnits, getCorrespondingAssayType } from "./controllers/assayTypeController";
 
 export function generateExcelReport(experimentInfo: ExperimentInfo, ownerUsername: string) {
     const sheet1Data = getSheet1Data(experimentInfo, ownerUsername);
@@ -22,8 +22,8 @@ function getSheet1Data(experimentInfo: ExperimentInfo, ownerUsername: string): S
         ["ID", experimentInfo.experiment.id],
         ["Owner", ownerUsername],
         ["Description", experimentInfo.experiment.description],
-        ["Start Date", experimentInfo.experiment.startDate.toString()]
-
+        ["Start Date", experimentInfo.experiment.startDate.toString()],
+        ["Canceled", experimentInfo.experiment.isCanceled.toString().toLowerCase()],
     ];
     return data;
 }
@@ -37,7 +37,7 @@ function getSheet2Data(experimentInfo: ExperimentInfo): OneRowOfSheet2Data[] {
         data.push({
             "Week": assay.week,
             "Condition": experimentInfo.conditions.findLast((condition: Condition) => condition.id === assay.conditionId)?.name,
-            "Assay Type": assayTypeIdToName(assay.assayTypeId, experimentInfo.assayTypes),
+            "Assay Type": `${assayTypeIdToName(assay.assayTypeId, experimentInfo.assayTypes)}${getCorrespondingAssayType(assay.assayTypeId, experimentInfo.assayTypes)?.assayType.isCustom ? '*' : ''}`,
             "Result": assayResult?.result,
             "Units": assayResult?.result ? getAssayTypeUnits(assay.assayTypeId, experimentInfo.assayTypes) : null,
             "Last Edited User": assayResult?.author,

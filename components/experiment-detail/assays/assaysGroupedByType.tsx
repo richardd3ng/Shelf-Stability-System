@@ -6,12 +6,11 @@ import {
     Typography,
     AccordionSummary,
     AccordionDetails,
-    Stack,
 } from "@mui/material";
 import React from "react";
-import ExperimentTable from "./experimentTable/experimentTable";
 import { AssayTypeInfo, ExperimentInfo } from "@/lib/controllers/types";
 import { ExpandMore } from "@mui/icons-material";
+import ReportTable from "@/components/experiment-report/experimentTableReport/reportTable";
 
 const AssaysGroupedByType: React.FC = () => {
     const experimentId = useExperimentId();
@@ -22,8 +21,7 @@ const AssaysGroupedByType: React.FC = () => {
     }
     return (
         <Container sx={{ marginTop: 2, minWidth: "100%" }}>
-
-            {data.assayTypes.map((type : AssayTypeInfo) => {
+            {data.assayTypes.map((type: AssayTypeInfo) => {
                 const typeId: number = type.id;
                 return (
                     <Accordion key={typeId}>
@@ -33,7 +31,8 @@ const AssaysGroupedByType: React.FC = () => {
                             </Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <ExperimentTable
+                            <ReportTable
+                                experimentInfo={data}
                                 assayFilter={(experimentInfo: ExperimentInfo) =>
                                     experimentInfo.assays.filter(
                                         (assay) => assay.assayTypeId === typeId

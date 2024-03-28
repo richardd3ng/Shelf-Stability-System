@@ -1,7 +1,7 @@
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { Stack, Typography, Container, IconButton, Box, Button } from "@mui/material";
-import React, {useState} from "react";
+import { Typography, Container, Button } from "@mui/material";
+import React from "react";
 
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import Table from "@/components/shared/table";
@@ -14,22 +14,20 @@ import { DeleteAssayTypeIcon } from "./deleteAssayTypeIcon";
 import { AssayTypesTableFooter } from "./tableFooter";
 
 const colDefs: GridColDef[] = [
-
     {
         field: "name",
         headerName: "Name",
         type: "string",
         flex: 4,
-        valueGetter : (params : any) => String(params.row.assayType.name),
-        renderCell : (params : any) => <NameCell {...params.row}/>
-            
+        valueGetter: (params: any) => String(params.row.assayType.name),
+        renderCell: (params: any) => <NameCell {...params.row} />,
     },
     {
         field: "technicianId",
         headerName: "Technician",
         type: "number",
         flex: 2,
-        renderCell : (params) => <TechnicianCell {...params.row}/>
+        renderCell: (params) => <TechnicianCell {...params.row} />,
     },
 
     {
@@ -38,7 +36,7 @@ const colDefs: GridColDef[] = [
         type: "string",
         valueGetter: (params) => params.row.assayType.units,
         flex: 2,
-        renderCell : (params : any) => <UnitsCell {...params.row}/>
+        renderCell: (params: any) => <UnitsCell {...params.row} />,
     },
 
     {
@@ -48,16 +46,15 @@ const colDefs: GridColDef[] = [
         align: "center",
         headerAlign: "center",
         sortable: false,
-        renderCell: (params) => <DeleteAssayTypeIcon {...params.row}/>
+        renderCell: (params) => <DeleteAssayTypeIcon {...params.row} />,
     },
 ];
 
-
-export const AssayTypes : React.FC = () => {
+export const AssayTypes: React.FC = () => {
     const experimentId = useExperimentId();
     const {data : experimentInfo} = useExperimentInfo(experimentId);
 
-    if (!experimentInfo){
+    if (!experimentInfo) {
         return null;
     }
 
@@ -68,4 +65,4 @@ export const AssayTypes : React.FC = () => {
             <Table columns={colDefs} rows={experimentInfo.assayTypes} footer={AssayTypesTableFooter}/>
         </Container>
     );
-}
+};

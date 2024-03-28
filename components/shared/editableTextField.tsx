@@ -16,6 +16,7 @@ interface EditableTextFieldProps {
     defaultDisplayValue?: string;
     includeDelete?: boolean;
     multiline?: boolean;
+    isEditing?: boolean;
     onSubmit: (value: string) => void;
 }
 
@@ -23,17 +24,22 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
     props: EditableTextFieldProps
 ) => {
     const [value, setValue] = useState<string>(props.value || "");
-    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [isEditing, setIsEditing] = useState<boolean>(
+        props.isEditing || false
+    );
     const { showAlert } = useAlert();
     const [resultText, setResultText] = useState<string>("");
-    const { startEditing, stopEditing } = useEditGroup(props.id, () => setIsEditing(false));
+    const { startEditing, stopEditing } = useEditGroup(props.id, () =>
+        setIsEditing(false)
+    );
 
     useEffect(() => {
         if ((props.value || value) && props.units) {
             setResultText(
-                `${props.value || value}${props.units.startsWith("%")
-                    ? props.units
-                    : ` ${props.units}`
+                `${props.value || value}${
+                    props.units.startsWith("%")
+                        ? props.units
+                        : ` ${props.units}`
                 }`
             );
         } else {

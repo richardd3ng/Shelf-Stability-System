@@ -68,6 +68,7 @@ const ConditionEditorModal: React.FC = () => {
                     id="name"
                     value={name?.toString()}
                     label="Name:"
+                    isEditing={true}
                     onSubmit={handleSubmitName}
                 />
                 {(!control && (

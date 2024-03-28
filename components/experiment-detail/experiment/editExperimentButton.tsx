@@ -11,6 +11,7 @@ const EditExperimentButton: React.FC = () => {
             text="Edit Experiment"
             icon={EditIcon}
             onClick={() => setIsEditing(true)}
+            size="large"
         />
     );
 };

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Box, Button, Typography } from "@mui/material";
 import { useMutationToDeleteExperiment } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
-import ConfirmationDialog from "../shared/confirmationDialog";
+import ConfirmationDialog from "../../shared/confirmationDialog";
 
 const DeleteExperimentButton = () => {
     const experimentId = useExperimentId();

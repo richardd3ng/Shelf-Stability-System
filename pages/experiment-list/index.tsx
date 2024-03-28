@@ -43,6 +43,7 @@ import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 import Delete from "@mui/icons-material/Delete";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import ConfirmationDialog from "@/components/shared/confirmationDialog";
+import { useSearchParams } from "next/navigation";
 
 interface QueryParams {
     search: string;
@@ -50,14 +51,24 @@ interface QueryParams {
     status: ExperimentStatus;
 }
 
-const getQueryParamsFromURL = (): QueryParams => {
-    const params: URLSearchParams = new URLSearchParams(window.location.search);
+const getQueryParamsFromURL = (params: URLSearchParams | null): QueryParams => {
     return {
-        search: params.get("search") ?? "",
-        user: params.get("user") ?? "",
-        status: (params.get("status") ?? "all") as ExperimentStatus,
+        search: params?.get("search") ?? "",
+        user: params?.get("user") ?? "",
+        status: (params?.get("status") ?? "all") as ExperimentStatus,
     };
 };
+
+function queryParamEquals(
+    oldParams: QueryParams,
+    newParams: QueryParams
+): boolean {
+    return (
+        oldParams.search === newParams.search &&
+        oldParams.user === newParams.user &&
+        oldParams.status === newParams.status
+    );
+}
 
 const ExperimentList: React.FC = () => {
     const [rows, setRows] = useState<ExperimentTableInfo[]>([]);
@@ -75,10 +86,12 @@ const ExperimentList: React.FC = () => {
         user: "",
         status: "all",
     });
-    const [initialized, setInitialized] = useState<boolean>(false); // hacky way to make reload() run once on first render
-    const [userFilterList, setUserFilterList] = useState<UserInfo[] | null>(
-        null
-    );
+    const [userFilterList, setUserFilterList] = useState<
+        {
+            label: string;
+            value: string;
+        }[]
+    >([]);
     const { user } = useContext(CurrentUserContext);
     const isAdmin: boolean = user?.isAdmin ?? false;
 
@@ -87,6 +100,13 @@ const ExperimentList: React.FC = () => {
     ): Promise<ExperimentTable> => {
         showLoading("Loading experiments...");
         const fetchedData = await getExperiments(paging);
+        const newParams = getQueryParamsFromURL(
+            new URLSearchParams(router.asPath.split('?')[1])
+        );
+        if (!queryParamEquals(queryParams, newParams)) {
+            return { rows: [], rowCount: 0 };
+        }
+        
         setRows(fetchedData.rows);
         hideLoading();
         return fetchedData;
@@ -96,39 +116,46 @@ const ExperimentList: React.FC = () => {
         reloadExperimentData,
         [],
         {
-            pageSize: 10,
+            pageSize: 15,
             page: 0,
         }
     );
 
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        setQueryParams(getQueryParamsFromURL(searchParams));
+    }, [searchParams]);
+
     useEffect(() => {
         const fetchUserData = async () => {
-            setUserFilterList(await fetchOwnersAndTechnicians());
-            setQueryParams(getQueryParamsFromURL());
-            setInitialized(true);
+            setUserFilterList(
+                (await fetchOwnersAndTechnicians()).map((user: UserInfo) => ({
+                    label: `${user.displayName} (${user.username})`,
+                    value: user.username,
+                }))
+            );
         };
         fetchUserData();
     }, []);
 
     useEffect(() => {
-        if (initialized) {
-            reload();
-        }
-    }, [initialized, queryParams]);
+        reload();
+    }, [queryParams]);
 
     const colDefs: GridColDef[] = [
         {
             field: "id",
             headerName: "ID",
             type: "number",
-            flex: 1.5,
+            flex: 1,
             valueFormatter: (params: any) => String(params.value),
         },
         {
             field: "title",
             headerName: "Title",
             type: "string",
-            flex: 4,
+            flex: 6,
             renderCell: (params) => {
                 const title = params.row.title;
                 const isTechnician = params.row.technicianIds.includes(
@@ -157,7 +184,7 @@ const ExperimentList: React.FC = () => {
             field: "ownerDisplayName",
             headerName: "Owner",
             type: "string",
-            flex: 2,
+            flex: 3,
             renderCell: (params) => {
                 const name = `${params.row.ownerDisplayName} (${params.row.owner})`;
                 return params.row.ownerId === user?.id ? <b>{name}</b> : name;
@@ -168,7 +195,7 @@ const ExperimentList: React.FC = () => {
             headerName: "Start Date",
             type: "string",
             valueGetter: (params) => params.row.startDate.toString(),
-            flex: 2,
+            flex: 1,
         },
         {
             field: "week",
@@ -317,26 +344,24 @@ const ExperimentList: React.FC = () => {
                             }}
                         />
                     </Box>
-                    <Box sx={{ flex: 1, paddingLeft: 10 }}>
+                    <Box sx={{ flex: 2, paddingLeft: 5 }}>
                         <Autocomplete
                             disablePortal
                             id="user-filter-selection"
                             size="small"
                             options={[
                                 { label: "(None)", value: "" },
-                                ...(userFilterList ?? []).map(
-                                    (user: UserInfo) => ({
-                                        label: `${user.displayName} (${user.username})`,
-                                        value: user.username,
-                                    })
-                                ),
+                                ...userFilterList,
                             ]}
                             value={{
-                                label: queryParams.user || "(None)",
+                                label:
+                                    userFilterList.find(
+                                        (user) =>
+                                            user.value === queryParams.user
+                                    )?.label ?? "",
                                 value: queryParams.user,
                             }}
                             isOptionEqualToValue={(option, value) =>
-                                option.label === value.label &&
                                 option.value === value.value
                             }
                             renderInput={(params) => (
@@ -360,7 +385,7 @@ const ExperimentList: React.FC = () => {
                             }}
                         />
                     </Box>
-                    <Box sx={{ paddingX: 10 }}>
+                    <Box sx={{ paddingX: 5 }}>
                         <FormControl component="fieldset">
                             <FormLabel
                                 component="legend"
@@ -430,7 +455,7 @@ const ExperimentList: React.FC = () => {
                         }
                     }}
                     {...paginationProps}
-                    rowClassName="experiment-row-clickable"
+                    getRowClassName={(params) => "experiment-row-clickable " + (params.row.isCanceled ? "experiment-row-canceled" : "")}
                 />
 
                 <ExperimentCreationDialog

@@ -51,7 +51,10 @@ export type ExperimentCreationRequiringConditionAndAssayTypeArgs = Omit<
     "id"
 > & {
     conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
-    assayTypeForExperimentCreationArgsArray : Omit<Omit<AssayTypeForExperiment, "id">, "experimentId">[];
+    assayTypeForExperimentCreationArgsArray: Omit<
+        Omit<AssayTypeForExperiment, "id">,
+        "experimentId"
+    >[];
 };
 
 export type ExperimentCreationArgs =
@@ -83,6 +86,10 @@ export type AssayAgendaInfo = {
     title: string;
     experimentId: number;
     owner: string;
+    ownerDisplayName: string;
+    technician: string | null;
+    technicianDisplayName: string | null;
+    technicianTypes: string[] | null;
     condition: string;
     week: number;
     type: string;
@@ -130,10 +137,10 @@ export type AssayTypeInfo = AssayTypeForExperiment & {
 };
 
 export type UpdateAssayTypeArgs = {
-    assayTypeId : number;
-    newName : string | null;
-    newUnits : string | null;
-}
+    assayTypeId: number;
+    newName: string | null;
+    newUnits: string | null;
+};
 
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 
@@ -187,11 +194,13 @@ export type EmailQueryResult = {
     targetDate: string;
     experimentId: number;
     title: string;
-    owner: string;
+    ownerUsername: string;
+    ownerDisplayName: string;
     condition: string;
     week: number;
     assayType: string;
-    technician: string;
+    technicianUsername: string;
+    technicianDisplayName: string;
 };
 
 export type EmailInfo = {

@@ -5,7 +5,7 @@ import {
 } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Box, Stack, Typography } from "@mui/material";
-import ExperimentEditorModal from "../modifications/editorModals/experimentEditorModal";
+import ExperimentEditorModal from "./experimentEditorModal";
 import ExperimentEditingContext from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import DownloadExcelIconButton from "./downloadExcelIconButton";
@@ -75,7 +75,13 @@ export const ExperimentHeader = () => {
                             {"[Canceled]"}
                         </Typography>
                     )}
-                    <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                        }}
+                    >
                         {isEditable && (
                             <ExperimentEditingContext.Provider
                                 value={{ isEditing, setIsEditing }}
@@ -83,7 +89,10 @@ export const ExperimentHeader = () => {
                                 <EditExperimentButton />
                             </ExperimentEditingContext.Provider>
                         )}
-                        <GenerateReportIconButton experimentId={experimentId} />
+                        <GenerateReportIconButton
+                            experimentId={experimentId}
+                            size="large"
+                        />
                         <DownloadExcelIconButton />
                     </Box>
                 </Box>
