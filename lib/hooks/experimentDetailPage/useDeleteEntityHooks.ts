@@ -20,7 +20,9 @@ export const useMutationToDeleteCondition = () => {
     const { showLoading, hideLoading } = useLoading();
 
     return useMutation({
-        mutationFn: deleteCondition,
+        mutationFn: (args: { id: number; confirm: boolean }) => {
+            return deleteCondition(args.id, args.confirm);
+        },
         onSuccess: (condition: Condition) => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),

@@ -19,7 +19,7 @@ export const createCondition = async (
         return resJson;
     }
     throw new ApiError(response.status, resJson.message);
-}
+};
 
 export const createConditions = async (
     conditionCreationArgsArray: ConditionCreationArgs[]
@@ -66,10 +66,13 @@ export const updateCondition = async (
     throw new ApiError(response.status, resJson.message);
 };
 
-export const deleteCondition = async (id: number): Promise<Condition> => {
+export const deleteCondition = async (
+    id: number,
+    confirm: boolean
+): Promise<Condition> => {
     const endpoint = `/api/conditions/${id}/delete`;
     try {
-        return deleteEntity(endpoint);
+        return deleteEntity(endpoint, confirm);
     } catch (error) {
         throw error;
     }
