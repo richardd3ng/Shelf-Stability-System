@@ -300,6 +300,7 @@ const ExperimentList: React.FC = () => {
     const handleDeleteExperiments = async () => {
         let deletedIds: number[] = [];
         let cannotDeleteIds: number[] = [];
+        showLoading("Deleting experiments...");
         try {
             const deletePromises = selectedExperimentIds.map(
                 async (experimentId: GridRowId) => {
@@ -339,6 +340,7 @@ const ExperimentList: React.FC = () => {
         } catch (error) {
             showAlert("error", getErrorMessage(error));
         }
+        hideLoading();
     };
 
     return (
