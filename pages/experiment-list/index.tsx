@@ -101,12 +101,12 @@ const ExperimentList: React.FC = () => {
         showLoading("Loading experiments...");
         const fetchedData = await getExperiments(paging);
         const newParams = getQueryParamsFromURL(
-            new URLSearchParams(router.asPath.split('?')[1])
+            new URLSearchParams(router.asPath.split("?")[1])
         );
         if (!queryParamEquals(queryParams, newParams)) {
             return { rows: [], rowCount: 0 };
         }
-        
+
         setRows(fetchedData.rows);
         hideLoading();
         return fetchedData;
@@ -144,6 +144,15 @@ const ExperimentList: React.FC = () => {
     }, [queryParams]);
 
     const colDefs: GridColDef[] = [
+        {
+            field: "status",
+            headerName: "Status",
+            type: "string",
+            width: 80,
+            renderCell: (params) => {
+                return params.row.isCanceled ? "Canceled" : "Active";
+            },
+        },
         {
             field: "id",
             headerName: "ID",
@@ -426,9 +435,9 @@ const ExperimentList: React.FC = () => {
                                     label="Canceled"
                                 />
                                 <FormControlLabel
-                                    value="non-canceled"
+                                    value="active"
                                     control={<Radio />}
-                                    label="Non-Canceled"
+                                    label="Active"
                                 />
                             </RadioGroup>
                         </FormControl>
@@ -455,7 +464,7 @@ const ExperimentList: React.FC = () => {
                         }
                     }}
                     {...paginationProps}
-                    getRowClassName={(params) => "experiment-row-clickable " + (params.row.isCanceled ? "experiment-row-canceled" : "")}
+                    getRowClassName={(_params) => "experiment-row-clickable"}
                 />
 
                 <ExperimentCreationDialog
