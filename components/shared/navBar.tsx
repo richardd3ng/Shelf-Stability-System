@@ -1,7 +1,17 @@
 import React, { useContext } from "react";
-import { AppBar, Button, Link, Toolbar, Typography } from "@mui/material";
+import {
+    AppBar,
+    Button,
+    Link,
+    Menu,
+    MenuItem,
+    Toolbar,
+    Typography,
+} from "@mui/material";
+import { AccountCircle, Logout, Settings } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import { useState } from "react";
 
 interface NavBarButtonProps {
     text: string;
@@ -14,6 +24,20 @@ const NavBarButton: React.FC<NavBarButtonProps> = (
 ) => {
     const router = useRouter();
     const isActive = router.pathname === props.path;
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleSignOut = () => {
+        router.push("/auth/signOut");
+        handleClose();
+    };
 
     return (
         <Button
@@ -34,6 +58,7 @@ const NavBarButton: React.FC<NavBarButtonProps> = (
 const NavBar: React.FC = () => {
     const router = useRouter();
     const { user } = useContext(CurrentUserContext);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const options: NavBarButtonProps[] = [
         {
@@ -51,17 +76,6 @@ const NavBar: React.FC = () => {
             onClick: () => router.push("/users"),
             path: "/users",
             hidden: !user?.isAdmin,
-        },
-        {
-            text: "Change Password",
-            onClick: () => router.push("/auth/updatePassword"),
-            path: "/auth/updatePassword",
-            hidden: user?.isSSO,
-        },
-        {
-            text: "Sign Out",
-            onClick: () => router.push("/auth/signOut"),
-            path: "/auth/signOut",
         },
     ];
 
@@ -87,6 +101,37 @@ const NavBar: React.FC = () => {
                             path={option.path}
                         />
                     ))}
+                <Button
+                    color="inherit"
+                    aria-controls="profile-menu"
+                    aria-haspopup="true"
+                    onClick={(e) => setAnchorEl(e.currentTarget)}
+                    endIcon={<AccountCircle />}
+                    sx={{ textTransform: "none" }}
+                >
+                    <Typography variant="subtitle1">
+                        {user?.displayName || "Guest"}
+                    </Typography>
+                </Button>
+                <Menu
+                    id="profile-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={() => setAnchorEl(null)}
+                >
+                    <MenuItem
+                        onClick={() => router.push("/auth/updatePassword")}
+                        hidden={user?.isSSO}
+                    >
+                        <Settings sx={{ marginRight: 1 }} />
+                        Update Password
+                    </MenuItem>
+                    <MenuItem onClick={() => router.push("/auth/signOut")}>
+                        <Logout sx={{ marginRight: 1 }} />
+                        Sign Out
+                    </MenuItem>
+                </Menu>
             </Toolbar>
         </AppBar>
     );

@@ -158,7 +158,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const resetFields = () => {
         setTitle("");
         setDescription("");
-        setOwnerId(INVALID_USER_ID);
         setDate(LocalDate.now());
         setConditionName("");
         setStorageConditions([]);
@@ -226,7 +225,14 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                     >
                         Storage Conditions
                     </DialogContentText>
-                    <Box sx={{ border: "1px solid #ccc", minHeight: 42 }}>
+                    <Box
+                        sx={{
+                            border:
+                                storageConditions.length > 0
+                                    ? "1px solid #ccc"
+                                    : "undefined",
+                        }}
+                    >
                         {storageConditions.map((condition, index) => (
                             <Chip
                                 key={index}

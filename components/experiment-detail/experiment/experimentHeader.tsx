@@ -59,12 +59,12 @@ export const ExperimentHeader = () => {
                         alignItems: "baseline",
                     }}
                 >
-                    <Typography variant="h5" sx={{ marginTop: 1 }}>
+                    <Typography variant="h5" sx={{ margin: 1 }}>
                         {experimentInfo
                             ? experimentInfo.experiment.title
                             : null}
                     </Typography>
-                    <Typography sx={{ fontSize: "small", marginLeft: 0.5 }}>
+                    <Typography sx={{ fontSize: "medium", marginLeft: 0.5 }}>
                         #{experimentId}
                     </Typography>
                     {isCanceled && (
@@ -96,17 +96,17 @@ export const ExperimentHeader = () => {
                         <DownloadExcelIconButton />
                     </Box>
                 </Box>
-                <Typography align="center" variant="h6" whiteSpace={"pre-line"}>
+                <Typography
+                    align="left"
+                    whiteSpace={"pre-line"}
+                    sx={{ marginX: 1 }}
+                >
                     {experimentInfo
                         ? experimentInfo.experiment.description
                         : null}
                 </Typography>
                 {owner && (
-                    <Typography
-                        align="center"
-                        variant="h6"
-                        sx={{ marginBottom: 1 }}
-                    >
+                    <Typography align="center" sx={{ marginBottom: 1 }}>
                         {`Started ${experimentInfo.experiment.startDate.toString()} by 
                     ${owner.displayName} (${owner.username})`}
                     </Typography>

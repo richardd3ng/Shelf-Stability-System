@@ -142,10 +142,12 @@ export const hasRecordedAssayResults = async (id: number): Promise<Boolean> => {
 };
 
 export const deleteExperiment = async (
-    id: number
+    id: number,
+    confirm: boolean
 ): Promise<ExperimentWithLocalDate> => {
-    const endpoint = `/api/experiments/${id}/delete`;
-    const response = await fetch(endpoint, {
+    const url = relativeURL(`/api/experiments/${id}/delete`);
+    url.searchParams.append("confirm", confirm.toString());
+    const response = await fetch(url.toString(), {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

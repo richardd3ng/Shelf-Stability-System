@@ -4,8 +4,14 @@ import { encodePaging, relativeURL } from "./url";
 import { deleteEntity } from "./deletions";
 import { LocalDate } from "@js-joda/core";
 import { Assay } from "@prisma/client";
-import { AssayCreationArgs, AssayAgendaInfo, AssayAgendaTable, AssayUpdateArgs } from "./types";
+import {
+    AssayCreationArgs,
+    AssayAgendaInfo,
+    AssayAgendaTable,
+    AssayUpdateArgs,
+} from "./types";
 import { stringFieldsToLocalDate } from "./jsonConversions";
+import exp from "constants";
 
 export const fetchAgendaList = async (
     minDate: LocalDate | null,
@@ -34,11 +40,16 @@ export const fetchAgendaList = async (
 
     const resJson = await response.json();
     if (response.ok) {
-        const table: { rows: (AssayAgendaInfo & { targetDate: string })[]; rowCount: number } = resJson;
+        const table: {
+            rows: (AssayAgendaInfo & { targetDate: string })[];
+            rowCount: number;
+        } = resJson;
         return {
             ...table,
             // Convert the startDate from string to Date
-            rows: table.rows.map((assay) => stringFieldsToLocalDate(assay, ["targetDate"])),
+            rows: table.rows.map((assay) =>
+                stringFieldsToLocalDate(assay, ["targetDate"])
+            ),
         };
     }
     throw new ApiError(response.status, resJson.message);
@@ -75,10 +86,14 @@ export const createAssay = async (assayCreationArgs: AssayCreationArgs) => {
     throw new ApiError(response.status, resJson.message);
 };
 
-export const deleteAssay = async (id: number): Promise<Assay> => {
+export const deleteAssay = async (
+    id: number,
+    confirm: boolean
+): Promise<Assay> => {
+    console.log("in controller");
     const endpoint = `/api/assays/${id}/delete`;
     try {
-        return deleteEntity(endpoint);
+        return deleteEntity(endpoint, confirm);
     } catch (error) {
         throw error;
     }

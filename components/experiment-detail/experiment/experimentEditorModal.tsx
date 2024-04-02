@@ -84,13 +84,14 @@ const ExperimentEditorModal: React.FC = () => {
                     label="Title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    sx={{ minWidth: 600 }}
                 />
                 <TextField
                     label="Description"
                     value={description}
                     fullWidth
                     multiline
-                    rows={4}
+                    rows={10}
                     onChange={(e) => setDescription(e.target.value)}
                 />
                 {allowEditStartDate && (

@@ -71,13 +71,7 @@ export default async function updateExperimentAPI(
                     dateFieldsToLocalDate(experiment, ["startDate"])
                 );
         if (!updatedExperiment) {
-            res.status(404).json(
-                getApiError(
-                    404,
-                    "Experiment does not exist",
-                    "Experiment Not Found"
-                )
-            );
+            res.status(404).json(getApiError(404, "Experiment does not exist"));
             return;
         }
         res.status(200).json(updatedExperiment);

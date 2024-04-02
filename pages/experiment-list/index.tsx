@@ -44,6 +44,8 @@ import Delete from "@mui/icons-material/Delete";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import ConfirmationDialog from "@/components/shared/confirmationDialog";
 import { useSearchParams } from "next/navigation";
+import { ApiError } from "next/dist/server/api-utils";
+import { CONFIRMATION_REQUIRED_MESSAGE } from "@/lib/api/error";
 
 interface QueryParams {
     search: string;
@@ -101,12 +103,12 @@ const ExperimentList: React.FC = () => {
         showLoading("Loading experiments...");
         const fetchedData = await getExperiments(paging);
         const newParams = getQueryParamsFromURL(
-            new URLSearchParams(router.asPath.split('?')[1])
+            new URLSearchParams(router.asPath.split("?")[1])
         );
         if (!queryParamEquals(queryParams, newParams)) {
             return { rows: [], rowCount: 0 };
         }
-        
+
         setRows(fetchedData.rows);
         hideLoading();
         return fetchedData;
@@ -144,6 +146,15 @@ const ExperimentList: React.FC = () => {
     }, [queryParams]);
 
     const colDefs: GridColDef[] = [
+        {
+            field: "status",
+            headerName: "Status",
+            type: "string",
+            width: 80,
+            renderCell: (params) => {
+                return params.row.isCanceled ? "Canceled" : "Active";
+            },
+        },
         {
             field: "id",
             headerName: "ID",
@@ -219,7 +230,7 @@ const ExperimentList: React.FC = () => {
                         <IconButtonWithTooltip
                             text="Delete"
                             icon={Delete}
-                            onClick={() => prepareForDeletion([params.row.id])}
+                            onClick={() => handleDelete(params.row.id)}
                         ></IconButtonWithTooltip>
                     )}
                 </Box>
@@ -243,7 +254,22 @@ const ExperimentList: React.FC = () => {
         }
     };
 
-    const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
+    const handleDelete = async (id: number) => {
+        try {
+            await deleteExperiment(id, false);
+        } catch (error) {
+            if (error instanceof ApiError) {
+                if (error.message === CONFIRMATION_REQUIRED_MESSAGE) {
+                    prepareForDeletions([id]);
+                    setShowConfirmationDialog(true);
+                } else {
+                    showAlert("error", error.message);
+                }
+            }
+        }
+    };
+
+    const prepareForDeletions = (selectedRows: GridRowSelectionModel) => {
         setSelectedExperimentIds(selectedRows);
         setShowConfirmationDialog(true);
     };
@@ -284,7 +310,7 @@ const ExperimentList: React.FC = () => {
                         if (resultFound) {
                             cannotDeleteIds.push(experimentId);
                         } else {
-                            await deleteExperiment(experimentId);
+                            await deleteExperiment(experimentId, true);
                             deletedIds.push(experimentId);
                         }
                     } catch (error) {
@@ -426,9 +452,9 @@ const ExperimentList: React.FC = () => {
                                     label="Canceled"
                                 />
                                 <FormControlLabel
-                                    value="non-canceled"
+                                    value="active"
                                     control={<Radio />}
-                                    label="Non-Canceled"
+                                    label="Active"
                                 />
                             </RadioGroup>
                         </FormControl>
@@ -448,14 +474,18 @@ const ExperimentList: React.FC = () => {
                     columns={colDefs}
                     rows={rows}
                     pagination
-                    onDeleteRows={prepareForDeletion}
+                    checkboxSelection={isAdmin}
+                    onDeleteRows={prepareForDeletions}
                     onCellClick={(cell) => {
-                        if (cell.field !== "actions") {
+                        if (
+                            cell.field !== "__check__" &&
+                            cell.field !== "actions"
+                        ) {
                             router.push(`/experiments/${cell.id}`);
                         }
                     }}
                     {...paginationProps}
-                    getRowClassName={(params) => "experiment-row-clickable " + (params.row.isCanceled ? "experiment-row-canceled" : "")}
+                    getRowClassName={(_params) => "experiment-row-clickable"}
                 />
 
                 <ExperimentCreationDialog
@@ -467,7 +497,7 @@ const ExperimentList: React.FC = () => {
                 />
                 <ConfirmationDialog
                     open={showConfirmationDialog}
-                    text="Are you sure you want to delete this experiment? This action cannot be undone."
+                    text="Are you sure you want to delete the selected experiment(s)? Only experiments without recorded assay results can be deleted. This action cannot be undone."
                     onClose={() => {
                         setShowConfirmationDialog(false);
                     }}

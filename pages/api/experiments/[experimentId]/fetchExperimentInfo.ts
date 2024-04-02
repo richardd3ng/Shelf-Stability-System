@@ -4,13 +4,22 @@ import {
     ExperimentInfo,
     ExperimentWithLocalDate,
     AssayTypeInfo,
-    AssayWithResult
+    AssayWithResult,
 } from "@/lib/controllers/types";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "@/lib/api/error";
-import { Assay, AssayResult, AssayTypeForExperiment, Condition, Experiment } from "@prisma/client";
+import {
+    Assay,
+    AssayResult,
+    AssayTypeForExperiment,
+    Condition,
+    Experiment,
+} from "@prisma/client";
 import { getExperimentID, INVALID_EXPERIMENT_ID } from "@/lib/api/apiHelpers";
-import { JSONToExperiment, dateFieldsToLocalDate } from "@/lib/controllers/jsonConversions";
+import {
+    JSONToExperiment,
+    dateFieldsToLocalDate,
+} from "@/lib/controllers/jsonConversions";
 
 export default async function getExperimentInfoAPI(
     req: NextApiRequest,
@@ -46,34 +55,30 @@ export default async function getExperimentInfoAPI(
             }),
             db.assay.findMany({
                 where: { experimentId: id },
-                include : {
-                    result : true
-                }
+                include: {
+                    result: true,
+                },
             }),
             db.assayTypeForExperiment.findMany({
-                where : { experimentId : id},
-                include : {
-                    assayType : true
-                }
-            })
+                where: { experimentId: id },
+                include: {
+                    assayType: true,
+                },
+            }),
         ]);
-        
+
         if (!experiment) {
             res.status(404).json(
-                getApiError(
-                    404,
-                    `Experiment ${id} does not exist`,
-                    "Experiment Not Found"
-                )
+                getApiError(404, `Experiment ${id} does not exist`)
             );
             return;
         }
         const experimentAssayResults: AssayResult[] = [];
         assays.forEach((assay) => {
-            if (assay.result){
+            if (assay.result) {
                 experimentAssayResults.push(assay.result);
             }
-        })
+        });
         /*
         await Promise.all(
             assays.map(async (assay: Assay) => {
@@ -89,9 +94,9 @@ export default async function getExperimentInfoAPI(
                 JSON.parse(JSON.stringify(experiment))
             ),
             conditions: conditions,
-            assays: assays.map((assay) => ({...assay, result : undefined})),
+            assays: assays.map((assay) => ({ ...assay, result: undefined })),
             assayResults: experimentAssayResults,
-            assayTypes : assayTypes
+            assayTypes: assayTypes,
         });
     } catch (error) {
         console.error(error);

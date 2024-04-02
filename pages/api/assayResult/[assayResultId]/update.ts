@@ -8,31 +8,43 @@ import {
     getAssayResultID,
 } from "@/lib/api/apiHelpers";
 import { getUserAndDenyReqIfUserIsNotLoggedIn } from "@/lib/api/auth/authHelpers";
-import { denyReqIfUserIsNeitherAdminNorExperimentOwner, denyReqIfUserIsNotAdmin } from "@/lib/api/auth/checkIfAdminOrExperimentOwner";
+import { denyReqIfUserIsNeitherAdminNorExperimentOwner } from "@/lib/api/auth/checkIfAdminOrExperimentOwner";
 import { APIPermissionTracker, denyAPIReq } from "@/lib/api/auth/acessDeniers";
 
 export default async function updateAssayResultAPI(
     req: NextApiRequest,
     res: NextApiResponse<AssayResult | ApiError>
 ) {
-    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    let permissionTracker: APIPermissionTracker = {
+        shouldStopExecuting: false,
+    };
     const id = getAssayResultID(req);
     if (id === INVALID_ASSAY_RESULT_ID) {
         res.status(400).json(getApiError(400, "Assay result ID is required"));
         return;
     }
-    const user = await getUserAndDenyReqIfUserIsNotLoggedIn(req, res, permissionTracker);
+    const user = await getUserAndDenyReqIfUserIsNotLoggedIn(
+        req,
+        res,
+        permissionTracker
+    );
     const assayResult = await db.assayResult.findUnique({
-        where : {
-            id : id
+        where: {
+            id: id,
         },
-        include : {
-            assay : true
-        }
+        include: {
+            assay: true,
+        },
     });
-    if (assayResult && user){
-        await denyReqIfUserIsNeitherAdminNorExperimentOwner(req, res, user, assayResult.assay.experimentId, permissionTracker);
-        if (permissionTracker.shouldStopExecuting){
+    if (assayResult && user) {
+        await denyReqIfUserIsNeitherAdminNorExperimentOwner(
+            req,
+            res,
+            user,
+            assayResult.assay.experimentId,
+            permissionTracker
+        );
+        if (permissionTracker.shouldStopExecuting) {
             return;
         }
     } else {
@@ -56,11 +68,7 @@ export default async function updateAssayResultAPI(
 
         if (!updatedAssayResult) {
             res.status(404).json(
-                getApiError(
-                    404,
-                    "Assay result to update does not exist",
-                    "Assay Result Not Found"
-                )
+                getApiError(404, "Assay result to update does not exist")
             );
             return;
         }
@@ -75,11 +83,7 @@ export default async function updateAssayResultAPI(
                 });
             if (!deletedAssayResult) {
                 res.status(404).json(
-                    getApiError(
-                        404,
-                        "Assay result to delete does not exist",
-                        "Assay Result Not Found"
-                    )
+                    getApiError(404, "Assay result to delete does not exist")
                 );
                 return;
             }

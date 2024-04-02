@@ -9,7 +9,7 @@ export async function redirectOrBlockIfNotLoggedIn(request: NextRequest) {
 
         if (!token) {
             if (request.nextUrl.pathname.startsWith("/api")) {
-                return NextResponse.json(getApiError(400, "You need to log in", "Not Logged in"))
+                return NextResponse.json(getApiError(400, "You need to log in"))
             }
             return NextResponse.redirect(new URL('/auth/login'));
         }
