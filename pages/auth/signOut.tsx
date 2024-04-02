@@ -24,7 +24,7 @@ const HomePage : React.FC = () => {
                     <Typography variant="h6" align="center" style={{marginBottom : 16}}>
                         Are you sure you want to sign out?
                     </Typography>
-                    <Button variant="contained" color="primary" onClick={signUserOut} >Yes, sign me out</Button>
+                    <Button variant="contained" color="primary" onClick={signUserOut} sx={{textTransform: "none"}} >Yes, sign me out</Button>
                 </Stack>
                 {error ? 
                     <Typography align="center" color="red" >
