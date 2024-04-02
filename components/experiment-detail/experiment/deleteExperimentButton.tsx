@@ -44,9 +44,7 @@ const DeleteExperimentButton = () => {
             </Box>
             <ConfirmationDialog
                 open={showConfirmationDialog}
-                text="Are you sure you want to delete the selected experiment(s)?
-                    Only experiments without recorded assay results can be
-                    deleted. This action cannot be undone."
+                text="Are you sure you want to delete this experiment? This action cannot be undone."
                 onClose={() => setShowConfirmationDialog(false)}
                 onConfirm={() =>
                     deleteExperimentMutationFn({

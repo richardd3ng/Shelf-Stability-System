@@ -158,7 +158,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const resetFields = () => {
         setTitle("");
         setDescription("");
-        setOwnerId(INVALID_USER_ID);
         setDate(LocalDate.now());
         setConditionName("");
         setStorageConditions([]);

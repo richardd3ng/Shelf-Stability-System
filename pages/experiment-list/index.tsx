@@ -44,6 +44,8 @@ import Delete from "@mui/icons-material/Delete";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import ConfirmationDialog from "@/components/shared/confirmationDialog";
 import { useSearchParams } from "next/navigation";
+import { ApiError } from "next/dist/server/api-utils";
+import { CONFIRMATION_REQUIRED_MESSAGE } from "@/lib/api/error";
 
 interface QueryParams {
     search: string;
@@ -228,7 +230,7 @@ const ExperimentList: React.FC = () => {
                         <IconButtonWithTooltip
                             text="Delete"
                             icon={Delete}
-                            onClick={() => prepareForDeletion([params.row.id])}
+                            onClick={() => handleDelete(params.row.id)}
                         ></IconButtonWithTooltip>
                     )}
                 </Box>
@@ -252,7 +254,22 @@ const ExperimentList: React.FC = () => {
         }
     };
 
-    const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
+    const handleDelete = async (id: number) => {
+        try {
+            await deleteExperiment(id, false);
+        } catch (error) {
+            if (error instanceof ApiError) {
+                if (error.message === CONFIRMATION_REQUIRED_MESSAGE) {
+                    prepareForDeletions([id]);
+                    setShowConfirmationDialog(true);
+                } else {
+                    showAlert("error", error.message);
+                }
+            }
+        }
+    };
+
+    const prepareForDeletions = (selectedRows: GridRowSelectionModel) => {
         setSelectedExperimentIds(selectedRows);
         setShowConfirmationDialog(true);
     };
@@ -458,7 +475,7 @@ const ExperimentList: React.FC = () => {
                     rows={rows}
                     pagination
                     checkboxSelection={isAdmin}
-                    onDeleteRows={prepareForDeletion}
+                    onDeleteRows={prepareForDeletions}
                     onCellClick={(cell) => {
                         if (
                             cell.field !== "__check__" &&
@@ -480,7 +497,7 @@ const ExperimentList: React.FC = () => {
                 />
                 <ConfirmationDialog
                     open={showConfirmationDialog}
-                    text="Are you sure you want to delete this experiment? This action cannot be undone."
+                    text="Are you sure you want to delete the selected experiment(s)? Only experiments without recorded assay results can be deleted. This action cannot be undone."
                     onClose={() => {
                         setShowConfirmationDialog(false);
                     }}
