@@ -293,7 +293,7 @@ const ExperimentList: React.FC = () => {
                         if (resultFound) {
                             cannotDeleteIds.push(experimentId);
                         } else {
-                            await deleteExperiment(experimentId);
+                            await deleteExperiment(experimentId, true);
                             deletedIds.push(experimentId);
                         }
                     } catch (error) {
@@ -457,9 +457,13 @@ const ExperimentList: React.FC = () => {
                     columns={colDefs}
                     rows={rows}
                     pagination
+                    checkboxSelection={isAdmin}
                     onDeleteRows={prepareForDeletion}
                     onCellClick={(cell) => {
-                        if (cell.field !== "actions") {
+                        if (
+                            cell.field !== "__check__" &&
+                            cell.field !== "actions"
+                        ) {
                             router.push(`/experiments/${cell.id}`);
                         }
                     }}

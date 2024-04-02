@@ -102,7 +102,9 @@ export const useMutationToDeleteExperiment = () => {
     const { showLoading, hideLoading } = useLoading();
 
     return useMutation({
-        mutationFn: deleteExperiment,
+        mutationFn: (args: { id: number; confirm: boolean }) => {
+            return deleteExperiment(args.id, args.confirm);
+        },
         onSuccess: (experiment: ExperimentWithLocalDate) => {
             router.push("/experiment-list");
             showAlert(
@@ -113,8 +115,8 @@ export const useMutationToDeleteExperiment = () => {
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
-        onMutate: (id: number) => {
-            showLoading(`Deleting experiment ${id}...`);
+        onMutate: (args: { id: number; confirm: boolean }) => {
+            showLoading(`Deleting experiment ${args.id}...`);
         },
         onSettled: () => {
             hideLoading();
