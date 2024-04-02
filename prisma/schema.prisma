@@ -34,6 +34,7 @@ model Experiment {
   assays      Assay[] 
   assayTypes  AssayTypeForExperiment[]   
   experimentWeekView        ExperimentWeekView?
+  weeks       String
 }
 
 view ExperimentWeekView {
@@ -59,9 +60,10 @@ model Assay {
   assayType    AssayTypeForExperiment @relation(fields: [assayTypeId], references: [id], onDelete: Cascade)
   assayTypeId  Int
   result       AssayResult?
-
   week         Int
+  sample       Int
   @@unique([experimentId, conditionId, week, assayTypeId], name: "UniqueAssayTypePerWeekAndCondition")
+  @@unique([experimentId, sample], name: "UniqueSampleNumbersPerExperiment")
 }
 
 model AssayResult {
