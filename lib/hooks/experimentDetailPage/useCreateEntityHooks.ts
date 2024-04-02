@@ -6,7 +6,10 @@ import { createAssayResult } from "@/lib/controllers/assayResultController";
 import { createCondition } from "@/lib/controllers/conditionController";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { Assay, Condition } from "@prisma/client";
-import { assayTypeIdToName, createNewCustomAssayTypeForExperimentThroughAPI, createNewStandardAssayTypeForExperimentThroughAPI } from "@/lib/controllers/assayTypeController";
+import {
+    createNewCustomAssayTypeForExperimentThroughAPI,
+    createNewStandardAssayTypeForExperimentThroughAPI,
+} from "@/lib/controllers/assayTypeController";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import {
@@ -56,18 +59,13 @@ export const useMutationToCreateAssay = () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
             });
-            showAlert(
-                "success",
-                `Succesfully created the assay!`
-            );
+            showAlert("success", `Succesfully created the assay!`);
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
-        onMutate: (assayCreationArgs: AssayCreationArgs) => {
-            showLoading(
-                `Creating assay...`
-            );
+        onMutate: (_assayCreationArgs: AssayCreationArgs) => {
+            showLoading(`Creating assay...`);
         },
         onSettled: () => {
             hideLoading();
@@ -123,14 +121,13 @@ export const useMutationToCreateCustomAssayType = () => {
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
-        onMutate: (experimentId : number) => {
+        onMutate: (experimentId: number) => {
             const loadingText: string = "Creating New Type";
             showLoading(loadingText);
         },
         onSettled: () => {
             hideLoading();
         },
-        
     });
 };
 
