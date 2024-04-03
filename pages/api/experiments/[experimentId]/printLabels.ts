@@ -34,7 +34,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.setHeader(
         'Content-Disposition',
-        `attachment; filename="labels.pdf"`
+        `attachment; filename="Labels-${experimentId}.pdf"`
     );
     res.setHeader('Content-Type', 'application/pdf');
 
