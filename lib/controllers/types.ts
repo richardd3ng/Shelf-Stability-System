@@ -83,6 +83,7 @@ export type ExperimentStatus = "all" | "cancelled" | "non-cancelled";
 
 export type AssayAgendaInfo = {
     id: number;
+    sampleId: number;
     targetDate: LocalDate;
     title: string;
     experimentId: number;
