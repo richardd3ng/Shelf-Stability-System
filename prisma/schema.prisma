@@ -120,5 +120,6 @@ view AssayAgendaView {
   condition             String
   type                  String
   week                  Int
+  sample                Int
   resultId              Int?
 }
