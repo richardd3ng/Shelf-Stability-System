@@ -30,6 +30,7 @@ export default async function createExperimentAPI(
         startDate,
         conditionCreationArgsNoExperimentIdArray,
         ownerId,
+        weeks,
     } = req.body;
     if (ownerId === undefined) {
         res.status(409).json(
@@ -67,6 +68,7 @@ export default async function createExperimentAPI(
                             technicianId: null,
                         })),
                     },
+                    weeks,
                     conditions: {
                         create: conditionCreationArgsNoExperimentIdArray,
                     },

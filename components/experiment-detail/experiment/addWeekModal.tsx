@@ -1,16 +1,14 @@
 import { Button, FormControl, Stack, TextField } from "@mui/material";
 import CloseableModal from "@/components/shared/closeableModal";
-import { getAllWeeksCoveredByAssays } from "./experimentTable";
+import { parseExperimentWeeks } from "@/lib/api/apiHelpers";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useState } from "react";
-import { WeekRow } from "./experimentTable";
 import { getNumericalValidationError } from "@/lib/validationUtils";
 import { useAlert } from "@/lib/context/shared/alertContext";
 
 interface AddWeekModalProps {
     open: boolean;
-    weekRows: WeekRow[];
     onClose: () => void;
     onSubmit: (week: number) => void;
 }
@@ -25,16 +23,11 @@ export const AddWeekModal: React.FC<AddWeekModalProps> = (
 
     const duplicateWeekValidation = (week: string): string => {
         const weekNumber = Number(week);
-        const weekExistsInTable: boolean = props.weekRows.some(
-            (row) => row.week === weekNumber
-        );
-        const weekExistsInAssays = getAllWeeksCoveredByAssays(
-            data?.assays || []
+        const weekExistsInAssays = (
+            (data?.experiment && parseExperimentWeeks(data.experiment)) ||
+            []
         ).includes(weekNumber);
-
-        return weekExistsInTable || weekExistsInAssays
-            ? `Week ${week} already exists.`
-            : "";
+        return weekExistsInAssays ? `Week ${week} already exists.` : "";
     };
 
     const onSubmit = () => {

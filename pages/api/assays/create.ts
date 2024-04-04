@@ -6,14 +6,17 @@ import { Assay } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
+import { parseExperimentWeeks, updateExperimentWeeks } from "@/lib/api/apiHelpers";
 
 export default async function createAssayAPI(
     req: NextApiRequest,
     res: NextApiResponse<Assay | ApiError>
 ) {
-    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    let permissionTracker: APIPermissionTracker = {
+        shouldStopExecuting: false,
+    };
     await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
-    if (permissionTracker.shouldStopExecuting){
+    if (permissionTracker.shouldStopExecuting) {
         return;
     }
 
@@ -36,6 +39,18 @@ export default async function createAssayAPI(
         const createdAssay: Assay = await db.assay.create({
             data: req.body,
         });
+        const experiment = await db.experiment.findFirst({
+            where: {
+                id: experimentId,
+            },
+        });
+        if (experiment) {
+            const weeks: number[] = parseExperimentWeeks(experiment);
+            if (!weeks.includes(createdAssay.week)) {
+                weeks.push(createdAssay.week);
+                await updateExperimentWeeks(experiment, weeks);
+            }
+        }
         res.status(200).json(createdAssay);
     } catch (error) {
         console.error(error);
