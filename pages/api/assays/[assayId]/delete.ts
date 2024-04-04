@@ -1,6 +1,11 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { INVALID_ASSAY_ID, getAssayID } from "@/lib/api/apiHelpers";
+import {
+    INVALID_ASSAY_ID,
+    getAssayID,
+    parseExperimentWeeks,
+    updateExperimentWeeks,
+} from "@/lib/api/apiHelpers";
 import { assayHasResult } from "@/lib/api/validations";
 import {
     CONFIRMATION_REQUIRED_MESSAGE,
@@ -55,6 +60,24 @@ export default async function deleteAssayAPI(
                     )
                 );
                 return;
+            }
+            const otherAssayInWeek: Assay | null = await db.assay.findFirst({
+                where: {
+                    week: deletedAssay.week,
+                },
+            });
+            if (!otherAssayInWeek) {
+                const experiment = await db.experiment.findFirst({
+                    where: {
+                        id: deletedAssay.experimentId,
+                    },
+                });
+                if (experiment) {
+                    const weeks: number[] = parseExperimentWeeks(
+                        experiment
+                    ).filter((week) => week !== deletedAssay.week);
+                    await updateExperimentWeeks(experiment, weeks);
+                }
             }
             res.status(200).json(deletedAssay);
         } else {

@@ -133,6 +133,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 conditionCreationArgsNoExperimentIdArray:
                     conditionCreationArgsNoExperimentIdArray,
                 ownerId: ownerId,
+                weeks: "",
             };
             const experimentResJson: ExperimentCreationResponse =
                 await createExperiment(experimentData);

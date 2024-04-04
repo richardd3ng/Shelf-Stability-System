@@ -28,9 +28,13 @@ import StarIcon from "@mui/icons-material/Star";
 import Edit from "@mui/icons-material/Edit";
 import ConditionEditorModal from "../conditions/conditionEditorModal";
 import ConditionEditingContext from "@/lib/context/experimentDetailPage/conditionEditingContext";
-import { INVALID_CONDITION_ID } from "@/lib/api/apiHelpers";
+import {
+    INVALID_CONDITION_ID,
+    parseExperimentWeeks,
+} from "@/lib/api/apiHelpers";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import DeleteConditionButton from "../conditions/deleteConditionButton";
+import { useMutationToUpdateExperiment } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
 
 export interface WeekRow {
     id: number;
@@ -56,16 +60,6 @@ export const getAssaysForWeekAndCondition = (
     });
 };
 
-export const getAllWeeksCoveredByAssays = (assays: Assay[]): number[] => {
-    let weeks: number[] = [];
-    assays.forEach((assay: Assay) => {
-        if (!weeks.includes(assay.week)) {
-            weeks.push(assay.week);
-        }
-    });
-    return weeks;
-};
-
 export const getAssayResultForAssay = (
     assayResults: AssayResult[],
     assay: Assay
@@ -87,7 +81,6 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
     const experimentId = useExperimentId();
     const { data: experimentInfo } = useExperimentInfo(experimentId);
     const [weekRows, setWeekRows] = useState<WeekRow[]>([]);
-    const [idCounter, setIdCounter] = useState<number>(0);
     const [addAssayParams, setAddAssayParams] = useState<AddAssayParams | null>(
         null
     );
@@ -106,13 +99,14 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
             (user?.isAdmin ||
                 user?.id === experimentInfo?.experiment.ownerId)) ??
         false;
+    const { mutate: updateExperiment } = useMutationToUpdateExperiment();
 
     useEffect(() => {
         if (!experimentInfo) {
             return;
         } else {
-            const weeks: number[] = getAllWeeksCoveredByAssays(
-                experimentInfo.assays
+            const weeks: number[] = parseExperimentWeeks(
+                experimentInfo.experiment
             );
             const initialWeekRows: WeekRow[] = [];
             weeks.forEach((week: number, index: number) => {
@@ -122,7 +116,6 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                 });
             });
             setWeekRows(initialWeekRows);
-            setIdCounter(weeks.length);
         }
     }, [experimentInfo]);
 
@@ -302,12 +295,15 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
     };
 
     const handleAddWeek = (week: number) => {
-        const addedRow: WeekRow = {
-            id: idCounter,
-            week: week,
-        };
-        setWeekRows([...weekRows, addedRow]);
-        setIdCounter(idCounter + 1);
+        const weeks: number[] =
+            (experimentInfo &&
+                parseExperimentWeeks(experimentInfo.experiment)) ||
+            [];
+        weeks.push(week);
+        updateExperiment({
+            id: experimentId,
+            weeks: weeks.join(","),
+        });
     };
 
     const tableFooter: React.FC = () => {
@@ -344,7 +340,6 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
         <>
             <AddWeekModal
                 open={showAddWeekModal}
-                weekRows={weekRows}
                 onClose={() => setShowAddWeekModal(false)}
                 onSubmit={handleAddWeek}
             />
