@@ -76,7 +76,7 @@ async function fillLabel(form: PDFForm, font: PDFFont, row: number, column: numb
     fillTextField(form.getTextField(`Type.${row}.${column}`), font, data.type);
     fillTextField(form.getTextField(`Number.${row}.${column}`), font, `${data.experimentId}-${data.sample.toString().padStart(3, "0")}`);
     const png = await form.doc.embedPng(await QRCode.toDataURL(
-        `https://shelf-stability-system.colab.duke.edu/experiments/${data.experimentId}/result/${data.sampleId}`
+        `https://shelf-stability-system.colab.duke.edu/experiments/${data.experimentId}/result/${data.sample}`
     ));
     form.getButton(`QR.${row}.${column}`).setImage(png);
 }
