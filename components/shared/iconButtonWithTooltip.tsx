@@ -6,9 +6,7 @@ import { IconButton, Tooltip } from "@mui/material";
 interface IconButtonWithTooltipProps {
     onClick: () => void;
     text: string;
-    icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
-        muiName: string;
-    };
+    icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
     size?: "small" | "medium" | "large";
 }
 
@@ -21,18 +19,6 @@ const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = (
         <Tooltip
             title={props.text}
             open={showTooltip}
-            slotProps={{
-                popper: {
-                    modifiers: [
-                        {
-                            name: "offset",
-                            options: {
-                                offset: [0, -14],
-                            },
-                        },
-                    ],
-                },
-            }}
         >
             <IconButton
                 onMouseEnter={() => setShowTooltip(true)}
