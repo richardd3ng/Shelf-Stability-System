@@ -1,29 +1,15 @@
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useMutationToCreateAssayResult } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
-import {
-    useMutationToUpdateAssay,
-    useMutationToUpdateAssayResult,
-} from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
-import {
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Stack,
-    Typography,
-} from "@mui/material";
+import { useMutationToUpdateAssayResult } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
+import { Stack, Typography } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import CloseableModal from "@/components/shared/closeableModal";
 import EditableTextField from "@/components/shared/editableTextField";
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
-import { INVALID_USERNAME } from "@/lib/hooks/useUserInfo";
-import {
-    getAssayTypeUnits,
-} from "@/lib/controllers/assayTypeController";
+import { getAssayTypeUnits } from "@/lib/controllers/assayTypeController";
 import { EditGroup } from "@/lib/context/shared/editGroup";
-import { EditGroupSelect } from "@/components/shared/editGroupSelect";
-import { AssayTypeInfo } from "@/lib/controllers/types";
 
 export interface AssayEditorModalProps {
     onlyEditResult?: boolean;
@@ -31,22 +17,29 @@ export interface AssayEditorModalProps {
     onClose?: () => void;
 }
 
-const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, showFullContext, onClose }) => {
+const AssayEditorModal: React.FC<AssayEditorModalProps> = ({
+    showFullContext,
+    onClose,
+}) => {
     const {
         isEditing: isEditingAssay,
         setIsEditing: setIsEditingAssay,
         assay,
     } = useContext(AssayEditingContext);
-    const { data: experimentInfo } = useExperimentInfo(assay?.experimentId ?? -1);
-    const { assayResult } = useContext(
-        AssayResultEditingContext
+    const { data: experimentInfo } = useExperimentInfo(
+        assay?.experimentId ?? -1
     );
+    const { assayResult } = useContext(AssayResultEditingContext);
     const INVALID_ASSAY_TYPE_ID = -1;
-    const [assayTypeId, setAssayTypeId] = useState<number>(INVALID_ASSAY_TYPE_ID);
+    const [assayTypeId, setAssayTypeId] = useState<number>(
+        INVALID_ASSAY_TYPE_ID
+    );
     const [week, setWeek] = useState<string>("");
     const [result, setResult] = useState<string>("");
     const [comment, setComment] = useState<string>("");
     const { user } = useContext(CurrentUserContext);
+    const { mutate: createAssayResult } = useMutationToCreateAssayResult();
+    const { mutate: updateAssayResult } = useMutationToUpdateAssayResult();
 
     useEffect(() => {
         if (!isEditingAssay || assay === undefined || !experimentInfo) {
@@ -57,31 +50,6 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, sho
         setResult(assayResult?.result?.toString() ?? "");
         setComment(assayResult?.comment ?? "");
     }, [assay, assayResult, isEditingAssay, experimentInfo]);
-
-    const { mutate: updateAssay } = useMutationToUpdateAssay();
-    const { mutate: createAssayResult } = useMutationToCreateAssayResult();
-    const { mutate: updateAssayResult } = useMutationToUpdateAssayResult();
-
-    const handleSubmitWeek = (newWeek: string) => {
-        updateAssay({
-            id: assay!.id,
-            week: parseInt(newWeek),
-        });
-        setWeek(newWeek);
-    };
-
-    const handleSelectAssayTypeChange = (assayTypeId: number) => {
-        updateAssay({
-            id: assay!.id,
-            assayTypeId: assayTypeId
-        });
-        if (experimentInfo) {
-            const correspondingTypes = experimentInfo.assayTypes.filter((type) => type.assayType.id === assayTypeId)
-            if (correspondingTypes.length > 0) {
-                setAssayTypeId(correspondingTypes[0].id);
-            }
-        }
-    };
 
     const handleSubmitResult = (newResult: string) => {
         const author = `${user?.displayName} (${user?.username})`;
@@ -132,12 +100,22 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, sho
         onClose?.();
     };
 
-    if (!assay || !user || assayTypeId <= INVALID_ASSAY_TYPE_ID || !week || !experimentInfo) {
+    if (
+        !assay ||
+        !user ||
+        assayTypeId <= INVALID_ASSAY_TYPE_ID ||
+        !week ||
+        !experimentInfo
+    ) {
         return <></>;
     }
 
-    const conditionName = experimentInfo.conditions.find((condition) => condition.id === assay.conditionId)?.name;
-    const assayTypeName = experimentInfo.assayTypes.find((type) => type.id === assayTypeId)?.assayType.name;
+    const conditionName = experimentInfo.conditions.find(
+        (condition) => condition.id === assay.conditionId
+    )?.name;
+    const assayTypeName = experimentInfo.assayTypes.find(
+        (type) => type.id === assayTypeId
+    )?.assayType.name;
 
     return (
         <CloseableModal
@@ -147,47 +125,24 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({ onlyEditResult, sho
             title="Edit Assay"
         >
             <Stack style={{ marginBottom: 8, marginRight: 4 }} spacing={1}>
-                <EditGroup
-                    editable={isEditingAssay}
-                >
-                    {showFullContext && <Typography>{experimentInfo.experiment.title}<br />Week {assay.week}, {conditionName}, {assayTypeName}</Typography>}
-                    {onlyEditResult ? null : (
-                        <>
-                            <FormControl fullWidth>
-                                <InputLabel id="Assay Type Select Label">
-                                    Assay Type
-                                </InputLabel>
-                                <EditGroupSelect
-                                    id="assayType"
-                                    labelId="Assay Type Select Label"
-                                    value={assayTypeId}
-                                    label="Assay Type"
-                                    onChange={(e) =>
-                                        handleSelectAssayTypeChange(Number(e.target.value))
-                                    }
-                                >
-                                    {experimentInfo.assayTypes.map((type: AssayTypeInfo) => (
-                                        <MenuItem key={type.id} value={type.assayType.id}>
-                                            {type.assayType.name}
-                                        </MenuItem>
-                                    ))}
-                                </EditGroupSelect>
-                            </FormControl>
-                            <EditableTextField
-                                id="week"
-                                value={week?.toString()}
-                                label="Week:"
-                                numberType="whole number"
-                                onSubmit={handleSubmitWeek}
-                            />
-                        </>)}
+                <EditGroup editable={isEditingAssay}>
+                    {showFullContext && (
+                        <Typography>
+                            {experimentInfo.experiment.title}
+                            <br />
+                            Week {assay.week}, {conditionName}, {assayTypeName}
+                        </Typography>
+                    )}
                     <EditableTextField
                         id="result"
                         value={result?.toString()}
                         defaultDisplayValue="N/A"
                         label="Result:"
                         numberType="float"
-                        units={getAssayTypeUnits(assayTypeId, experimentInfo.assayTypes)}
+                        units={getAssayTypeUnits(
+                            assayTypeId,
+                            experimentInfo.assayTypes
+                        )}
                         onSubmit={handleSubmitResult}
                     />
                     <EditableTextField
