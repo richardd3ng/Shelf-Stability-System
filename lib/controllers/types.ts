@@ -146,6 +146,11 @@ export type UpdateAssayTypeArgs = {
 
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 
+export type CustomAssayTypeForExperimentCreationArgs = Omit<AssayTypeCreationArgs, "isCustom"> & {
+    experimentId : number;
+    technicianId : number | null;
+}
+
 export type StandardAssayTypeForExperimentCreationsArgs = {
     experimentId : number;
     assayTypeId : number;

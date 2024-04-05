@@ -1,5 +1,5 @@
 import { ApiError } from "next/dist/server/api-utils";
-import { AssayTypeInfo, ExperimentInfo, StandardAssayTypeForExperimentCreationsArgs, UpdateAssayTypeArgs, UpdateTechnicianArgs } from "./types";
+import { AssayTypeInfo, CustomAssayTypeForExperimentCreationArgs, ExperimentInfo, StandardAssayTypeForExperimentCreationsArgs, UpdateAssayTypeArgs, UpdateTechnicianArgs } from "./types";
 import { AssayType, AssayTypeForExperiment } from "@prisma/client";
 
 
@@ -51,14 +51,14 @@ export const getCorrespondingAssayType = (
     );
 };
 
-export const createNewCustomAssayTypeForExperimentThroughAPI = async (experimentId : number) => {
+export const createNewCustomAssayTypeForExperimentThroughAPI = async (creationArgs : CustomAssayTypeForExperimentCreationArgs) => {
     const endpoint = "/api/assayTypeForExperiment/createCustom";
     const response = await fetch(endpoint, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({experimentId}),
+        body: JSON.stringify({...creationArgs}),
     });
     const resJson = await response.json();
     if (response.ok) {
@@ -67,24 +67,6 @@ export const createNewCustomAssayTypeForExperimentThroughAPI = async (experiment
     throw new ApiError(response.status, resJson.message);
 }
 
-export const createNewStandardAssayTypeForExperimentThroughAPI = async (creationArgs : StandardAssayTypeForExperimentCreationsArgs) => {
-    const endpoint = "/api/assayTypeForExperiment/createStandard";
-    const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            experimentId : creationArgs.experimentId,
-            assayTypeId : creationArgs.assayTypeId
-        }),
-    });
-    const resJson = await response.json();
-    if (response.ok) {
-        return {...resJson};
-    }
-    throw new ApiError(response.status, resJson.message);
-}
 
 export const getAllStandardAssayTypesThroughAPI = async () : Promise<AssayType[]> => {
     const endpoint = "/api/assayTypeForExperiment/getAllStandardAssayTypes";

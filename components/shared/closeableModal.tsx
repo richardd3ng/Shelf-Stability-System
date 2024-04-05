@@ -22,8 +22,9 @@ const CloseableModal: React.FC<CloseableModalProps> = (
     return (
         <Dialog
             open={props.open}
-            maxWidth="lg"
             hideBackdrop={props.hideBackdrop}
+            sx={{ width: "100%" }}
+            PaperProps={{sx : {overflowX : "hidden"}}}
         >
             <Container
                 style={{

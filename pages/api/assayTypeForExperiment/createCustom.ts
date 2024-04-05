@@ -14,14 +14,14 @@ export default async function createCustomAssayTypeAPI(
     if (permissionTracker.shouldStopExecuting){
         return;
     }
-    const {experimentId} = req.body;
+    const {experimentId, name, units, description, technicianId} = req.body;
     try{
         const assayType = await db.assayType.create({
             data : {
                 isCustom : true,
-                name : "",
-                units : "",
-                description : ""
+                name : name,
+                units : units,
+                description : description
             }
         });
 
@@ -32,7 +32,7 @@ export default async function createCustomAssayTypeAPI(
 
             data : {
                 experimentId : experimentId,
-                technicianId : null,
+                technicianId : technicianId,
                 assayTypeId : assayType.id
             }
         })
