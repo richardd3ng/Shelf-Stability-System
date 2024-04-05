@@ -187,3 +187,23 @@ export const checkIfThereAreRecordedResultsForAssayType = (assayTypeForExperimen
     });
     return hasResults;
 }
+
+export const fetchAssayTypeForExperiment = async (assayTypeForExperimentId: number) : Promise<AssayTypeForExperiment> => {
+    const endpoint = `/api/assayTypeForExperiment/${assayTypeForExperimentId}`;
+    const response = await fetch(endpoint);
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    }
+    throw new ApiError(response.status, resJson.message);
+}
+
+export const fetchAssayType = async (assayTypeId: number) : Promise<AssayType> => {
+    const endpoint = `/api/assayType/${assayTypeId}`;
+    const response = await fetch(endpoint);
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    }
+    throw new ApiError(response.status, resJson.message);
+}

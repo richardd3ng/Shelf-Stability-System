@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
-import { Print } from "@mui/icons-material";
 import { Icon, SvgIconTypeMap } from "@mui/material";
 import icon from "./labelIcon.svg";
 import Image from "next/image";
@@ -12,7 +11,7 @@ interface PrintLabelsButtonProps {
 }
 
 const PrintLabelsIconButton: OverridableComponent<SvgIconTypeMap<{}, "svg">> = () => {
-    return (<Icon>
+    return (<Icon style={{ fontSize: 30 }}>
         <Image src={icon} alt="Print sample labels" />
     </Icon>);
 };
@@ -21,7 +20,7 @@ const PrintLabelsButton: React.FC<PrintLabelsButtonProps> = (
     props: PrintLabelsButtonProps
 ) => {
     const router = useRouter();
-    console.log(icon);
+    
     return (
         <IconButtonWithTooltip
             text="Print Sample Labels"

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SvgIconTypeMap } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { IconButton, Tooltip } from "@mui/material";
@@ -13,16 +12,12 @@ interface IconButtonWithTooltipProps {
 const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = (
     props: IconButtonWithTooltipProps
 ) => {
-    const [showTooltip, setShowTooltip] = useState<boolean>(false);
 
     return (
         <Tooltip
             title={props.text}
-            open={showTooltip}
         >
             <IconButton
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
                 onClick={props.onClick}
             >
                 <props.icon
@@ -31,8 +26,8 @@ const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = (
                             props.size === "large"
                                 ? 30
                                 : props.size === "small"
-                                ? 18
-                                : null,
+                                    ? 18
+                                    : null,
                     }}
                 />
             </IconButton>
