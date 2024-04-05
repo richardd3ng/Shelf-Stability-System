@@ -122,4 +122,5 @@ view AssayAgendaView {
   week                  Int
   sample                Int
   resultId              Int?
+  isCanceled            Boolean
 }
