@@ -43,7 +43,7 @@ export const ExperimentHeader = () => {
     return (
         <Stack>
             <Box sx={{ marginLeft: 2, marginBottom: 0.5 }}>
-                <BackButton text="Back to Experiment List" />
+                <BackButton />
             </Box>
             <Box
                 sx={{
