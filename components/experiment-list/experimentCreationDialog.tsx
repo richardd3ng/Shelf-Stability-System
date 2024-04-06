@@ -16,21 +16,15 @@ import {
     Chip,
 } from "@mui/material";
 import { UserInfo, UserTable } from "@/lib/controllers/types";
-import { createExperiment } from "@/lib/controllers/experimentController";
-import {
-    ConditionCreationArgsNoExperimentId,
-    ExperimentCreationResponse,
-} from "@/lib/controllers/types";
+import { ConditionCreationArgsNoExperimentId } from "@/lib/controllers/types";
 import { ExperimentCreationArgs } from "@/lib/controllers/types";
 import { useAlert } from "@/lib/context/shared/alertContext";
-import { useRouter } from "next/router";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "../shared/myDatePicker";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { INVALID_USER_ID } from "@/lib/hooks/useUserInfo";
 import { fetchUserList } from "@/lib/controllers/userController";
-import { useLoading } from "@/lib/context/shared/loadingContext";
+import { useMutationToCreateExperiment } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -49,8 +43,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [conditionName, setConditionName] = useState<string>("");
     const [storageConditions, setStorageConditions] = useState<string[]>([]);
     const { showAlert } = useAlert();
-    const { showLoading, hideLoading } = useLoading();
-    const router = useRouter();
+    const { mutate: createExperiment } = useMutationToCreateExperiment();
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -119,35 +112,21 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             showAlert("error", generateAlertMessage(missingDetails));
             return;
         }
-        showLoading("Creating experiment...");
-        try {
-            const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
-                storageConditions.map((condition: string, index: number) => ({
-                    name: condition,
-                    isControl: index === 0,
-                }));
-            const experimentData: ExperimentCreationArgs = {
-                title: title,
-                description: description,
-                startDate: date!,
-                conditionCreationArgsNoExperimentIdArray:
-                    conditionCreationArgsNoExperimentIdArray,
-                ownerId: ownerId,
-                weeks: "",
-            };
-            const experimentResJson: ExperimentCreationResponse =
-                await createExperiment(experimentData);
-            showAlert(
-                "success",
-                `Successfully created experiment ${experimentResJson.experiment.id}!`
-            );
-            router.push(`/experiments/${experimentResJson.experiment.id}`);
-        } catch (error) {
-            showAlert("error", getErrorMessage(error));
-            hideLoading();
-            return;
-        }
-        hideLoading();
+        const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
+            storageConditions.map((condition: string, index: number) => ({
+                name: condition,
+                isControl: index === 0,
+            }));
+        const experimentData: ExperimentCreationArgs = {
+            title: title,
+            description: description,
+            startDate: date!,
+            conditionCreationArgsNoExperimentIdArray:
+                conditionCreationArgsNoExperimentIdArray,
+            ownerId: ownerId,
+            weeks: "",
+        };
+        createExperiment(experimentData);
         closeDialog();
     };
 
