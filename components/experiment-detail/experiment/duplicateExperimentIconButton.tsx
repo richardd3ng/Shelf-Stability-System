@@ -3,16 +3,18 @@ import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentI
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 import {
+    AssayTypeInfo,
     ConditionCreationArgsNoExperimentId,
     ExperimentCreationArgs,
 } from "@/lib/controllers/types";
 import { createExperiment } from "@/lib/controllers/experimentController";
 import { createAssay } from "@/lib/controllers/assayController";
-import { AssayCreationArgs } from "@/lib/controllers/types";
+import { createNewCustomAssayTypeForExperimentThroughAPI } from "@/lib/controllers/assayTypeController";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useRouter } from "next/router";
 import { ApiError } from "next/dist/server/api-utils";
+import { Condition } from "@prisma/client";
 
 const DuplicateExperimentIconButton: React.FC = () => {
     const experimentId = useExperimentId();
@@ -24,6 +26,45 @@ const DuplicateExperimentIconButton: React.FC = () => {
     if (!experimentInfo) {
         return null;
     }
+
+    const getNewConditionId = (
+        newConditions: Condition[],
+        oldConditionId: number
+    ): number => {
+        const oldCondition = experimentInfo.conditions.find(
+            (condition) => condition.id === oldConditionId
+        );
+        if (!oldCondition) {
+            throw new Error("Duplication error: old condition does not exist");
+        }
+        const newCondition = newConditions.find(
+            (condition) => condition.name === oldCondition.name
+        );
+        if (!newCondition) {
+            throw new Error("Duplication error: new condition does not exist");
+        }
+        return newCondition.id;
+    };
+
+    const getNewAssayTypeForExperimentId = (
+        newAssayTypeInfos: AssayTypeInfo[],
+        oldAssayTypeForExperimentId: number
+    ): number => {
+        const oldAssayTypeInfo = experimentInfo.assayTypes.find(
+            (assayType) => assayType.id === oldAssayTypeForExperimentId
+        );
+        if (!oldAssayTypeInfo) {
+            throw new Error("Duplication error: old assay type does not exist");
+        }
+        const newAssayTypeForExperiment = newAssayTypeInfos.find(
+            (assayTypeInfo) =>
+                assayTypeInfo.assayType.name === oldAssayTypeInfo.assayType.name
+        );
+        if (!newAssayTypeForExperiment) {
+            throw new Error("Duplication error: new assay type does not exist");
+        }
+        return newAssayTypeForExperiment.id;
+    };
 
     const attemptCopy = async (number: number) => {
         try {
@@ -43,24 +84,42 @@ const DuplicateExperimentIconButton: React.FC = () => {
                 ownerId: experimentInfo.experiment.ownerId,
                 weeks: experimentInfo.experiment.weeks,
             };
-            const id = await createExperiment(experimentData).then(
-                (res) => res.experiment.id
+            const { experiment: newExperiment, conditions: newConditions } =
+                await createExperiment(experimentData);
+            const newAssayTypeInfos: AssayTypeInfo[] = [];
+            await Promise.all(
+                experimentInfo.assayTypes.map(async (assayTypeInfo) => {
+                    const newAssayTypeInfo =
+                        await createNewCustomAssayTypeForExperimentThroughAPI({
+                            description: assayTypeInfo.assayType.description,
+                            name: assayTypeInfo.assayType.name,
+                            units: assayTypeInfo.assayType.units,
+                            experimentId: newExperiment.id,
+                            technicianId: assayTypeInfo.technicianId,
+                        });
+                    newAssayTypeInfos.push(newAssayTypeInfo);
+                })
             );
-            experimentInfo.assays.forEach((assay) => {
-                const assayInfo: AssayCreationArgs = {
-                    experimentId: id,
-                    conditionId: assay.conditionId,
-                    assayTypeId: assay.assayTypeId,
+            experimentInfo.assays.forEach(async (assay) => {
+                await createAssay({
+                    experimentId: newExperiment.id,
+                    conditionId: getNewConditionId(
+                        newConditions,
+                        assay.conditionId
+                    ),
+                    assayTypeId: getNewAssayTypeForExperimentId(
+                        newAssayTypeInfos,
+                        assay.assayTypeId
+                    ),
                     week: assay.week,
                     sample: assay.sample,
-                };
-                createAssay(assayInfo);
+                });
             });
             showAlert(
                 "success",
-                `Succesfully created experiment ${id} from experiment ${experimentId}`
+                `Succesfully created experiment ${newExperiment.id} from experiment ${experimentId}`
             );
-            router.push(`/experiments/${id}`);
+            router.push(`/experiments/${newExperiment.id}`);
         } catch (error) {
             const apiError: ApiError = error as ApiError;
             if (
