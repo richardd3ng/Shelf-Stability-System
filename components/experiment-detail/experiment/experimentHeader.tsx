@@ -11,6 +11,7 @@ import { useLoading } from "@/lib/context/shared/loadingContext";
 import DownloadExcelIconButton from "./downloadExcelIconButton";
 import GenerateReportIconButton from "@/components/shared/generateReportIconButton";
 import EditExperimentButton from "./editExperimentButton";
+import DuplicateExperimentIconButton from "./duplicateExperimentIconButton";
 import BackButton from "@/components/shared/backButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
@@ -94,6 +95,7 @@ export const ExperimentHeader = () => {
                             size="large"
                         />
                         <DownloadExcelIconButton />
+                        <DuplicateExperimentIconButton />
                     </Box>
                 </Box>
                 <Typography

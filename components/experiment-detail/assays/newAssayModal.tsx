@@ -44,12 +44,12 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
             week: props.week,
             sample: 4,
         };
-        await createAssay(assayInfo);
+        createAssay(assayInfo);
         props.onClose();
     };
 
     if (!experimentInfo) {
-        return <></>;
+        return null;
     }
 
     return (
