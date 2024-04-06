@@ -131,6 +131,7 @@ async function parseAndCreateAssayResultsForExperimentInDB(createdExperiment: Cr
 
 async function parseAndCreateAssaysForExperimentInDB(experiment: ExperimentImportJSON, conditionToId: Map<string, number>, createdExperiment: CreatedExperimentIdAndConditionsAndAssayTypes) {
     const assayCreationArgsArray: AssayCreationArgs[] = [];
+    let sampleNum = 1;
     for (const condition in experiment.assay_schedule) {
         const schedule = experiment.assay_schedule[condition];
         for (const week in schedule) {
@@ -147,7 +148,9 @@ async function parseAndCreateAssaysForExperimentInDB(experiment: ExperimentImpor
                     assayTypeId : assayTypeId,
                     conditionId: getConditionIdFromName(conditionToId, condition),
                     week: parseInt(week),
+                    sample : sampleNum
                 });
+                sampleNum += 1;
 
             }
         }
@@ -188,7 +191,8 @@ async function parseAndCreateExperimentWithConditionsAndAssayTypesInDB(experimen
         ownerId: getUserIdFromUsername(experiment.owner, allUsers),
         conditionCreationArgsNoExperimentIdArray: conditionCreationArgsNoExperimentIdArray,
         assayTypeForExperimentCreationArgsArray : assayTypeCreationArgs,
-        isCanceled : experiment.canceled
+        isCanceled : experiment.canceled,
+        weeks : ""
     };
     const createdExperiment = await createExperimentWithConditionsAndAssayTypes(experimentData);
     return createdExperiment;
