@@ -1,22 +1,21 @@
-import { useRouter } from "next/router";
 import DescriptionIcon from "@mui/icons-material/Description";
 import IconButtonWithTooltip from "@/components/shared/iconButtonWithTooltip";
 
 interface GenerateReportIconButtonProps {
-    experimentId: number;
+    text : string;
+    onClick : () => void;
     size?: "small" | "medium" | "large";
 }
 
 const GenerateReportIconButton: React.FC<GenerateReportIconButtonProps> = (
     props: GenerateReportIconButtonProps
 ) => {
-    const router = useRouter();
     return (
         <IconButtonWithTooltip
-            text="Generate Report"
+            text={props.text}
             icon={DescriptionIcon}
             onClick={() =>
-                router.push(`/experiments/${props.experimentId}/report`)
+                props.onClick()
             }
             size={props.size}
         />

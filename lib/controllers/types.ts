@@ -227,3 +227,15 @@ export type EmailInfo = {
         }[];
     };
 };
+
+/* ----- Lab Utilization ----- */
+export type UtilizationReportParams = {
+    startDate : LocalDate;
+    endDate : LocalDate;
+}
+
+export type UtilizationReportRow = {
+    weekStartDate : LocalDate;
+    count : number;
+    assayTypeName : string;
+}
