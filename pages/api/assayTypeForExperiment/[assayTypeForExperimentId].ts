@@ -9,20 +9,21 @@ export default async function assayTypeForExperimentAPI(
     req : NextApiRequest,
     res : NextApiResponse
 ) {
-    
-
-    try{
-
+    try {
         let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
         await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
         if (permissionTracker.shouldStopExecuting){
             return;
         }
         const assayTypeForExperimentId = Number(req.query.assayTypeForExperimentId);
-        if (req.method === "PATCH"){
+        if (req.method === "GET") {
+            await getAssayTypeForExperiment(assayTypeForExperimentId, req, res);
+        } else if (req.method === "PATCH"){
             await updateTechnician(assayTypeForExperimentId, req, res);
         } else if (req.method === "DELETE"){
             await deleteAssayTypeForExperiment(assayTypeForExperimentId, req, res);
+        } else {
+            res.status(405).json(getApiError(405, "Method not allowed"));
         }
 
     } catch (error) {
@@ -33,7 +34,21 @@ export default async function assayTypeForExperimentAPI(
 
 }
 
-const updateTechnician = async (assayTypeForExperimentId : number, req : NextApiRequest,  res : NextApiResponse, ) => {
+const getAssayTypeForExperiment = async (assayTypeForExperimentId : number, req : NextApiRequest, res : NextApiResponse) => {
+    const assayTypeForExperiment = await db.assayTypeForExperiment.findUnique({
+        where : {
+            id : assayTypeForExperimentId
+        }
+    });
+
+    if (assayTypeForExperiment == null) {
+        res.status(404).json(getApiError(404, "Assay type for experiment not found"));
+        return;
+    }
+    res.status(200).json(assayTypeForExperiment);
+}
+
+const updateTechnician = async (assayTypeForExperimentId : number, req : NextApiRequest,  res : NextApiResponse) => {
     const {technicianId} = req.body;
     if (!technicianId){
         res.status(400).json(getApiError(400, "No technicianId field in request body"));

@@ -61,3 +61,13 @@ export const deleteAssayResult = async (id: number): Promise<AssayResult> => {
         throw error;
     }
 };
+
+export const fetchResultForAssay = async (assayId: number): Promise<AssayResult | null> => {
+    const endpoint = `/api/assays/${assayId}/result`;
+    const response = await fetch(endpoint);
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    }
+    throw new ApiError(response.status, resJson.message);
+};

@@ -14,6 +14,7 @@ import EditExperimentButton from "./editExperimentButton";
 import DuplicateExperimentIconButton from "./duplicateExperimentIconButton";
 import BackButton from "@/components/shared/backButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import PrintLabelsButton from "./printLabelsButton";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -95,6 +96,10 @@ export const ExperimentHeader = () => {
                             size="large"
                         />
                         <DownloadExcelIconButton />
+                        <PrintLabelsButton
+                            experimentId={experimentId}
+                            size="large"
+                        />
                         <DuplicateExperimentIconButton />
                     </Box>
                 </Box>
