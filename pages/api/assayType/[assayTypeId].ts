@@ -18,13 +18,35 @@ export default async function assayTypeAPI(
             return;
         }
         const assayTypeId = Number(req.query.assayTypeId);
-        if (req.method === "PATCH") {
+        if (req.method === "GET") {
+            await getAssayType(assayTypeId, req, res);
+        } else if (req.method === "PATCH") {
             await updateAssayType(assayTypeId, req, res);
+        } else {
+            res.status(405).json(getApiError(405, "Method not allowed"));
         }
     } catch (error) {
         res.status(500).json(getApiError(500, "Failed on server"));
     }
 }
+
+const getAssayType = async (
+    assayTypeId: number,
+    _req: NextApiRequest,
+    res: NextApiResponse
+) => {
+    const assayType = await db.assayType.findUnique({
+        where: {
+            id: assayTypeId,
+        },
+    });
+
+    if (assayType === null) {
+        res.status(404).json(getApiError(404, "Assay type not found"));
+        return;
+    }
+    res.status(200).json(assayType);
+};
 
 const updateAssayType = async (
     assayTypeId: number,

@@ -14,6 +14,7 @@ import EditExperimentButton from "./editExperimentButton";
 import DuplicateExperimentIconButton from "./duplicateExperimentIconButton";
 import BackButton from "@/components/shared/backButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import PrintLabelsButton from "./printLabelsButton";
 import { useRouter } from "next/router";
 
 export const ExperimentHeader = () => {
@@ -98,6 +99,10 @@ export const ExperimentHeader = () => {
                             onClick={() => router.push(`/experiments/${experimentId}/report`)}
                         />
                         <DownloadExcelIconButton />
+                        <PrintLabelsButton
+                            experimentId={experimentId}
+                            size="large"
+                        />
                         <DuplicateExperimentIconButton />
                     </Box>
                 </Box>
