@@ -32,7 +32,8 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
     const { mutate: createAssay } = useMutationToCreateAssay();
     const { showAlert } = useAlert();
 
-    const onSubmit = async () => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         if (selectedAssayTypeId < 0) {
             showAlert("error", "Please select an assay type.");
             return;
@@ -58,7 +59,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
             closeFn={props.onClose}
             title={"Add New Assay"}
         >
-            {experimentInfo ? (
+            <form onSubmit={handleSubmit}>
                 <Stack gap={1}>
                     <FormControl fullWidth>
                         <InputLabel id="Assay Type Select Label">
@@ -83,14 +84,14 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
                     </FormControl>
                     <Button
                         variant="contained"
+                        type="submit"
                         color="primary"
-                        onClick={onSubmit}
                         sx={{ textTransform: "none" }}
                     >
                         Submit
                     </Button>
                 </Stack>
-            ) : null}
+            </form>
         </CloseableModal>
     );
 };

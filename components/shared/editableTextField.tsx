@@ -58,7 +58,8 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
         startEditing();
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         if (props.numberType) {
             const error = getNumericalValidationError(value, props.numberType);
             if (error) {
@@ -71,50 +72,48 @@ const EditableLabel: React.FC<EditableTextFieldProps> = (
         props.onSubmit(value);
     };
 
-    // FIXME this is not the right way to handle this
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "Enter") {
-            handleSubmit();
-        }
-    };
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value);
     };
 
     return (
-        <Box sx={{ alignItems: "center", display: "flex", width: "100%" }}>
-            {props.label && !isEditing && (
-                <Typography sx={{ paddingRight: 2 }}>{props.label}</Typography>
-            )}
-            {isEditing ? (
-                <TextField
-                    label={props.label}
-                    multiline={props.multiline}
-                    value={value}
-                    onChange={handleChange}
-                    onKeyDown={handleKeyDown}
-                    autoFocus
-                    sx={{ flex: 9, paddingRight: 1 }}
-                />
-            ) : (
-                <Box sx={{ flex: 9 }}>
-                    <Typography>{resultText}</Typography>
-                </Box>
-            )}
-            {props.units && isEditing && (
-                <Typography sx={{ paddingLeft: 0 }}>{props.units}</Typography>
-            )}
-            {isEditing ? (
-                <IconButton onClick={handleSubmit} sx={{ flex: 1 }}>
-                    <CheckIcon sx={{ color: "green" }} />
-                </IconButton>
-            ) : (
-                <IconButton onClick={handleEdit} sx={{ marginRight: -1 }}>
-                    <EditIcon />
-                </IconButton>
-            )}
-        </Box>
+        <form onSubmit={handleSubmit}>
+            <Box sx={{ alignItems: "center", display: "flex", width: "100%" }}>
+                {props.label && !isEditing && (
+                    <Typography sx={{ paddingRight: 2 }}>
+                        {props.label}
+                    </Typography>
+                )}
+                {isEditing ? (
+                    <TextField
+                        label={props.label}
+                        multiline={props.multiline}
+                        value={value}
+                        onChange={handleChange}
+                        autoFocus
+                        sx={{ flex: 9, paddingRight: 1 }}
+                    />
+                ) : (
+                    <Box sx={{ flex: 9 }}>
+                        <Typography>{resultText}</Typography>
+                    </Box>
+                )}
+                {props.units && isEditing && (
+                    <Typography sx={{ paddingLeft: 0 }}>
+                        {props.units}
+                    </Typography>
+                )}
+                {isEditing ? (
+                    <IconButton type="submit" sx={{ flex: 1 }}>
+                        <CheckIcon sx={{ color: "green" }} />
+                    </IconButton>
+                ) : (
+                    <IconButton onClick={handleEdit} sx={{ marginRight: -1 }}>
+                        <EditIcon />
+                    </IconButton>
+                )}
+            </Box>
+        </form>
     );
 };
 

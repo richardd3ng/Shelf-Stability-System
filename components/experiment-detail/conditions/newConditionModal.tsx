@@ -19,7 +19,8 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
     const [condition, setCondition] = useState<string>("");
     const { mutate: createCondition } = useMutationToCreateCondition();
 
-    const onSubmit = () => {
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
         if (!condition) {
             return;
         }
@@ -33,14 +34,12 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
         props.onClose();
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "Enter") {
-            onSubmit();
-        }
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCondition(e.target.value);
     };
 
     if (!data) {
-        return <></>;
+        return null;
     }
 
     return (
@@ -49,25 +48,26 @@ export const NewConditionModal: React.FC<NewConditionModalProps> = (
             closeFn={props.onClose}
             title={"Add New Condition"}
         >
-            <Stack gap={1}>
-                <FormControl fullWidth>
-                    <TextField
-                        label="Condition"
-                        style={{ marginLeft: 4, marginRight: 4 }}
-                        value={condition}
-                        onChange={(e) => setCondition(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                    />
-                </FormControl>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={onSubmit}
-                    sx={{ textTransform: "none" }}
-                >
-                    Submit
-                </Button>
-            </Stack>
+            <form onSubmit={handleSubmit}>
+                <Stack gap={1}>
+                    <FormControl fullWidth>
+                        <TextField
+                            label="Condition"
+                            style={{ marginLeft: 4, marginRight: 4 }}
+                            value={condition}
+                            onChange={handleInputChange}
+                        />
+                    </FormControl>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        sx={{ textTransform: "none" }}
+                    >
+                        Submit
+                    </Button>
+                </Stack>
+            </form>
         </CloseableModal>
     );
 };
