@@ -25,6 +25,7 @@ import AssayEditorModal from "@/components/experiment-detail/assays/assayEditorM
 import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { useRouter } from "next/router";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import { UtilReportButton } from "@/components/agenda/utilReportButton";
 
 export default function AssayAgenda() {
     const [fromDate, setFromDate] = useState<LocalDate | null>(
@@ -230,6 +231,7 @@ export default function AssayAgenda() {
                                         label="To"
                                     />
                                 </Stack>
+                                
                                 <Box
                                     display="flex"
                                     flexDirection="row"
@@ -262,6 +264,7 @@ export default function AssayAgenda() {
                                     />
                                 </Box>
                             </Box>
+                            <UtilReportButton/>
                             <DataGrid
                                 rows={rows}
                                 columns={colDefs}
