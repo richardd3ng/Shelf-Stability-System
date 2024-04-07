@@ -41,7 +41,7 @@ const getAssayType = async (
         },
     });
 
-    if (assayType == null) {
+    if (assayType === null) {
         res.status(404).json(getApiError(404, "Assay type not found"));
         return;
     }
