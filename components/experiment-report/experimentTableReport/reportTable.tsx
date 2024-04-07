@@ -12,10 +12,10 @@ import Table from "@/components/shared/table";
 import ReportChip from "./reportChip";
 import { WeekRow } from "@/components/experiment-detail/experiment/experimentTable";
 import {
-    getAllWeeksCoveredByAssays,
     getAssayResultForAssay,
     getAssaysForWeekAndCondition,
 } from "@/components/experiment-detail/experiment/experimentTable";
+import { parseExperimentWeeks } from "@/lib/api/apiHelpers";
 
 interface ReportTableProps {
     experimentInfo: ExperimentInfo;
@@ -28,7 +28,7 @@ const ReportTable: React.FC<ReportTableProps> = (props: ReportTableProps) => {
 
     const weekRows: WeekRow[] = [];
     const assays: Assay[] = props.assayFilter(props.experimentInfo);
-    getAllWeeksCoveredByAssays(assays).forEach(
+    parseExperimentWeeks(props.experimentInfo.experiment).forEach(
         (week: number, index: number) => {
             weekRows.push({
                 id: index,

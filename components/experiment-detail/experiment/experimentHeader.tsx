@@ -11,6 +11,7 @@ import { useLoading } from "@/lib/context/shared/loadingContext";
 import DownloadExcelIconButton from "./downloadExcelIconButton";
 import GenerateReportIconButton from "@/components/shared/generateReportIconButton";
 import EditExperimentButton from "./editExperimentButton";
+import DuplicateExperimentIconButton from "./duplicateExperimentIconButton";
 import BackButton from "@/components/shared/backButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import PrintLabelsButton from "./printLabelsButton";
@@ -43,7 +44,7 @@ export const ExperimentHeader = () => {
     return (
         <Stack>
             <Box sx={{ marginLeft: 2, marginBottom: 0.5 }}>
-                <BackButton text="Back to Experiment List" />
+                <BackButton />
             </Box>
             <Box
                 sx={{
@@ -99,6 +100,7 @@ export const ExperimentHeader = () => {
                             experimentId={experimentId}
                             size="large"
                         />
+                        <DuplicateExperimentIconButton />
                     </Box>
                 </Box>
                 <Typography

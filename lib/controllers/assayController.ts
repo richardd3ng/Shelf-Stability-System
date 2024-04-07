@@ -11,7 +11,6 @@ import {
     AssayUpdateArgs,
 } from "./types";
 import { stringFieldsToLocalDate } from "./jsonConversions";
-import exp from "constants";
 
 export const fetchAgendaList = async (
     minDate: LocalDate | null,
@@ -90,7 +89,6 @@ export const deleteAssay = async (
     id: number,
     confirm: boolean
 ): Promise<Assay> => {
-    console.log("in controller");
     const endpoint = `/api/assays/${id}/delete`;
     try {
         return deleteEntity(endpoint, confirm);

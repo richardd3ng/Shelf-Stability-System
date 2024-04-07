@@ -42,13 +42,14 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
             conditionId: props.conditionId,
             assayTypeId: selectedAssayTypeId,
             week: props.week,
+            sample: 401,
         };
-        await createAssay(assayInfo);
+        createAssay(assayInfo);
         props.onClose();
     };
 
     if (!experimentInfo) {
-        return <></>;
+        return null;
     }
 
     return (
@@ -67,15 +68,17 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
                             id="Assay Type Selection"
                             value={selectedAssayTypeId}
                             label="Assay Type"
-                            onChange={e => {
+                            onChange={(e) => {
                                 setSelectedAssayTypeId(Number(e.target.value));
                             }}
                         >
-                            {experimentInfo.assayTypes.map((type: AssayTypeInfo ) => (
-                                <MenuItem key={type.id} value={type.id}>
-                                    {type.assayType.name}
-                                </MenuItem>
-                            ))}
+                            {experimentInfo.assayTypes.map(
+                                (type: AssayTypeInfo) => (
+                                    <MenuItem key={type.id} value={type.id}>
+                                        {type.assayType.name}
+                                    </MenuItem>
+                                )
+                            )}
                         </Select>
                     </FormControl>
                     <Button

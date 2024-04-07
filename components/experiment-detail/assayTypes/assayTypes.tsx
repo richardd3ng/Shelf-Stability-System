@@ -1,12 +1,10 @@
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { Typography, Container, Button } from "@mui/material";
-import React from "react";
+import React, {useState} from "react";
 
 import { GridColDef, GridRowId, GridRowSelectionModel } from "@mui/x-data-grid";
 import Table from "@/components/shared/table";
-import { useAllUsers } from "@/lib/hooks/useAllUsers";
-import { useMutationToCreateCustomAssayType } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 import { NameCell } from "./nameCell";
 import { UnitsCell } from "./unitsCell";
 import { TechnicianCell } from "./technicianCell";
@@ -14,6 +12,7 @@ import { DeleteAssayTypeIcon } from "./deleteAssayTypeIcon";
 import { AssayTypesTableFooter } from "./tableFooter";
 import { DescriptionCell } from "./descriptionCell";
 import { useUserInfo } from "@/lib/hooks/useUserInfo";
+import AssayTypeCreationContext from "@/lib/context/experimentDetailPage/assayTypeCreationContext";
 
 const colDefs: GridColDef[] = [
     {
@@ -70,6 +69,7 @@ export const AssayTypes: React.FC = () => {
     const experimentId = useExperimentId();
     const {data : experimentInfo} = useExperimentInfo(experimentId);
     const {isAdmin} = useUserInfo();
+    const [isCreating, setIsCreating] = useState<boolean>(false);
     
     let canAddTypes = isAdmin && experimentInfo && !experimentInfo.experiment.isCanceled;
     if (!experimentInfo) {
@@ -77,17 +77,19 @@ export const AssayTypes: React.FC = () => {
     }
 
     return (
-        <Container style={{backgroundColor : "white", marginTop : 8, marginBottom : 8}}>
-            <Typography variant="h6" style={{marginBottom : 8, marginTop : 8}}>Assay Types</Typography>
-            {
-                canAddTypes 
-                ?
-                <Table columns={colDefs} rows={experimentInfo.assayTypes} footer={AssayTypesTableFooter}/>
-                :
-                <Table columns={colDefs} rows={experimentInfo.assayTypes} />
+        <AssayTypeCreationContext.Provider value={{isCreating : isCreating, setIsCreating : setIsCreating}}>
+            <Container style={{backgroundColor : "white", marginTop : 8, marginBottom : 8}}>
+                <Typography variant="h6" style={{marginBottom : 8, marginTop : 8}}>Assay Types</Typography>
+                {
+                    canAddTypes 
+                    ?
+                    <Table columns={colDefs} rows={experimentInfo.assayTypes} footer={AssayTypesTableFooter}/>
+                    :
+                    <Table columns={colDefs} rows={experimentInfo.assayTypes} />
 
-            }
-            
-        </Container>
+                }
+                
+            </Container>
+        </AssayTypeCreationContext.Provider>
     );
 };

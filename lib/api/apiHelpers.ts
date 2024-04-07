@@ -1,6 +1,10 @@
 import { NextApiRequest } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "./error";
+import { Experiment } from "@prisma/client";
+import { ExperimentWithLocalDate } from "../controllers/types";
+import { db } from "./db";
+
 export function getErrorMessage(error: unknown): string {
     if (error instanceof Error) return error.message;
     return String(error);
@@ -36,7 +40,11 @@ export const getExperimentID = (req: NextApiRequest): number => {
 
 export const INVALID_ASSAY_TYPE_ID = -1;
 
-export const requireQueryFields = <K extends string>(req: NextApiRequest, fields: K[], defaults: Partial<{ [P in K]: string }>): { [P in K]: string } | ApiError => {
+export const requireQueryFields = <K extends string>(
+    req: NextApiRequest,
+    fields: K[],
+    defaults: Partial<{ [P in K]: string }>
+): { [P in K]: string } | ApiError => {
     const missing: string[] = [];
     const result: { [P in K]: string } = {} as any;
 
@@ -54,8 +62,41 @@ export const requireQueryFields = <K extends string>(req: NextApiRequest, fields
     }
 
     if (missing.length > 0) {
-        return getApiError(400, `Missing required query fields: ${missing.join(", ")}`);
+        return getApiError(
+            400,
+            `Missing required query fields: ${missing.join(", ")}`
+        );
     }
 
     return result;
+};
+
+export const parseExperimentWeeks = (
+    experiment: Experiment | ExperimentWithLocalDate
+): number[] => {
+    let weeks: number[] = [];
+    experiment.weeks.split(",").forEach((week) => {
+        if (week.trim() !== "") {
+            weeks.push(Number(week));
+        }
+    });
+    return weeks;
+};
+
+export const updateExperimentWeeks = async (
+    experiment: Experiment,
+    weeks: number[]
+): Promise<void> => {
+    try {
+        await db.experiment.update({
+            where: {
+                id: experiment.id,
+            },
+            data: {
+                weeks: weeks.join(","),
+            },
+        });
+    } catch (error) {
+        throw error;
+    }
 };

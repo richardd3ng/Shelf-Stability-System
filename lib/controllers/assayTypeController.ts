@@ -1,7 +1,12 @@
 import { ApiError } from "next/dist/server/api-utils";
-import { AssayTypeInfo, ExperimentInfo, StandardAssayTypeForExperimentCreationsArgs, UpdateAssayTypeArgs, UpdateTechnicianArgs } from "./types";
+import {
+    AssayTypeInfo,
+    CustomAssayTypeForExperimentCreationArgs,
+    ExperimentInfo,
+    UpdateAssayTypeArgs,
+    UpdateTechnicianArgs,
+} from "./types";
 import { AssayType, AssayTypeForExperiment } from "@prisma/client";
-
 
 export const assayTypeIdToName = (
     assayTypeForExperimentId: number,
@@ -51,80 +56,63 @@ export const getCorrespondingAssayType = (
     );
 };
 
-export const createNewCustomAssayTypeForExperimentThroughAPI = async (experimentId : number) => {
+export const createNewCustomAssayTypeForExperimentThroughAPI = async (
+    creationArgs: CustomAssayTypeForExperimentCreationArgs
+): Promise<AssayTypeInfo> => {
     const endpoint = "/api/assayTypeForExperiment/createCustom";
     const response = await fetch(endpoint, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({experimentId}),
+        body: JSON.stringify({ ...creationArgs }),
     });
     const resJson = await response.json();
     if (response.ok) {
-        return {...resJson};
+        return { ...resJson };
     }
     throw new ApiError(response.status, resJson.message);
-}
+};
 
-export const createNewStandardAssayTypeForExperimentThroughAPI = async (creationArgs : StandardAssayTypeForExperimentCreationsArgs) => {
-    const endpoint = "/api/assayTypeForExperiment/createStandard";
-    const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            experimentId : creationArgs.experimentId,
-            assayTypeId : creationArgs.assayTypeId
-        }),
-    });
-    const resJson = await response.json();
-    if (response.ok) {
-        return {...resJson};
-    }
-    throw new ApiError(response.status, resJson.message);
-}
-
-export const getAllStandardAssayTypesThroughAPI = async () : Promise<AssayType[]> => {
+export const getAllStandardAssayTypesThroughAPI = async (): Promise<
+    AssayType[]
+> => {
     const endpoint = "/api/assayTypeForExperiment/getAllStandardAssayTypes";
     const response = await fetch(endpoint, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-
     });
     const resJson = await response.json();
     if (response.ok) {
         return [...resJson];
     }
     throw new ApiError(response.status, resJson.message);
-}
+};
 
-
-
-
-const getUpdateAssayTypeBody = (updateArgs : UpdateAssayTypeArgs) => {
-    if (updateArgs.name && updateArgs.units){
+const getUpdateAssayTypeBody = (updateArgs: UpdateAssayTypeArgs) => {
+    if (updateArgs.name && updateArgs.units) {
         return {
-            name : updateArgs.name,
-            units : updateArgs.units
+            name: updateArgs.name,
+            units: updateArgs.units,
         };
-    } else if (updateArgs.name){
+    } else if (updateArgs.name) {
         return {
-            name : updateArgs.name
+            name: updateArgs.name,
         };
-    } else if (updateArgs.units){
+    } else if (updateArgs.units) {
         return {
-            units : updateArgs.units
+            units: updateArgs.units,
         };
     } else {
         return {};
     }
-}
+};
 
-export const updateAssayTypeThroughAPI = async (updateArgs : UpdateAssayTypeArgs) : Promise<AssayType> => {
+export const updateAssayTypeThroughAPI = async (
+    updateArgs: UpdateAssayTypeArgs
+): Promise<AssayType> => {
     const endpoint = "/api/assayType/" + updateArgs.assayTypeId.toString();
 
     const response = await fetch(endpoint, {
@@ -136,30 +124,37 @@ export const updateAssayTypeThroughAPI = async (updateArgs : UpdateAssayTypeArgs
     });
     const resJson = await response.json();
     if (response.ok) {
-        return {...resJson};
+        return { ...resJson };
     }
     throw new ApiError(response.status, resJson.message);
-}
+};
 
-export const updateTechnicianOfAssayTypeForExperimentThroughAPI = async (updateArgs : UpdateTechnicianArgs) : Promise<AssayTypeForExperiment> => {
-    const endpoint = "/api/assayTypeForExperiment/" + updateArgs.assayTypeForExperimentId.toString();
+export const updateTechnicianOfAssayTypeForExperimentThroughAPI = async (
+    updateArgs: UpdateTechnicianArgs
+): Promise<AssayTypeForExperiment> => {
+    const endpoint =
+        "/api/assayTypeForExperiment/" +
+        updateArgs.assayTypeForExperimentId.toString();
 
     const response = await fetch(endpoint, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({technicianId : updateArgs.technicianId}),
+        body: JSON.stringify({ technicianId: updateArgs.technicianId }),
     });
     const resJson = await response.json();
     if (response.ok) {
-        return {...resJson};
+        return { ...resJson };
     }
     throw new ApiError(response.status, resJson.message);
-}
+};
 
-export const deleteAssayTypeForExperimentThroughAPI = async (assayTypeForExperimentId : number) : Promise<AssayTypeForExperiment> => {
-    const endpoint = "/api/assayTypeForExperiment/" + assayTypeForExperimentId.toString();
+export const deleteAssayTypeForExperimentThroughAPI = async (
+    assayTypeForExperimentId: number
+): Promise<AssayTypeForExperiment> => {
+    const endpoint =
+        "/api/assayTypeForExperiment/" + assayTypeForExperimentId.toString();
 
     const response = await fetch(endpoint, {
         method: "DELETE",
@@ -169,24 +164,30 @@ export const deleteAssayTypeForExperimentThroughAPI = async (assayTypeForExperim
     });
     const resJson = await response.json();
     if (response.ok) {
-        return {...resJson};
+        return { ...resJson };
     }
     throw new ApiError(response.status, resJson.message);
-}
+};
 
-export const checkIfThereAreRecordedResultsForAssayType = (assayTypeForExperimentId : number, experimentInfo : ExperimentInfo) : boolean => {
-    let hasResults : boolean = false;
+export const checkIfThereAreRecordedResultsForAssayType = (
+    assayTypeForExperimentId: number,
+    experimentInfo: ExperimentInfo
+): boolean => {
+    let hasResults: boolean = false;
     experimentInfo.assays.forEach((assay) => {
-        if (assay.assayTypeId === assayTypeForExperimentId){
+        if (assay.assayTypeId === assayTypeForExperimentId) {
             experimentInfo.assayResults.forEach((result) => {
-                if (result.assayId === assay.id && (result.result || result.comment)){
+                if (
+                    result.assayId === assay.id &&
+                    (result.result || result.comment)
+                ) {
                     hasResults = true;
                 }
-            })
+            });
         }
     });
     return hasResults;
-}
+};
 
 export const fetchAssayTypeForExperiment = async (assayTypeForExperimentId: number) : Promise<AssayTypeForExperiment> => {
     const endpoint = `/api/assayTypeForExperiment/${assayTypeForExperimentId}`;
@@ -196,7 +197,7 @@ export const fetchAssayTypeForExperiment = async (assayTypeForExperimentId: numb
         return resJson;
     }
     throw new ApiError(response.status, resJson.message);
-}
+};
 
 export const fetchAssayType = async (assayTypeId: number) : Promise<AssayType> => {
     const endpoint = `/api/assayType/${assayTypeId}`;
@@ -206,4 +207,4 @@ export const fetchAssayType = async (assayTypeId: number) : Promise<AssayType> =
         return resJson;
     }
     throw new ApiError(response.status, resJson.message);
-}
+};

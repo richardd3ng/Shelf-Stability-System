@@ -75,6 +75,7 @@ export type ExperimentUpdateArgs = {
     description?: string | null;
     startDate?: LocalDate;
     isCanceled?: boolean;
+    weeks?: string;
 };
 
 export type ExperimentStatus = "all" | "cancelled" | "non-cancelled";
@@ -116,8 +117,8 @@ export type AssayUpdateArgs = {
 };
 
 export type AssayWithResult = Assay & {
-    result : AssayResult | null;
-}
+    result: AssayResult | null;
+};
 
 /* ----- Condition ----- */
 
@@ -142,20 +143,25 @@ export type UpdateAssayTypeArgs = {
     assayTypeId: number;
     name: string | null;
     units: string | null;
-    description : string | null;
+    description: string | null;
 };
 
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 
-export type StandardAssayTypeForExperimentCreationsArgs = {
+export type CustomAssayTypeForExperimentCreationArgs = Omit<AssayTypeCreationArgs, "isCustom"> & {
     experimentId : number;
-    assayTypeId : number;
-}
-
-export type UpdateTechnicianArgs = {
-    assayTypeForExperimentId : number;
     technicianId : number | null;
 }
+
+export type StandardAssayTypeForExperimentCreationsArgs = {
+    experimentId: number;
+    assayTypeId: number;
+};
+
+export type UpdateTechnicianArgs = {
+    assayTypeForExperimentId: number;
+    technicianId: number | null;
+};
 
 /* ----- Assay Result ----- */
 

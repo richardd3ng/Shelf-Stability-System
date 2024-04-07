@@ -1,50 +1,46 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
-import { AssayTypeForExperiment, AssayType} from "@prisma/client";
 import { db } from "@/lib/api/db";
 import { getApiError } from "@/lib/api/error";
+import { ApiError } from "next/dist/server/api-utils";
+import { AssayTypeInfo } from "@/lib/controllers/types";
 
 export default async function createCustomAssayTypeAPI(
-    req : NextApiRequest,
-    res : NextApiResponse
-) {
-    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    req: NextApiRequest,
+    res: NextApiResponse
+): Promise<AssayTypeInfo | ApiError | void> {
+    let permissionTracker: APIPermissionTracker = {
+        shouldStopExecuting: false,
+    };
     await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
-    if (permissionTracker.shouldStopExecuting){
+    if (permissionTracker.shouldStopExecuting) {
         return;
     }
-    const {experimentId} = req.body;
-    try{
+    const { experimentId, name, units, description, technicianId } = req.body;
+    try {
         const assayType = await db.assayType.create({
-            data : {
-                isCustom : true,
-                name : "",
-                units : "",
-                description : ""
-            }
-        });
-
-        const assayTypeForExperiment = await db.assayTypeForExperiment.create({
-            select : {
-                assayType : true
+            data: {
+                isCustom: true,
+                name: name,
+                units: units,
+                description: description,
             },
-
-            data : {
-                experimentId : experimentId,
-                technicianId : null,
-                assayTypeId : assayType.id
-            }
-        })
-        res.status(200).json(assayTypeForExperiment);
-
+        });
+        const assayTypeForExperiment = await db.assayTypeForExperiment.create({
+            data: {
+                experimentId: experimentId,
+                technicianId: technicianId,
+                assayTypeId: assayType.id,
+            },
+        });
+        res.status(200).json({
+            ...assayTypeForExperiment,
+            assayType: assayType,
+        });
     } catch (error) {
         res.status(500).json(
             getApiError(500, "Failed to create Assay Type on server")
         );
     }
-
-
-
-
 }

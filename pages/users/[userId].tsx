@@ -15,10 +15,7 @@ export default function EditUser() {
                 spacing={3}
                 sx={{ marginTop: -1, marginBottom: 2, marginX: 2 }}
             >
-                <BackButton
-                    text="Back to Users"
-                    onClick={() => router.push("/users")}
-                />
+                <BackButton text="Back to Users" url="/users" />
                 <UserForm
                     newUser={false}
                     userId={
