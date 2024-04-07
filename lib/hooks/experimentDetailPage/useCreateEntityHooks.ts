@@ -4,18 +4,45 @@ import { getQueryKeyForUseExperimentInfo } from "./experimentDetailHooks";
 import { createAssay } from "@/lib/controllers/assayController";
 import { createAssayResult } from "@/lib/controllers/assayResultController";
 import { createCondition } from "@/lib/controllers/conditionController";
+import { createExperiment } from "@/lib/controllers/experimentController";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { Assay, Condition } from "@prisma/client";
-import {
-    createNewCustomAssayTypeForExperimentThroughAPI,
-} from "@/lib/controllers/assayTypeController";
+import { createNewCustomAssayTypeForExperimentThroughAPI } from "@/lib/controllers/assayTypeController";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import {
     AssayCreationArgs,
     AssayResultCreationArgs,
     ConditionCreationArgs,
+    ExperimentCreationResponse,
 } from "@/lib/controllers/types";
+import { useRouter } from "next/router";
+
+export const useMutationToCreateExperiment = () => {
+    const router = useRouter();
+    const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
+    return useMutation({
+        mutationFn: createExperiment,
+        onSuccess: (createdExperiment: ExperimentCreationResponse) => {
+            showAlert(
+                "success",
+                `Succesfully created experiment ${createdExperiment.experiment.id}!`
+            );
+            router.push(`/experiments/${createdExperiment.experiment.id}`);
+        },
+        onError: (error) => {
+            showAlert("error", getErrorMessage(error));
+        },
+        onMutate: () => {
+            showLoading("Creating experiment...");
+        },
+        onSettled: () => {
+            hideLoading();
+        },
+    });
+};
 
 export const useMutationToCreateCondition = () => {
     const queryClient = useQueryClient();
@@ -129,4 +156,3 @@ export const useMutationToCreateCustomAssayType = () => {
         },
     });
 };
-
