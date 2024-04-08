@@ -32,6 +32,7 @@ const ExperimentEditorModal: React.FC = () => {
             }
             setTitle(data.experiment.title);
             setDescription(data.experiment.description || "");
+            setStartDate(data.experiment.startDate || null);
             setAllowEditStartDate(
                 !(await hasRecordedAssayResults(experimentId))
             );
@@ -86,7 +87,8 @@ const ExperimentEditorModal: React.FC = () => {
                         label="Title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        sx={{ minWidth: 600 }}
+                        sx={{ minWidth: 400 }}
+                        fullWidth
                     />
                     <TextField
                         label="Description"
