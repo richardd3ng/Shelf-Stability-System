@@ -11,12 +11,25 @@ import {
     updateExperimentWeeks,
 } from "@/lib/api/apiHelpers";
 
+const getNextSampleNumber = async (experimentId: number): Promise<number> => {
+    const assays = await db.assay.findMany({
+        select: {
+            sample: true,
+        },
+        where: {
+            experimentId: experimentId,
+        },
+    });
+    const sampleNumbers = assays.map((assay) => assay.sample);
+    return sampleNumbers.length === 0 ? 1 : Math.max(...sampleNumbers) + 1;
+};
+
 export const createAssayAPIHelper = async (
     experimentId: number,
     conditionId: number,
     assayTypeId: number,
     week: number,
-    sample: number
+    sample?: number
 ): Promise<Assay> => {
     const createdAssay: Assay = await db.assay.create({
         data: {
@@ -24,7 +37,7 @@ export const createAssayAPIHelper = async (
             conditionId,
             assayTypeId,
             week,
-            sample,
+            sample: sample ?? (await getNextSampleNumber(experimentId)),
         },
     });
     const experiment = await db.experiment.findFirst({
@@ -54,18 +67,17 @@ export default async function createAssayAPI(
         return;
     }
 
-    const { experimentId, conditionId, assayTypeId, week, sample } = req.body;
+    const { experimentId, conditionId, assayTypeId, week } = req.body;
     if (
         assayTypeId === undefined ||
         week === undefined ||
         experimentId === undefined ||
-        conditionId === undefined ||
-        sample === undefined
+        conditionId === undefined
     ) {
         res.status(400).json(
             getApiError(
                 400,
-                "Assay type, week, experiment ID, condition ID, and sample are required"
+                "Assay type, week, experiment ID, and condition ID are required"
             )
         );
         return;
@@ -76,8 +88,7 @@ export default async function createAssayAPI(
                 experimentId,
                 conditionId,
                 assayTypeId,
-                week,
-                sample
+                week
             )
         );
     } catch (error) {
@@ -87,8 +98,9 @@ export default async function createAssayAPI(
             if (
                 prismError.code === "P2002" &&
                 Array.isArray(prismError.meta?.target) &&
-                ["experimentId", "conditionId", "week", "type"].every((value) =>
-                    (prismError.meta?.target as string[]).includes(value)
+                ["experimentId", "conditionId", "week", "assayTypeId"].every(
+                    (value) =>
+                        (prismError.meta?.target as string[]).includes(value)
                 )
             ) {
                 res.status(CONSTRAINT_ERROR_CODE).json(

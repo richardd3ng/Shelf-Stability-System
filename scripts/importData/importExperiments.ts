@@ -1,9 +1,9 @@
 import { CreatedExperimentIdAndConditionsAndAssayTypes, createExperimentWithConditionsAndAssayTypes } from "../dbOperations/experimentOperations";
 import { ExperimentImportJSON, readExperimentsFileToJSON } from "./jsonParser";
-import { AssayCreationArgs, AssayResultCreationArgs, ExperimentCreationArgs, ConditionCreationArgsNoExperimentId, ExperimentCreationRequiringConditionAndAssayTypeArgs } from "../../lib/controllers/types";
+import { AssayCreationArgs, AssayResultCreationArgs, ConditionCreationArgsNoExperimentId, ExperimentCreationRequiringConditionAndAssayTypeArgs } from "../../lib/controllers/types";
 import { LocalDate, DateTimeFormatter } from "@js-joda/core";
 import { getAllUsers } from "../dbOperations/userOperations";
-import { User, Condition, Assay, AssayType, AssayTypeForExperiment } from "@prisma/client";
+import { User, Condition, Assay, AssayTypeForExperiment } from "@prisma/client";
 import { createAssays, getAssaysForExperiment } from "../dbOperations/assayOperations";
 import { createAssayResults } from "../dbOperations/assayResultOperations";
 import { AssayTypeNameAndId, createAssayTypes, createBasicAssayTypesIfNeeded } from "../dbOperations/assayTypeOperations";
@@ -15,7 +15,6 @@ const getUserIdFromUsername = (username : string, allUsers : User[]) : number =>
     } else {
         throw new Error("User " + username + " does not exist");
     }
-
 }
 
 const importExperiments = async (filePath: string) => {
@@ -131,7 +130,6 @@ async function parseAndCreateAssayResultsForExperimentInDB(createdExperiment: Cr
 
 async function parseAndCreateAssaysForExperimentInDB(experiment: ExperimentImportJSON, conditionToId: Map<string, number>, createdExperiment: CreatedExperimentIdAndConditionsAndAssayTypes) {
     const assayCreationArgsArray: AssayCreationArgs[] = [];
-    let sampleNum = 1;
     for (const condition in experiment.assay_schedule) {
         const schedule = experiment.assay_schedule[condition];
         for (const week in schedule) {
@@ -148,10 +146,7 @@ async function parseAndCreateAssaysForExperimentInDB(experiment: ExperimentImpor
                     assayTypeId : assayTypeId,
                     conditionId: getConditionIdFromName(conditionToId, condition),
                     week: parseInt(week),
-                    sample : sampleNum
                 });
-                sampleNum += 1;
-
             }
         }
     }
