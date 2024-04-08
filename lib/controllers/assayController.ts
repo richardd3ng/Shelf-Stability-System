@@ -92,11 +92,7 @@ export const deleteAssay = async (
     confirm: boolean
 ): Promise<Assay> => {
     const endpoint = `/api/assays/${id}/delete`;
-    try {
-        return deleteEntity(endpoint, confirm);
-    } catch (error) {
-        throw error;
-    }
+    return deleteEntity(endpoint, confirm);
 };
 
 export const updateAssay = async (
@@ -121,12 +117,13 @@ export const updateAssay = async (
     throw new ApiError(response.status, resJson.message);
 };
 
-export const fetchUtilizationData = async (params : UtilizationReportParams) : Promise<UtilizationReportRow[]> => {
+export const fetchUtilizationData = async (
+    params: UtilizationReportParams
+): Promise<UtilizationReportRow[]> => {
     const url = relativeURL("/api/assays/utilization");
 
     url.searchParams.set("startdate", params.startDate.toString());
     url.searchParams.set("enddate", params.endDate.toString());
-
 
     const response = await fetch(url, {
         method: "GET",
@@ -137,13 +134,12 @@ export const fetchUtilizationData = async (params : UtilizationReportParams) : P
 
     const resJson = await response.json();
     if (response.ok) {
-        return resJson.map((row : any) => {
+        return resJson.map((row: any) => {
             return {
                 ...row,
-                weekStartDate : LocalDate.parse(row.weekStartDate)
-            }
-            
-        })
+                weekStartDate: LocalDate.parse(row.weekStartDate),
+            };
+        });
     }
     throw new ApiError(response.status, resJson.message);
-}
+};

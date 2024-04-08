@@ -11,7 +11,7 @@ export const getAssayResult = async (id: number): Promise<AssayResult> => {
         return resJson;
     }
     throw new ApiError(response.status, resJson.message);
-}
+};
 
 export const createAssayResult = async (
     assayResultCreationArgs: AssayResultCreationArgs
@@ -55,14 +55,12 @@ export const updateAssayResult = async (
 
 export const deleteAssayResult = async (id: number): Promise<AssayResult> => {
     const endpoint = `/api/assayResult/${id}/delete`;
-    try {
-        return deleteEntity(endpoint);
-    } catch (error) {
-        throw error;
-    }
+    return deleteEntity(endpoint);
 };
 
-export const fetchResultForAssay = async (assayId: number): Promise<AssayResult | null> => {
+export const fetchResultForAssay = async (
+    assayId: number
+): Promise<AssayResult | null> => {
     const endpoint = `/api/assays/${assayId}/result`;
     const response = await fetch(endpoint);
     const resJson = await response.json();

@@ -6,15 +6,11 @@ import { getApiError } from "@/lib/api/error";
 export const getStandardAssayTypesAPIHelper = async (): Promise<
     AssayType[]
 > => {
-    try {
-        return await db.assayType.findMany({
-            where: {
-                isCustom: false,
-            },
-        });
-    } catch (error) {
-        throw error;
-    }
+    return await db.assayType.findMany({
+        where: {
+            isCustom: false,
+        },
+    });
 };
 
 export default async function getStandardAssayTypesAPI(

@@ -13,29 +13,25 @@ export const createCustomAssayTypeAPIHelper = async (
     units?: string,
     technicianId?: number
 ): Promise<AssayTypeInfo> => {
-    try {
-        const assayType = await db.assayType.create({
-            data: {
-                isCustom: true,
-                name: name,
-                units: units,
-                description: description,
-            },
-        });
-        const assayTypeForExperiment = await db.assayTypeForExperiment.create({
-            data: {
-                experimentId: experimentId,
-                technicianId: technicianId,
-                assayTypeId: assayType.id,
-            },
-        });
-        return {
-            ...assayTypeForExperiment,
-            assayType: assayType,
-        };
-    } catch (error) {
-        throw error;
-    }
+    const assayType = await db.assayType.create({
+        data: {
+            isCustom: true,
+            name: name,
+            units: units,
+            description: description,
+        },
+    });
+    const assayTypeForExperiment = await db.assayTypeForExperiment.create({
+        data: {
+            experimentId: experimentId,
+            technicianId: technicianId,
+            assayTypeId: assayType.id,
+        },
+    });
+    return {
+        ...assayTypeForExperiment,
+        assayType: assayType,
+    };
 };
 
 export default async function createCustomAssayTypeAPI(
