@@ -17,7 +17,9 @@ export default async function hasRecordedAssayResults(
             );
             return;
         }
-        res.status(200).json(await experimentHasAssaysWithResults(id));
+        res.status(200).json(
+            await experimentHasAssaysWithResults(id, req.body.week)
+        );
     } catch (error) {
         console.error(error);
         res.status(500).json(

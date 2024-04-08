@@ -335,7 +335,7 @@ const ExperimentList: React.FC = () => {
             if (cannotDeleteIds.length > 0) {
                 showAlert(
                     "warning",
-                    `The following experiments contained recorded assay results and could not be deleted: ${cannotDeleteIds.join(
+                    `The following experiments contain recorded assay results and cannot be deleted: ${cannotDeleteIds.join(
                         ", "
                     )}`
                 );
