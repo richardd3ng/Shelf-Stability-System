@@ -11,10 +11,11 @@ import {
     Select,
     Stack,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AssayCreationArgs } from "@/lib/controllers/types";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { AssayTypeInfo } from "@/lib/controllers/types";
+import { INVALID_ASSAY_TYPE_ID } from "@/lib/api/apiHelpers";
 
 interface NewAssayModalProps {
     open: boolean;
@@ -28,9 +29,17 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
 ) => {
     const experimentId = useExperimentId();
     const { data: experimentInfo } = useExperimentInfo(experimentId);
-    const [selectedAssayTypeId, setSelectedAssayTypeId] = useState<number>(-1);
+    const [selectedAssayTypeId, setSelectedAssayTypeId] = useState<number>(
+        INVALID_ASSAY_TYPE_ID
+    );
     const { mutate: createAssay } = useMutationToCreateAssay();
     const { showAlert } = useAlert();
+
+    useEffect(() => {
+        setSelectedAssayTypeId(
+            experimentInfo?.assayTypes[0]?.id ?? INVALID_ASSAY_TYPE_ID
+        );
+    }, [experimentInfo?.assayTypes, props.open]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

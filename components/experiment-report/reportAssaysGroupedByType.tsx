@@ -1,6 +1,7 @@
 import { AssayTypeInfo, ExperimentInfo } from "@/lib/controllers/types";
 import { Stack, Typography } from "@mui/material";
 import ReportTable from "./experimentTableReport/reportTable";
+import { assayTypeHasAssays } from "../experiment-detail/assays/assaysGroupedByType";
 
 interface ReportAssaysGroupedByTypeProps {
     experimentInfo: ExperimentInfo;
@@ -20,15 +21,17 @@ const ReportAssaysGroupedByType: React.FC<ReportAssaysGroupedByTypeProps> = (
                     }
                 />
             </Stack>
-            {props.experimentInfo.assayTypes.map(
-                (type : AssayTypeInfo) => {
-                    const typeId: number = type.id;
+            {props.experimentInfo.assayTypes.map((type: AssayTypeInfo) => {
+                const typeId: number = type.id;
+                if (assayTypeHasAssays(props.experimentInfo, typeId)) {
                     return (
                         <Stack
                             key={typeId}
                             sx={{ "@media print": { breakInside: "avoid" } }}
                         >
-                            <Typography>Assays of type {type.assayType.name}</Typography>
+                            <Typography>
+                                Assays of type {type.assayType.name}
+                            </Typography>
                             <ReportTable
                                 experimentInfo={props.experimentInfo}
                                 assayFilter={(experimentInfo: ExperimentInfo) =>
@@ -40,7 +43,7 @@ const ReportAssaysGroupedByType: React.FC<ReportAssaysGroupedByTypeProps> = (
                         </Stack>
                     );
                 }
-            )}
+            })}
         </Stack>
     );
 };
