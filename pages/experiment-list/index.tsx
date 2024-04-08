@@ -354,7 +354,7 @@ const ExperimentList: React.FC = () => {
                         justifyContent: "space-between",
                     }}
                 >
-                    <Box sx={{ flex: 2 }}>
+                    <Box sx={{ flex: 2, paddingLeft: 1 }}>
                         <SearchBar
                             placeholder="Enter Keyword"
                             value={queryParams.search}
@@ -472,24 +472,27 @@ const ExperimentList: React.FC = () => {
                         </Button>
                     )}
                 </Box>
-                <Table
-                    columns={colDefs}
-                    rows={rows}
-                    pagination
-                    checkboxSelection={isAdmin}
-                    onDeleteRows={prepareForDeletions}
-                    onCellClick={(cell) => {
-                        if (
-                            cell.field !== "__check__" &&
-                            cell.field !== "actions"
-                        ) {
-                            router.push(`/experiments/${cell.id}`);
+                <Box sx={{ paddingLeft: 2 }}>
+                    <Table
+                        columns={colDefs}
+                        rows={rows}
+                        pagination
+                        checkboxSelection={isAdmin}
+                        onDeleteRows={prepareForDeletions}
+                        onCellClick={(cell) => {
+                            if (
+                                cell.field !== "__check__" &&
+                                cell.field !== "actions"
+                            ) {
+                                router.push(`/experiments/${cell.id}`);
+                            }
+                        }}
+                        {...paginationProps}
+                        getRowClassName={(_params) =>
+                            "experiment-row-clickable"
                         }
-                    }}
-                    {...paginationProps}
-                    getRowClassName={(_params) => "experiment-row-clickable"}
-                />
-
+                    />
+                </Box>
                 <ExperimentCreationDialog
                     open={showCreationDialog}
                     onClose={() => {

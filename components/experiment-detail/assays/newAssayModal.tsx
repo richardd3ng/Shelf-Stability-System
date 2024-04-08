@@ -43,7 +43,7 @@ export const NewAssayModal: React.FC<NewAssayModalProps> = (
             conditionId: props.conditionId,
             assayTypeId: selectedAssayTypeId,
             week: props.week,
-            sample: 401,
+            sample: 403,
         };
         createAssay(assayInfo);
         props.onClose();

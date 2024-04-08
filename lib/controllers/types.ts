@@ -63,12 +63,12 @@ export type ExperimentCreationArgs =
     | {
           conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
       };
+
 export type ExperimentCreationResponse = Omit<
     ExperimentInfo,
     "assays" | "assayResults" | "assayTypes"
->;
+> & { defaultAssayTypes: AssayTypeForExperiment[] };
 
-// experiment updates are done in a single atomic transaction
 export type ExperimentUpdateArgs = {
     id: number;
     title?: string;
@@ -107,7 +107,6 @@ export type AssayAgendaTable = {
 
 export type AssayCreationArgs = Omit<Assay, "id">;
 
-// experiment updates can be done by individual fields
 export type AssayUpdateArgs = {
     id: number;
     conditionId?: number;
@@ -147,10 +146,13 @@ export type UpdateAssayTypeArgs = {
 
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 
-export type CustomAssayTypeForExperimentCreationArgs = Omit<AssayTypeCreationArgs, "isCustom"> & {
-    experimentId : number;
-    technicianId : number | null;
-}
+export type CustomAssayTypeForExperimentCreationArgs = Omit<
+    AssayTypeCreationArgs,
+    "isCustom"
+> & {
+    experimentId: number;
+    technicianId: number | null;
+};
 
 export type StandardAssayTypeForExperimentCreationsArgs = {
     experimentId: number;
@@ -166,7 +168,6 @@ export type UpdateTechnicianArgs = {
 
 export type AssayResultCreationArgs = Omit<AssayResult, "id">;
 
-// assay result updates can be done by individual fields
 export type AssayResultUpdateArgs = {
     id: number;
     result?: number | null;
