@@ -2,10 +2,10 @@ import { ExperimentInfo } from "@/lib/controllers/types";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
 import { useExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import React, { useContext, useEffect, useState } from "react";
-import { useAlert } from "@/lib/context/shared/alertContext";
 import {
     GridColDef,
     GridRenderCellParams,
+    GridRowSelectionModel,
     GridSortItem,
     GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
@@ -35,6 +35,8 @@ import {
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import DeleteConditionButton from "../conditions/deleteConditionButton";
 import { useMutationToUpdateExperiment } from "@/lib/hooks/experimentDetailPage/useUpdateEntityHooks";
+import ConfirmationDialog from "@/components/shared/confirmationDialog";
+import { useMutationToDeleteExperimentWeeks } from "@/lib/hooks/experimentDetailPage/useDeleteEntityHooks";
 
 export interface WeekRow {
     id: number;
@@ -77,10 +79,14 @@ export const getAssayResultForAssay = (
 const ExperimentTable: React.FC<ExperimentTableProps> = (
     props: ExperimentTableProps
 ) => {
-    const { showAlert } = useAlert();
     const experimentId = useExperimentId();
     const { data: experimentInfo } = useExperimentInfo(experimentId);
     const [weekRows, setWeekRows] = useState<WeekRow[]>([]);
+    const [selectedWeeks, setSelectedWeeks] = useState<GridRowSelectionModel>(
+        []
+    );
+    const [showConfirmationDialog, setShowConfirmationDialog] =
+        useState<boolean>(false);
     const [addAssayParams, setAddAssayParams] = useState<AddAssayParams | null>(
         null
     );
@@ -100,18 +106,20 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                 user?.id === experimentInfo?.experiment.ownerId)) ??
         false;
     const { mutate: updateExperiment } = useMutationToUpdateExperiment();
+    const { mutate: deleteExperimentWeeks } =
+        useMutationToDeleteExperimentWeeks();
 
     useEffect(() => {
         if (!experimentInfo) {
             return;
         } else {
             const weeks: number[] = parseExperimentWeeks(
-                experimentInfo.experiment
+                experimentInfo.experiment.weeks
             );
             const initialWeekRows: WeekRow[] = [];
-            weeks.forEach((week: number, index: number) => {
+            weeks.forEach((week) => {
                 initialWeekRows.push({
-                    id: index,
+                    id: week,
                     week: week,
                 });
             });
@@ -226,10 +234,6 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                                     (row) => row.id === params.row.id
                                 );
                                 if (!weekRow) {
-                                    showAlert(
-                                        "error",
-                                        "Week not found for this row"
-                                    );
                                     return;
                                 }
                                 setAddAssayParams({
@@ -297,13 +301,18 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
     const handleAddWeek = (week: number) => {
         const weeks: number[] =
             (experimentInfo &&
-                parseExperimentWeeks(experimentInfo.experiment)) ||
+                parseExperimentWeeks(experimentInfo.experiment.weeks)) ||
             [];
         weeks.push(week);
         updateExperiment({
             id: experimentId,
             weeks: weeks.join(","),
         });
+    };
+
+    const prepareForDeletions = (selectedRows: GridRowSelectionModel) => {
+        setSelectedWeeks(selectedRows);
+        setShowConfirmationDialog(true);
     };
 
     const tableFooter: React.FC = () => {
@@ -375,6 +384,21 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                         sort: "asc",
                     } as GridSortItem,
                 ]}
+                checkboxSelection
+                onDeleteRows={prepareForDeletions}
+            />
+            <ConfirmationDialog
+                open={showConfirmationDialog}
+                text="Are you sure you want to delete the selected week(s)? Only weeks without recorded assay results can be deleted. Deleted weeks will result in all assays in that week being deleted. This action cannot be undone."
+                onClose={() => {
+                    setShowConfirmationDialog(false);
+                }}
+                onConfirm={() =>
+                    deleteExperimentWeeks({
+                        id: experimentId,
+                        weeks: selectedWeeks as number[],
+                    })
+                }
             />
         </>
     );

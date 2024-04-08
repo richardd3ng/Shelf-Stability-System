@@ -24,7 +24,7 @@ export const AddWeekModal: React.FC<AddWeekModalProps> = (
     const duplicateWeekValidation = (week: string): string => {
         const weekNumber = Number(week);
         const weekExistsInAssays = (
-            (data?.experiment && parseExperimentWeeks(data.experiment)) ||
+            (data?.experiment && parseExperimentWeeks(data.experiment.weeks)) ||
             []
         ).includes(weekNumber);
         return weekExistsInAssays ? `Week ${week} already exists.` : "";

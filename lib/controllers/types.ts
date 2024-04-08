@@ -80,6 +80,12 @@ export type ExperimentUpdateArgs = {
 
 export type ExperimentStatus = "all" | "cancelled" | "non-cancelled";
 
+export type ExperimentWeekDeletionResponse = {
+    experimentId: number;
+    deletedWeeks: number[];
+    cannotDeleteWeeks: number[];
+};
+
 /* ----- Assay ----- */
 
 export type AssayAgendaInfo = {

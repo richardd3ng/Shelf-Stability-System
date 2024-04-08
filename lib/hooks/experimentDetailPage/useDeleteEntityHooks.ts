@@ -4,13 +4,19 @@ import { useExperimentId } from "./useExperimentId";
 import { deleteCondition } from "@/lib/controllers/conditionController";
 import { deleteAssay } from "@/lib/controllers/assayController";
 import { deleteAssayResult } from "@/lib/controllers/assayResultController";
-import { deleteExperiment } from "@/lib/controllers/experimentController";
+import {
+    deleteExperiment,
+    deleteExperimentWeeks,
+} from "@/lib/controllers/experimentController";
 import { useRouter } from "next/router";
 import { AssayTypeForExperiment, Condition } from "@prisma/client";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
-import { ExperimentWithLocalDate } from "@/lib/controllers/types";
+import {
+    ExperimentWeekDeletionResponse,
+    ExperimentWithLocalDate,
+} from "@/lib/controllers/types";
 import { deleteAssayTypeForExperimentThroughAPI } from "@/lib/controllers/assayTypeController";
 
 export const useMutationToDeleteCondition = () => {
@@ -119,6 +125,55 @@ export const useMutationToDeleteExperiment = () => {
         },
         onMutate: (args: { id: number; confirm: boolean }) => {
             showLoading(`Deleting experiment ${args.id}...`);
+        },
+        onSettled: () => {
+            hideLoading();
+        },
+    });
+};
+
+export const useMutationToDeleteExperimentWeeks = () => {
+    const queryClient = useQueryClient();
+    const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
+    return useMutation({
+        mutationFn: (args: { id: number; weeks: number[] }) => {
+            return deleteExperimentWeeks(args.id, args.weeks);
+        },
+        onSuccess: (
+            experimentWeekDeletionResponse: ExperimentWeekDeletionResponse
+        ) => {
+            queryClient.invalidateQueries({
+                queryKey: getQueryKeyForUseExperimentInfo(
+                    experimentWeekDeletionResponse.experimentId
+                ),
+            });
+            const deletedWeeks = experimentWeekDeletionResponse.deletedWeeks;
+            const cannotDeleteWeeks =
+                experimentWeekDeletionResponse.cannotDeleteWeeks;
+            if (cannotDeleteWeeks.length > 0) {
+                showAlert(
+                    "error",
+                    `The following weeks contain recorded assay results and cannot be deleted: ${cannotDeleteWeeks
+                        .sort()
+                        .join(", ")}`
+                );
+            }
+            if (deletedWeeks.length > 0) {
+                showAlert(
+                    "success",
+                    `The following weeks were successfully deleted: ${deletedWeeks
+                        .sort()
+                        .join(", ")}`
+                );
+            }
+        },
+        onError: (error) => {
+            showAlert("error", getErrorMessage(error));
+        },
+        onMutate: () => {
+            showLoading("Deleting weeks...");
         },
         onSettled: () => {
             hideLoading();

@@ -3,6 +3,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import { getApiError } from "./error";
 import { Experiment } from "@prisma/client";
 import { ExperimentWithLocalDate } from "../controllers/types";
+import { dateFieldsToLocalDate } from "../controllers/jsonConversions";
 import { db } from "./db";
 
 export function getErrorMessage(error: unknown): string {
@@ -71,11 +72,9 @@ export const requireQueryFields = <K extends string>(
     return result;
 };
 
-export const parseExperimentWeeks = (
-    experiment: Experiment | ExperimentWithLocalDate
-): number[] => {
+export const parseExperimentWeeks = (weekString: string): number[] => {
     let weeks: number[] = [];
-    experiment.weeks.split(",").forEach((week) => {
+    weekString.split(",").forEach((week) => {
         if (week.trim() !== "") {
             weeks.push(Number(week));
         }
@@ -84,15 +83,19 @@ export const parseExperimentWeeks = (
 };
 
 export const updateExperimentWeeks = async (
-    experiment: Experiment,
+    experimentId: number,
     weeks: number[]
-): Promise<void> => {
-    await db.experiment.update({
-        where: {
-            id: experiment.id,
-        },
-        data: {
-            weeks: weeks.join(","),
-        },
-    });
+): Promise<ExperimentWithLocalDate> => {
+    return await db.experiment
+        .update({
+            where: {
+                id: experimentId,
+            },
+            data: {
+                weeks: weeks.join(","),
+            },
+        })
+        .then((experiment: Experiment) =>
+            dateFieldsToLocalDate(experiment, ["startDate"])
+        );
 };

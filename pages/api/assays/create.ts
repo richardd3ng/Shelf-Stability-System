@@ -46,10 +46,10 @@ export const createAssayAPIHelper = async (
         },
     });
     if (experiment) {
-        const weeks: number[] = parseExperimentWeeks(experiment);
+        const weeks: number[] = parseExperimentWeeks(experiment.weeks);
         if (!weeks.includes(createdAssay.week)) {
             weeks.push(createdAssay.week);
-            await updateExperimentWeeks(experiment, weeks);
+            await updateExperimentWeeks(experiment.id, weeks);
         }
     }
     return createdAssay;

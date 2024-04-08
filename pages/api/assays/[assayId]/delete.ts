@@ -74,9 +74,9 @@ export default async function deleteAssayAPI(
                 });
                 if (experiment) {
                     const weeks: number[] = parseExperimentWeeks(
-                        experiment
+                        experiment.weeks
                     ).filter((week) => week !== deletedAssay.week);
-                    await updateExperimentWeeks(experiment, weeks);
+                    await updateExperimentWeeks(experiment.id, weeks);
                 }
             }
             res.status(200).json(deletedAssay);
