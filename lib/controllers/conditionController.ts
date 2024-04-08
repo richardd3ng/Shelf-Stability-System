@@ -48,6 +48,16 @@ export const createConditions = async (
     throw new ApiError(response.status, resJson.message);
 };
 
+export const fetchCondition = async (id: number): Promise<Condition> => {
+    const endpoint = `/api/conditions/${id}`;
+    const response = await fetch(endpoint);
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
 export const updateCondition = async (
     conditionUpdateArgs: ConditionUpdateArgs
 ): Promise<Condition> => {

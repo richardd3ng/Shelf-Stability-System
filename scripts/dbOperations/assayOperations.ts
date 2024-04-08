@@ -10,6 +10,8 @@ export const createAssays = async (assays : AssayCreationArgs[]) => {
                 experimentId : assay.experimentId,
                 assayTypeId : assay.assayTypeId,
                 week : assay.week,
+                sample : assay.sample
+                
                 
             };
         })

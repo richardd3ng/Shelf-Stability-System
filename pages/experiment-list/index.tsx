@@ -224,7 +224,8 @@ const ExperimentList: React.FC = () => {
             renderCell: (params) => (
                 <Box sx={{ display: "flex" }}>
                     <GeneratePrintableReportButton
-                        experimentId={params.row.id}
+                        text="Generate Report"
+                        onClick={() => router.push(`/experiments/${params.row.id}/report`)}
                     />
                     {isAdmin && (
                         <IconButtonWithTooltip

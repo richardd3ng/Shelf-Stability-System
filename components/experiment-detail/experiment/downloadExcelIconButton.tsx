@@ -1,4 +1,4 @@
-import { generateExcelReport } from "@/lib/generateExcelReport";
+import { generateExcelReport } from "@/lib/generateExcelExperimentReport";
 import {
     useExperimentInfo,
     useExperimentOwner,

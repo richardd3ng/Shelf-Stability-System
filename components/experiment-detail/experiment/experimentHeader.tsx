@@ -14,6 +14,8 @@ import EditExperimentButton from "./editExperimentButton";
 import DuplicateExperimentIconButton from "./duplicateExperimentIconButton";
 import BackButton from "@/components/shared/backButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
+import PrintLabelsButton from "./printLabelsButton";
+import { useRouter } from "next/router";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -28,6 +30,7 @@ export const ExperimentHeader = () => {
     const { user } = useContext(CurrentUserContext);
     const isCanceled: boolean = experimentInfo?.experiment.isCanceled ?? false;
     const isEditable: boolean = (!isCanceled && user?.isAdmin) ?? false;
+    const router = useRouter();
 
     useEffect(() => {
         if (isLoading) {
@@ -91,10 +94,15 @@ export const ExperimentHeader = () => {
                             </ExperimentEditingContext.Provider>
                         )}
                         <GenerateReportIconButton
+                            text = "Generate Report"
+                            size="large"
+                            onClick={() => router.push(`/experiments/${experimentId}/report`)}
+                        />
+                        <DownloadExcelIconButton />
+                        <PrintLabelsButton
                             experimentId={experimentId}
                             size="large"
                         />
-                        <DownloadExcelIconButton />
                         <DuplicateExperimentIconButton />
                     </Box>
                 </Box>

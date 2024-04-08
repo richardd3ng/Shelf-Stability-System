@@ -84,6 +84,7 @@ export type ExperimentStatus = "all" | "cancelled" | "non-cancelled";
 
 export type AssayAgendaInfo = {
     id: number;
+    sample: number;
     targetDate: LocalDate;
     title: string;
     experimentId: number;
@@ -227,3 +228,15 @@ export type EmailInfo = {
         }[];
     };
 };
+
+/* ----- Lab Utilization ----- */
+export type UtilizationReportParams = {
+    startDate : LocalDate;
+    endDate : LocalDate;
+}
+
+export type UtilizationReportRow = {
+    weekStartDate : LocalDate;
+    count : number;
+    assayTypeName : string;
+}
