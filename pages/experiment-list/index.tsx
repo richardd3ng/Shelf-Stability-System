@@ -225,7 +225,9 @@ const ExperimentList: React.FC = () => {
                 <Box sx={{ display: "flex" }}>
                     <GeneratePrintableReportButton
                         text="Generate Report"
-                        onClick={() => router.push(`/experiments/${params.row.id}/report`)}
+                        onClick={() =>
+                            router.push(`/experiments/${params.row.id}/report`)
+                        }
                     />
                     {isAdmin && (
                         <IconButtonWithTooltip
@@ -355,7 +357,7 @@ const ExperimentList: React.FC = () => {
                         justifyContent: "space-between",
                     }}
                 >
-                    <Box sx={{ flex: 2, paddingLeft: 1 }}>
+                    <Box sx={{ flex: 2 }}>
                         <SearchBar
                             placeholder="Enter Keyword"
                             value={queryParams.search}
@@ -473,27 +475,23 @@ const ExperimentList: React.FC = () => {
                         </Button>
                     )}
                 </Box>
-                <Box sx={{ paddingLeft: 2 }}>
-                    <Table
-                        columns={colDefs}
-                        rows={rows}
-                        pagination
-                        checkboxSelection={isAdmin}
-                        onDeleteRows={prepareForDeletions}
-                        onCellClick={(cell) => {
-                            if (
-                                cell.field !== "__check__" &&
-                                cell.field !== "actions"
-                            ) {
-                                router.push(`/experiments/${cell.id}`);
-                            }
-                        }}
-                        {...paginationProps}
-                        getRowClassName={(_params) =>
-                            "experiment-row-clickable"
+                <Table
+                    columns={colDefs}
+                    rows={rows}
+                    pagination
+                    checkboxSelection={isAdmin}
+                    onDeleteRows={prepareForDeletions}
+                    onCellClick={(cell) => {
+                        if (
+                            cell.field !== "__check__" &&
+                            cell.field !== "actions"
+                        ) {
+                            router.push(`/experiments/${cell.id}`);
                         }
-                    />
-                </Box>
+                    }}
+                    {...paginationProps}
+                    getRowClassName={(_params) => "experiment-row-clickable"}
+                />
                 <ExperimentCreationDialog
                     open={showCreationDialog}
                     onClose={() => {
