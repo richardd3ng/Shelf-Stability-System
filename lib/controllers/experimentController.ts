@@ -78,6 +78,26 @@ export const createExperiment = async (
         return {
             experiment: JSONToExperiment(resJson.experiment),
             conditions: resJson.conditions,
+            defaultAssayTypes: resJson.assayTypes,
+        };
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
+export const duplicateExperiment = async (id: number) => {
+    const endpoint = `/api/experiments/${id}/duplicate`;
+    const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return {
+            experiment: JSONToExperiment(resJson.experiment),
+            conditions: resJson.conditions,
+            defaultAssayTypes: resJson.assayTypes,
         };
     }
     throw new ApiError(response.status, resJson.message);

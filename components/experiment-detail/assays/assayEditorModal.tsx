@@ -9,7 +9,7 @@ import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import AssayResultEditingContext from "@/lib/context/shared/assayResultEditingContext";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { getAssayTypeUnits } from "@/lib/controllers/assayTypeController";
-import { EditGroup } from "@/lib/context/shared/editGroup";
+import { Button, FormControl, TextField } from "@mui/material";
 
 export interface AssayEditorModalProps {
     onlyEditResult?: boolean;
@@ -17,10 +17,9 @@ export interface AssayEditorModalProps {
     onClose?: () => void;
 }
 
-const AssayEditorModal: React.FC<AssayEditorModalProps> = ({
-    showFullContext,
-    onClose,
-}) => {
+const AssayEditorModal: React.FC<AssayEditorModalProps> = (
+    props: AssayEditorModalProps
+) => {
     const {
         isEditing: isEditingAssay,
         setIsEditing: setIsEditingAssay,
@@ -34,8 +33,7 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({
     const [assayTypeId, setAssayTypeId] = useState<number>(
         INVALID_ASSAY_TYPE_ID
     );
-    const [week, setWeek] = useState<string>("");
-    const [result, setResult] = useState<string>("");
+    const [value, setValue] = useState<string>("");
     const [comment, setComment] = useState<string>("");
     const { user } = useContext(CurrentUserContext);
     const { mutate: createAssayResult } = useMutationToCreateAssayResult();
@@ -45,116 +43,83 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = ({
         if (!isEditingAssay || assay === undefined || !experimentInfo) {
             return;
         }
-        setWeek(assay.week.toString());
         setAssayTypeId(assay.assayTypeId);
-        setResult(assayResult?.result?.toString() ?? "");
+        setValue(assayResult?.result?.toString() ?? "");
         setComment(assayResult?.comment ?? "");
     }, [assay, assayResult, isEditingAssay, experimentInfo]);
 
-    const handleSubmitResult = (newResult: string) => {
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
         const author = `${user?.displayName} (${user?.username})`;
-
         if (assayResult !== undefined) {
             updateAssayResult({
                 id: assayResult.id,
-                result: newResult ? parseFloat(newResult) : null,
+                result: value ? parseFloat(value) : null,
+                comment: comment !== "" ? comment : null,
                 author: author,
             });
-        } else if (newResult) {
+        } else if (value || comment) {
             createAssayResult({
                 assayId: assay!.id,
-                result: parseFloat(newResult),
-                comment: null,
+                result: value ? parseFloat(value) : null,
+                comment: comment !== "" ? comment : null,
                 author: author,
             });
         }
-        setResult(newResult);
-    };
-
-    const handleSubmitComment = (newComment: string) => {
-        const author = `${user?.displayName} (${user?.username})`;
-
-        if (assayResult !== undefined) {
-            updateAssayResult({
-                id: assayResult.id,
-                comment: newComment ? newComment : null,
-                author: author,
-            });
-        } else if (newComment) {
-            createAssayResult({
-                assayId: assay!.id,
-                result: null,
-                comment: newComment,
-                author: author,
-            });
-        }
-        setComment(newComment);
     };
 
     const handleClose = () => {
         setComment("");
-        setResult("");
-        setWeek("");
+        setValue("");
         setAssayTypeId(INVALID_ASSAY_TYPE_ID);
         setIsEditingAssay(false);
-        onClose?.();
+        props.onClose?.();
     };
 
     if (
         !assay ||
         !user ||
         assayTypeId <= INVALID_ASSAY_TYPE_ID ||
-        !week ||
         !experimentInfo
     ) {
-        return <></>;
+        return null;
     }
-
-    const conditionName = experimentInfo.conditions.find(
-        (condition) => condition.id === assay.conditionId
-    )?.name;
-    const assayTypeName = experimentInfo.assayTypes.find(
-        (type) => type.id === assayTypeId
-    )?.assayType.name;
 
     return (
         <CloseableModal
             open={isEditingAssay}
             hideBackdrop
             closeFn={handleClose}
-            title="Edit Assay"
+            title="Edit Assay Result"
         >
-            <Stack style={{ marginBottom: 8, marginRight: 4 }} spacing={1}>
-                <EditGroup editable={isEditingAssay}>
-                    {showFullContext && (
-                        <Typography>
-                            {experimentInfo.experiment.title}
-                            <br />
-                            Week {assay.week}, {conditionName}, {assayTypeName}
-                        </Typography>
-                    )}
-                    <EditableTextField
-                        id="result"
-                        value={result?.toString()}
-                        defaultDisplayValue="N/A"
-                        label="Result:"
-                        numberType="float"
-                        units={getAssayTypeUnits(
+            <form onSubmit={handleSubmit}>
+                <Stack style={{ marginBottom: 8, marginRight: 4 }} spacing={1}>
+                    <TextField
+                        label={`Value (${getAssayTypeUnits(
                             assayTypeId,
                             experimentInfo.assayTypes
-                        )}
-                        onSubmit={handleSubmitResult}
+                        )})`}
+                        style={{ marginLeft: 4, marginRight: 4 }}
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
                     />
-                    <EditableTextField
-                        id="comment"
-                        value={comment?.toString()}
-                        defaultDisplayValue="N/A"
-                        label="Comment:"
-                        multiline
-                        onSubmit={handleSubmitComment}
+                    <TextField
+                        label="Comment"
+                        style={{ marginLeft: 4, marginRight: 4 }}
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
                     />
-                </EditGroup>
-            </Stack>
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        color="primary"
+                        onClick={handleSubmit}
+                        sx={{ textTransform: "none" }}
+                    >
+                        Submit
+                    </Button>
+                </Stack>
+            </form>
         </CloseableModal>
     );
 };

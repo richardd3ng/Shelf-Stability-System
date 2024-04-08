@@ -39,7 +39,8 @@ const ExperimentEditorModal: React.FC = () => {
         fetchMetadata();
     }, [data, experimentId]);
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
         if (title.trim() === "") {
             showAlert("error", "Experiment title cannot be empty");
             return;
@@ -68,7 +69,7 @@ const ExperimentEditorModal: React.FC = () => {
     };
 
     if (isLoading) {
-        return <></>;
+        return null;
     } else if (isError || !data) {
         return <ErrorMessage message={getErrorMessage(error)} />;
     }
@@ -79,39 +80,41 @@ const ExperimentEditorModal: React.FC = () => {
             closeFn={() => setIsEditing(false)}
             title="Edit Experiment"
         >
-            <Stack style={{ marginBottom: 8, marginRight: 4 }} spacing={1}>
-                <TextField
-                    label="Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    sx={{ minWidth: 600 }}
-                />
-                <TextField
-                    label="Description"
-                    value={description}
-                    fullWidth
-                    multiline
-                    rows={10}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-                {allowEditStartDate && (
-                    <MyDatePicker
-                        label="Start Date"
-                        value={startDate}
-                        onChange={(date) => {
-                            setStartDate(date);
-                        }}
+            <form onSubmit={handleSubmit}>
+                <Stack style={{ marginBottom: 8, marginRight: 4 }} spacing={1}>
+                    <TextField
+                        label="Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        sx={{ minWidth: 600 }}
                     />
-                )}
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                    sx={{ textTransform: "none" }}
-                >
-                    Submit
-                </Button>
-            </Stack>
+                    <TextField
+                        label="Description"
+                        value={description}
+                        fullWidth
+                        multiline
+                        rows={10}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    {allowEditStartDate && (
+                        <MyDatePicker
+                            label="Start Date"
+                            value={startDate}
+                            onChange={(date) => {
+                                setStartDate(date);
+                            }}
+                        />
+                    )}
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        color="primary"
+                        sx={{ textTransform: "none" }}
+                    >
+                        Submit
+                    </Button>
+                </Stack>
+            </form>
         </CloseableModal>
     );
 };

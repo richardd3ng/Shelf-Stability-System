@@ -6,7 +6,41 @@ import { Assay } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
-import { parseExperimentWeeks, updateExperimentWeeks } from "@/lib/api/apiHelpers";
+import {
+    parseExperimentWeeks,
+    updateExperimentWeeks,
+} from "@/lib/api/apiHelpers";
+
+export const createAssayAPIHelper = async (
+    experimentId: number,
+    conditionId: number,
+    assayTypeId: number,
+    week: number,
+    sample: number
+): Promise<Assay> => {
+    const createdAssay: Assay = await db.assay.create({
+        data: {
+            experimentId,
+            conditionId,
+            assayTypeId,
+            week,
+            sample,
+        },
+    });
+    const experiment = await db.experiment.findFirst({
+        where: {
+            id: experimentId,
+        },
+    });
+    if (experiment) {
+        const weeks: number[] = parseExperimentWeeks(experiment);
+        if (!weeks.includes(createdAssay.week)) {
+            weeks.push(createdAssay.week);
+            await updateExperimentWeeks(experiment, weeks);
+        }
+    }
+    return createdAssay;
+};
 
 export default async function createAssayAPI(
     req: NextApiRequest,
@@ -20,38 +54,32 @@ export default async function createAssayAPI(
         return;
     }
 
-    const { experimentId, conditionId, assayTypeId, week } = req.body;
+    const { experimentId, conditionId, assayTypeId, week, sample } = req.body;
     if (
         assayTypeId === undefined ||
         week === undefined ||
         experimentId === undefined ||
-        conditionId === undefined
+        conditionId === undefined ||
+        sample === undefined
     ) {
         res.status(400).json(
             getApiError(
                 400,
-                "Assay type, week, experiment ID, and condition ID are required"
+                "Assay type, week, experiment ID, condition ID, and sample are required"
             )
         );
         return;
     }
     try {
-        const createdAssay: Assay = await db.assay.create({
-            data: req.body,
-        });
-        const experiment = await db.experiment.findFirst({
-            where: {
-                id: experimentId,
-            },
-        });
-        if (experiment) {
-            const weeks: number[] = parseExperimentWeeks(experiment);
-            if (!weeks.includes(createdAssay.week)) {
-                weeks.push(createdAssay.week);
-                await updateExperimentWeeks(experiment, weeks);
-            }
-        }
-        res.status(200).json(createdAssay);
+        res.status(200).json(
+            await createAssayAPIHelper(
+                experimentId,
+                conditionId,
+                assayTypeId,
+                week,
+                sample
+            )
+        );
     } catch (error) {
         console.error(error);
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
