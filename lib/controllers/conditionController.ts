@@ -81,11 +81,7 @@ export const deleteCondition = async (
     confirm: boolean
 ): Promise<Condition> => {
     const endpoint = `/api/conditions/${id}/delete`;
-    try {
-        return deleteEntity(endpoint, confirm);
-    } catch (error) {
-        throw error;
-    }
+    return deleteEntity(endpoint, confirm);
 };
 
 export const setConditionAsControl = async (id: number): Promise<Condition> => {

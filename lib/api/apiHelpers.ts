@@ -87,16 +87,12 @@ export const updateExperimentWeeks = async (
     experiment: Experiment,
     weeks: number[]
 ): Promise<void> => {
-    try {
-        await db.experiment.update({
-            where: {
-                id: experiment.id,
-            },
-            data: {
-                weeks: weeks.join(","),
-            },
-        });
-    } catch (error) {
-        throw error;
-    }
+    await db.experiment.update({
+        where: {
+            id: experiment.id,
+        },
+        data: {
+            weeks: weeks.join(","),
+        },
+    });
 };

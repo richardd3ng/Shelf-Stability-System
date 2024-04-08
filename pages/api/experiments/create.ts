@@ -27,49 +27,45 @@ export const createExperimentAPIHelper = async (
     ownerId: number,
     weeks: string
 ): Promise<ExperimentCreationResponse> => {
-    try {
-        const createdExperiment: ExperimentWithLocalDate = await db.experiment
-            .create({
-                data: {
-                    title,
-                    description,
-                    startDate: localDateToJsDate(LocalDate.parse(startDate)),
-                    ownerId,
-                    isCanceled: false,
-                    assayTypes: {
-                        create: [1, 2, 3, 4, 5, 6].map((typeId) => ({
-                            assayTypeId: typeId,
-                            technicianId: null,
-                        })),
-                    },
-                    weeks,
-                    conditions: {
-                        create: conditionCreationArgsNoExperimentIdArray,
-                    },
+    const createdExperiment: ExperimentWithLocalDate = await db.experiment
+        .create({
+            data: {
+                title,
+                description,
+                startDate: localDateToJsDate(LocalDate.parse(startDate)),
+                ownerId,
+                isCanceled: false,
+                assayTypes: {
+                    create: [1, 2, 3, 4, 5, 6].map((typeId) => ({
+                        assayTypeId: typeId,
+                        technicianId: null,
+                    })),
                 },
-            })
-            .then((experiment: Experiment) =>
-                dateFieldsToLocalDate(experiment, ["startDate"])
-            );
-        const createdConditions: Condition[] = await db.condition.findMany({
+                weeks,
+                conditions: {
+                    create: conditionCreationArgsNoExperimentIdArray,
+                },
+            },
+        })
+        .then((experiment: Experiment) =>
+            dateFieldsToLocalDate(experiment, ["startDate"])
+        );
+    const createdConditions: Condition[] = await db.condition.findMany({
+        where: {
+            experimentId: createdExperiment.id,
+        },
+    });
+    const createdAssayTypesForExperiment: AssayTypeForExperiment[] =
+        await db.assayTypeForExperiment.findMany({
             where: {
                 experimentId: createdExperiment.id,
             },
         });
-        const createdAssayTypesForExperiment: AssayTypeForExperiment[] =
-            await db.assayTypeForExperiment.findMany({
-                where: {
-                    experimentId: createdExperiment.id,
-                },
-            });
-        return {
-            experiment: createdExperiment,
-            conditions: createdConditions,
-            defaultAssayTypes: createdAssayTypesForExperiment,
-        };
-    } catch (error) {
-        throw error;
-    }
+    return {
+        experiment: createdExperiment,
+        conditions: createdConditions,
+        defaultAssayTypes: createdAssayTypesForExperiment,
+    };
 };
 
 export default async function createExperimentAPI(

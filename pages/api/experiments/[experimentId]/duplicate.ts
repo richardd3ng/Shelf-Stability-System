@@ -93,7 +93,6 @@ const getDuplicateExperimentTitle = async (
     return `${oldTitle} - copy ${maxCopyNumber + 1}`;
 };
 
-
 export default async function duplicateExperimentAPI(
     req: NextApiRequest,
     res: NextApiResponse<ExperimentCreationResponse | ApiError>
@@ -168,23 +167,25 @@ export default async function duplicateExperimentAPI(
                 }
             })
         );
-        oldExperimentInfo.assays.forEach(async (assay) => {
-            await createAssayAPIHelper(
-                newExperiment.id,
-                getNewConditionId(
-                    oldExperimentInfo,
-                    newConditions,
-                    assay.conditionId
-                ),
-                getNewAssayTypeForExperimentId(
-                    oldExperimentInfo,
-                    newAssayTypeInfos,
-                    assay.assayTypeId
-                ),
-                assay.week,
-                assay.sample
-            );
-        });
+        await Promise.all(
+            oldExperimentInfo.assays.map(async (assay, index) => {
+                await createAssayAPIHelper(
+                    newExperiment.id,
+                    getNewConditionId(
+                        oldExperimentInfo,
+                        newConditions,
+                        assay.conditionId
+                    ),
+                    getNewAssayTypeForExperimentId(
+                        oldExperimentInfo,
+                        newAssayTypeInfos,
+                        assay.assayTypeId
+                    ),
+                    assay.week,
+                    index + 1
+                );
+            })
+        );
         res.status(200).json({
             experiment: newExperiment,
             conditions: newConditions,

@@ -106,7 +106,7 @@ export type AssayAgendaTable = {
     rowCount: number;
 };
 
-export type AssayCreationArgs = Omit<Assay, "id">;
+export type AssayCreationArgs = Omit<Assay, "id" | "sample">;
 
 export type AssayUpdateArgs = {
     id: number;
@@ -231,12 +231,12 @@ export type EmailInfo = {
 
 /* ----- Lab Utilization ----- */
 export type UtilizationReportParams = {
-    startDate : LocalDate;
-    endDate : LocalDate;
-}
+    startDate: LocalDate;
+    endDate: LocalDate;
+};
 
 export type UtilizationReportRow = {
-    weekStartDate : LocalDate;
-    count : number;
-    assayTypeName : string;
-}
+    weekStartDate: LocalDate;
+    count: number;
+    assayTypeName: string;
+};
