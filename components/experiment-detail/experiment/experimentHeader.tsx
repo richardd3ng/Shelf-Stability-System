@@ -4,7 +4,7 @@ import {
     useExperimentOwner,
 } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import ExperimentEditorModal from "./experimentEditorModal";
 import ExperimentEditingContext from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
@@ -19,11 +19,7 @@ import { useRouter } from "next/router";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
-    const {
-        data: experimentInfo,
-        isLoading,
-        isError,
-    } = useExperimentInfo(experimentId);
+    const { data: experimentInfo, isLoading } = useExperimentInfo(experimentId);
     const { data: owner } = useExperimentOwner(experimentId);
     const { showLoading, hideLoading } = useLoading();
     const [isEditing, setIsEditing] = useState(false);
@@ -40,8 +36,8 @@ export const ExperimentHeader = () => {
         }
     }, [isLoading, showLoading, hideLoading]);
 
-    if (isError || !experimentInfo) {
-        return <></>;
+    if (!experimentInfo) {
+        return null;
     }
     return (
         <Stack>
@@ -82,8 +78,10 @@ export const ExperimentHeader = () => {
                     <Box
                         sx={{
                             position: "absolute",
-                            top: 0,
-                            right: 0,
+                            top: 2,
+                            right: 16,
+                            borderRadius: 2,
+                            border: "1px solid rgba(0, 0, 0, 0.2)",
                         }}
                     >
                         {isEditable && (
@@ -94,9 +92,13 @@ export const ExperimentHeader = () => {
                             </ExperimentEditingContext.Provider>
                         )}
                         <GenerateReportIconButton
-                            text = "Generate Report"
+                            text="Generate Report"
                             size="large"
-                            onClick={() => router.push(`/experiments/${experimentId}/report`)}
+                            onClick={() =>
+                                router.push(
+                                    `/experiments/${experimentId}/report`
+                                )
+                            }
                         />
                         <DownloadExcelIconButton />
                         <PrintLabelsButton
@@ -106,21 +108,49 @@ export const ExperimentHeader = () => {
                         <DuplicateExperimentIconButton />
                     </Box>
                 </Box>
-                <Typography
-                    align="left"
-                    whiteSpace={"pre-line"}
-                    sx={{ marginX: 1 }}
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignContent: "flex-end",
+                        paddingX: 2,
+                        paddingBottom: 2,
+                    }}
                 >
-                    {experimentInfo
-                        ? experimentInfo.experiment.description
-                        : null}
-                </Typography>
-                {owner && (
-                    <Typography align="center" sx={{ marginBottom: 1 }}>
-                        {`Started ${experimentInfo.experiment.startDate.toString()} by 
-                    ${owner.displayName} (${owner.username})`}
-                    </Typography>
-                )}
+                    <Stack sx={{ flex: 6, marginX: 1 }}>
+                        <Divider sx={{ marginBottom: 1 }} />
+                        <Typography sx={{ fontWeight: "bold" }}>
+                            About this Experiment
+                        </Typography>
+                        <Typography align="left" whiteSpace={"pre-line"}>
+                            {experimentInfo
+                                ? experimentInfo.experiment.description
+                                : null}
+                        </Typography>
+                    </Stack>
+                    <Divider
+                        orientation="vertical"
+                        sx={{ height: "auto", marginTop: 4 }}
+                    />
+                    <Stack sx={{ flex: 1, marginTop: 1, marginLeft: 2 }}>
+                        {owner && (
+                            <Stack>
+                                <Typography sx={{ fontWeight: "bold" }}>
+                                    Owner
+                                </Typography>
+                                <Typography>
+                                    {`${owner.displayName} (${owner.username})`}
+                                </Typography>
+                            </Stack>
+                        )}
+                        <Divider sx={{ marginY: 1 }} />
+                        <Stack>
+                            <Typography sx={{ fontWeight: "bold" }}>
+                                Start Date
+                            </Typography>{" "}
+                            <Typography>{`${experimentInfo.experiment.startDate}`}</Typography>
+                        </Stack>
+                    </Stack>
+                </Box>
             </Box>
             <ExperimentEditingContext.Provider
                 value={{ isEditing, setIsEditing }}
