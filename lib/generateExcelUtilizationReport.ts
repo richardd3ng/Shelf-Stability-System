@@ -38,6 +38,14 @@ function getCountForTypeAndWeek (rows : UtilizationReportRow[], assayTypeName : 
     return count;
 }
 
+function getTotalCountNoTypeFilter (rows : UtilizationReportRow[]) : number {
+    let count = 0;
+    rows.forEach((row : UtilizationReportRow) => {
+        count += row.count;
+    });
+    return count;
+}
+
 
 type OneRowOfSheet2Data = { [key: string]: any };
 function getSheet2Data(rows : UtilizationReportRow[]): OneRowOfSheet2Data[] {
@@ -48,26 +56,28 @@ function getSheet2Data(rows : UtilizationReportRow[]): OneRowOfSheet2Data[] {
     uniqueWeeks.forEach((week : string) => {
         let rowsForWeek = rows.filter((row) => row.weekStartDate.toString() === week);
         data.push({
-            "" : "",
+            "Week" : `${week} - ${LocalDate.parse(week).plusDays(6).toString()}`,
             [SENSORY.name] : getCountForTypeAndWeek(rowsForWeek, SENSORY.name),
             [MOISTURE.name] : getCountForTypeAndWeek(rowsForWeek, MOISTURE.name),
             [HEXANAL.name] : getCountForTypeAndWeek(rowsForWeek, HEXANAL.name),
             [FFA.name] : getCountForTypeAndWeek(rowsForWeek, FFA.name),
             [PEROXIDE.name] : getCountForTypeAndWeek(rowsForWeek, PEROXIDE.name),
             [ANISIDINE.name] : getCountForTypeAndWeek(rowsForWeek, ANISIDINE.name),
-            "Other" : getCountForTypeAndWeek(rowsForWeek, "Other")
+            "Other" : getCountForTypeAndWeek(rowsForWeek, "Other"),
+            "Total" : getTotalCountNoTypeFilter(rowsForWeek)
         })
     })
     //need to push the totals
     data.push({
-        "" : "Total",
+        "Week" : "Total",
         [SENSORY.name] : getCountForTypeAndWeek(rows, SENSORY.name),
         [MOISTURE.name] : getCountForTypeAndWeek(rows, MOISTURE.name),
         [HEXANAL.name] : getCountForTypeAndWeek(rows, HEXANAL.name),
         [FFA.name] : getCountForTypeAndWeek(rows, FFA.name),
         [PEROXIDE.name] : getCountForTypeAndWeek(rows, PEROXIDE.name),
         [ANISIDINE.name] : getCountForTypeAndWeek(rows, ANISIDINE.name),
-        "Other" : getCountForTypeAndWeek(rows, "Other")
+        "Other" : getCountForTypeAndWeek(rows, "Other"),
+        "Total" : getTotalCountNoTypeFilter(rows)
 
     })
     return data;
