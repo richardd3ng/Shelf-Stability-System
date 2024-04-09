@@ -8,7 +8,7 @@ import {
     getAssayResultID,
 } from "@/lib/api/apiHelpers";
 import { getUserAndDenyReqIfUserIsNotLoggedIn } from "@/lib/api/auth/authHelpers";
-import { denyReqIfUserIsNeitherAdminNorExperimentOwner } from "@/lib/api/auth/checkIfAdminOrExperimentOwner";
+import { denyReqIfUserIsNeitherAdminNorTechnicianNorExperimentOwner } from '@/lib/api/auth/acessDeniers';
 import { APIPermissionTracker, denyAPIReq } from "@/lib/api/auth/acessDeniers";
 
 export default async function updateAssayResultAPI(
@@ -33,15 +33,20 @@ export default async function updateAssayResultAPI(
             id: id,
         },
         include: {
-            assay: true,
+            assay: {
+                include : {
+                    assayType : true
+                }
+            },
         },
     });
     if (assayResult && user) {
-        await denyReqIfUserIsNeitherAdminNorExperimentOwner(
+        await denyReqIfUserIsNeitherAdminNorTechnicianNorExperimentOwner(
             req,
             res,
             user,
             assayResult.assay.experimentId,
+            assayResult.assay.assayType.technicianId,
             permissionTracker
         );
         if (permissionTracker.shouldStopExecuting) {

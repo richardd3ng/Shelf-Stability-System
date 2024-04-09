@@ -5,7 +5,7 @@ import { User } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { getToken } from "next-auth/jwt";
-import { checkIfUserIsAdmin } from "@/lib/api/auth/checkIfAdminOrExperimentOwner";
+import { checkIfUserIsAdmin } from '@/lib/api/auth/authHelpers';
 import { hashPassword } from "@/lib/api/auth/authHelpers";
 
 const selectExceptPassword = {
