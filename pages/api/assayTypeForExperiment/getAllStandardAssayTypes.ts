@@ -21,7 +21,7 @@ export default async function getStandardAssayTypesAPI(
         res.status(200).json(await getStandardAssayTypesAPIHelper());
     } catch (error) {
         res.status(500).json(
-            getApiError(500, "Failed to create Assay Type on server")
+            getApiError(500, "Failed to get standard assay types on server")
         );
     }
 }
