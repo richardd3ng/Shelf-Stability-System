@@ -20,7 +20,7 @@ export const assayTypeIdToName = (
         return correspondingType.assayType.name;
     } else {
         throw new ApiError(
-            400,
+            404,
             `Assay type with ID ${assayTypeForExperimentId} is not found`
         );
     }
@@ -42,8 +42,8 @@ export const getAssayTypeUnits = (
         }
     }
     throw new ApiError(
-        400,
-        `Assay type ${assayTypeForExperimentId} is not recognized`
+        404,
+        `Assay type with ID ${assayTypeForExperimentId} is not found`
     );
 };
 
@@ -189,7 +189,9 @@ export const checkIfThereAreRecordedResultsForAssayType = (
     return hasResults;
 };
 
-export const fetchAssayTypeForExperiment = async (assayTypeForExperimentId: number) : Promise<AssayTypeForExperiment> => {
+export const fetchAssayTypeForExperiment = async (
+    assayTypeForExperimentId: number
+): Promise<AssayTypeForExperiment> => {
     const endpoint = `/api/assayTypeForExperiment/${assayTypeForExperimentId}`;
     const response = await fetch(endpoint);
     const resJson = await response.json();
@@ -199,7 +201,9 @@ export const fetchAssayTypeForExperiment = async (assayTypeForExperimentId: numb
     throw new ApiError(response.status, resJson.message);
 };
 
-export const fetchAssayType = async (assayTypeId: number) : Promise<AssayType> => {
+export const fetchAssayType = async (
+    assayTypeId: number
+): Promise<AssayType> => {
     const endpoint = `/api/assayType/${assayTypeId}`;
     const response = await fetch(endpoint);
     const resJson = await response.json();

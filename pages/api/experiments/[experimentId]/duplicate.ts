@@ -12,10 +12,10 @@ import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 import { getExperimentID, INVALID_EXPERIMENT_ID } from "@/lib/api/apiHelpers";
 import { createExperimentAPIHelper } from "../create";
 import { fetchExperimentInfoAPIHelper } from "./fetchExperimentInfo";
-import { getStandardAssayTypesAPIHelper } from "../../assayTypeForExperiment/getAllStandardAssayTypes";
 import { Condition } from "@prisma/client";
 import { createCustomAssayTypeAPIHelper } from "../../assayTypeForExperiment/createCustom";
 import { createAssayAPIHelper } from "../../assays/create";
+import { getStandardAssayTypesAPIHelper } from "../../assayTypeForExperiment/getAllStandardAssayTypes";
 
 const getNewConditionId = (
     experimentInfo: ExperimentInfo,
@@ -89,8 +89,7 @@ const getDuplicateExperimentTitle = async (
             .trim();
         return copyNumber === "" ? 1 : parseInt(copyNumber);
     });
-    const maxCopyNumber = Math.max(...copyNumbers);
-    return `${oldTitle} - copy ${maxCopyNumber + 1}`;
+    return `${oldTitle} - copy ${Math.max(...copyNumbers) + 1}`;
 };
 
 export default async function duplicateExperimentAPI(
@@ -113,14 +112,16 @@ export default async function duplicateExperimentAPI(
     }
     try {
         const oldExperimentInfo = await fetchExperimentInfoAPIHelper(id);
+        const standardAssayTypes = await getStandardAssayTypesAPIHelper();
+        const newTitle = await getDuplicateExperimentTitle(
+            oldExperimentInfo.experiment.title
+        );
         const {
             experiment: newExperiment,
             conditions: newConditions,
             defaultAssayTypes: newAssayTypesForExperiment,
         } = await createExperimentAPIHelper(
-            await getDuplicateExperimentTitle(
-                oldExperimentInfo.experiment.title
-            ),
+            newTitle,
             oldExperimentInfo.experiment.description,
             oldExperimentInfo.experiment.startDate.toString(),
             oldExperimentInfo.conditions.map((condition) => ({
@@ -131,39 +132,53 @@ export default async function duplicateExperimentAPI(
             oldExperimentInfo.experiment.weeks
         );
         const newAssayTypeInfos: AssayTypeInfo[] = [];
-        const standardAssayTypes = await getStandardAssayTypesAPIHelper();
-        newAssayTypesForExperiment.forEach((assayType) => {
-            const matchedStandardAssayType = standardAssayTypes?.find(
-                (standardAssayType) =>
-                    standardAssayType.id === assayType.assayTypeId
-            );
-            if (matchedStandardAssayType) {
-                newAssayTypeInfos.push({
-                    id: assayType.id,
-                    assayTypeId: assayType.assayTypeId,
-                    technicianId: assayType.technicianId,
-                    experimentId: newExperiment.id,
-                    assayType: matchedStandardAssayType,
-                });
-            } else {
-                throw new ApiError(
-                    404,
-                    "Duplication error: matching standard assay type not found"
-                );
-            }
-        });
         await Promise.all(
             oldExperimentInfo.assayTypes.map(async (assayTypeInfo) => {
                 if (assayTypeInfo.assayType.isCustom) {
-                    const newAssayTypeInfo =
+                    newAssayTypeInfos.push(
                         await createCustomAssayTypeAPIHelper(
                             newExperiment.id,
                             assayTypeInfo.assayType.name,
                             assayTypeInfo.assayType.description ?? undefined,
                             assayTypeInfo.assayType.units ?? undefined,
                             assayTypeInfo.technicianId ?? undefined
+                        )
+                    );
+                } else {
+                    const matchedStandardAssayType = standardAssayTypes.find(
+                        (standardAssayType) =>
+                            standardAssayType.id === assayTypeInfo.assayTypeId
+                    );
+                    if (!matchedStandardAssayType) {
+                        throw new ApiError(
+                            404,
+                            "Duplication error: matching standard assay type not found"
                         );
-                    newAssayTypeInfos.push(newAssayTypeInfo);
+                    }
+                    const matchedStandardAssayTypeForExperiment =
+                        newAssayTypesForExperiment.find(
+                            (assayType) =>
+                                assayType.assayTypeId ===
+                                assayTypeInfo.assayTypeId
+                        );
+                    if (!matchedStandardAssayTypeForExperiment) {
+                        throw new ApiError(
+                            404,
+                            "Duplication error: matching standard assay type for experiment not found"
+                        );
+                    }
+                    await db.assayTypeForExperiment.update({
+                        where: {
+                            id: matchedStandardAssayTypeForExperiment.id,
+                        },
+                        data: {
+                            technicianId: assayTypeInfo.technicianId,
+                        },
+                    });
+                    newAssayTypeInfos.push({
+                        ...matchedStandardAssayTypeForExperiment,
+                        assayType: matchedStandardAssayType,
+                    });
                 }
             })
         );
