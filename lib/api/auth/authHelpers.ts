@@ -4,7 +4,7 @@ import { NextApiResponse, NextApiRequest } from "next";
 import { getToken } from "next-auth/jwt";
 import { UserWithoutPassword } from "../../controllers/types";
 import { APIPermissionTracker, denyAPIReq } from "./acessDeniers";
-import { denyReqIfUserIsNotAdmin } from "./checkIfAdminOrExperimentOwner";
+import { denyReqIfUserIsNotAdmin } from './acessDeniers';
 
 
 export const ADMIN_USERNAME = "admin";
@@ -79,6 +79,42 @@ export async function denyReqIfUserIsNotLoggedInAdmin(req : NextApiRequest, res 
         await denyReqIfUserIsNotAdmin(req, res, user, permissionTracker);
     }
 }
+
+export const checkIfUserIsAdmin = async (username: string): Promise<boolean> => {
+    try {
+        const user = await db.user.findUnique({
+            where: {
+                username: username
+            }
+        });
+        if (user && user.isAdmin) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch {
+        return false;
+    }
+};
+
+export const checkIfUserIsExperimentOwner = async (user: UserWithoutPassword, experimentId: number): Promise<boolean> => {
+    try {
+        const experiment = await db.experiment.findUnique({
+            where: {
+                id: experimentId
+            }
+        });
+        if (experiment && experiment.ownerId === user.id) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch {
+        return false;
+    }
+
+
+};
 
 
 

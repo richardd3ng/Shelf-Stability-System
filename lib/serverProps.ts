@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import { getToken } from "next-auth/jwt";
-import { checkIfUserIsAdmin } from "./api/auth/checkIfAdminOrExperimentOwner";
+import { checkIfUserIsAdmin } from './api/auth/authHelpers';
 
 export async function requiresAdminProps(context: GetServerSidePropsContext, badResult: any = undefined, badStatus: number = 403) {
     const token = await getToken({ req: context.req });
