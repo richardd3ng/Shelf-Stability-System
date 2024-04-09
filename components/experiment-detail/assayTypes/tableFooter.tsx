@@ -24,7 +24,7 @@ export const AssayTypesTableFooter : React.FC = () => {
                 //await createNewCustomAssayTypeForExperimentThroughAPI(experimentId);
                 //queryClient.invalidateQueries({queryKey : getQueryKeyForUseExperimentInfo(experimentId)});
                 setIsCreating(true);
-            }}>+ Add Custom Type</Button>
+            }}>+ Custom Type</Button>
             <CreateAssayTypeModal/>
         </Stack>
     );
