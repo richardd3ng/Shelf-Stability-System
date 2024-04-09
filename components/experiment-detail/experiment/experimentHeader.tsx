@@ -26,6 +26,7 @@ export const ExperimentHeader = () => {
     const { user } = useContext(CurrentUserContext);
     const isCanceled: boolean = experimentInfo?.experiment.isCanceled ?? false;
     const isEditable: boolean = (!isCanceled && user?.isAdmin) ?? false;
+    const isDuplicatable: boolean = user?.isAdmin ?? false;
     const router = useRouter();
 
     useEffect(() => {
@@ -105,7 +106,7 @@ export const ExperimentHeader = () => {
                             experimentId={experimentId}
                             size="large"
                         />
-                        <DuplicateExperimentIconButton />
+                        {isDuplicatable && <DuplicateExperimentIconButton />}
                     </Box>
                 </Box>
                 <Box
