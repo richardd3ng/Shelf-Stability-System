@@ -188,7 +188,7 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                         setIsEditing,
                     }}
                 >
-                    <AssayEditorModal onlyEditResult={!isDeletable} />
+                    <AssayEditorModal />
                 </AssayResultEditingContext.Provider>
             </AssayEditingContext.Provider>
         </>

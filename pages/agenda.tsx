@@ -283,8 +283,6 @@ export default function AssayAgenda() {
                                 getRowClassName={(_) => "agenda-row-clickable"}
                             />
                             <AssayEditorModal
-                                onlyEditResult
-                                showFullContext
                                 onClose={reload}
                             />
                         </Stack>
