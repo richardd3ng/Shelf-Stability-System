@@ -35,7 +35,7 @@ export const ExperimentHeader = () => {
         } else {
             hideLoading();
         }
-    }, [isLoading, showLoading, hideLoading]);
+    }, [isLoading]);
 
     if (!experimentInfo) {
         return null;
