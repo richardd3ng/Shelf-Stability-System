@@ -16,6 +16,7 @@ export default function ResultEntryPage() {
                     experimentId={Number(experimentId)}
                     assayId={Number(assayId)}
                     onSubmit={() => router.push(`/experiments/${experimentId}`)}
+                    loadForeverOnSubmit
                 />
             </Box>
         </Layout>
