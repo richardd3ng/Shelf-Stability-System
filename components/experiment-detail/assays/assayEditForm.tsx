@@ -13,9 +13,10 @@ interface AssayEditFormProps {
     experimentId: number;
     assayId: number;
     onSubmit?: () => void;
+    loadForeverOnSubmit?: boolean;
 }
 
-export default function AssayEditForm({ experimentId, assayId, onSubmit }: AssayEditFormProps) {
+export default function AssayEditForm({ experimentId, assayId, onSubmit, loadForeverOnSubmit }: AssayEditFormProps) {
     const user = useContext(CurrentUserContext);
 
     const { showLoading, hideLoading } = useLoading();
@@ -108,6 +109,9 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit }: Assay
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
             });
             onSubmit?.();
+            if (!loadForeverOnSubmit) {
+                hideLoading();
+            }
         };
 
         if (assayResultId === null) {
