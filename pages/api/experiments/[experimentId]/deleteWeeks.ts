@@ -6,6 +6,7 @@ import { experimentHasAssaysWithResults } from "@/lib/api/validations";
 import {
     INVALID_EXPERIMENT_ID,
     getExperimentID,
+    parseExperimentWeeks,
     updateExperimentWeeks,
 } from "@/lib/api/apiHelpers";
 import { ExperimentWeekDeletionResponse } from "@/lib/controllers/types";
@@ -65,7 +66,9 @@ export default async function deleteExperimentWeekAPI(
         );
         await updateExperimentWeeks(
             id,
-            weeks.filter((week: number) => !deletedWeeks.includes(week))
+            parseExperimentWeeks(experiment.weeks).filter(
+                (week: number) => !deletedWeeks.includes(week)
+            )
         );
         res.status(200).json({
             experimentId: id,
