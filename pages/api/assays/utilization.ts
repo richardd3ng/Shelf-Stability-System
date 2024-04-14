@@ -1,24 +1,15 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
-import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 import { localDateToJsDate } from "@/lib/datesUtils";
 import { LocalDate } from "@js-joda/core";
 import { getApiError } from "@/lib/api/error";
 
 
-export default async function createAssayAPI(
+export default async function utilizationAPI(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
     try{
-        let permissionTracker: APIPermissionTracker = {
-            shouldStopExecuting: false,
-        };
-        await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
-        if (permissionTracker.shouldStopExecuting) {
-            return;
-        }
 
         let startDateStr = typeof(req.query.startdate) === "string" ? req.query.startdate : LocalDate.now().toString();
         let endDateStr = typeof(req.query.enddate) === "string" ? req.query.enddate : LocalDate.now().toString();

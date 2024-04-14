@@ -72,6 +72,11 @@ const NavBar: React.FC = () => {
             path: "/agenda",
         },
         {
+            text: "Lab Utilization",
+            onClick: () => router.push("/utilization"),
+            path: "/utilization",
+        },
+        {
             text: "Users",
             onClick: () => router.push("/users"),
             path: "/users",
