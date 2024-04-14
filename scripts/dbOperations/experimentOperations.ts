@@ -30,7 +30,7 @@ export const createExperimentWithConditionsAndAssayTypes = async (experiment : E
                 description : experiment.description,
                 startDate : localDateToJsDate(experiment.startDate),
                 isCanceled : experiment.isCanceled,
-                weeks : "",
+                weeks : experiment.weeks,
                 conditions : {
                     create : experiment.conditionCreationArgsNoExperimentIdArray.map((condition) => {
                         return {
