@@ -16,7 +16,7 @@ export const DeleteAssayTypeIcon : React.FC<AssayTypeInfo> = (props : AssayTypeI
     const experimentId = useExperimentId();
     const {data : experimentInfo} = useExperimentInfo(experimentId);
     let canDelete = props.assayType.isCustom && isAdmin && experimentInfo && !experimentInfo.experiment.isCanceled && !checkIfThereAreRecordedResultsForAssayType(props.id, experimentInfo);
-
+    
     if (!canDelete){
         return null;
     }

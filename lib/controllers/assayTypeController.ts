@@ -110,27 +110,48 @@ const getUpdateAssayTypeBody = (updateArgs: UpdateAssayTypeArgs) => {
     }
 };
 
+// export const updateAssayTypeThroughAPI = async (
+//     updateArgs: UpdateAssayTypeArgs
+// ): Promise<AssayType> => {
+//     const endpoint = "/api/assayType/" + updateArgs.assayTypeId.toString();
+
+//     const response = await fetch(endpoint, {
+//         method: "PATCH",
+//         headers: {
+//             "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(updateArgs),
+//     });
+//     const resJson = await response.json();
+//     if (response.ok) {
+//         return { ...resJson };
+//     }
+//     throw new ApiError(response.status, resJson.message);
+// };
+
+// export const updateTechnicianOfAssayTypeForExperimentThroughAPI = async (
+//     updateArgs: UpdateTechnicianArgs
+// ): Promise<AssayTypeForExperiment> => {
+//     const endpoint =
+//         "/api/assayTypeForExperiment/" +
+//         updateArgs.assayTypeForExperimentId.toString();
+
+//     const response = await fetch(endpoint, {
+//         method: "PATCH",
+//         headers: {
+//             "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ technicianId: updateArgs.technicianId }),
+//     });
+//     const resJson = await response.json();
+//     if (response.ok) {
+//         return { ...resJson };
+//     }
+//     throw new ApiError(response.status, resJson.message);
+// };
+
 export const updateAssayTypeThroughAPI = async (
     updateArgs: UpdateAssayTypeArgs
-): Promise<AssayType> => {
-    const endpoint = "/api/assayType/" + updateArgs.assayTypeId.toString();
-
-    const response = await fetch(endpoint, {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updateArgs),
-    });
-    const resJson = await response.json();
-    if (response.ok) {
-        return { ...resJson };
-    }
-    throw new ApiError(response.status, resJson.message);
-};
-
-export const updateTechnicianOfAssayTypeForExperimentThroughAPI = async (
-    updateArgs: UpdateTechnicianArgs
 ): Promise<AssayTypeForExperiment> => {
     const endpoint =
         "/api/assayTypeForExperiment/" +
@@ -141,7 +162,7 @@ export const updateTechnicianOfAssayTypeForExperimentThroughAPI = async (
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ technicianId: updateArgs.technicianId }),
+        body: JSON.stringify(updateArgs),
     });
     const resJson = await response.json();
     if (response.ok) {
