@@ -1,8 +1,15 @@
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { fetchAssay } from "@/lib/controllers/assayController";
-import { createAssayResult, fetchResultForAssay, updateAssayResult } from "@/lib/controllers/assayResultController";
-import { fetchAssayType, fetchAssayTypeForExperiment } from "@/lib/controllers/assayTypeController";
+import {
+    createAssayResult,
+    fetchResultForAssay,
+    updateAssayResult,
+} from "@/lib/controllers/assayResultController";
+import {
+    fetchAssayType,
+    fetchAssayTypeForExperiment,
+} from "@/lib/controllers/assayTypeController";
 import { fetchCondition } from "@/lib/controllers/conditionController";
 import { getQueryKeyForUseExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
@@ -16,7 +23,12 @@ interface AssayEditFormProps {
     loadForeverOnSubmit?: boolean;
 }
 
-export default function AssayEditForm({ experimentId, assayId, onSubmit, loadForeverOnSubmit }: AssayEditFormProps) {
+export default function AssayEditForm({
+    experimentId,
+    assayId,
+    onSubmit,
+    loadForeverOnSubmit,
+}: AssayEditFormProps) {
     const user = useContext(CurrentUserContext);
 
     const { showLoading, hideLoading } = useLoading();
@@ -24,15 +36,19 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
     async function fetchAssayDetails() {
         // TODO all these different calls can definitely be sped up
         // At the very least by combining them into a single API call
-        const assay = await fetchAssay(assayId)
-        setFullSample(`${assay.experimentId}-${assay.sample.toString().padStart(3, "0")}`);
+        const assay = await fetchAssay(assayId);
+        setFullSample(
+            `${assay.experimentId}-${assay.sample.toString().padStart(3, "0")}`
+        );
         setWeek(assay.week.toString());
 
         const [condition, assayType, result] = await Promise.all([
             fetchCondition(assay.conditionId),
-            fetchAssayTypeForExperiment(assay.assayTypeId)
-                .then(assayTypeForExperiment => fetchAssayType(assayTypeForExperiment.assayTypeId)),
-            fetchResultForAssay(assayId)
+            fetchAssayTypeForExperiment(assay.assayTypeId).then(
+                (assayTypeForExperiment) =>
+                    fetchAssayType(assayTypeForExperiment.assayTypeId)
+            ),
+            fetchResultForAssay(assayId),
         ]);
         setCondition(condition.name);
         setAssayType(assayType.name);
@@ -49,7 +65,12 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
     useEffect(() => {
         showLoading("Loading assay details...");
 
-        if (isNaN(experimentId) || experimentId < 0 || isNaN(assayId) || assayId < 0) {
+        if (
+            isNaN(experimentId) ||
+            experimentId < 0 ||
+            isNaN(assayId) ||
+            assayId < 0
+        ) {
             return;
         }
 
@@ -101,7 +122,7 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
             assayId: Number(assayId),
             result: value === "" ? null : valueNumber,
             comment: comment === "" ? null : comment,
-            author: `${user.user?.displayName} (${user.user?.username})`
+            author: `${user.user?.displayName} (${user.user?.username})`,
         };
 
         const then = () => {
@@ -119,7 +140,7 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
         } else {
             updateAssayResult({
                 id: assayResultId,
-                ...updateParams
+                ...updateParams,
             }).then(then);
         }
     }
@@ -129,12 +150,21 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
             <Stack maxWidth={350} spacing={1}>
                 <Typography variant="body1">
                     {fullSample}
-                    <br />Week: {week}
-                    <br />Condition: {condition}
-                    <br />{assayType}
+                    <br />
+                    Week: {week}
+                    <br />
+                    Condition: {condition}
+                    <br />
+                    {assayType}
                 </Typography>
 
-                <Box sx={{ alignItems: "center", display: "flex", width: "100%" }}>
+                <Box
+                    sx={{
+                        alignItems: "center",
+                        display: "flex",
+                        width: "100%",
+                    }}
+                >
                     <TextField
                         label="Value"
                         value={value}
@@ -152,7 +182,13 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
                     error={commentError}
                     helperText={commentErrorText}
                 />
-                <Button type="submit" variant="contained">Submit</Button>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                >
+                    Submit
+                </Button>
             </Stack>
         </form>
     );
