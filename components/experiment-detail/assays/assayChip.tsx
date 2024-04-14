@@ -125,6 +125,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                                 disableTouchRipple
                                 onMouseEnter={() => setShowLastEditor(true)}
                                 onMouseLeave={() => setShowLastEditor(false)}
+                                sx={{
+                                    cursor: "default",
+                                    "&:hover": {
+                                        backgroundColor: "inherit !important",
+                                    },
+                                }}
                             >
                                 <PersonIcon
                                     sx={{ fontSize: 20, color: "gray" }}
@@ -147,6 +153,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                                 disableTouchRipple
                                 onMouseEnter={() => setShowComment(true)}
                                 onMouseLeave={() => setShowComment(false)}
+                                sx={{
+                                    cursor: "default",
+                                    "&:hover": {
+                                        backgroundColor: "inherit !important",
+                                    },
+                                }}
                             >
                                 <MessageIcon
                                     sx={{ fontSize: 20, color: "gray" }}
