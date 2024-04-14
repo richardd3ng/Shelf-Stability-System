@@ -30,10 +30,12 @@ const ReportTable: React.FC<ReportTableProps> = (props: ReportTableProps) => {
     const assays: Assay[] = props.assayFilter(props.experimentInfo);
     parseExperimentWeeks(props.experimentInfo.experiment.weeks).forEach(
         (week) => {
-            weekRows.push({
-                id: week,
-                week: week,
-            });
+            if (assays.some((assay) => assay.week === week)) {
+                weekRows.push({
+                    id: week,
+                    week: week,
+                });
+            }
         }
     );
 
