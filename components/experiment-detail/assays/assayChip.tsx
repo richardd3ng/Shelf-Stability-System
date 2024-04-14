@@ -96,6 +96,11 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                     <Typography sx={{ fontSize: 12 }}>
                         {getResultText(experimentInfo.assayTypes)}
                     </Typography>
+                    <Typography sx={{ fontSize: 12 }}>
+                        {`${props.assay.experimentId}-${props.assay.sample
+                            .toString()
+                            .padStart(3, "0")}`}
+                    </Typography>
                     <Box
                         sx={{
                             marginY: -0.25,
