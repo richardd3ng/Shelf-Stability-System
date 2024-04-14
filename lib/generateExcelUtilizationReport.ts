@@ -56,7 +56,7 @@ function getSheet2Data(rows : UtilizationReportRow[]): OneRowOfSheet2Data[] {
     uniqueWeeks.forEach((week : string) => {
         let rowsForWeek = rows.filter((row) => row.weekStartDate.toString() === week);
         data.push({
-            "Week" : `${week} - ${LocalDate.parse(week).plusDays(6).toString()}`,
+            "Week Start Date" : week,
             [SENSORY.name] : getCountForTypeAndWeek(rowsForWeek, SENSORY.name),
             [MOISTURE.name] : getCountForTypeAndWeek(rowsForWeek, MOISTURE.name),
             [HEXANAL.name] : getCountForTypeAndWeek(rowsForWeek, HEXANAL.name),
@@ -69,7 +69,7 @@ function getSheet2Data(rows : UtilizationReportRow[]): OneRowOfSheet2Data[] {
     })
     //need to push the totals
     data.push({
-        "Week" : "Total",
+        "Week Start Date" : "Total",
         [SENSORY.name] : getCountForTypeAndWeek(rows, SENSORY.name),
         [MOISTURE.name] : getCountForTypeAndWeek(rows, MOISTURE.name),
         [HEXANAL.name] : getCountForTypeAndWeek(rows, HEXANAL.name),
