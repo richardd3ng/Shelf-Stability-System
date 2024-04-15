@@ -98,7 +98,6 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 sx={{
                     "@media print": {
                         breakInside: "avoid",
-                        pageBreakInside: "avoid",
                     },
                 }}
             />

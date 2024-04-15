@@ -12,7 +12,7 @@ const ReportAssaysGroupedByType: React.FC<ReportAssaysGroupedByTypeProps> = (
 ) => {
     return (
         <Stack gap={2}>
-            <Stack sx={{ "@media print": { breakInside: "avoid" } }}>
+            <Stack>
                 <Typography variant="h6">Assay Schedule</Typography>
                 <ReportTable
                     experimentInfo={props.experimentInfo}
