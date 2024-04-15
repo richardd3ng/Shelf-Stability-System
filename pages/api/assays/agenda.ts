@@ -75,12 +75,25 @@ export default async function getAssays(
             : undefined,
     };
 
+    const sortOrderTyped: "asc" | "desc" = sortOrder === "asc" ? "asc" : "desc";
+
+    const orderBy = sortBy === "sample"
+        ? [
+            {
+                experimentId: sortOrderTyped,
+            },
+            {
+                sample: sortOrderTyped,
+            }
+        ]
+        : {
+            [sortBy]: sortOrderTyped,
+        };
+
     const queryRows = db.assayAgendaView
         .findMany({
             where: whereCondition,
-            orderBy: {
-                [sortBy]: sortOrder,
-            },
+            orderBy: orderBy,
             // Note: skipping requires going through all the records, so it's not efficient for large tables
             // https://www.prisma.io/docs/orm/prisma-client/queries/pagination
             skip: page * pageSize,
