@@ -183,8 +183,6 @@ export default function AssayAgenda() {
         router.push(
             `/experiments/${params.row.experimentId}#assay-chip-${params.row.id}`
         );
-        if (params.field === "actions") return;
-        router.push(`/experiments/${params.row.experimentId}`);
     }
 
     return (
