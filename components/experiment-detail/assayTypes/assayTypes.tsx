@@ -17,7 +17,7 @@ import AssayTypeEditingContext from "@/lib/context/experimentDetailPage/assayTyp
 import { EditAssayTypeModal } from "./editAssayTypeModal";
 
 
-const colDefs: GridColDef[] = [
+const allColDefs: GridColDef[] = [
     {
         field: "name",
         headerName: "Name",
@@ -61,6 +61,8 @@ const colDefs: GridColDef[] = [
     },
 ];
 
+
+
 export const AssayTypes: React.FC = () => {
     const experimentId = useExperimentId();
     const {data : experimentInfo} = useExperimentInfo(experimentId);
@@ -78,7 +80,10 @@ export const AssayTypes: React.FC = () => {
     if (!experimentInfo) {
         return null;
     }
-
+    let colDefs = allColDefs;
+    if (!isAdmin){
+        colDefs = colDefs.filter((column) => column.field !== "actions");
+    }
     return (
         <AssayTypeCreationContext.Provider value={{isCreating : isCreating, setIsCreating : setIsCreating}}>
             <AssayTypeEditingContext.Provider value={{isEditing, setIsEditing, assayTypeIdBeingEdited, setAssayTypeIdBeingEdited, name : nameBeingEdited, setName : setNameBeingEdited, 
