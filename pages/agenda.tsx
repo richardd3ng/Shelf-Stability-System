@@ -51,11 +51,18 @@ export default function AssayAgenda() {
 
     const colDefs: GridColDef[] = [
         {
+            field: "sample",
+            headerName: "Sample ID",
+            type: "string",
+            valueGetter: (params) => `${params.row.experimentId}-${params.row.sample.toString().padStart(3, "0")}`,
+            width: 120
+        },
+        {
             field: "targetDate",
             headerName: "Target Date",
             type: "string",
             valueGetter: (params) => params.row.targetDate.toString(),
-            width: 150,
+            width: 130,
         },
         {
             field: "title",
@@ -176,8 +183,6 @@ export default function AssayAgenda() {
         router.push(
             `/experiments/${params.row.experimentId}#assay-chip-${params.row.id}`
         );
-        if (params.field === "actions") return;
-        router.push(`/experiments/${params.row.experimentId}`);
     }
 
     return (

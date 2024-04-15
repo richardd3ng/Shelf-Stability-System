@@ -237,6 +237,7 @@ export type EmailQueryResult = {
     assayType: string;
     technicianUsername: string;
     technicianDisplayName: string;
+    sample: number;
 };
 
 export type EmailInfo = {
@@ -251,6 +252,7 @@ export type EmailInfo = {
             week: number;
             assayType: string;
             technician: string;
+            sample: number;
         }[];
     };
 };
