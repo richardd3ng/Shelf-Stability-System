@@ -384,7 +384,7 @@ const ExperimentTable: React.FC<ExperimentTableProps> = (
                         sort: "asc",
                     } as GridSortItem,
                 ]}
-                checkboxSelection
+                checkboxSelection={!isCanceled}
                 onDeleteRows={prepareForDeletions}
             />
             <ConfirmationDialog
