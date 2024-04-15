@@ -52,9 +52,7 @@ const ReportChip: React.FC<ReportChipProps> = (props: ReportChipProps) => {
                         fontSize: 10,
                     }}
                 >
-                    {`${props.assay.experimentId}-${props.assay.sample
-                        .toString()
-                        .padStart(3, "0")}`}
+                    {`${props.assay.sample.toString().padStart(3, "0")}`}
                 </Typography>
                 <Typography
                     sx={{

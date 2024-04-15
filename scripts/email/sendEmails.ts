@@ -17,7 +17,7 @@ export const sendEmails = async () => {
         const unsubscribeHtml = `
             <p style="margin-top: 20px; font-size: 12px;">
                 You are receiving this email because you subscribed to email reminders in Shelf Stability System.<br>
-                <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0">Click here to unsubscribe</a>.
+                <a href="https://tinyurl.com/3yrwywav">Click here to unsubscribe</a>.
             </p>`;
 
         Object.entries(emailInfo).forEach(([_userId, data]) => {
