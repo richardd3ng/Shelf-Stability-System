@@ -21,7 +21,7 @@ interface AssayEditFormProps {
 
 export default function AssayEditForm({ experimentId, assayId, allowDeletion, onSubmit, loadForeverOnSubmit }: AssayEditFormProps) {
     const { user } = useContext(CurrentUserContext);
-
+    const queryClient = useQueryClient();
     const { showLoading, hideLoading } = useLoading();
 
     async function fetchAssayDetails() {
@@ -84,12 +84,12 @@ export default function AssayEditForm({ experimentId, assayId, allowDeletion, on
     )) {
         return <Typography variant="body1">You do not have permission to edit this assay</Typography>;
     }
-
+    
     if (isCanceled) {
         return <Typography variant="body1">This experiment has been canceled, and assay results can no longer be edited</Typography>;
     }
 
-    const queryClient = useQueryClient();
+    
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
