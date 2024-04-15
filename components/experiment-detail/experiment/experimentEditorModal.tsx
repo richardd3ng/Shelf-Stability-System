@@ -5,8 +5,6 @@ import { Button, Stack, TextField } from "@mui/material";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
 import React, { useContext, useState, useEffect } from "react";
 import CloseableModal from "@/components/shared/closeableModal";
-import { ErrorMessage } from "@/components/shared/errorMessage";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { LocalDate } from "@js-joda/core";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { ExperimentUpdateArgs } from "@/lib/controllers/types";
@@ -68,11 +66,8 @@ const ExperimentEditorModal: React.FC = () => {
         updateExperiment(experimentUpdateArgs);
         setIsEditing(false);
     };
-
-    if (isLoading) {
+    if (isLoading || isError || !data) {
         return null;
-    } else if (isError || !data) {
-        return <ErrorMessage message={getErrorMessage(error)} />;
     }
     return (
         <CloseableModal
