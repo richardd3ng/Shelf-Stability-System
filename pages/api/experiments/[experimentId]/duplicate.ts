@@ -129,7 +129,8 @@ export default async function duplicateExperimentAPI(
                 isControl: condition.isControl,
             })),
             oldExperimentInfo.experiment.ownerId,
-            oldExperimentInfo.experiment.weeks
+            oldExperimentInfo.experiment.weeks,
+            oldExperimentInfo.experiment.isCanceled
         );
         const newAssayTypeInfos: AssayTypeInfo[] = [];
         await Promise.all(
