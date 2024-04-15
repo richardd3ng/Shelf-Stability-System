@@ -11,6 +11,7 @@ import {
     AssayUpdateArgs,
     UtilizationReportParams,
     UtilizationReportRow,
+    AssayEditInfo,
 } from "./types";
 import { stringFieldsToLocalDate } from "./jsonConversions";
 
@@ -140,6 +141,21 @@ export const fetchUtilizationData = async (
                 weekStartDate: LocalDate.parse(row.weekStartDate),
             };
         });
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
+export const fetchAssayEditInfo = async (id: number): Promise<AssayEditInfo> => {
+    const endpoint = `/api/assays/${id}/editInfo`;
+    const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return stringFieldsToLocalDate(resJson, ["targetDate"]);
     }
     throw new ApiError(response.status, resJson.message);
 };

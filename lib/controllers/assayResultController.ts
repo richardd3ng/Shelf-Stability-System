@@ -15,7 +15,7 @@ export const getAssayResult = async (id: number): Promise<AssayResult> => {
 
 export const createAssayResult = async (
     assayResultCreationArgs: AssayResultCreationArgs
-) => {
+): Promise<AssayResult> => {
     const endpoint = "/api/assayResult/create";
     const response = await fetch(endpoint, {
         method: "POST",

@@ -44,6 +44,7 @@ const AssayEditorModal: React.FC<AssayEditorModalProps> = (
                 <AssayEditForm
                     experimentId={experimentInfo.experiment.id}
                     assayId={assay.id}
+                    allowDeletion
                 />
             </Box>
         </CloseableModal>
