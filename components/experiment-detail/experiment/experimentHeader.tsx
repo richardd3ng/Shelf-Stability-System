@@ -4,7 +4,9 @@ import {
     useExperimentOwner,
 } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Divider, Icon, Stack, Typography } from "@mui/material";
+import Image from "next/image";
+import cancelledIcon from "./cancelled.svg";
 import ExperimentEditorModal from "./experimentEditorModal";
 import ExperimentEditingContext from "@/lib/context/experimentDetailPage/experimentEditingContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
@@ -65,16 +67,19 @@ export const ExperimentHeader = () => {
                             ? experimentInfo.experiment.title
                             : null}
                     </Typography>
-                    <Typography sx={{ fontSize: "medium", marginLeft: 0.5 }}>
+                    <Typography
+                        sx={{
+                            fontSize: "medium",
+                        }}
+                    >
                         #{experimentId}
                     </Typography>
                     {isCanceled && (
-                        <Typography
-                            variant="h5"
-                            sx={{ marginTop: 1, marginLeft: 1, color: "red" }}
-                        >
-                            {"[Canceled]"}
-                        </Typography>
+                        <Image
+                            src={cancelledIcon}
+                            alt="Cancelled"
+                            style={{ marginLeft: 12, alignSelf: "center" }}
+                        />
                     )}
                     <Box
                         sx={{
