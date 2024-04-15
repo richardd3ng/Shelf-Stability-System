@@ -13,7 +13,6 @@ export async function redirectOrBlockIfNotLoggedIn(request: NextRequest) {
             } else {
                 const redirectUrl = new URL('/auth/login', request.nextUrl);
                 redirectUrl.searchParams.append('redirect', request.nextUrl.pathname);
-                console.log(redirectUrl);
                 return NextResponse.redirect(new URL(redirectUrl)); //here I want to include the new URL to redirect to after logging in
             }
             
