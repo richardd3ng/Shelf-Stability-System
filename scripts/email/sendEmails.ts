@@ -33,6 +33,7 @@ export const sendEmails = async () => {
                     <td>${agendaItem.week}</td>
                     <td>${agendaItem.assayType}</td>
                     <td>${agendaItem.technician}</td>
+                    <td>${agendaItem.experimentId}-${agendaItem.sample.toString().padStart(3, "0")}</td>
                 </tr>
                 <tr style="height: 5px;"><td colspan="7"></td></tr>`;
             });
@@ -48,6 +49,7 @@ export const sendEmails = async () => {
                             <th style="padding: 8px 16px 8px 0; text-align: left;">Week</th>
                             <th style="padding: 8px 48px 8px 0; text-align: left;">Assay Type</th>
                             <th style="padding: 8px 144px 8px 0; text-align: left;">Technician</th>
+                            <th style="padding: 8px 48px 8px 0; text-align: left;">Sample Number</th>
                         </tr>
                     </thead>
                     <tbody>
