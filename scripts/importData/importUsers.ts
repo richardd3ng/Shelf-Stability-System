@@ -1,5 +1,5 @@
 import { UserImportJSON, readUsersFileToJSON } from "./jsonParser";
-import {createUserInDB, getAllUsers} from "../dbOperations/userOperations";
+import { createUserInDB } from "../dbOperations/userOperations";
 
 async function importJSONUsers(filePath : string) {
 

@@ -1,15 +1,11 @@
-import { ExperimentInfo, UserInfo } from "./controllers/types";
 import { utils, writeFile } from "xlsx/";
-import { Assay, AssayResult, Condition } from "@prisma/client";
-import { assayTypeIdToName, getAssayTypeUnits, getCorrespondingAssayType } from "./controllers/assayTypeController";
 import { UtilizationReportRow } from "./controllers/types";
 import { LocalDate } from "@js-joda/core";
-import { ANISIDINE, FFA, HEXANAL, MOISTURE, PEROXIDE, SENSORY, standardAssayTypes } from "@/data/assayTypes";
+import { ANISIDINE, FFA, HEXANAL, MOISTURE, PEROXIDE, SENSORY } from "@/data/assayTypes";
 
 export function generateExcelUtilizationReport(rows : UtilizationReportRow[], startDate : LocalDate, endDate : LocalDate) {
     const sheet1Data = getSheet1Data(startDate, endDate);
     const sheet2Data = getSheet2Data(rows);
-    console.log(sheet2Data);
     const worksheet1 = utils.aoa_to_sheet(sheet1Data);
     const worksheet2 = utils.json_to_sheet(sheet2Data);
     const wb = utils.book_new();

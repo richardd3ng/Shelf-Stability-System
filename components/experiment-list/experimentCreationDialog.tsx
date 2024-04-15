@@ -125,6 +125,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                 conditionCreationArgsNoExperimentIdArray,
             ownerId: ownerId,
             weeks: "",
+            isCanceled: false,
         };
         createExperiment(experimentData);
         closeDialog();

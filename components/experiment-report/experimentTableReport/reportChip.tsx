@@ -32,9 +32,19 @@ const ReportChip: React.FC<ReportChipProps> = (props: ReportChipProps) => {
                 padding: "4px",
                 display: "inline-block",
                 textAlign: "center",
+                "@media print": {
+                    breakInside: "avoid",
+                },
             }}
         >
-            <Stack sx={{ margin: -0.25 }}>
+            <Stack
+                sx={{
+                    margin: -0.25,
+                    "@media print": {
+                        breakInside: "avoid",
+                    },
+                }}
+            >
                 <Typography sx={{ fontSize: 12 }}>
                     {props.assayType.assayType.name}
                 </Typography>
@@ -46,6 +56,13 @@ const ReportChip: React.FC<ReportChipProps> = (props: ReportChipProps) => {
                     }}
                 >
                     {resultText}
+                </Typography>
+                <Typography
+                    sx={{
+                        fontSize: 10,
+                    }}
+                >
+                    {`${props.assay.sample.toString().padStart(3, "0")}`}
                 </Typography>
                 <Typography
                     sx={{

@@ -105,6 +105,24 @@ export type AssayAgendaInfo = {
     resultId: number | null;
 };
 
+export type AssayEditInfo = {
+    id: number;
+    sample: number;
+    targetDate: LocalDate;
+    title: string;
+    experimentId: number;
+    condition: string;
+    week: number;
+    type: string;
+    resultId: number | null;
+    resultValue: number | null;
+    resultComment: string | null;
+    units: string | null;
+    owner: string;
+    technician: string | null;
+    isCanceled: boolean;
+};
+
 export type AssayAgendaTable = {
     // Rows on this page
     rows: AssayAgendaInfo[];
@@ -219,6 +237,7 @@ export type EmailQueryResult = {
     assayType: string;
     technicianUsername: string;
     technicianDisplayName: string;
+    sample: number;
 };
 
 export type EmailInfo = {
@@ -233,6 +252,7 @@ export type EmailInfo = {
             week: number;
             assayType: string;
             technician: string;
+            sample: number;
         }[];
     };
 };

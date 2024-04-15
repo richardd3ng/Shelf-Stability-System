@@ -1,47 +1,44 @@
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
-import { fetchAssay } from "@/lib/controllers/assayController";
-import { createAssayResult, fetchResultForAssay, updateAssayResult } from "@/lib/controllers/assayResultController";
-import { fetchAssayType, fetchAssayTypeForExperiment } from "@/lib/controllers/assayTypeController";
-import { fetchCondition } from "@/lib/controllers/conditionController";
+import { fetchAssayEditInfo } from "@/lib/controllers/assayController";
+import {
+    createAssayResult,
+    updateAssayResult,
+    deleteAssayResult,
+} from "@/lib/controllers/assayResultController";
 import { getQueryKeyForUseExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, Stack, TextField, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 
 interface AssayEditFormProps {
     experimentId: number;
     assayId: number;
+    allowDeletion?: boolean;
     onSubmit?: () => void;
     loadForeverOnSubmit?: boolean;
 }
 
-export default function AssayEditForm({ experimentId, assayId, onSubmit, loadForeverOnSubmit }: AssayEditFormProps) {
-    const user = useContext(CurrentUserContext);
+export default function AssayEditForm({ experimentId, assayId, allowDeletion, onSubmit, loadForeverOnSubmit }: AssayEditFormProps) {
+    const { user } = useContext(CurrentUserContext);
 
     const { showLoading, hideLoading } = useLoading();
 
     async function fetchAssayDetails() {
-        // TODO all these different calls can definitely be sped up
-        // At the very least by combining them into a single API call
-        const assay = await fetchAssay(assayId)
-        setFullSample(`${assay.experimentId}-${assay.sample.toString().padStart(3, "0")}`);
-        setWeek(assay.week.toString());
-
-        const [condition, assayType, result] = await Promise.all([
-            fetchCondition(assay.conditionId),
-            fetchAssayTypeForExperiment(assay.assayTypeId)
-                .then(assayTypeForExperiment => fetchAssayType(assayTypeForExperiment.assayTypeId)),
-            fetchResultForAssay(assayId)
-        ]);
-        setCondition(condition.name);
-        setAssayType(assayType.name);
-        setUnits(assayType.units);
-        if (result !== null) {
-            setAssayResultId(result.id);
-            setValue(result.result?.toString() ?? "");
-            setComment(result.comment?.toString() ?? "");
-        }
+        const editInfo = await fetchAssayEditInfo(assayId)
+        setFullSample(`${editInfo.experimentId}-${editInfo.sample.toString().padStart(3, "0")}`);
+        setTitle(editInfo.title);
+        setWeek(editInfo.week.toString());
+        setTargetDate(editInfo.targetDate.toString());
+        setCondition(editInfo.condition);
+        setAssayType(editInfo.type);
+        setUnits(editInfo.units);
+        setAssayResultId(editInfo.resultId);
+        setValue(editInfo.resultValue?.toString() ?? "");
+        setComment(editInfo.resultComment?.toString() ?? "");
+        setOwner(editInfo.owner);
+        setTechnician(editInfo.technician);
+        setIsCanceled(editInfo.isCanceled);
 
         hideLoading();
     }
@@ -49,7 +46,12 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
     useEffect(() => {
         showLoading("Loading assay details...");
 
-        if (isNaN(experimentId) || experimentId < 0 || isNaN(assayId) || assayId < 0) {
+        if (
+            isNaN(experimentId) ||
+            experimentId < 0 ||
+            isNaN(assayId) ||
+            assayId < 0
+        ) {
             return;
         }
 
@@ -57,11 +59,16 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
     }, [experimentId, assayId]);
 
     const [fullSample, setFullSample] = useState<string>("");
+    const [title, setTitle] = useState<string>("");
     const [week, setWeek] = useState<string>("");
+    const [targetDate, setTargetDate] = useState<string>("");
     const [condition, setCondition] = useState<string>("");
     const [assayType, setAssayType] = useState<string>("");
     const [units, setUnits] = useState<string | null>(null);
     const [assayResultId, setAssayResultId] = useState<number | null>(null);
+    const [owner, setOwner] = useState<string>("");
+    const [technician, setTechnician] = useState<string | null>(null);
+    const [isCanceled, setIsCanceled] = useState<boolean>(false);
 
     const [value, setValue] = useState<string>("");
     const [comment, setComment] = useState<string>("");
@@ -69,6 +76,18 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
     const [commentError, setCommentError] = useState<boolean>(false);
     const [valueErrorText, setValueErrorText] = useState<string>("");
     const [commentErrorText, setCommentErrorText] = useState<string>("");
+
+    if (user !== undefined && !(
+        user.isAdmin ||
+        user.username === owner ||
+        user.username === technician
+    )) {
+        return <Typography variant="body1">You do not have permission to edit this assay</Typography>;
+    }
+
+    if (isCanceled) {
+        return <Typography variant="body1">This experiment has been canceled, and assay results can no longer be edited</Typography>;
+    }
 
     const queryClient = useQueryClient();
 
@@ -80,7 +99,28 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
         setValueErrorText("");
         setCommentErrorText("");
 
+        const then = () => {
+            queryClient.invalidateQueries({
+                queryKey: getQueryKeyForUseExperimentInfo(experimentId),
+            });
+            onSubmit?.();
+            if (!loadForeverOnSubmit) {
+                hideLoading();
+            }
+        };
+
         if (value === "" && comment === "") {
+            // Delete result if empty
+            if (allowDeletion) {
+                showLoading("Deleting result...");
+                if (assayResultId !== null) {
+                    deleteAssayResult(assayResultId!).then(then);
+                    setAssayResultId(null);
+                } else {
+                    then();
+                }
+                return;
+            }
             setValueError(true);
             setCommentError(true);
             setCommentErrorText("Please enter a value or comment");
@@ -101,26 +141,19 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
             assayId: Number(assayId),
             result: value === "" ? null : valueNumber,
             comment: comment === "" ? null : comment,
-            author: `${user.user?.displayName} (${user.user?.username})`
-        };
-
-        const then = () => {
-            queryClient.invalidateQueries({
-                queryKey: getQueryKeyForUseExperimentInfo(experimentId),
-            });
-            onSubmit?.();
-            if (!loadForeverOnSubmit) {
-                hideLoading();
-            }
+            author: `${user?.displayName} (${user?.username})`
         };
 
         if (assayResultId === null) {
-            createAssayResult(updateParams).then(then);
+            createAssayResult(updateParams)
+            .then((res) => setAssayResultId(res.id))
+            .then(then);
         } else {
             updateAssayResult({
                 id: assayResultId,
                 ...updateParams
-            }).then(then);
+            })
+            .then(then);
         }
     }
 
@@ -128,13 +161,26 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
         <form onSubmit={handleSubmit}>
             <Stack maxWidth={350} spacing={1}>
                 <Typography variant="body1">
+                    {title}
+                </Typography>
+                <Divider />
+                <Typography variant="body1">
+                    {condition}
+                    <br />
+                    {targetDate} (Week {week})
+                    <br />
+                    {assayType}
+                    <br />
                     {fullSample}
-                    <br />Week: {week}
-                    <br />Condition: {condition}
-                    <br />{assayType}
                 </Typography>
 
-                <Box sx={{ alignItems: "center", display: "flex", width: "100%" }}>
+                <Box
+                    sx={{
+                        alignItems: "center",
+                        display: "flex",
+                        width: "100%",
+                    }}
+                >
                     <TextField
                         label="Value"
                         value={value}
@@ -152,7 +198,13 @@ export default function AssayEditForm({ experimentId, assayId, onSubmit, loadFor
                     error={commentError}
                     helperText={commentErrorText}
                 />
-                <Button type="submit" variant="contained">Submit</Button>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                >
+                    Submit
+                </Button>
             </Stack>
         </form>
     );
