@@ -10,16 +10,18 @@ export default async function assayTypeForExperimentAPI(
     res : NextApiResponse
 ) {
     try {
+        const assayTypeForExperimentId = Number(req.query.assayTypeForExperimentId);
+        if (req.method === "GET") {
+            await getAssayTypeForExperiment(assayTypeForExperimentId, req, res);
+        }
+
         let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
         await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
         if (permissionTracker.shouldStopExecuting){
             return;
         }
-        const assayTypeForExperimentId = Number(req.query.assayTypeForExperimentId);
-        if (req.method === "GET") {
-            await getAssayTypeForExperiment(assayTypeForExperimentId, req, res);
-        } else if (req.method === "PATCH"){
-            await updateTechnician(assayTypeForExperimentId, req, res);
+        if (req.method === "PATCH"){
+            await updateType(assayTypeForExperimentId, req, res);
         } else if (req.method === "DELETE"){
             await deleteAssayTypeForExperiment(assayTypeForExperimentId, req, res);
         } else {
@@ -28,7 +30,7 @@ export default async function assayTypeForExperimentAPI(
 
     } catch (error) {
         res.status(500).json(
-            getApiError(500, "Failed on server")
+            getApiError(500, "Failed to update assay type")
         );
     }
 
@@ -48,23 +50,55 @@ const getAssayTypeForExperiment = async (assayTypeForExperimentId : number, req 
     res.status(200).json(assayTypeForExperiment);
 }
 
-const updateTechnician = async (assayTypeForExperimentId : number, req : NextApiRequest,  res : NextApiResponse) => {
-    const {technicianId} = req.body;
-    if (!technicianId){
-        res.status(400).json(getApiError(400, "No technicianId field in request body"));
-    }
-    
-
-    const assayTypeForExperiment = await db.assayTypeForExperiment.update({
+const updateType = async (assayTypeForExperimentId : number, req : NextApiRequest,  res : NextApiResponse) => {
+    const {technicianId, name, units, description} = req.body;
+    const assayType = await db.assayTypeForExperiment.findUnique({
         where : {
             id : assayTypeForExperimentId
         },
-
-        data : {
-            technicianId : technicianId,
+        include : {
+            assayType : true
         }
     })
-    res.status(200).json(assayTypeForExperiment);
+    if (assayType && !assayType.assayType.isCustom){
+        const assayTypeForExperiment = await db.assayTypeForExperiment.update({
+            where : {
+                id : assayTypeForExperimentId
+            },
+            data : {
+                technicianId : technicianId,
+            }
+        })
+        res.status(200).json(assayTypeForExperiment);
+    } else {
+        if (!assayType){
+            return;
+        }
+        const [assayTypeForExperiment, t] = await Promise.all([
+            db.assayTypeForExperiment.update({
+                where : {
+                    id : assayTypeForExperimentId
+                },
+                data : {
+                    technicianId : technicianId
+                }
+            }),
+            
+            db.assayType.update({
+                where : {
+                    id : assayType.assayTypeId
+                },
+                data : {
+                    name : name,
+                    units : units,
+                    description : description
+                }
+            })
+            
+        ])
+        res.status(200).json({...assayTypeForExperiment, assayType : t});
+    }
+
 }
 
 const deleteAssayTypeForExperiment = async (assayTypeForExperimentId : number, req : NextApiRequest, res : NextApiResponse) => {

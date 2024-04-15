@@ -18,7 +18,7 @@ import {
 } from "@/lib/controllers/types";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
-import { updateAssayTypeThroughAPI, updateTechnicianOfAssayTypeForExperimentThroughAPI } from "@/lib/controllers/assayTypeController";
+import { updateAssayTypeThroughAPI  } from "@/lib/controllers/assayTypeController";
 
 export const useMutationToUpdateAssayResult = () => {
     const queryClient = useQueryClient();
@@ -176,35 +176,6 @@ export const useMutationToUpdateAssayType = () => {
 
     return useMutation({
         mutationFn: updateAssayTypeThroughAPI,
-        onSuccess: (updatedAssayType : AssayType) => {
-            queryClient.invalidateQueries({
-                queryKey: getQueryKeyForUseExperimentInfo(experimentId),
-            });
-            showAlert(
-                "success",
-                `Succesfully updated`
-            );
-        },
-        onError: (error) => {
-            showAlert("error", getErrorMessage(error));
-        },
-        onMutate: () => {
-            showLoading("Updating");
-        },
-        onSettled: () => {
-            hideLoading();
-        },
-    });
-};
-
-export const useMutationToUpdateTechnicianOfAssayTypeForExperiment = () => {
-    const queryClient = useQueryClient();
-    const experimentId = useExperimentId();
-    const { showAlert } = useAlert();
-    const { showLoading, hideLoading } = useLoading();
-
-    return useMutation({
-        mutationFn: updateTechnicianOfAssayTypeForExperimentThroughAPI,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
@@ -225,3 +196,4 @@ export const useMutationToUpdateTechnicianOfAssayTypeForExperiment = () => {
         },
     });
 };
+

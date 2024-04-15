@@ -1,7 +1,17 @@
 import { useLoading } from "@/lib/context/shared/loadingContext";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
-import { fetchAssayEditInfo } from "@/lib/controllers/assayController";
-import { createAssayResult, deleteAssayResult, updateAssayResult } from "@/lib/controllers/assayResultController";
+import { fetchAssay } from "@/lib/controllers/assayController";
+import {
+    createAssayResult,
+    fetchResultForAssay,
+    updateAssayResult,
+    deleteAssayResult,
+} from "@/lib/controllers/assayResultController";
+import {
+    fetchAssayType,
+    fetchAssayTypeForExperiment,
+} from "@/lib/controllers/assayTypeController";
+import { fetchCondition } from "@/lib/controllers/conditionController";
 import { getQueryKeyForUseExperimentInfo } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { Box, Button, Divider, Stack, TextField, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
@@ -42,7 +52,12 @@ export default function AssayEditForm({ experimentId, assayId, allowDeletion, on
     useEffect(() => {
         showLoading("Loading assay details...");
 
-        if (isNaN(experimentId) || experimentId < 0 || isNaN(assayId) || assayId < 0) {
+        if (
+            isNaN(experimentId) ||
+            experimentId < 0 ||
+            isNaN(assayId) ||
+            assayId < 0
+        ) {
             return;
         }
 
@@ -157,12 +172,21 @@ export default function AssayEditForm({ experimentId, assayId, allowDeletion, on
                 <Divider />
                 <Typography variant="body1">
                     {condition}
-                    <br />{targetDate} (Week {week})
-                    <br />{assayType}
-                    <br />{fullSample}
+                    <br />
+                    {targetDate} (Week {week})
+                    <br />
+                    {assayType}
+                    <br />
+                    {fullSample}
                 </Typography>
 
-                <Box sx={{ alignItems: "center", display: "flex", width: "100%" }}>
+                <Box
+                    sx={{
+                        alignItems: "center",
+                        display: "flex",
+                        width: "100%",
+                    }}
+                >
                     <TextField
                         label="Value"
                         value={value}
@@ -180,7 +204,13 @@ export default function AssayEditForm({ experimentId, assayId, allowDeletion, on
                     error={commentError}
                     helperText={commentErrorText}
                 />
-                <Button type="submit" variant="contained">Submit</Button>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                >
+                    Submit
+                </Button>
             </Stack>
         </form>
     );

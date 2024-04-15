@@ -16,8 +16,8 @@ import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
 const deleteAssaysInWeek = async (experimentId: number, week: number) => {
     await db.assay.deleteMany({
         where: {
-            experimentId,
-            week,
+            experimentId: experimentId,
+            week: week,
         },
     });
 };
@@ -58,15 +58,17 @@ export default async function deleteExperimentWeekAPI(
             weeks.map(async (week: number) => {
                 if (await experimentHasAssaysWithResults(id, week)) {
                     cannotDeleteWeeks.push(week);
-                    return;
+                } else {
+                    await deleteAssaysInWeek(id, week);
+                    deletedWeeks.push(week);
                 }
-                await deleteAssaysInWeek(id, week);
-                deletedWeeks.push(week);
             })
         );
         await updateExperimentWeeks(
             id,
-            weeks.filter((week: number) => !deletedWeeks.includes(week))
+            parseExperimentWeeks(experiment.weeks).filter(
+                (week: number) => !deletedWeeks.includes(week)
+            )
         );
         res.status(200).json({
             experimentId: id,

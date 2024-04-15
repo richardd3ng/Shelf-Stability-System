@@ -96,7 +96,10 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 }}
                 {...props}
                 sx={{
-                    "@media print": { breakInside: "avoid" },
+                    "@media print": {
+                        breakInside: "avoid",
+                        pageBreakInside: "avoid",
+                    },
                 }}
             />
         </Box>

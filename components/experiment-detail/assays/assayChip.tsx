@@ -96,6 +96,11 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                     <Typography sx={{ fontSize: 12 }}>
                         {getResultText(experimentInfo.assayTypes)}
                     </Typography>
+                    <Typography sx={{ fontSize: 12 }}>
+                        {`${props.assay.experimentId}-${props.assay.sample
+                            .toString()
+                            .padStart(3, "0")}`}
+                    </Typography>
                     <Box
                         sx={{
                             marginY: -0.25,
@@ -120,6 +125,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                                 disableTouchRipple
                                 onMouseEnter={() => setShowLastEditor(true)}
                                 onMouseLeave={() => setShowLastEditor(false)}
+                                sx={{
+                                    cursor: "default",
+                                    "&:hover": {
+                                        backgroundColor: "inherit !important",
+                                    },
+                                }}
                             >
                                 <PersonIcon
                                     sx={{ fontSize: 20, color: "gray" }}
@@ -142,6 +153,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                                 disableTouchRipple
                                 onMouseEnter={() => setShowComment(true)}
                                 onMouseLeave={() => setShowComment(false)}
+                                sx={{
+                                    cursor: "default",
+                                    "&:hover": {
+                                        backgroundColor: "inherit !important",
+                                    },
+                                }}
                             >
                                 <MessageIcon
                                     sx={{ fontSize: 20, color: "gray" }}

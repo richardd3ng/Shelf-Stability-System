@@ -54,6 +54,11 @@ export const fetchExperimentInfoAPIHelper = async (
             include: {
                 assayType: true,
             },
+            orderBy : {
+                assayType : {
+                    id : "asc"
+                }
+            }
         }),
     ]);
     const experimentAssayResults: AssayResult[] = [];

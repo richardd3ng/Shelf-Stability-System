@@ -163,6 +163,8 @@ export type AssayTypeInfo = AssayTypeForExperiment & {
 };
 
 export type UpdateAssayTypeArgs = {
+    assayTypeForExperimentId : number;
+    technicianId : number | null;
     assayTypeId: number;
     name: string | null;
     units: string | null;

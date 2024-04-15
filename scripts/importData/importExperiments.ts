@@ -93,6 +93,17 @@ function getAllAssayTypesFromJSONExperiment(experiment: ExperimentImportJSON) : 
     return assayTypes;
 }
 
+function getAllWeeksFromJSONExperiment(experiment : ExperimentImportJSON) : string {
+    let allWeeksSet = new Set<string>();
+    for (const condition in experiment.assay_schedule) {
+        const schedule = experiment.assay_schedule[condition];
+        for (const week in schedule) {
+            allWeeksSet.add(week);
+        }
+    }
+    return Array.from(allWeeksSet).join(",");
+}
+
 async function parseAndCreateAssayTypesIfNeeded(experiment : ExperimentImportJSON, basicAssayTypes : AssayTypeNameAndId[]){
     const assayTypes = getAllAssayTypesFromJSONExperiment(experiment);
     let customTypes : string[] = assayTypes.filter((typeName) => !basicAssayTypes.map((t) => t.name).includes(typeName));
@@ -187,7 +198,7 @@ async function parseAndCreateExperimentWithConditionsAndAssayTypesInDB(experimen
         conditionCreationArgsNoExperimentIdArray: conditionCreationArgsNoExperimentIdArray,
         assayTypeForExperimentCreationArgsArray : assayTypeCreationArgs,
         isCanceled : experiment.canceled,
-        weeks : ""
+        weeks : getAllWeeksFromJSONExperiment(experiment)
     };
     const createdExperiment = await createExperimentWithConditionsAndAssayTypes(experimentData);
     return createdExperiment;
