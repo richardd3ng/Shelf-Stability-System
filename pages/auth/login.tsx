@@ -25,7 +25,8 @@ export default function LoginPage() {
                 if (!d || (d && d.status > 300)) {
                     showAlert("error", "Wrong username/password");
                 } else {
-                    router.push("/experiment-list");
+                    const redirectUrl = typeof(router.query.redirect) === "string" ? router.query.redirect : '/experiment-list';
+                    router.push(redirectUrl);
                 }
             })
             .catch((_reason) => {})
@@ -36,7 +37,8 @@ export default function LoginPage() {
 
     const handleOAuth = async () => {
         showLoading("Logging in...");
-        await signIn("duke");
+        const redirectUrl = typeof(router.query.redirect) === "string" ? router.query.redirect : '/experiment-list';
+        await signIn("duke", {callbackUrl : redirectUrl});
     };
 
     return (

@@ -15,7 +15,8 @@ export async function middleware(request: NextRequest) {
     if (
         pathname.startsWith("/experiments") ||
         pathname.startsWith("/agenda") ||
-        pathname.startsWith("/experiment-list")
+        pathname.startsWith("/experiment-list") ||
+        pathname.startsWith("/utilization")
     ) {
         return await redirectOrBlockIfNotLoggedIn(request);
     }
