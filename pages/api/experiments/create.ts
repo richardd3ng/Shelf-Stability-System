@@ -25,7 +25,8 @@ export const createExperimentAPIHelper = async (
     startDate: string,
     conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[],
     ownerId: number,
-    weeks: string
+    weeks: string,
+    isCanceled: boolean
 ): Promise<ExperimentCreationResponse> => {
     const createdExperiment: ExperimentWithLocalDate = await db.experiment
         .create({
@@ -34,7 +35,7 @@ export const createExperimentAPIHelper = async (
                 description,
                 startDate: localDateToJsDate(LocalDate.parse(startDate)),
                 ownerId,
-                isCanceled: false,
+                isCanceled,
                 assayTypes: {
                     create: [1, 2, 3, 4, 5, 6].map((typeId) => ({
                         assayTypeId: typeId,
@@ -86,13 +87,8 @@ export default async function createExperimentAPI(
         conditionCreationArgsNoExperimentIdArray,
         ownerId,
         weeks,
+        isCanceled,
     } = req.body;
-    if (ownerId === undefined) {
-        res.status(409).json(
-            getApiError(409, "Only registered users can create experiments")
-        );
-        return;
-    }
     if (
         !title ||
         !startDate ||
@@ -115,7 +111,8 @@ export default async function createExperimentAPI(
                 startDate,
                 conditionCreationArgsNoExperimentIdArray,
                 ownerId,
-                weeks
+                weeks,
+                isCanceled
             )
         );
     } catch (error) {
