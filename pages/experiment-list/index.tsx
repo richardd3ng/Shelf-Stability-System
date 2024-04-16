@@ -46,6 +46,7 @@ import ConfirmationDialog from "@/components/shared/confirmationDialog";
 import { useSearchParams } from "next/navigation";
 import { ApiError } from "next/dist/server/api-utils";
 import { CONFIRMATION_REQUIRED_MESSAGE } from "@/lib/api/error";
+import useIsMobile from "@/lib/hooks/useIsMobile";
 
 interface QueryParams {
     search: string;
@@ -96,6 +97,7 @@ const ExperimentList: React.FC = () => {
     >([]);
     const { user } = useContext(CurrentUserContext);
     const isAdmin: boolean = user?.isAdmin ?? false;
+    const isMobile = useIsMobile();
 
     const reloadExperimentData = async (
         paging: ServerPaginationArgs
@@ -351,13 +353,13 @@ const ExperimentList: React.FC = () => {
             <Stack spacing={2}>
                 <Box
                     sx={{
-                        display: "flex",
+                        display: isMobile ? undefined : "flex",
                         alignItems: "center",
                         paddingX: 3,
                         justifyContent: "space-between",
                     }}
                 >
-                    <Box sx={{ flex: 2 }}>
+                    <Box sx={{ flex: 2, paddingY: isMobile ? 2 : undefined }}>
                         <SearchBar
                             placeholder="Enter Keyword"
                             value={queryParams.search}
@@ -375,7 +377,12 @@ const ExperimentList: React.FC = () => {
                             }}
                         />
                     </Box>
-                    <Box sx={{ flex: 2, paddingLeft: 5 }}>
+                    <Box
+                        sx={{
+                            flex: 2,
+                            paddingLeft: isMobile ? undefined : 5,
+                        }}
+                    >
                         <Autocomplete
                             disablePortal
                             id="user-filter-selection"
@@ -416,7 +423,12 @@ const ExperimentList: React.FC = () => {
                             }}
                         />
                     </Box>
-                    <Box sx={{ paddingX: 5 }}>
+                    <Box
+                        sx={{
+                            paddingX: isMobile ? undefined : 5,
+                            paddingY: isMobile ? 2 : undefined,
+                        }}
+                    >
                         <FormControl component="fieldset">
                             <FormLabel
                                 component="legend"

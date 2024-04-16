@@ -24,20 +24,6 @@ const NavBarButton: React.FC<NavBarButtonProps> = (
 ) => {
     const router = useRouter();
     const isActive = router.pathname === props.path;
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleSignOut = () => {
-        router.push("/auth/signOut");
-        handleClose();
-    };
 
     return (
         <Button
