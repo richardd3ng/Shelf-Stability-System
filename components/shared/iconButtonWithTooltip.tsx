@@ -7,27 +7,23 @@ interface IconButtonWithTooltipProps {
     text: string;
     icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
     size?: "small" | "medium" | "large";
+    disabled?: boolean;
 }
 
 const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = (
     props: IconButtonWithTooltipProps
 ) => {
-
     return (
-        <Tooltip
-            title={props.text}
-        >
-            <IconButton
-                onClick={props.onClick}
-            >
+        <Tooltip title={props.text}>
+            <IconButton onClick={props.onClick} disabled={props.disabled}>
                 <props.icon
                     sx={{
                         fontSize:
                             props.size === "large"
                                 ? 30
                                 : props.size === "small"
-                                    ? 18
-                                    : null,
+                                ? 18
+                                : null,
                     }}
                 />
             </IconButton>
