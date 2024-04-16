@@ -46,7 +46,8 @@ const allColDefs: GridColDef[] = [
         field: "technicianId",
         headerName: "Technician",
         type: "number",
-        flex: 2,
+        flex : 2,
+        headerAlign : "left",
         renderCell: (params) => <TechnicianCell {...params.row} />,
     },
 
