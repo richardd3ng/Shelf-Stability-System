@@ -4,7 +4,7 @@ import {
     PickerChangeHandlerContext,
 } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Dayjs } from "dayjs"
+import { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { LocalDate, ZoneId, nativeJs } from "@js-joda/core";
 import utc from "dayjs/plugin/utc";
@@ -17,6 +17,7 @@ export type MyDatePickerProps = {
     ) => void;
     value?: LocalDate | null;
     defaultValue?: LocalDate | null;
+    required?: boolean;
 } & Omit<DatePickerProps<Dayjs>, "value" | "onChange" | "defaultValue"> &
     React.RefAttributes<HTMLDivElement>;
 
@@ -27,6 +28,9 @@ export const MyDatePicker: React.FC<MyDatePickerProps> = (props) => {
             format="YYYY-MM-DD"
             slotProps={{
                 actionBar: { actions: ["today", "clear"] },
+                textField: {
+                    required: props.required,
+                },
             }}
             {...props}
             value={
@@ -35,8 +39,7 @@ export const MyDatePicker: React.FC<MyDatePickerProps> = (props) => {
                     : dayjs(props.value.toString())
             }
             defaultValue={
-                props.defaultValue === null ||
-                    props.defaultValue === undefined
+                props.defaultValue === null || props.defaultValue === undefined
                     ? props.defaultValue
                     : dayjs(props.defaultValue.toString())
             }

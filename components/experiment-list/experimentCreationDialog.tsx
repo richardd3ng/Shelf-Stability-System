@@ -194,11 +194,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         label="Start Date"
                         value={date}
                         onChange={setDate}
-                        slotProps={{
-                            textField: {
-                                required: true,
-                            },
-                        }}
+                        required
                     />
                     <DialogContentText
                         sx={{
@@ -210,7 +206,10 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                     <Box
                         sx={{
                             border: "1px solid #ccc",
-                            display: storageConditions.length > 0 ? undefined : "none"
+                            display:
+                                storageConditions.length > 0
+                                    ? undefined
+                                    : "none",
                         }}
                     >
                         {storageConditions.map((condition, index) => (
@@ -224,7 +223,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                             />
                         ))}
                     </Box>
-                    <Box 
+                    <Box
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -238,7 +237,9 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                                 label="Condition Name"
                                 fullWidth
                                 value={conditionName}
-                                onChange={(e) => setConditionName(e.target.value)}
+                                onChange={(e) =>
+                                    setConditionName(e.target.value)
+                                }
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter") {
                                         handleAddStorageCondition();
