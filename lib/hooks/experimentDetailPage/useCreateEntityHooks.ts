@@ -50,25 +50,19 @@ export const useMutationToCreateExperiment = () => {
 export const useMutationToDuplicateExperiment = () => {
     const router = useRouter();
     const { showAlert } = useAlert();
-    const { showLoading, hideLoading } = useLoading();
+    const experimentId = useExperimentId();
 
     return useMutation({
         mutationFn: duplicateExperiment,
         onSuccess: (duplicatedExperiment: ExperimentCreationResponse) => {
             showAlert(
                 "success",
-                `Succesfully created experiment ${duplicatedExperiment.experiment.id} from experiment ${duplicatedExperiment.experiment.id}!`
+                `Succesfully created experiment ${duplicatedExperiment.experiment.id} from experiment ${experimentId}!`
             );
             router.push(`/experiments/${duplicatedExperiment.experiment.id}`);
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
-        },
-        onMutate: (id: number) => {
-            showLoading(`Duplicating experiment ${id}...`);
-        },
-        onSettled: () => {
-            hideLoading();
         },
     });
 };
