@@ -1,20 +1,15 @@
-import React, { useContext, useState } from "react"
-import { UtilizationReportContext } from "@/lib/context/agendaPage/utilizationReportContext"
+import React, { useState } from "react"
 import { Stack, Typography, Button } from "@mui/material";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
 import { LocalDate } from "@js-joda/core";
-import { fetchUtilizationData } from "@/lib/controllers/assayController";
-import { UtilizationReportRow } from "@/lib/controllers/types";
-import { generateExcelUtilizationReport } from "@/lib/generateExcelUtilizationReport";
 import { useGenerateLabUtilReport } from "@/lib/hooks/useGenerateLabUtilReport";
 import { Container } from "@mui/material";
 import Layout from "@/components/shared/layout";
 
 
 export default function UtilizationPage() {
-    const {isChoosingDates, setIsChoosingDates} = useContext(UtilizationReportContext);
     const [startDate, setStartDate] = useState<LocalDate>(LocalDate.now());
-    const [endDate, setEndDate] = useState<LocalDate>(LocalDate.now());
+    const [endDate, setEndDate] = useState<LocalDate>(LocalDate.now().plusDays(7));
     const {mutate : fetchUtilizationDataAndGenerateExcelReport} = useGenerateLabUtilReport();
     const canSubmit = endDate.compareTo(startDate) > 0;
     return (

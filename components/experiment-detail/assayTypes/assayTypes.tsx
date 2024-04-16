@@ -82,7 +82,7 @@ export const AssayTypes: React.FC = () => {
         return null;
     }
     let colDefs = allColDefs;
-    if (!isAdmin){
+    if (!(isAdmin && experimentInfo && !experimentInfo.experiment.isCanceled)){
         colDefs = colDefs.filter((column) => column.field !== "actions");
     }
     return (
