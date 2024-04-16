@@ -152,7 +152,7 @@ const ExperimentList: React.FC = () => {
             field: "status",
             headerName: "Status",
             type: "string",
-            width: 80,
+            width: isMobile ? 100 : 80,
             renderCell: (params) => {
                 return params.row.isCanceled ? "Canceled" : "Active";
             },
@@ -161,7 +161,7 @@ const ExperimentList: React.FC = () => {
             field: "id",
             headerName: "ID",
             type: "number",
-            width: 80,
+            width: isMobile ? 100 : 80,
             valueFormatter: (params: any) => String(params.value),
         },
         {
@@ -208,13 +208,13 @@ const ExperimentList: React.FC = () => {
             headerName: "Start Date",
             type: "string",
             valueGetter: (params) => params.row.startDate.toString(),
-            width: 110,
+            width: 120,
         },
         {
             field: "week",
             headerName: "Week",
             type: "number",
-            width: 70,
+            width: isMobile ? 100 : 70,
         },
         {
             field: "actions",

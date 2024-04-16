@@ -4,7 +4,7 @@ import {
     useExperimentOwner,
 } from "@/lib/hooks/experimentDetailPage/experimentDetailHooks";
 import { useExperimentId } from "@/lib/hooks/experimentDetailPage/useExperimentId";
-import { Box, Divider, Icon, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import cancelledIcon from "./cancelled.svg";
 import ExperimentEditorModal from "./experimentEditorModal";
@@ -18,6 +18,7 @@ import BackButton from "@/components/shared/backButton";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import PrintLabelsButton from "./printLabelsButton";
 import { useRouter } from "next/router";
+import useIsMobile from "@/lib/hooks/useIsMobile";
 
 export const ExperimentHeader = () => {
     const experimentId = useExperimentId();
@@ -30,6 +31,7 @@ export const ExperimentHeader = () => {
     const isEditable: boolean = (!isCanceled && user?.isAdmin) ?? false;
     const isDuplicatable: boolean = user?.isAdmin ?? false;
     const router = useRouter();
+    const isMobile = useIsMobile();
 
     useEffect(() => {
         if (isLoading) {
@@ -37,7 +39,7 @@ export const ExperimentHeader = () => {
         } else {
             hideLoading();
         }
-    }, [isLoading]);
+    }, [hideLoading, isLoading, showLoading]);
 
     if (!experimentInfo) {
         return null;
@@ -60,9 +62,16 @@ export const ExperimentHeader = () => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "baseline",
+                        paddingTop: isMobile ? 6 : undefined,
                     }}
                 >
-                    <Typography variant="h5" sx={{ margin: 1 }}>
+                    <Typography
+                        variant="h5"
+                        sx={{
+                            margin: 1,
+                            paddingLeft: 2,
+                        }}
+                    >
                         {experimentInfo
                             ? experimentInfo.experiment.title
                             : null}
@@ -70,6 +79,7 @@ export const ExperimentHeader = () => {
                     <Typography
                         sx={{
                             fontSize: "medium",
+                            paddingRight: 2,
                         }}
                     >
                         #{experimentId}
@@ -78,7 +88,11 @@ export const ExperimentHeader = () => {
                         <Image
                             src={cancelledIcon}
                             alt="Cancelled"
-                            style={{ marginLeft: 12, alignSelf: "center" }}
+                            style={{
+                                marginLeft: 12,
+                                alignSelf: "center",
+                                marginRight: isMobile ? 12 : undefined,
+                            }}
                         />
                     )}
                     <Box
