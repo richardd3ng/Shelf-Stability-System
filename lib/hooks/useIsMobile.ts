@@ -10,7 +10,7 @@ const useIsMobile = () => {
     }
 
     useEffect(() => {
-        handleWindowSizeChange(); // Initial check
+        handleWindowSizeChange();
         window.addEventListener("resize", handleWindowSizeChange);
         return () => {
             window.removeEventListener("resize", handleWindowSizeChange);
