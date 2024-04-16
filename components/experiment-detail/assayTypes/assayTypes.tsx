@@ -46,7 +46,8 @@ const allColDefs: GridColDef[] = [
         field: "technicianId",
         headerName: "Technician",
         type: "number",
-        flex: 2,
+        flex : 2,
+        headerAlign : "left",
         renderCell: (params) => <TechnicianCell {...params.row} />,
     },
 
@@ -81,7 +82,7 @@ export const AssayTypes: React.FC = () => {
         return null;
     }
     let colDefs = allColDefs;
-    if (!isAdmin){
+    if (!(isAdmin && experimentInfo && !experimentInfo.experiment.isCanceled)){
         colDefs = colDefs.filter((column) => column.field !== "actions");
     }
     return (

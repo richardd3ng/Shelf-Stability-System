@@ -1,8 +1,8 @@
-import { AssayCreationArgs } from "../../lib/controllers/types";
+import { AssayCreationArgs, AssayCreationArgsWithSample } from "../../lib/controllers/types";
 import { Assay } from "@prisma/client";
 import { db } from "../../lib/api/db";
 
-export const createAssays = async (assays: AssayCreationArgs[]) => {
+export const createAssays = async (assays: AssayCreationArgsWithSample[]) => {
     await db.assay.createMany({
         data: assays.map((assay, index) => {
             return {
@@ -10,7 +10,7 @@ export const createAssays = async (assays: AssayCreationArgs[]) => {
                 experimentId: assay.experimentId,
                 assayTypeId: assay.assayTypeId,
                 week: assay.week,
-                sample: index + 1,
+                sample: assay.sample
             };
         }),
     });

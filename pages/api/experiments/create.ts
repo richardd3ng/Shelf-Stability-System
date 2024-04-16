@@ -28,6 +28,11 @@ export const createExperimentAPIHelper = async (
     weeks: string,
     isCanceled: boolean
 ): Promise<ExperimentCreationResponse> => {
+    const standardAssayTypes = await db.assayType.findMany({
+        where : {
+            isCustom : false
+        }
+    });
     const createdExperiment: ExperimentWithLocalDate = await db.experiment
         .create({
             data: {
@@ -37,8 +42,8 @@ export const createExperimentAPIHelper = async (
                 ownerId,
                 isCanceled,
                 assayTypes: {
-                    create: [1, 2, 3, 4, 5, 6].map((typeId) => ({
-                        assayTypeId: typeId,
+                    create: standardAssayTypes.map((standardType) => ({
+                        assayTypeId: standardType.id,
                         technicianId: null,
                     })),
                 },

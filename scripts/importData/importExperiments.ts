@@ -1,6 +1,6 @@
 import { CreatedExperimentIdAndConditionsAndAssayTypes, createExperimentWithConditionsAndAssayTypes } from "../dbOperations/experimentOperations";
 import { ExperimentImportJSON, readExperimentsFileToJSON } from "./jsonParser";
-import { AssayCreationArgs, AssayResultCreationArgs, ConditionCreationArgsNoExperimentId, ExperimentCreationRequiringConditionAndAssayTypeArgs } from "../../lib/controllers/types";
+import { AssayCreationArgsWithSample, AssayResultCreationArgs, ConditionCreationArgsNoExperimentId, ExperimentCreationRequiringConditionAndAssayTypeArgs } from "../../lib/controllers/types";
 import { LocalDate, DateTimeFormatter } from "@js-joda/core";
 import { getAllUsers } from "../dbOperations/userOperations";
 import { User, Condition, Assay, AssayTypeForExperiment } from "@prisma/client";
@@ -55,8 +55,8 @@ const getConditionIdFromName = (conditionToId : Map<string, number>, conditionNa
     }
 }
 
-const getCorrespondingAssayId = (createdAssays : Assay[], week : number, conditionId : number, type : number ) : number =>{
-    const assay = createdAssays.find((a) => (a.conditionId === conditionId && a.week === week && a.assayTypeId === type ));
+const getCorrespondingAssayId = (createdAssays : Assay[], week : number, conditionId : number, type : number, sample_number : number ) : number =>{
+    const assay = createdAssays.find((a) => (a.conditionId === conditionId && a.week === week && a.assayTypeId === type && a.sample === sample_number ));
     if (assay){
         return assay.id;
     } else {
@@ -81,9 +81,9 @@ function getAllAssayTypesFromJSONExperiment(experiment: ExperimentImportJSON) : 
     for (const condition in experiment.assay_schedule) {
         const schedule = experiment.assay_schedule[condition];
         for (const week in schedule) {
-            for (const assayType of schedule[week]) {
+            for (const assayTypeAndSampleNum of schedule[week]) {
 
-                extraAssayTypes.add(assayType);
+                extraAssayTypes.add(assayTypeAndSampleNum.assay_type);
 
             }
         }
@@ -126,7 +126,7 @@ async function parseAndCreateAssayResultsForExperimentInDB(createdExperiment: Cr
     experiment.assay_results.forEach((result) => {
         const conditionId = getConditionIdFromName(conditionToId, result.condition);
         const type = getCorrespondingAssayTypeId(result.assay_type, createdExperiment);
-        const correspondingAssayId = getCorrespondingAssayId(createdAssays, result.week, conditionId, type);
+        const correspondingAssayId = getCorrespondingAssayId(createdAssays, result.week, conditionId, type, parseInt(result.sample.sample_number));
         const displayName = allUsers.find((u) => u.username === result.result.author)?.displayName;
         assayResults.push({
             assayId: correspondingAssayId,
@@ -140,23 +140,24 @@ async function parseAndCreateAssayResultsForExperimentInDB(createdExperiment: Cr
 }
 
 async function parseAndCreateAssaysForExperimentInDB(experiment: ExperimentImportJSON, conditionToId: Map<string, number>, createdExperiment: CreatedExperimentIdAndConditionsAndAssayTypes) {
-    const assayCreationArgsArray: AssayCreationArgs[] = [];
+    const assayCreationArgsArray: AssayCreationArgsWithSample[] = [];
     for (const condition in experiment.assay_schedule) {
         const schedule = experiment.assay_schedule[condition];
         for (const week in schedule) {
-            for (const assayType of schedule[week]) {
+            for (const assayTypeAndSampleNum of schedule[week]) {
 
                 if (!conditionToId.has(condition)) {
                     throw new Error(
                         `Bad JSON data: Condition ${condition} not found in database`
                     );
                 }
-                let assayTypeId = getCorrespondingAssayTypeId(assayType, createdExperiment);
+                let assayTypeId = getCorrespondingAssayTypeId(assayTypeAndSampleNum.assay_type, createdExperiment);
                 assayCreationArgsArray.push({
                     experimentId: createdExperiment.id,
                     assayTypeId : assayTypeId,
                     conditionId: getConditionIdFromName(conditionToId, condition),
                     week: parseInt(week),
+                    sample : parseInt(assayTypeAndSampleNum.sample_number)
                 });
             }
         }
@@ -173,20 +174,16 @@ async function parseAndCreateExperimentWithConditionsAndAssayTypesInDB(experimen
             };
         }
     );
-    const assayTypeCreationArgs : Omit<Omit<AssayTypeForExperiment, "id">, "experimentId">[] = getAllAssayTypesFromJSONExperiment(experiment).map((type) => {
-        const correspondingAssayType = relevantAssayTypes.find((t) => t.name === type);
-        const technicianName : string | undefined = experiment.assigned_technicians[type];
+    const assayTypeCreationArgs : Omit<Omit<AssayTypeForExperiment, "id">, "experimentId">[] = relevantAssayTypes.map((type) => {
+        const technicianName : string | undefined = experiment.assigned_technicians[type.name];
         let technicianId : number | null = null;
         if (technicianName){
             technicianId = getUserIdFromUsername(technicianName, allUsers);
         }
-        if (correspondingAssayType){
-            return {
-                technicianId : technicianId,
-                assayTypeId : correspondingAssayType.id
-            }
-        } else {
-            throw new Error("Assay Type " + type + " not found!")
+
+        return {
+            technicianId : technicianId,
+            assayTypeId : type.id
         }
         
     })

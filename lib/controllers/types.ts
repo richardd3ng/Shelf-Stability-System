@@ -132,6 +132,8 @@ export type AssayAgendaTable = {
 
 export type AssayCreationArgs = Omit<Assay, "id" | "sample">;
 
+export type AssayCreationArgsWithSample = Omit<Assay, "id">;
+
 export type AssayUpdateArgs = {
     id: number;
     conditionId?: number;
