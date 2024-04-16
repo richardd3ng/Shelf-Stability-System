@@ -1,4 +1,4 @@
-import NavBar from "./navBar";
+import { NavBar } from "./navBar/navBar";
 import React, { ReactNode } from "react";
 import { Stack } from "@mui/material";
 
