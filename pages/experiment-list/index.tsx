@@ -153,11 +153,14 @@ const ExperimentList: React.FC = () => {
             headerName: "Status",
             type: "string",
             width: isMobile ? 100 : 80,
+            sortable: false,
             renderCell: (params) => {
                 return params.row.isCanceled ? "Canceled" : "Active";
             },
             cellClassName: (params) =>
-                params.row.isCanceled ? "experiment-cell-canceled" : "experiment-cell-active"
+                params.row.isCanceled
+                    ? "experiment-cell-canceled"
+                    : "experiment-cell-active",
         },
         {
             field: "id",
@@ -216,7 +219,7 @@ const ExperimentList: React.FC = () => {
             field: "week",
             headerName: "Week",
             type: "number",
-            width: isMobile ? 100 : 70,
+            width: isMobile ? 100 : 85,
         },
         {
             field: "actions",

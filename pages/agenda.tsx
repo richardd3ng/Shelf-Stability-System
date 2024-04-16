@@ -117,7 +117,7 @@ export default function AssayAgenda() {
             field: "week",
             headerName: "Week",
             type: "number",
-            width: 70,
+            width: 85,
         },
         {
             field: "type",
@@ -130,6 +130,7 @@ export default function AssayAgenda() {
             headerName: "Recorded",
             type: "boolean",
             width: 100,
+            sortable: false,
             valueGetter: (params) => params.row.resultId !== null,
             cellClassName: (params) => params.value ? "" : "display-none",
         },
