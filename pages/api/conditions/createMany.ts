@@ -11,9 +11,11 @@ export default async function createConditionsAPI(
     res: NextApiResponse<Condition[] | ApiError>
 ) {
     try {
-        let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+        let permissionTracker: APIPermissionTracker = {
+            shouldStopExecuting: false,
+        };
         await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
-        if (permissionTracker.shouldStopExecuting){
+        if (permissionTracker.shouldStopExecuting) {
             return;
         }
         const { experimentId, conditions } = req.body;
@@ -35,11 +37,7 @@ export default async function createConditionsAPI(
         });
         if (createdConditions.length === 0) {
             res.status(404).json(
-                getApiError(
-                    404,
-                    "Valid experiment ID is required",
-                    "Experiment Not Found"
-                )
+                getApiError(404, "Valid experiment ID is required")
             );
             return;
         }

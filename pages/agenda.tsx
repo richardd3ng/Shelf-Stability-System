@@ -26,6 +26,7 @@ import AssayEditingContext from "@/lib/context/shared/assayEditingContext";
 import { useRouter } from "next/router";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 
+
 export default function AssayAgenda() {
     const [fromDate, setFromDate] = useState<LocalDate | null>(
         LocalDate.now().minusWeeks(1)
@@ -50,11 +51,18 @@ export default function AssayAgenda() {
 
     const colDefs: GridColDef[] = [
         {
+            field: "sample",
+            headerName: "Sample ID",
+            type: "string",
+            valueGetter: (params) => `${params.row.experimentId}-${params.row.sample.toString().padStart(3, "0")}`,
+            width: 120
+        },
+        {
             field: "targetDate",
             headerName: "Target Date",
             type: "string",
             valueGetter: (params) => params.row.targetDate.toString(),
-            width: 150,
+            width: 130,
         },
         {
             field: "title",
@@ -109,13 +117,22 @@ export default function AssayAgenda() {
             field: "week",
             headerName: "Week",
             type: "number",
-            width: 70,
+            width: 85,
         },
         {
             field: "type",
             headerName: "Assay Type",
             type: "string",
             flex: 1,
+        },
+        {
+            field: "recorded",
+            headerName: "Recorded",
+            type: "boolean",
+            width: 100,
+            sortable: false,
+            valueGetter: (params) => params.row.resultId !== null,
+            cellClassName: (params) => params.value ? "" : "display-none",
         },
         {
             field: "actions",
@@ -175,8 +192,6 @@ export default function AssayAgenda() {
         router.push(
             `/experiments/${params.row.experimentId}#assay-chip-${params.row.id}`
         );
-        if (params.field === "actions") return;
-        router.push(`/experiments/${params.row.experimentId}`);
     }
 
     return (
@@ -230,6 +245,7 @@ export default function AssayAgenda() {
                                         label="To"
                                     />
                                 </Stack>
+                                
                                 <Box
                                     display="flex"
                                     flexDirection="row"
@@ -280,8 +296,6 @@ export default function AssayAgenda() {
                                 getRowClassName={(_) => "agenda-row-clickable"}
                             />
                             <AssayEditorModal
-                                onlyEditResult
-                                showFullContext
                                 onClose={reload}
                             />
                         </Stack>

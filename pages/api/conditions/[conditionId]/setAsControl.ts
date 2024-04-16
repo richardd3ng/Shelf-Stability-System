@@ -12,9 +12,11 @@ export default async function setConditionAsControlAPI(
     req: NextApiRequest,
     res: NextApiResponse<Condition | ApiError>
 ) {
-    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    let permissionTracker: APIPermissionTracker = {
+        shouldStopExecuting: false,
+    };
     await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
-    if (permissionTracker.shouldStopExecuting){
+    if (permissionTracker.shouldStopExecuting) {
         return;
     }
     const id = getConditionID(req);
@@ -45,8 +47,7 @@ export default async function setConditionAsControlAPI(
                 res.status(404).json(
                     getApiError(
                         404,
-                        `Condition ${id} does not exist or was deleted`,
-                        "Condition Not Found"
+                        `Condition ${id} does not exist or was deleted`
                     )
                 );
                 return;
@@ -61,11 +62,7 @@ export default async function setConditionAsControlAPI(
 
             if (!oldControlCondition) {
                 res.status(404).json(
-                    getApiError(
-                        404,
-                        `Control condition does not exist`,
-                        "Condition Not Found"
-                    )
+                    getApiError(404, `Control condition does not exist`)
                 );
                 return;
             }

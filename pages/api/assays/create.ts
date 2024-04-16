@@ -6,14 +6,64 @@ import { Assay } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { denyReqIfUserIsNotLoggedInAdmin } from "@/lib/api/auth/authHelpers";
 import { APIPermissionTracker } from "@/lib/api/auth/acessDeniers";
+import {
+    parseExperimentWeeks,
+    updateExperimentWeeks,
+} from "@/lib/api/apiHelpers";
+
+const getNextSampleNumber = async (experimentId: number): Promise<number> => {
+    const assays = await db.assay.findMany({
+        select: {
+            sample: true,
+        },
+        where: {
+            experimentId: experimentId,
+        },
+    });
+    const sampleNumbers = assays.map((assay) => assay.sample);
+    return sampleNumbers.length === 0 ? 1 : Math.max(...sampleNumbers) + 1;
+};
+
+export const createAssayAPIHelper = async (
+    experimentId: number,
+    conditionId: number,
+    assayTypeId: number,
+    week: number,
+    sample?: number
+): Promise<Assay> => {
+    const createdAssay: Assay = await db.assay.create({
+        data: {
+            experimentId,
+            conditionId,
+            assayTypeId,
+            week,
+            sample: sample ?? (await getNextSampleNumber(experimentId)),
+        },
+    });
+    const experiment = await db.experiment.findFirst({
+        where: {
+            id: experimentId,
+        },
+    });
+    if (experiment) {
+        const weeks: number[] = parseExperimentWeeks(experiment.weeks);
+        if (!weeks.includes(createdAssay.week)) {
+            weeks.push(createdAssay.week);
+            await updateExperimentWeeks(experiment.id, weeks);
+        }
+    }
+    return createdAssay;
+};
 
 export default async function createAssayAPI(
     req: NextApiRequest,
     res: NextApiResponse<Assay | ApiError>
 ) {
-    let permissionTracker : APIPermissionTracker = {shouldStopExecuting : false};
+    let permissionTracker: APIPermissionTracker = {
+        shouldStopExecuting: false,
+    };
     await denyReqIfUserIsNotLoggedInAdmin(req, res, permissionTracker);
-    if (permissionTracker.shouldStopExecuting){
+    if (permissionTracker.shouldStopExecuting) {
         return;
     }
 
@@ -33,10 +83,14 @@ export default async function createAssayAPI(
         return;
     }
     try {
-        const createdAssay: Assay = await db.assay.create({
-            data: req.body,
-        });
-        res.status(200).json(createdAssay);
+        res.status(200).json(
+            await createAssayAPIHelper(
+                experimentId,
+                conditionId,
+                assayTypeId,
+                week
+            )
+        );
     } catch (error) {
         console.error(error);
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -44,8 +98,9 @@ export default async function createAssayAPI(
             if (
                 prismError.code === "P2002" &&
                 Array.isArray(prismError.meta?.target) &&
-                ["experimentId", "conditionId", "week", "type"].every((value) =>
-                    (prismError.meta?.target as string[]).includes(value)
+                ["experimentId", "conditionId", "week", "assayTypeId"].every(
+                    (value) =>
+                        (prismError.meta?.target as string[]).includes(value)
                 )
             ) {
                 res.status(CONSTRAINT_ERROR_CODE).json(

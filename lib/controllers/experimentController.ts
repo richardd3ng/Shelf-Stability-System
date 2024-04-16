@@ -78,6 +78,26 @@ export const createExperiment = async (
         return {
             experiment: JSONToExperiment(resJson.experiment),
             conditions: resJson.conditions,
+            defaultAssayTypes: resJson.assayTypes,
+        };
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
+export const duplicateExperiment = async (id: number) => {
+    const endpoint = `/api/experiments/${id}/duplicate`;
+    const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return {
+            experiment: JSONToExperiment(resJson.experiment),
+            conditions: resJson.conditions,
+            defaultAssayTypes: resJson.assayTypes,
         };
     }
     throw new ApiError(response.status, resJson.message);
@@ -126,10 +146,14 @@ export const fetchExperimentOwner = async (
     throw new ApiError(response.status, resJson.message);
 };
 
-export const hasRecordedAssayResults = async (id: number): Promise<Boolean> => {
+export const hasRecordedAssayResults = async (
+    id: number,
+    week?: number
+): Promise<Boolean> => {
     const endpoint = `/api/experiments/${id}/hasRecordedResults`;
     const response = await fetch(endpoint, {
-        method: "GET",
+        method: "POST",
+        body: JSON.stringify({ week }),
         headers: {
             "Content-Type": "application/json",
         },
@@ -142,10 +166,12 @@ export const hasRecordedAssayResults = async (id: number): Promise<Boolean> => {
 };
 
 export const deleteExperiment = async (
-    id: number
+    id: number,
+    confirm: boolean
 ): Promise<ExperimentWithLocalDate> => {
-    const endpoint = `/api/experiments/${id}/delete`;
-    const response = await fetch(endpoint, {
+    const url = relativeURL(`/api/experiments/${id}/delete`);
+    url.searchParams.append("confirm", confirm.toString());
+    const response = await fetch(url.toString(), {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -172,6 +198,22 @@ export const updateExperiment = async (
     const resJson = await response.json();
     if (response.ok) {
         return JSONToExperiment(resJson);
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
+export const deleteExperimentWeeks = async (id: number, weeks: number[]) => {
+    const endpoint = `/api/experiments/${id}/deleteWeeks`;
+    const response = await fetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify({ weeks }),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson;
     }
     throw new ApiError(response.status, resJson.message);
 };

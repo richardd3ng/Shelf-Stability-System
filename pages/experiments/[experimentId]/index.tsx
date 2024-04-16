@@ -17,14 +17,14 @@ const ExperimentPage = () => {
     const experimentId = useExperimentId();
     const { data: experimentInfo } = useExperimentInfo(experimentId);
     const isAdmin: boolean = user?.isAdmin ?? false;
-    
+
     return (
         <Layout>
             <ExperimentHeader />
             <Container style={{ backgroundColor: "white" }}>
                 <Typography
                     variant="h5"
-                    style={{ marginBottom: 16, marginTop: 8 }}
+                    style={{ marginBottom: 16, marginTop: 8, paddingTop: 8 }}
                 >
                     Assay Schedule
                 </Typography>
@@ -34,9 +34,9 @@ const ExperimentPage = () => {
                     }
                 />
             </Container>
-            
-            <AssayTypes/>
-            
+
+            <AssayTypes />
+
             <AssaysGroupedByType />
             <Stack
                 spacing={1}

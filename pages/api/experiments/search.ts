@@ -117,7 +117,7 @@ export default async function searchExperimentsAPI(
             isCanceled:
                 status === "canceled"
                     ? true
-                    : status === "non-canceled"
+                    : status === "active"
                     ? false
                     : undefined,
         };

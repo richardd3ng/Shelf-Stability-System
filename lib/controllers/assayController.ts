@@ -4,7 +4,15 @@ import { encodePaging, relativeURL } from "./url";
 import { deleteEntity } from "./deletions";
 import { LocalDate } from "@js-joda/core";
 import { Assay } from "@prisma/client";
-import { AssayCreationArgs, AssayAgendaInfo, AssayAgendaTable, AssayUpdateArgs } from "./types";
+import {
+    AssayCreationArgs,
+    AssayAgendaInfo,
+    AssayAgendaTable,
+    AssayUpdateArgs,
+    UtilizationReportParams,
+    UtilizationReportRow,
+    AssayEditInfo,
+} from "./types";
 import { stringFieldsToLocalDate } from "./jsonConversions";
 
 export const fetchAgendaList = async (
@@ -34,11 +42,16 @@ export const fetchAgendaList = async (
 
     const resJson = await response.json();
     if (response.ok) {
-        const table: { rows: (AssayAgendaInfo & { targetDate: string })[]; rowCount: number } = resJson;
+        const table: {
+            rows: (AssayAgendaInfo & { targetDate: string })[];
+            rowCount: number;
+        } = resJson;
         return {
             ...table,
             // Convert the startDate from string to Date
-            rows: table.rows.map((assay) => stringFieldsToLocalDate(assay, ["targetDate"])),
+            rows: table.rows.map((assay) =>
+                stringFieldsToLocalDate(assay, ["targetDate"])
+            ),
         };
     }
     throw new ApiError(response.status, resJson.message);
@@ -75,13 +88,12 @@ export const createAssay = async (assayCreationArgs: AssayCreationArgs) => {
     throw new ApiError(response.status, resJson.message);
 };
 
-export const deleteAssay = async (id: number): Promise<Assay> => {
+export const deleteAssay = async (
+    id: number,
+    confirm: boolean
+): Promise<Assay> => {
     const endpoint = `/api/assays/${id}/delete`;
-    try {
-        return deleteEntity(endpoint);
-    } catch (error) {
-        throw error;
-    }
+    return deleteEntity(endpoint, confirm);
 };
 
 export const updateAssay = async (
@@ -102,6 +114,48 @@ export const updateAssay = async (
     const resJson = await response.json();
     if (response.ok) {
         return resJson;
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
+export const fetchUtilizationData = async (
+    params: UtilizationReportParams
+): Promise<UtilizationReportRow[]> => {
+    const url = relativeURL("/api/assays/utilization");
+
+    url.searchParams.set("startdate", params.startDate.toString());
+    url.searchParams.set("enddate", params.endDate.toString());
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    const resJson = await response.json();
+    if (response.ok) {
+        return resJson.map((row: any) => {
+            return {
+                ...row,
+                weekStartDate: LocalDate.parse(row.weekStartDate),
+            };
+        });
+    }
+    throw new ApiError(response.status, resJson.message);
+};
+
+export const fetchAssayEditInfo = async (id: number): Promise<AssayEditInfo> => {
+    const endpoint = `/api/assays/${id}/editInfo`;
+    const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await response.json();
+    if (response.ok) {
+        return stringFieldsToLocalDate(resJson, ["targetDate"]);
     }
     throw new ApiError(response.status, resJson.message);
 };

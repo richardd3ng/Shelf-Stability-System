@@ -1,8 +1,12 @@
 import fs from "fs";
 
+export interface TypeAndSampleNumber {
+    sample_number : string;
+    assay_type : string;
+}
 export interface AssayScheduleImportJSON {
     [condition: string]: {
-        [week: number]: string[];
+        [week: number]: TypeAndSampleNumber[];
     };
 }
 
@@ -21,6 +25,9 @@ export interface AssayResultImportJSON {
     week: number;
     assay_type: string;
     result: ValueCommentAuthor;
+    sample : {
+        sample_number : string;
+    };
 }
 
 export interface ExperimentImportJSON {

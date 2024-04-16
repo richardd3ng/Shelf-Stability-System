@@ -63,26 +63,34 @@ export type ExperimentCreationArgs =
     | {
           conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[];
       };
+
 export type ExperimentCreationResponse = Omit<
     ExperimentInfo,
     "assays" | "assayResults" | "assayTypes"
->;
+> & { defaultAssayTypes: AssayTypeForExperiment[] };
 
-// experiment updates are done in a single atomic transaction
 export type ExperimentUpdateArgs = {
     id: number;
     title?: string;
     description?: string | null;
     startDate?: LocalDate;
     isCanceled?: boolean;
+    weeks?: string;
 };
 
 export type ExperimentStatus = "all" | "cancelled" | "non-cancelled";
+
+export type ExperimentWeekDeletionResponse = {
+    experimentId: number;
+    deletedWeeks: number[];
+    cannotDeleteWeeks: number[];
+};
 
 /* ----- Assay ----- */
 
 export type AssayAgendaInfo = {
     id: number;
+    sample: number;
     targetDate: LocalDate;
     title: string;
     experimentId: number;
@@ -97,6 +105,24 @@ export type AssayAgendaInfo = {
     resultId: number | null;
 };
 
+export type AssayEditInfo = {
+    id: number;
+    sample: number;
+    targetDate: LocalDate;
+    title: string;
+    experimentId: number;
+    condition: string;
+    week: number;
+    type: string;
+    resultId: number | null;
+    resultValue: number | null;
+    resultComment: string | null;
+    units: string | null;
+    owner: string;
+    technician: string | null;
+    isCanceled: boolean;
+};
+
 export type AssayAgendaTable = {
     // Rows on this page
     rows: AssayAgendaInfo[];
@@ -104,9 +130,10 @@ export type AssayAgendaTable = {
     rowCount: number;
 };
 
-export type AssayCreationArgs = Omit<Assay, "id">;
+export type AssayCreationArgs = Omit<Assay, "id" | "sample">;
 
-// experiment updates can be done by individual fields
+export type AssayCreationArgsWithSample = Omit<Assay, "id">;
+
 export type AssayUpdateArgs = {
     id: number;
     conditionId?: number;
@@ -115,8 +142,8 @@ export type AssayUpdateArgs = {
 };
 
 export type AssayWithResult = Assay & {
-    result : AssayResult | null;
-}
+    result: AssayResult | null;
+};
 
 /* ----- Condition ----- */
 
@@ -138,29 +165,38 @@ export type AssayTypeInfo = AssayTypeForExperiment & {
 };
 
 export type UpdateAssayTypeArgs = {
+    assayTypeForExperimentId : number;
+    technicianId : number | null;
     assayTypeId: number;
     name: string | null;
     units: string | null;
-    description : string | null;
+    description: string | null;
 };
 
 export type AssayTypeCreationArgs = Omit<AssayType, "id">;
 
+export type CustomAssayTypeForExperimentCreationArgs = Omit<
+    AssayTypeCreationArgs,
+    "isCustom"
+> & {
+    experimentId: number;
+    technicianId: number | null;
+};
+
 export type StandardAssayTypeForExperimentCreationsArgs = {
-    experimentId : number;
-    assayTypeId : number;
-}
+    experimentId: number;
+    assayTypeId: number;
+};
 
 export type UpdateTechnicianArgs = {
-    assayTypeForExperimentId : number;
-    technicianId : number | null;
-}
+    assayTypeForExperimentId: number;
+    technicianId: number | null;
+};
 
 /* ----- Assay Result ----- */
 
 export type AssayResultCreationArgs = Omit<AssayResult, "id">;
 
-// assay result updates can be done by individual fields
 export type AssayResultUpdateArgs = {
     id: number;
     result?: number | null;
@@ -203,6 +239,7 @@ export type EmailQueryResult = {
     assayType: string;
     technicianUsername: string;
     technicianDisplayName: string;
+    sample: number;
 };
 
 export type EmailInfo = {
@@ -217,6 +254,19 @@ export type EmailInfo = {
             week: number;
             assayType: string;
             technician: string;
+            sample: number;
         }[];
     };
+};
+
+/* ----- Lab Utilization ----- */
+export type UtilizationReportParams = {
+    startDate: LocalDate;
+    endDate: LocalDate;
+};
+
+export type UtilizationReportRow = {
+    weekStartDate: LocalDate;
+    count: number;
+    assayTypeName: string;
 };

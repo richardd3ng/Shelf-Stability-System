@@ -1,5 +1,8 @@
 import { Box, IconButton, Stack, Typography, Tooltip } from "@mui/material";
-import { getAssayTypeUnits, getCorrespondingAssayType } from "@/lib/controllers/assayTypeController";
+import {
+    getAssayTypeUnits,
+    getCorrespondingAssayType,
+} from "@/lib/controllers/assayTypeController";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MessageIcon from "@mui/icons-material/Message";
@@ -30,8 +33,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
     const [showComment, setShowComment] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const { user } = useContext(CurrentUserContext);
-    const experimentSpecificAssayType = getCorrespondingAssayType(props.assay.assayTypeId, experimentInfo?.assayTypes ?? []);
-    const isTechnician: boolean = user?.id === experimentSpecificAssayType?.technicianId ?? false;
+    const experimentSpecificAssayType = getCorrespondingAssayType(
+        props.assay.assayTypeId,
+        experimentInfo?.assayTypes ?? []
+    );
+    const isTechnician: boolean =
+        user?.id === experimentSpecificAssayType?.technicianId ?? false;
     const isAdminOrOwner: boolean =
         (user?.isAdmin || user?.id === experimentInfo?.experiment.ownerId) ??
         false;
@@ -39,7 +46,8 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
     const isDeletable: boolean =
         !experimentInfo?.experiment.isCanceled && isAdminOrOwner;
     const isEditable: boolean =
-        !experimentInfo?.experiment.isCanceled && (isAdminOrOwner || isTechnician);
+        !experimentInfo?.experiment.isCanceled &&
+        (isAdminOrOwner || isTechnician);
 
     const getResultText = (
         assayTypesForExperiment: AssayTypeInfo[]
@@ -49,9 +57,10 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
             assayTypesForExperiment
         );
         const resultText: string =
-            props.assayResult && props.assayResult.result
-                ? `${props.assayResult.result}${units.startsWith("%") ? units : ` ${units}`
-                }`
+            props.assayResult && props.assayResult.result !== null
+                ? `${props.assayResult.result}${
+                      units.startsWith("%") ? units : ` ${units}`
+                  }`
                 : "N/A";
         return resultText;
     };
@@ -87,6 +96,9 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                     <Typography sx={{ fontSize: 12 }}>
                         {getResultText(experimentInfo.assayTypes)}
                     </Typography>
+                    <Typography sx={{ fontSize: 12 }}>
+                        {`${props.assay.sample.toString().padStart(3, "0")}`}
+                    </Typography>
                     <Box
                         sx={{
                             marginY: -0.25,
@@ -98,8 +110,9 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                         <Tooltip
                             title={
                                 <Typography fontSize={16}>
-                                    {`Author: ${props.assayResult?.author ?? "N/A"
-                                        }`}
+                                    {`Author: ${
+                                        props.assayResult?.author ?? "N/A"
+                                    }`}
                                 </Typography>
                             }
                             open={showLastEditor}
@@ -110,6 +123,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                                 disableTouchRipple
                                 onMouseEnter={() => setShowLastEditor(true)}
                                 onMouseLeave={() => setShowLastEditor(false)}
+                                sx={{
+                                    cursor: "default",
+                                    "&:hover": {
+                                        backgroundColor: "inherit !important",
+                                    },
+                                }}
                             >
                                 <PersonIcon
                                     sx={{ fontSize: 20, color: "gray" }}
@@ -119,8 +138,9 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                         <Tooltip
                             title={
                                 <Typography fontSize={16}>
-                                    {`Comment: ${props.assayResult?.comment ?? "N/A"
-                                        }`}
+                                    {`Comment: ${
+                                        props.assayResult?.comment ?? "N/A"
+                                    }`}
                                 </Typography>
                             }
                             open={showComment}
@@ -131,6 +151,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                                 disableTouchRipple
                                 onMouseEnter={() => setShowComment(true)}
                                 onMouseLeave={() => setShowComment(false)}
+                                sx={{
+                                    cursor: "default",
+                                    "&:hover": {
+                                        backgroundColor: "inherit !important",
+                                    },
+                                }}
                             >
                                 <MessageIcon
                                     sx={{ fontSize: 20, color: "gray" }}
@@ -162,7 +188,7 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
             <AssayEditingContext.Provider
                 value={{
                     assay: props.assay,
-                    setAssay: (_assay: Assay) => { },
+                    setAssay: (_assay: Assay) => {},
                     isEditing,
                     setIsEditing,
                 }}
@@ -172,14 +198,12 @@ const AssayChip: React.FC<AssayChipProps> = (props: AssayChipProps) => {
                         assayResult: props.assayResult,
                         setAssayResult: (
                             _result: AssayResult | undefined
-                        ) => { },
+                        ) => {},
                         isEditing,
                         setIsEditing,
                     }}
                 >
-                    <AssayEditorModal 
-                        onlyEditResult={!isDeletable}
-                    />
+                    <AssayEditorModal />
                 </AssayResultEditingContext.Provider>
             </AssayEditingContext.Provider>
         </>

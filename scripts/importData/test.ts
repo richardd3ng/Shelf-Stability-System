@@ -1,4 +1,4 @@
-import { Assay, AssayResult } from "@prisma/client";
+import { AssayResult } from "@prisma/client";
 import { db } from "../../lib/api/db";
 
 async function run(){

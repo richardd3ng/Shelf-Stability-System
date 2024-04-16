@@ -89,6 +89,7 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 disableRowSelectionOnClick
                 slots={{ footer: FooterComponent }}
                 onCellClick={props.handleCellClick}
+                rowSelectionModel={selectedRows}
                 onRowSelectionModelChange={(
                     newSelectedRows: GridRowSelectionModel
                 ) => {
@@ -96,7 +97,9 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 }}
                 {...props}
                 sx={{
-                    "@media print": { breakInside: "avoid" },
+                    "@media print": {
+                        breakInside: "avoid",
+                    },
                 }}
             />
         </Box>

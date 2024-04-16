@@ -4,13 +4,19 @@ import { useExperimentId } from "./useExperimentId";
 import { deleteCondition } from "@/lib/controllers/conditionController";
 import { deleteAssay } from "@/lib/controllers/assayController";
 import { deleteAssayResult } from "@/lib/controllers/assayResultController";
-import { deleteExperiment } from "@/lib/controllers/experimentController";
+import {
+    deleteExperiment,
+    deleteExperimentWeeks,
+} from "@/lib/controllers/experimentController";
 import { useRouter } from "next/router";
-import { AssayResult, AssayTypeForExperiment, Condition } from "@prisma/client";
+import { AssayTypeForExperiment, Condition } from "@prisma/client";
 import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { useLoading } from "@/lib/context/shared/loadingContext";
-import { ExperimentWithLocalDate } from "@/lib/controllers/types";
+import {
+    ExperimentWeekDeletionResponse,
+    ExperimentWithLocalDate,
+} from "@/lib/controllers/types";
 import { deleteAssayTypeForExperimentThroughAPI } from "@/lib/controllers/assayTypeController";
 
 export const useMutationToDeleteCondition = () => {
@@ -20,7 +26,9 @@ export const useMutationToDeleteCondition = () => {
     const { showLoading, hideLoading } = useLoading();
 
     return useMutation({
-        mutationFn: deleteCondition,
+        mutationFn: (args: { id: number; confirm: boolean }) => {
+            return deleteCondition(args.id, args.confirm);
+        },
         onSuccess: (condition: Condition) => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
@@ -49,7 +57,9 @@ export const useMutationToDeleteAssay = () => {
     const { showLoading, hideLoading } = useLoading();
 
     return useMutation({
-        mutationFn: deleteAssay,
+        mutationFn: (args: { id: number; confirm: boolean }) => {
+            return deleteAssay(args.id, args.confirm);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
@@ -68,11 +78,6 @@ export const useMutationToDeleteAssay = () => {
     });
 };
 
-const deleteAssayResultMutationFn = async (
-    assayResultId: number
-): Promise<AssayResult> => {
-    return await deleteAssayResult(assayResultId);
-};
 export const useMutationToDeleteAssayResult = () => {
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
@@ -80,7 +85,7 @@ export const useMutationToDeleteAssayResult = () => {
     const { showLoading, hideLoading } = useLoading();
 
     return useMutation({
-        mutationFn: deleteAssayResultMutationFn,
+        mutationFn: deleteAssayResult,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
@@ -105,7 +110,9 @@ export const useMutationToDeleteExperiment = () => {
     const { showLoading, hideLoading } = useLoading();
 
     return useMutation({
-        mutationFn: deleteExperiment,
+        mutationFn: (args: { id: number; confirm: boolean }) => {
+            return deleteExperiment(args.id, args.confirm);
+        },
         onSuccess: (experiment: ExperimentWithLocalDate) => {
             router.push("/experiment-list");
             showAlert(
@@ -116,8 +123,57 @@ export const useMutationToDeleteExperiment = () => {
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
-        onMutate: (id: number) => {
-            showLoading(`Deleting experiment ${id}...`);
+        onMutate: (args: { id: number; confirm: boolean }) => {
+            showLoading(`Deleting experiment ${args.id}...`);
+        },
+        onSettled: () => {
+            hideLoading();
+        },
+    });
+};
+
+export const useMutationToDeleteExperimentWeeks = () => {
+    const queryClient = useQueryClient();
+    const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+
+    return useMutation({
+        mutationFn: (args: { id: number; weeks: number[] }) => {
+            return deleteExperimentWeeks(args.id, args.weeks);
+        },
+        onSuccess: (
+            experimentWeekDeletionResponse: ExperimentWeekDeletionResponse
+        ) => {
+            queryClient.invalidateQueries({
+                queryKey: getQueryKeyForUseExperimentInfo(
+                    experimentWeekDeletionResponse.experimentId
+                ),
+            });
+            const deletedWeeks = experimentWeekDeletionResponse.deletedWeeks;
+            const cannotDeleteWeeks =
+                experimentWeekDeletionResponse.cannotDeleteWeeks;
+            if (cannotDeleteWeeks.length > 0) {
+                showAlert(
+                    "error",
+                    `The following weeks contain recorded assay results and cannot be deleted: ${cannotDeleteWeeks
+                        .sort()
+                        .join(", ")}`
+                );
+            }
+            if (deletedWeeks.length > 0) {
+                showAlert(
+                    "success",
+                    `The following weeks were successfully deleted: ${deletedWeeks
+                        .sort()
+                        .join(", ")}`
+                );
+            }
+        },
+        onError: (error) => {
+            showAlert("error", getErrorMessage(error));
+        },
+        onMutate: () => {
+            showLoading("Deleting weeks...");
         },
         onSettled: () => {
             hideLoading();
@@ -126,7 +182,6 @@ export const useMutationToDeleteExperiment = () => {
 };
 
 export const useMutationToDeleteAssayTypeForExperiment = () => {
-    const router = useRouter();
     const queryClient = useQueryClient();
     const experimentId = useExperimentId();
     const { showAlert } = useAlert();
@@ -134,19 +189,16 @@ export const useMutationToDeleteAssayTypeForExperiment = () => {
 
     return useMutation({
         mutationFn: deleteAssayTypeForExperimentThroughAPI,
-        onSuccess: (assayTypeForExperiment : AssayTypeForExperiment) => {
+        onSuccess: (_assayTypeForExperiment: AssayTypeForExperiment) => {
             queryClient.invalidateQueries({
                 queryKey: getQueryKeyForUseExperimentInfo(experimentId),
             });
-            showAlert(
-                "success",
-                `Succesfully deleted`
-            );
+            showAlert("success", `Succesfully deleted`);
         },
         onError: (error) => {
             showAlert("error", getErrorMessage(error));
         },
-        onMutate: (id: number) => {
+        onMutate: (_id: number) => {
             showLoading(`Deleting Assay Type`);
         },
         onSettled: () => {

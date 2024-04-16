@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SvgIconTypeMap } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { IconButton, Tooltip } from "@mui/material";
@@ -6,39 +5,17 @@ import { IconButton, Tooltip } from "@mui/material";
 interface IconButtonWithTooltipProps {
     onClick: () => void;
     text: string;
-    icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
-        muiName: string;
-    };
+    icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
     size?: "small" | "medium" | "large";
+    disabled?: boolean;
 }
 
 const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = (
     props: IconButtonWithTooltipProps
 ) => {
-    const [showTooltip, setShowTooltip] = useState<boolean>(false);
-
     return (
-        <Tooltip
-            title={props.text}
-            open={showTooltip}
-            slotProps={{
-                popper: {
-                    modifiers: [
-                        {
-                            name: "offset",
-                            options: {
-                                offset: [0, -14],
-                            },
-                        },
-                    ],
-                },
-            }}
-        >
-            <IconButton
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-                onClick={props.onClick}
-            >
+        <Tooltip title={props.text}>
+            <IconButton onClick={props.onClick} disabled={props.disabled}>
                 <props.icon
                     sx={{
                         fontSize:

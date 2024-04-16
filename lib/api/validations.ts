@@ -12,11 +12,13 @@ export const assayHasResult = async (assayId: number): Promise<boolean> => {
 };
 
 export const experimentHasAssaysWithResults = async (
-    experimentId: number
+    experimentId: number,
+    week?: number
 ): Promise<boolean> => {
     const assaysForExperiment: Assay[] = await db.assay.findMany({
         where: {
             experimentId: experimentId,
+            week: week,
         },
     });
     for (let assay of assaysForExperiment) {
@@ -49,7 +51,7 @@ export const conditionIsControl = async (
     const controlCondition: Condition | null = await db.condition.findUnique({
         where: {
             id: conditionId,
-            isControl : true
+            isControl: true,
         },
     });
     return controlCondition !== null;

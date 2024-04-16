@@ -9,9 +9,13 @@ export async function redirectOrBlockIfNotLoggedIn(request: NextRequest) {
 
         if (!token) {
             if (request.nextUrl.pathname.startsWith("/api")) {
-                return NextResponse.json(getApiError(400, "You need to log in", "Not Logged in"))
+                return NextResponse.json(getApiError(400, "You need to log in"))
+            } else {
+                const redirectUrl = new URL('/auth/login', request.nextUrl);
+                redirectUrl.searchParams.append('redirect', request.nextUrl.pathname);
+                return NextResponse.redirect(new URL(redirectUrl)); //here I want to include the new URL to redirect to after logging in
             }
-            return NextResponse.redirect(new URL('/auth/login'));
+            
         }
 
 

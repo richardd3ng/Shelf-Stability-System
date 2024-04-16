@@ -16,21 +16,15 @@ import {
     Chip,
 } from "@mui/material";
 import { UserInfo, UserTable } from "@/lib/controllers/types";
-import { createExperiment } from "@/lib/controllers/experimentController";
-import {
-    ConditionCreationArgsNoExperimentId,
-    ExperimentCreationResponse,
-} from "@/lib/controllers/types";
+import { ConditionCreationArgsNoExperimentId } from "@/lib/controllers/types";
 import { ExperimentCreationArgs } from "@/lib/controllers/types";
 import { useAlert } from "@/lib/context/shared/alertContext";
-import { useRouter } from "next/router";
 import { LocalDate } from "@js-joda/core";
 import { MyDatePicker } from "../shared/myDatePicker";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { INVALID_USER_ID } from "@/lib/hooks/useUserInfo";
 import { fetchUserList } from "@/lib/controllers/userController";
-import { useLoading } from "@/lib/context/shared/loadingContext";
+import { useMutationToCreateExperiment } from "@/lib/hooks/experimentDetailPage/useCreateEntityHooks";
 
 interface ExperimentCreationDialogProps {
     open: boolean;
@@ -49,8 +43,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const [conditionName, setConditionName] = useState<string>("");
     const [storageConditions, setStorageConditions] = useState<string[]>([]);
     const { showAlert } = useAlert();
-    const { showLoading, hideLoading } = useLoading();
-    const router = useRouter();
+    const { mutate: createExperiment } = useMutationToCreateExperiment();
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -119,34 +112,22 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
             showAlert("error", generateAlertMessage(missingDetails));
             return;
         }
-        showLoading("Creating experiment...");
-        try {
-            const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
-                storageConditions.map((condition: string, index: number) => ({
-                    name: condition,
-                    isControl: index === 0,
-                }));
-            const experimentData: ExperimentCreationArgs = {
-                title: title,
-                description: description,
-                startDate: date!,
-                conditionCreationArgsNoExperimentIdArray:
-                    conditionCreationArgsNoExperimentIdArray,
-                ownerId: ownerId,
-            };
-            const experimentResJson: ExperimentCreationResponse =
-                await createExperiment(experimentData);
-            showAlert(
-                "success",
-                `Successfully created experiment ${experimentResJson.experiment.id}!`
-            );
-            router.push(`/experiments/${experimentResJson.experiment.id}`);
-        } catch (error) {
-            showAlert("error", getErrorMessage(error));
-            hideLoading();
-            return;
-        }
-        hideLoading();
+        const conditionCreationArgsNoExperimentIdArray: ConditionCreationArgsNoExperimentId[] =
+            storageConditions.map((condition: string, index: number) => ({
+                name: condition,
+                isControl: index === 0,
+            }));
+        const experimentData: ExperimentCreationArgs = {
+            title: title,
+            description: description,
+            startDate: date!,
+            conditionCreationArgsNoExperimentIdArray:
+                conditionCreationArgsNoExperimentIdArray,
+            ownerId: ownerId,
+            weeks: "",
+            isCanceled: false,
+        };
+        createExperiment(experimentData);
         closeDialog();
     };
 
@@ -158,7 +139,6 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
     const resetFields = () => {
         setTitle("");
         setDescription("");
-        setOwnerId(INVALID_USER_ID);
         setDate(LocalDate.now());
         setConditionName("");
         setStorageConditions([]);
@@ -213,11 +193,7 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                         label="Start Date"
                         value={date}
                         onChange={setDate}
-                        slotProps={{
-                            textField: {
-                                required: true,
-                            },
-                        }}
+                        required
                     />
                     <DialogContentText
                         sx={{
@@ -226,7 +202,15 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                     >
                         Storage Conditions
                     </DialogContentText>
-                    <Box sx={{ border: "1px solid #ccc", minHeight: 42 }}>
+                    <Box
+                        sx={{
+                            border: "1px solid #ccc",
+                            display:
+                                storageConditions.length > 0
+                                    ? undefined
+                                    : "none",
+                        }}
+                    >
                         {storageConditions.map((condition, index) => (
                             <Chip
                                 key={index}
@@ -245,26 +229,30 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                             alignItems: "center",
                         }}
                     >
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            label="Condition Name"
-                            sx={{ width: "70%" }}
-                            value={conditionName}
-                            onChange={(e) => setConditionName(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                    handleAddStorageCondition();
+                        <Box flexGrow={1}>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                label="Condition Name"
+                                fullWidth
+                                value={conditionName}
+                                onChange={(e) =>
+                                    setConditionName(e.target.value)
                                 }
-                            }}
-                        />
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        handleAddStorageCondition();
+                                    }
+                                }}
+                            />
+                        </Box>
                         <Button
                             variant="contained"
                             color="primary"
-                            sx={{ textTransform: "none" }}
+                            sx={{ textTransform: "none", ml: 1 }}
                             onClick={handleAddStorageCondition}
                         >
-                            + Condition
+                            Add
                         </Button>
                     </Box>
                 </Stack>

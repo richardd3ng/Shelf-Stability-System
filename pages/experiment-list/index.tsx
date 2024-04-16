@@ -44,6 +44,9 @@ import Delete from "@mui/icons-material/Delete";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import ConfirmationDialog from "@/components/shared/confirmationDialog";
 import { useSearchParams } from "next/navigation";
+import { ApiError } from "next/dist/server/api-utils";
+import { CONFIRMATION_REQUIRED_MESSAGE } from "@/lib/api/error";
+import useIsMobile from "@/lib/hooks/useIsMobile";
 
 interface QueryParams {
     search: string;
@@ -94,6 +97,7 @@ const ExperimentList: React.FC = () => {
     >([]);
     const { user } = useContext(CurrentUserContext);
     const isAdmin: boolean = user?.isAdmin ?? false;
+    const isMobile = useIsMobile();
 
     const reloadExperimentData = async (
         paging: ServerPaginationArgs
@@ -101,12 +105,12 @@ const ExperimentList: React.FC = () => {
         showLoading("Loading experiments...");
         const fetchedData = await getExperiments(paging);
         const newParams = getQueryParamsFromURL(
-            new URLSearchParams(router.asPath.split('?')[1])
+            new URLSearchParams(router.asPath.split("?")[1])
         );
         if (!queryParamEquals(queryParams, newParams)) {
             return { rows: [], rowCount: 0 };
         }
-        
+
         setRows(fetchedData.rows);
         hideLoading();
         return fetchedData;
@@ -145,10 +149,24 @@ const ExperimentList: React.FC = () => {
 
     const colDefs: GridColDef[] = [
         {
+            field: "status",
+            headerName: "Status",
+            type: "string",
+            width: isMobile ? 100 : 80,
+            sortable: false,
+            renderCell: (params) => {
+                return params.row.isCanceled ? "Canceled" : "Active";
+            },
+            cellClassName: (params) =>
+                params.row.isCanceled
+                    ? "experiment-cell-canceled"
+                    : "experiment-cell-active",
+        },
+        {
             field: "id",
             headerName: "ID",
             type: "number",
-            width: 80,
+            width: isMobile ? 100 : 80,
             valueFormatter: (params: any) => String(params.value),
         },
         {
@@ -195,13 +213,13 @@ const ExperimentList: React.FC = () => {
             headerName: "Start Date",
             type: "string",
             valueGetter: (params) => params.row.startDate.toString(),
-            width: 110,
+            width: 120,
         },
         {
             field: "week",
             headerName: "Week",
             type: "number",
-            width: 70,
+            width: isMobile ? 100 : 85,
         },
         {
             field: "actions",
@@ -213,13 +231,16 @@ const ExperimentList: React.FC = () => {
             renderCell: (params) => (
                 <Box sx={{ display: "flex" }}>
                     <GeneratePrintableReportButton
-                        experimentId={params.row.id}
+                        text="Generate Report"
+                        onClick={() =>
+                            router.push(`/experiments/${params.row.id}/report`)
+                        }
                     />
                     {isAdmin && (
                         <IconButtonWithTooltip
                             text="Delete"
                             icon={Delete}
-                            onClick={() => prepareForDeletion([params.row.id])}
+                            onClick={() => handleDelete(params.row.id)}
                         ></IconButtonWithTooltip>
                     )}
                 </Box>
@@ -243,7 +264,22 @@ const ExperimentList: React.FC = () => {
         }
     };
 
-    const prepareForDeletion = (selectedRows: GridRowSelectionModel) => {
+    const handleDelete = async (id: number) => {
+        try {
+            await deleteExperiment(id, false);
+        } catch (error) {
+            if (error instanceof ApiError) {
+                if (error.message === CONFIRMATION_REQUIRED_MESSAGE) {
+                    prepareForDeletions([id]);
+                    setShowConfirmationDialog(true);
+                } else {
+                    showAlert("error", error.message);
+                }
+            }
+        }
+    };
+
+    const prepareForDeletions = (selectedRows: GridRowSelectionModel) => {
         setSelectedExperimentIds(selectedRows);
         setShowConfirmationDialog(true);
     };
@@ -274,6 +310,7 @@ const ExperimentList: React.FC = () => {
     const handleDeleteExperiments = async () => {
         let deletedIds: number[] = [];
         let cannotDeleteIds: number[] = [];
+        showLoading("Deleting experiments...");
         try {
             const deletePromises = selectedExperimentIds.map(
                 async (experimentId: GridRowId) => {
@@ -284,7 +321,7 @@ const ExperimentList: React.FC = () => {
                         if (resultFound) {
                             cannotDeleteIds.push(experimentId);
                         } else {
-                            await deleteExperiment(experimentId);
+                            await deleteExperiment(experimentId, true);
                             deletedIds.push(experimentId);
                         }
                     } catch (error) {
@@ -305,7 +342,7 @@ const ExperimentList: React.FC = () => {
             if (cannotDeleteIds.length > 0) {
                 showAlert(
                     "warning",
-                    `The following experiments contained recorded assay results and could not be deleted: ${cannotDeleteIds.join(
+                    `The following experiments contain recorded assay results and cannot be deleted: ${cannotDeleteIds.join(
                         ", "
                     )}`
                 );
@@ -313,6 +350,7 @@ const ExperimentList: React.FC = () => {
         } catch (error) {
             showAlert("error", getErrorMessage(error));
         }
+        hideLoading();
     };
 
     return (
@@ -320,13 +358,13 @@ const ExperimentList: React.FC = () => {
             <Stack spacing={2}>
                 <Box
                     sx={{
-                        display: "flex",
+                        display: isMobile ? undefined : "flex",
                         alignItems: "center",
                         paddingX: 3,
                         justifyContent: "space-between",
                     }}
                 >
-                    <Box sx={{ flex: 2 }}>
+                    <Box sx={{ flex: 2, paddingY: isMobile ? 2 : undefined }}>
                         <SearchBar
                             placeholder="Enter Keyword"
                             value={queryParams.search}
@@ -344,7 +382,12 @@ const ExperimentList: React.FC = () => {
                             }}
                         />
                     </Box>
-                    <Box sx={{ flex: 2, paddingLeft: 5 }}>
+                    <Box
+                        sx={{
+                            flex: 2,
+                            paddingLeft: isMobile ? undefined : 5,
+                        }}
+                    >
                         <Autocomplete
                             disablePortal
                             id="user-filter-selection"
@@ -385,7 +428,12 @@ const ExperimentList: React.FC = () => {
                             }}
                         />
                     </Box>
-                    <Box sx={{ paddingX: 5 }}>
+                    <Box
+                        sx={{
+                            paddingX: isMobile ? undefined : 5,
+                            paddingY: isMobile ? 2 : undefined,
+                        }}
+                    >
                         <FormControl component="fieldset">
                             <FormLabel
                                 component="legend"
@@ -426,9 +474,9 @@ const ExperimentList: React.FC = () => {
                                     label="Canceled"
                                 />
                                 <FormControlLabel
-                                    value="non-canceled"
+                                    value="active"
                                     control={<Radio />}
-                                    label="Non-Canceled"
+                                    label="Active"
                                 />
                             </RadioGroup>
                         </FormControl>
@@ -448,16 +496,19 @@ const ExperimentList: React.FC = () => {
                     columns={colDefs}
                     rows={rows}
                     pagination
-                    onDeleteRows={prepareForDeletion}
+                    checkboxSelection={isAdmin}
+                    onDeleteRows={prepareForDeletions}
                     onCellClick={(cell) => {
-                        if (cell.field !== "actions") {
+                        if (
+                            cell.field !== "__check__" &&
+                            cell.field !== "actions"
+                        ) {
                             router.push(`/experiments/${cell.id}`);
                         }
                     }}
                     {...paginationProps}
-                    getRowClassName={(params) => "experiment-row-clickable " + (params.row.isCanceled ? "experiment-row-canceled" : "")}
+                    getRowClassName={(_params) => "experiment-row-clickable"}
                 />
-
                 <ExperimentCreationDialog
                     open={showCreationDialog}
                     onClose={() => {
@@ -467,7 +518,7 @@ const ExperimentList: React.FC = () => {
                 />
                 <ConfirmationDialog
                     open={showConfirmationDialog}
-                    text="Are you sure you want to delete this experiment? This action cannot be undone."
+                    text="Are you sure you want to delete the selected experiment(s)? Only experiments without recorded assay results can be deleted. This action cannot be undone."
                     onClose={() => {
                         setShowConfirmationDialog(false);
                     }}

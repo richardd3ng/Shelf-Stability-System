@@ -20,13 +20,6 @@ interface GraphForOneAssayTypeProps {
 }
 
 export function GraphForOneAssayType(props : GraphForOneAssayTypeProps) {
-    Array.from(props.data.conditionsToValues.entries()).forEach(([key, value]) => {
-        console.log(key + ", " + props.type);
-        console.log(value.values.map((v) => ({
-            x : v.label,
-            y : v.val
-        })));
-    })
     const colors = ["red", "blue", "green", "black", "yellow", "orange", "purple", "cyan", "brown", "scarlet", "gray"];
     const scatterData = {
         datasets : Array.from(props.data.conditionsToValues.entries()).map(([key, value], index) => ({

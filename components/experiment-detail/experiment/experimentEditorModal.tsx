@@ -5,8 +5,6 @@ import { Button, Stack, TextField } from "@mui/material";
 import { MyDatePicker } from "@/components/shared/myDatePicker";
 import React, { useContext, useState, useEffect } from "react";
 import CloseableModal from "@/components/shared/closeableModal";
-import { ErrorMessage } from "@/components/shared/errorMessage";
-import { getErrorMessage } from "@/lib/api/apiHelpers";
 import { LocalDate } from "@js-joda/core";
 import { useAlert } from "@/lib/context/shared/alertContext";
 import { ExperimentUpdateArgs } from "@/lib/controllers/types";
@@ -32,6 +30,7 @@ const ExperimentEditorModal: React.FC = () => {
             }
             setTitle(data.experiment.title);
             setDescription(data.experiment.description || "");
+            setStartDate(data.experiment.startDate || null);
             setAllowEditStartDate(
                 !(await hasRecordedAssayResults(experimentId))
             );
@@ -39,7 +38,8 @@ const ExperimentEditorModal: React.FC = () => {
         fetchMetadata();
     }, [data, experimentId]);
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
         if (title.trim() === "") {
             showAlert("error", "Experiment title cannot be empty");
             return;
@@ -66,11 +66,8 @@ const ExperimentEditorModal: React.FC = () => {
         updateExperiment(experimentUpdateArgs);
         setIsEditing(false);
     };
-
-    if (isLoading) {
-        return <></>;
-    } else if (isError || !data) {
-        return <ErrorMessage message={getErrorMessage(error)} />;
+    if (isLoading || isError || !data) {
+        return null;
     }
     return (
         <CloseableModal
@@ -79,38 +76,42 @@ const ExperimentEditorModal: React.FC = () => {
             closeFn={() => setIsEditing(false)}
             title="Edit Experiment"
         >
-            <Stack style={{ marginBottom: 8, marginRight: 4 }} spacing={1}>
-                <TextField
-                    label="Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                <TextField
-                    label="Description"
-                    value={description}
-                    fullWidth
-                    multiline
-                    rows={4}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-                {allowEditStartDate && (
-                    <MyDatePicker
-                        label="Start Date"
-                        value={startDate}
-                        onChange={(date) => {
-                            setStartDate(date);
-                        }}
+            <form onSubmit={handleSubmit}>
+                <Stack style={{ marginBottom: 8, marginRight: 4 }} spacing={1}>
+                    <TextField
+                        label="Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        sx={{ minWidth: 400 }}
+                        fullWidth
                     />
-                )}
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                    sx={{ textTransform: "none" }}
-                >
-                    Submit
-                </Button>
-            </Stack>
+                    <TextField
+                        label="Description"
+                        value={description}
+                        fullWidth
+                        multiline
+                        rows={10}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    {allowEditStartDate && (
+                        <MyDatePicker
+                            label="Start Date"
+                            value={startDate}
+                            onChange={(date) => {
+                                setStartDate(date);
+                            }}
+                        />
+                    )}
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        color="primary"
+                        sx={{ textTransform: "none" }}
+                    >
+                        Submit
+                    </Button>
+                </Stack>
+            </form>
         </CloseableModal>
     );
 };

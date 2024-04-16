@@ -83,14 +83,22 @@ a {
     cursor: pointer;
 }
 
-.experiment-row-canceled {
-    background-color: rgb(255, 151, 151);
-}
-
 .agenda-row-clickable {
     cursor: pointer;
 }
 
 .hover-underline {
     text-decoration: dotted underline;
+}
+
+.experiment-cell-canceled {
+    background-color: rgb(221, 96, 96);
+}
+
+.experiment-cell-active {
+    background-color: rgb(98, 214, 98);
+}
+
+.display-none * {
+    display: none !important;
 }

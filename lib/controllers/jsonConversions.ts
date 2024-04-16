@@ -28,7 +28,7 @@ export function stringFieldsToLocalDate<T extends { [P in K]: string }, K extend
 }
 
 export function dateFieldsToLocalDate<T extends { [P in K]: Date }, K extends string | number | symbol>(obj: T, fields: K[]): T & { [P in K]: LocalDate } {
-    const replacements: Partial<{ [key in K]: LocalDate }> = {};
+    const replacements: Partial<{ [P in K]: LocalDate }> = {};
 
     // Convert all string fields listed in K to LocalDate
     for (const key of fields) {
@@ -40,6 +40,6 @@ export function dateFieldsToLocalDate<T extends { [P in K]: Date }, K extends st
     }
     return {
         ...obj,
-        ...replacements
+        ...(replacements as { [P in K]: LocalDate })
     };
 }

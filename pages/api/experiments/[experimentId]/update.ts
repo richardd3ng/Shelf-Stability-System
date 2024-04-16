@@ -31,7 +31,7 @@ export default async function updateExperimentAPI(
         );
         return;
     }
-    const { title, description, startDate, isCanceled } = req.body;
+    const { title, description, startDate, isCanceled, weeks } = req.body;
     try {
         if (startDate) {
             if (await experimentHasAssaysWithResults(id)) {
@@ -59,6 +59,9 @@ export default async function updateExperimentAPI(
         if (isCanceled !== undefined && isCanceled !== null) {
             updateData.isCanceled = isCanceled;
         }
+        if (weeks) {
+            updateData.weeks = weeks;
+        }
         const updatedExperiment: ExperimentWithLocalDate | null =
             await db.experiment
                 .update({
@@ -71,13 +74,7 @@ export default async function updateExperimentAPI(
                     dateFieldsToLocalDate(experiment, ["startDate"])
                 );
         if (!updatedExperiment) {
-            res.status(404).json(
-                getApiError(
-                    404,
-                    "Experiment does not exist",
-                    "Experiment Not Found"
-                )
-            );
+            res.status(404).json(getApiError(404, "Experiment does not exist"));
             return;
         }
         res.status(200).json(updatedExperiment);
