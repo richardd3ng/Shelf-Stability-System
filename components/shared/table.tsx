@@ -89,6 +89,7 @@ const Table: React.FC<TableProps & DataGridProps> = (
                 disableRowSelectionOnClick
                 slots={{ footer: FooterComponent }}
                 onCellClick={props.handleCellClick}
+                rowSelectionModel={selectedRows}
                 onRowSelectionModelChange={(
                     newSelectedRows: GridRowSelectionModel
                 ) => {
