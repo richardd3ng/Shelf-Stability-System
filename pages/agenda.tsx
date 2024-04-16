@@ -126,6 +126,14 @@ export default function AssayAgenda() {
             flex: 1,
         },
         {
+            field: "recorded",
+            headerName: "Recorded",
+            type: "boolean",
+            width: 100,
+            valueGetter: (params) => params.row.resultId !== null,
+            cellClassName: (params) => params.value ? "" : "display-none",
+        },
+        {
             field: "actions",
             headerName: "Actions",
             width: 100,

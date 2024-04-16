@@ -154,6 +154,8 @@ const ExperimentList: React.FC = () => {
             renderCell: (params) => {
                 return params.row.isCanceled ? "Canceled" : "Active";
             },
+            cellClassName: (params) =>
+                params.row.isCanceled ? "experiment-cell-canceled" : "experiment-cell-active"
         },
         {
             field: "id",

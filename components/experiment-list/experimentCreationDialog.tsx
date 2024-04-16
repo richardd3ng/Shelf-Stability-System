@@ -14,6 +14,7 @@ import {
     Stack,
     TextField,
     Chip,
+    FormGroup,
 } from "@mui/material";
 import { UserInfo, UserTable } from "@/lib/controllers/types";
 import { ConditionCreationArgsNoExperimentId } from "@/lib/controllers/types";
@@ -208,10 +209,8 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                     </DialogContentText>
                     <Box
                         sx={{
-                            border:
-                                storageConditions.length > 0
-                                    ? "1px solid #ccc"
-                                    : "undefined",
+                            border: "1px solid #ccc",
+                            display: storageConditions.length > 0 ? undefined : "none"
                         }}
                     >
                         {storageConditions.map((condition, index) => (
@@ -225,33 +224,35 @@ const ExperimentCreationDialog: React.FC<ExperimentCreationDialogProps> = (
                             />
                         ))}
                     </Box>
-                    <Box
+                    <Box 
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
                         }}
                     >
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            label="Condition Name"
-                            sx={{ width: "70%" }}
-                            value={conditionName}
-                            onChange={(e) => setConditionName(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                    handleAddStorageCondition();
-                                }
-                            }}
-                        />
+                        <Box flexGrow={1}>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                label="Condition Name"
+                                fullWidth
+                                value={conditionName}
+                                onChange={(e) => setConditionName(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        handleAddStorageCondition();
+                                    }
+                                }}
+                            />
+                        </Box>
                         <Button
                             variant="contained"
                             color="primary"
-                            sx={{ textTransform: "none" }}
+                            sx={{ textTransform: "none", ml: 1 }}
                             onClick={handleAddStorageCondition}
                         >
-                            + Condition
+                            Add
                         </Button>
                     </Box>
                 </Stack>
