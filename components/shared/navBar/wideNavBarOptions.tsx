@@ -12,77 +12,22 @@ import { AccountCircle, Logout, Settings } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { CurrentUserContext } from "@/lib/context/users/currentUserContext";
 import { useState } from "react";
+import { NavBarButtonProps, NavBarButton } from "./navBarButton";
 
-interface NavBarButtonProps {
-    text: string;
-    onClick: () => void;
-    path: string;
-    hidden?: boolean;
+
+export interface WideNavBarOptionsProps {
+    options : NavBarButtonProps[];
 }
-const NavBarButton: React.FC<NavBarButtonProps> = (
-    props: NavBarButtonProps
-) => {
-    const router = useRouter();
-    const isActive = router.pathname === props.path;
 
-    return (
-        <Button
-            color="inherit"
-            style={{ textTransform: "none" }}
-            onClick={props.onClick}
-            sx={{
-                backgroundColor: isActive
-                    ? "rgba(255, 255, 255, 0.2)"
-                    : "inherit",
-            }}
-        >
-            <Typography>{props.text}</Typography>
-        </Button>
-    );
-};
-
-const NavBar: React.FC = () => {
+export const WideNavBarOptions: React.FC<WideNavBarOptionsProps> = (props : WideNavBarOptionsProps) => {
     const router = useRouter();
-    const { user } = useContext(CurrentUserContext);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-    const options: NavBarButtonProps[] = [
-        {
-            text: "Experiments",
-            onClick: () => router.push("/experiment-list"),
-            path: "/experiment-list",
-        },
-        {
-            text: "Assay Agenda",
-            onClick: () => router.push("/agenda"),
-            path: "/agenda",
-        },
-        {
-            text: "Lab Utilization",
-            onClick: () => router.push("/utilization"),
-            path: "/utilization",
-        },
-        {
-            text: "Users",
-            onClick: () => router.push("/users"),
-            path: "/users",
-            hidden: !user?.isAdmin,
-        },
-    ];
+    const {user} = useContext(CurrentUserContext);
 
     return (
-        <AppBar position="sticky" color="primary">
-            <Toolbar>
-                <Typography variant="h6" style={{ flexGrow: 1 }}>
-                    <Link
-                        href="/experiment-list"
-                        style={{ color: "inherit", textDecoration: "none" }}
-                    >
-                        Shelf Stability System
-                    </Link>
-                </Typography>
-
-                {options
+        <>
+                
+                {props.options
                     .filter((option) => !option.hidden)
                     .map((option, index) => (
                         <NavBarButton
@@ -123,9 +68,8 @@ const NavBar: React.FC = () => {
                         Sign Out
                     </MenuItem>
                 </Menu>
-            </Toolbar>
-        </AppBar>
+        </>
     );
 };
 
-export default NavBar;
+export default WideNavBarOptions;
