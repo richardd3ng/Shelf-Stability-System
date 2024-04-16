@@ -72,7 +72,7 @@ export const MobileNavBarOptions: React.FC<MobileNavBarProps> = (props: MobileNa
                 >
                     <MenuItem
                         onClick={() => router.push("/auth/updatePassword")}
-                        hidden={user?.isSSO}
+                        sx={{ display: user?.isSSO ? "none" : undefined}}
                     >
                         <Settings sx={{ marginRight: 1 }} />
                         Update Password
