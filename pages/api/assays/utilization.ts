@@ -1,7 +1,7 @@
 import { db } from "@/lib/api/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { localDateToJsDate } from "@/lib/datesUtils";
-import { LocalDate } from "@js-joda/core";
+import { DayOfWeek, LocalDate } from "@js-joda/core";
 import { getApiError } from "@/lib/api/error";
 
 
@@ -13,10 +13,14 @@ export default async function utilizationAPI(
 
         let startDateStr = typeof(req.query.startdate) === "string" ? req.query.startdate : LocalDate.now().toString();
         let endDateStr = typeof(req.query.enddate) === "string" ? req.query.enddate : LocalDate.now().toString();
-        let startDate = localDateToJsDate(LocalDate.parse(startDateStr));
-        let endDate = localDateToJsDate(LocalDate.parse(endDateStr));
-        const roundedStartDate = startDate;
-        const roundedEndDate = endDate;
+        let startLocalDate = LocalDate.parse(startDateStr);
+        let endLocalDate = LocalDate.parse(endDateStr);
+
+        let roundedStartLocalDate = startLocalDate.plusDays(( DayOfWeek.SUNDAY.compareTo(startLocalDate.dayOfWeek()) - 7) % 7);
+        let roundedEndLocalDate = endLocalDate.plusDays(( DayOfWeek.SUNDAY.compareTo(endLocalDate.dayOfWeek()) - 7) % 7 );
+    
+        const roundedStartDate = localDateToJsDate(roundedStartLocalDate);
+        const roundedEndDate = localDateToJsDate(roundedEndLocalDate);
 
         const standardTypesData : any[] = await db.$queryRaw`
             WITH assayTypesCombined as (
@@ -44,7 +48,12 @@ export default async function utilizationAPI(
                 FROM assaysWithTypesAndExperimentStartDate
             ),
             assaysWithTypesAndRoundedDownTargetDate AS (
-                SELECT *, date_trunc('week', "targetDate") AS "weekStartDate"
+                SELECT 
+                    *,
+                    CASE 
+                        WHEN extract(dow FROM "targetDate") = 0 THEN "targetDate"  
+                        ELSE "targetDate" - (extract(dow FROM "targetDate") * interval '1 day')
+                    END AS "weekStartDate"
                 FROM assaysWithTypesAndTargetDate
             )
             SELECT COUNT("assayId") as "count", "weekStartDate", "assayTypeName"
@@ -79,7 +88,12 @@ export default async function utilizationAPI(
                 FROM assaysWithTypesAndExperimentStartDate
             ),
             assaysWithTypesAndRoundedDownTargetDate AS (
-                SELECT *, date_trunc('week', "targetDate") AS "weekStartDate"
+                SELECT 
+                    *,
+                    CASE 
+                        WHEN extract(dow FROM "targetDate") = 0 THEN "targetDate"  
+                        ELSE "targetDate" - (extract(dow FROM "targetDate") * interval '1 day')
+                    END AS "weekStartDate"
                 FROM assaysWithTypesAndTargetDate
             )
             SELECT COUNT("assayId") as "count", "weekStartDate"
@@ -108,7 +122,8 @@ export default async function utilizationAPI(
                 count : parseInt(intCount)
             }
         }));
-    } catch {
+    } catch (error) {
+        console.log(error);
         res.status(500).json(
             getApiError(500, "Failed to get utilization data")
         );
@@ -118,9 +133,7 @@ export default async function utilizationAPI(
 }
 
 function formatDateToISO(date : Date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    let isoDate = date.toISOString().split("-");
+    return `${isoDate[0]}-${isoDate[1]}-${isoDate[2].substring(0, 2)}`;
 }
   
