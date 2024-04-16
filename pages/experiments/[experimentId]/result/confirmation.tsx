@@ -17,7 +17,7 @@ const ResultConfirmationPage: React.FC = () => {
     return (
         <Layout>
             <Box
-                paddingLeft={1.5}
+                sx={{ px: 1.5 }}
                 display="flex"
                 alignItems="center"
                 justifyContent="center"

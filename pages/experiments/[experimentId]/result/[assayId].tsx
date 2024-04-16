@@ -9,7 +9,7 @@ export default function ResultEntryPage() {
 
     return (
         <Layout>
-            <Box paddingLeft={1.5}>
+            <Box sx={{ px: 1.5 }}>
                 <Typography variant="h4" marginBottom={1}>
                     Enter Assay Result
                 </Typography>

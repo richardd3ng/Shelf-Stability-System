@@ -14,7 +14,6 @@ import {
     Stack,
     TextField,
     Chip,
-    FormGroup,
 } from "@mui/material";
 import { UserInfo, UserTable } from "@/lib/controllers/types";
 import { ConditionCreationArgsNoExperimentId } from "@/lib/controllers/types";
