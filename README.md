@@ -1,5 +1,12 @@
 # Shelf Stability System
 
+## Login Guide
+Logging in via Duke SSO registers your account as a non-admin user with limited priveleges. To login as the super admin, use
+- Username: admin
+- Password: superStabilityTracker378
+  
+Note that logging in as an admin grants you full read/write access to the system, so please do not abuse this by deleting entities you didn't create or overloading our database. Thanks!
+
 ## Developer Guide
 This app uses [Next.js](https://nextjs.org/) to have both frontend and backend code contained within a single codebase with a RESTful API to connect them. We use [Prisma](https://www.prisma.io/) as an ORM to communicate with our database in a type-safe way.
 
