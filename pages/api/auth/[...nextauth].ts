@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/api/db";
 import { compare } from "bcryptjs";
 import DukeProvider from "@/lib/api/auth/dukeProvider";
-import { decode } from "next-auth/jwt";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -18,7 +17,8 @@ export const authOptions: NextAuthOptions = {
                 username: { label: "Username", type: "username" },
                 password: { label: "Password", type: "password" },
             },
-            async authorize(credentials, req) { // TODO block SSO accounts
+            async authorize(credentials, req) {
+                // TODO block SSO accounts
                 try {
                     const username = credentials?.username;
                     const password = credentials?.password;
@@ -59,10 +59,10 @@ export const authOptions: NextAuthOptions = {
         ),
     ],
 
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_PUBLIC_SECRET,
 
     jwt: {
-        secret: process.env.NEXTAUTH_SECRET,
+        secret: process.env.NEXTAUTH_PUBLIC_SECRET,
         maxAge: 60 * 60 * 24 * 30,
     },
 
@@ -79,10 +79,7 @@ export const authOptions: NextAuthOptions = {
             }
             return token;
         },
-        async session({
-            session,
-            token,
-        }) {
+        async session({ session, token }) {
             session.user = token;
             return session;
         },

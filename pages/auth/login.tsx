@@ -9,6 +9,7 @@ import { useAlert } from "@/lib/context/shared/alertContext";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { GetServerSidePropsContext } from "next";
+import { useEffect } from "react";
 
 export default function LoginPage() {
     const [username, setUsername] = useState<string>("");
@@ -25,7 +26,10 @@ export default function LoginPage() {
                 if (!d || (d && d.status > 300)) {
                     showAlert("error", "Wrong username/password");
                 } else {
-                    const redirectUrl = typeof(router.query.redirect) === "string" ? router.query.redirect : '/experiment-list';
+                    const redirectUrl =
+                        typeof router.query.redirect === "string"
+                            ? router.query.redirect
+                            : "/experiment-list";
                     router.push(redirectUrl);
                 }
             })
@@ -37,8 +41,11 @@ export default function LoginPage() {
 
     const handleOAuth = async () => {
         showLoading("Logging in...");
-        const redirectUrl = typeof(router.query.redirect) === "string" ? router.query.redirect : '/experiment-list';
-        await signIn("duke", {callbackUrl : redirectUrl});
+        const redirectUrl =
+            typeof router.query.redirect === "string"
+                ? router.query.redirect
+                : "/experiment-list";
+        await signIn("duke", { callbackUrl: redirectUrl });
     };
 
     return (

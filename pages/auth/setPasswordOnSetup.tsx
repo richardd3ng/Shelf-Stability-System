@@ -10,11 +10,6 @@ export default function SetPasswordOnSetupPage() {
     const [password2, setPassword2] = useState<string>("");
     const { mutate: setPassword } = useMutationToSetPasswordOnSetup();
 
-    useEffect(() => {
-        console.log("nextauth secret:", process.env.NEXTAUTH_SECRET);
-        console.log("nextauth url:", process.env.NEXTAUTH_URL);
-    }, []);
-
     return (
         <Stack>
             <Box alignSelf="center">
