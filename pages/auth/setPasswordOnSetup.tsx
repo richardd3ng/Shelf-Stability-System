@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { AuthForm } from "@/components/shared/authForm";
 import { ErrorMessage } from "@/components/shared/errorMessage";
@@ -9,6 +9,10 @@ export default function SetPasswordOnSetupPage() {
     const [password1, setPassword1] = useState<string>("");
     const [password2, setPassword2] = useState<string>("");
     const { mutate: setPassword } = useMutationToSetPasswordOnSetup();
+    useEffect(() => {
+        console.log(process.env.NEXTAUTH_SECRET);
+        console.log(process.env.NEXTAUTH_URL);
+    }, []);
     return (
         <Stack>
             <Box alignSelf="center">
